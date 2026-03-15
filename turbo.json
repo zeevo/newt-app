@@ -16,6 +16,13 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "migrate": {
+      "cache": false,
+      "interactive": true
+    },
+    "generate": {
+      "cache": false
     }
   }
 }

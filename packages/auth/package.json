@@ -1,0 +1,23 @@
+{
+  "name": "@repo/auth",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "migrate": "dotenv -e .env -- auth migrate --config src/index.ts",
+    "generate": "dotenv -e .env -- auth generate --config src/index.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.2.8",
+    "pg": "^8.14.1"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/pg": "^8.11.13",
+    "auth": "^1.5.5",
+    "dotenv-cli": "^11.0.0",
+    "typescript": "5.9.2"
+  }
+}
