@@ -1,12 +1,14 @@
-{
-  "name": "newt-app",
+export default {
+  filename: "package.json",
+  template: `{
+  "name": "<%= projectName %>",
   "private": true,
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "format": "prettier --write \\"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\\"",
+    "format:check": "prettier --check \\"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\\"",
     "check-types": "turbo run check-types",
     "db:migrate": "turbo run migrate",
     "db:generate": "turbo run generate"
@@ -20,4 +22,5 @@
   "engines": {
     "node": ">=18"
   }
-}
+}`,
+};

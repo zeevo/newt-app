@@ -1,4 +1,6 @@
-'use client';
+export default {
+  filename: "apps/web/app/page.tsx",
+  template: `'use client';
 
 import { useQuery } from '@tanstack/react-query';
 import { authClient } from '../lib/auth-client';
@@ -17,8 +19,12 @@ export default function Home() {
   return (
     <main className="max-w-lg mx-auto border-r border-l h-full">
       <div className="border-b p-4">
+        <p className="font-mono">apps/web/page.tsx</p>
+        <p className="text-gray-500">Delete me to get started!</p>
+      </div>
+      <div className="border-b p-4">
         <h1 className="text-5xl font-black tracking-tight bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-          NEWT APP
+          <%= projectName %>
         </h1>
         <p className="mt-2 text-sm text-gray-500 tracking-widest uppercase">
           Next + Nest = Newt 💜
@@ -29,8 +35,8 @@ export default function Home() {
         <div className="flex justify-end text-gray-500">
           <h2 className="uppercase">Next.js</h2>
         </div>
-        <p className="font-mono">apps/web/page.tsx</p>
-        <p>Edit me to get started</p>
+        <p className="font-mono">apps/web/layout.tsx</p>
+        <p>Next.js rendering</p>
       </div>
 
       <div className="p-4 border-b">
@@ -72,4 +78,5 @@ export default function Home() {
       </div>
     </main>
   );
-}
+}`,
+};

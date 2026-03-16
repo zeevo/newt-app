@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+export default {
+  filename: "apps/web/app/layout.tsx",
+  template: `import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Providers from "./providers";
 import "./globals.css";
@@ -13,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Newt App",
+  title: "<%= projectName %>",
   description: "Next + Nest = Newt",
 };
 
@@ -24,9 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={\`\${geistSans.variable} \${geistMono.variable}\`}>
         <Providers>{children}</Providers>
       </body>
     </html>
   );
-}
+}`,
+};
