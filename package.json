@@ -9,9 +9,13 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "check-types": "turbo run check-types",
     "db:migrate": "turbo run migrate",
-    "db:generate": "turbo run generate"
+    "db:generate": "turbo run generate",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.5",
     "prettier": "^3.7.4",
     "turbo": "^2.8.16",
     "typescript": "5.9.2"
