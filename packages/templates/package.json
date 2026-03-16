@@ -1,13 +1,15 @@
 {
   "name": "@newt-app/templates",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Templates for newt-app",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"
