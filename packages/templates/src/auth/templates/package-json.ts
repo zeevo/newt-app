@@ -1,7 +1,7 @@
 export default {
   filename: "packages/auth/package.json",
   template: `{
-  "name": "@repo/auth",
+  "name": "@<%= projectName %>/auth",
   "version": "0.0.0",
   "private": true,
   "exports": {
@@ -16,7 +16,7 @@ export default {
     "pg": "^8.14.1"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@<%= projectName %>/typescript-config": "workspace:*",
     "@types/pg": "^8.11.13",
     "auth": "^1.5.5",
     "dotenv-cli": "^11.0.0",

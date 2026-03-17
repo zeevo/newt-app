@@ -1,7 +1,7 @@
 export default {
   filename: "packages/auth/tsconfig.json",
   template: `{
-  "extends": "@repo/typescript-config/base.json",
+  "extends": "@<%= projectName %>/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "dist",
     "strictNullChecks": true

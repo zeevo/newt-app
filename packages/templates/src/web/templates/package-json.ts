@@ -14,8 +14,8 @@ export default {
     "db:migrate": "better-auth migrate"
   },
   "dependencies": {
-    "@repo/auth": "workspace:*",
-    "@repo/ui": "workspace:*",
+    "@<%= projectName %>/auth": "workspace:*",
+    "@<%= projectName %>/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.2.1",
     "@tanstack/react-form": "^1.28.5",
     "@tanstack/react-query": "^5.90.21",
@@ -26,8 +26,8 @@ export default {
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@<%= projectName %>/eslint-config": "workspace:*",
+    "@<%= projectName %>/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",

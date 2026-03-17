@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { authClient } from '../lib/auth-client';
 import { AuthForm } from './auth-form';
-import { Link } from '@repo/ui/link';
+import { Link } from '@newt-app/ui/link';
 import { TodoList } from './todo-list';
 
 export default function Home() {

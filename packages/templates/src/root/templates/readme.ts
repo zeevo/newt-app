@@ -22,9 +22,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Packages
 
-- **\`@repo/auth\`** — better-auth config
-- **\`@repo/ui\`** — shared React components
-- **\`@repo/eslint-config\`** — shared ESLint config
-- **\`@repo/typescript-config\`** — shared tsconfig
+- **\`@<%= projectName %>/auth\`** — better-auth config
+- **\`@<%= projectName %>/ui\`** — shared React components
+- **\`@<%= projectName %>/eslint-config\`** — shared ESLint config
+- **\`@<%= projectName %>/typescript-config\`** — shared tsconfig
 `,
 };

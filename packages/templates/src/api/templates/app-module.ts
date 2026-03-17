@@ -3,7 +3,7 @@ export default {
   template: `import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard, AuthModule } from '@thallesp/nestjs-better-auth';
-import { auth } from '@repo/auth';
+import { auth } from '@<%= projectName %>/auth';
 import { AppController } from './app.controller';
 import { TodosModule } from './todos/todos.module';
 

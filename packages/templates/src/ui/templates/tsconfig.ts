@@ -1,7 +1,7 @@
 export default {
   filename: "packages/ui/tsconfig.json",
   template: `{
-  "extends": "@repo/typescript-config/react-library.json",
+  "extends": "@<%= projectName %>/typescript-config/react-library.json",
   "compilerOptions": {
     "outDir": "dist",
     "strictNullChecks": true

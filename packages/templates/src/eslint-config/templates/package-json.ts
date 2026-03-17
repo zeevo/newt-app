@@ -1,7 +1,7 @@
 export default {
   filename: "packages/eslint-config/package.json",
   template: `{
-  "name": "@repo/eslint-config",
+  "name": "@<%= projectName %>/eslint-config",
   "version": "0.0.0",
   "type": "module",
   "private": true,

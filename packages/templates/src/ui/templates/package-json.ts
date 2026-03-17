@@ -1,7 +1,7 @@
 export default {
   filename: "packages/ui/package.json",
   template: `{
-  "name": "@repo/ui",
+  "name": "@<%= projectName %>/ui",
   "version": "0.0.0",
   "private": true,
   "exports": {
@@ -12,8 +12,8 @@ export default {
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@<%= projectName %>/eslint-config": "workspace:*",
+    "@<%= projectName %>/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",

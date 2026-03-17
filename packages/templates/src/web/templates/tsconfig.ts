@@ -1,7 +1,7 @@
 export default {
   filename: "apps/web/tsconfig.json",
   template: `{
-  "extends": "@repo/typescript-config/nextjs.json",
+  "extends": "@<%= projectName %>/typescript-config/nextjs.json",
   "compilerOptions": {
     "plugins": [
       {

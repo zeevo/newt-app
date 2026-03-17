@@ -32,7 +32,7 @@ importers:
       '@nestjs/platform-express':
         specifier: ^11.0.1
         version: 11.1.16(@nestjs/common@11.1.16(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.16)
-      '@repo/auth':
+      '@newt-app/auth':
         specifier: workspace:*
         version: link:../../packages/auth
       '@thallesp/nestjs-better-auth':
@@ -114,10 +114,10 @@ importers:
 
   apps/web:
     dependencies:
-      '@repo/auth':
+      '@newt-app/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@repo/ui':
+      '@newt-app/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@tailwindcss/postcss':
@@ -131,7 +131,7 @@ importers:
         version: 5.90.21(react@19.2.0)
       better-auth:
         specifier: ^1.2.8
-        version: 1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(@babel/core@7.29.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       next:
         specifier: 16.1.5
         version: 16.1.5(@babel/core@7.29.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -145,10 +145,10 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1
     devDependencies:
-      '@repo/eslint-config':
+      '@newt-app/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@repo/typescript-config':
+      '@newt-app/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
@@ -171,12 +171,12 @@ importers:
     dependencies:
       better-auth:
         specifier: ^1.2.8
-        version: 1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(@babel/core@7.29.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       pg:
         specifier: ^8.14.1
         version: 8.20.0
     devDependencies:
-      '@repo/typescript-config':
+      '@newt-app/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/pg':
@@ -288,10 +288,10 @@ importers:
         specifier: ^19.2.0
         version: 19.2.0(react@19.2.0)
     devDependencies:
-      '@repo/eslint-config':
+      '@newt-app/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@repo/typescript-config':
+      '@newt-app/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@types/node':
@@ -7104,7 +7104,7 @@ snapshots:
     dependencies:
       '@nestjs/common': 11.1.16(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.16(@nestjs/common@11.1.16(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.16)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      better-auth: 1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      better-auth: 1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(@babel/core@7.29.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       express: 5.2.1
       typescript: 5.9.2
     optionalDependencies:
@@ -7680,7 +7680,7 @@ snapshots:
       '@mrleebo/prisma-ast': 0.13.1
       '@prisma/client': 7.5.0(typescript@5.9.2)
       '@types/pg': 8.18.0
-      better-auth: 1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      better-auth: 1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(@babel/core@7.29.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       c12: 3.3.3
       chalk: 5.6.2
       commander: 12.1.0
@@ -7806,7 +7806,7 @@ snapshots:
 
   baseline-browser-mapping@2.9.11: {}
 
-  better-auth@1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+  better-auth@1.5.5(@prisma/client@7.5.0(typescript@5.9.2))(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))(mongodb@7.1.0)(next@16.1.5(@babel/core@7.29.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(pg@8.20.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
       '@better-auth/core': 1.5.5(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(better-call@1.3.2(zod@4.3.6))(jose@6.2.1)(kysely@0.28.11)(nanostores@1.1.1)
       '@better-auth/drizzle-adapter': 1.5.5(@better-auth/core@1.5.5(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(better-call@1.3.2(zod@4.3.6))(jose@6.2.1)(kysely@0.28.11)(nanostores@1.1.1))(@better-auth/utils@0.3.1)(drizzle-orm@0.41.0(@prisma/client@7.5.0(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(pg@8.20.0))
