@@ -5,6 +5,7 @@ export default {
 import { useForm } from '@tanstack/react-form';
 import { useState } from 'react';
 import { authClient } from '../lib/auth-client';
+import { Button } from '@<%= projectName %>/ui/button';
 
 export function AuthForm() {
   const [tab, setTab] = useState<'signin' | 'signup'>('signin');
@@ -32,18 +33,18 @@ export function AuthForm() {
           className={
             tab === 'signin'
               ? 'font-semibold'
-              : 'text-gray-500 hover:text-gray-700'
+              : 'text-gray-400 hover:text-gray-200'
           }
         >
           Sign in
         </button>
-        <span className="text-gray-200">|</span>
+        <span className="text-gray-600">|</span>
         <button
           onClick={() => setTab('signup')}
           className={
             tab === 'signup'
               ? 'font-semibold'
-              : 'text-gray-500 hover:text-gray-700'
+              : 'text-gray-400 hover:text-gray-200'
           }
         >
           Sign up
@@ -67,7 +68,7 @@ export function AuthForm() {
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   required
-                  className="w-full border border-gray-200 rounded px-3 py-2 text-sm"
+                  className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 text-sm"
                 />
               </div>
             )}
@@ -83,7 +84,7 @@ export function AuthForm() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
-                className="w-full border border-gray-200 rounded px-3 py-2 text-sm"
+                className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 text-sm"
               />
             </div>
           )}
@@ -99,7 +100,7 @@ export function AuthForm() {
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
                 minLength={8}
-                className="w-full border border-gray-200 rounded px-3 py-2 text-sm"
+                className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 text-sm"
               />
             </div>
           )}
@@ -109,17 +110,13 @@ export function AuthForm() {
 
         <form.Subscribe selector={(s) => s.isSubmitting}>
           {(isSubmitting) => (
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-gray-900 text-white rounded py-2 text-sm font-medium hover:bg-gray-700 disabled:opacity-40"
-            >
+            <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting
                 ? 'Loading…'
                 : tab === 'signin'
                   ? 'Sign in'
                   : 'Create account'}
-            </button>
+            </Button>
           )}
         </form.Subscribe>
       </form>

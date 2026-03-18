@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "build:watch": "tsup --watch",
     "dev": "tsup --watch"
   },
   "devDependencies": {

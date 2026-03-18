@@ -8,12 +8,12 @@ body {
 }
 
 body {
-  color: #374151;
-  background-color: #ffffff;
+  color: #f9fafb;
+  background-color: #111827;
   -webkit-font-smoothing: antialiased;
 }
 
 * {
-  @apply border-gray-200;
+  @apply border-gray-700;
 }`,
 };

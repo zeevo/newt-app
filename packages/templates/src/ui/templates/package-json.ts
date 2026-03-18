@@ -5,6 +5,7 @@ export default {
   "version": "0.0.0",
   "private": true,
   "exports": {
+    "./utils": "./src/utils.ts",
     "./*": "./src/*.tsx"
   },
   "scripts": {
@@ -21,8 +22,10 @@ export default {
     "typescript": "5.9.2"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "tailwind-merge": "^3.3.0"
   }
 }`,
 };
