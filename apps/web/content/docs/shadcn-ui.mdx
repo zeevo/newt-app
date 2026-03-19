@@ -1,0 +1,51 @@
+---
+title: "shadcn/ui"
+description: "Include shadcn/ui components in an easy-to-use package"
+---
+
+```bash
+pnpm create newt-app -m shadcn/ui
+```
+
+Choosing the `shadcn/ui` package adds a package containing all [shadcn/ui](https://ui.shadcn.com/) components,
+hooks, libs, and styles. This package is configured with `tailwindcss` to
+consistently style your `apps`.
+
+To use the `ui` package, import `@project/ui/globals.css` in your `apps`.
+
+```tsx
+import { Toaster } from "@project/ui/components/sonner";
+
+import "@project/ui/globals.css";
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        {children}
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+```
+
+Use components in your pages.
+
+```tsx
+import { Button } from "@project/ui/components/button";
+import { Input } from "@project/ui/components/input";
+
+export default async function Page() {
+  return (
+    <div className="flex flex-col max-w-2xlg mx-auto">
+      <Button>button</Button>
+      <Input type="email" placeholder="Email" />
+    </div>
+  );
+}
+```

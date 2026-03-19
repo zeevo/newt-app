@@ -1,75 +1,36 @@
-'use client';
-
-import { useQuery } from '@tanstack/react-query';
-import { authClient } from '../lib/auth-client';
-import { AuthForm } from './auth-form';
-import { Link } from '@newt-app/ui/link';
-import { TodoList } from './todo-list';
+import { CopyButton } from '@/components/copy-button';
+import OrbitWrapper from '@/components/orbit-wrapper';
 
 export default function Home() {
-  const { data: session, isPending } = authClient.useSession();
-
-  const { data: hello } = useQuery({
-    queryKey: ['hello'],
-    queryFn: () => fetch('/api/hello').then((r) => r.json()),
-  });
-
   return (
-    <main className="max-w-lg mx-auto border-r border-l h-full">
-      <div className="border-b p-4">
-        <h1 className="text-5xl font-black tracking-tight bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-          NEWT APP
-        </h1>
-        <p className="mt-2 text-sm text-gray-500 tracking-widest uppercase">
-          Next + Nest = Newt 💜
-        </p>
-        <p className="text-gray-500">The perfect TypeScript monorepo setup</p>
-      </div>
-      <div className="border-b p-4 text-gray-500">
-        <div className="flex justify-end text-gray-500">
-          <h2 className="uppercase">Next.js</h2>
+    <div className="flex flex-col justify-center flex-1">
+      <section className="container mx-auto grid place-items-center relative">
+        <div className="">
+          <OrbitWrapper />
         </div>
-        <p className="font-mono">apps/web/page.tsx</p>
-        <p>Edit me to get started</p>
-      </div>
-
-      <div className="p-4 border-b">
-        <div className="flex justify-end text-gray-500">
-          <h2 className="uppercase">Nest</h2>
+        <div className="absolute flex items-center lg:justify-center flex-col gap-2 z-10">
+          <h1 className="p-1 rounded text-6xl font-semibold tracking-tight text-balance lg:leading-[1.1] lg:font-semibold xl:text-8xl xl:tracking-tighter max-w-4xl bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 bg-clip-text text-transparent">
+            newt-app
+          </h1>
+          <p className="text-center max-w-xl text-base text-balance sm:text-lg text-muted-foreground">
+            Everything you want. Nothing you don&apos;t need. The monorepo-first
+            way to build full-stack TypeScript apps.
+          </p>
+          <div className="mx-auto flex flex-col items-center gap-4 pt-2 sm:flex-row">
+            <div className="flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md border bg-background py-2 pr-px pl-4 text-foreground text-sm shadow-sm">
+              <p className="pointer-events-none shrink-0 select-none text-muted-foreground">
+                $
+              </p>
+              <div className="flex-1 truncate text-left font-mono">
+                npm create newt-app
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <CopyButton value={'npm create newt-app'} />
+              </div>
+            </div>
+          </div>
         </div>
-        <span className="font-mono text-gray-500 text-xs">
-          HTTP GET /api/hello
-        </span>
-        <pre className="border p-2 rounded bg-gray-50">
-          <code>{JSON.stringify(hello, null, 2)}</code>
-        </pre>
-      </div>
-      <div className="p-4 border-b">
-        <div className="flex justify-end text-gray-500">
-          <h2>better-auth</h2>
-        </div>
-        {isPending ? (
-          <p className="text-sm text-gray-500">Loading…</p>
-        ) : session ? (
-          <TodoList session={session} />
-        ) : (
-          <AuthForm />
-        )}
-      </div>
-      <div className="p-4 text-sm">
-        <p className="mb-2">Learn more</p>
-        <ul className="list-disc list-inside space-y-2 mt-2">
-          <li>
-            <Link href="https://github.com">GitHub</Link>
-          </li>
-          <li>
-            <Link href="https://nextjs.org">Next.js</Link>
-          </li>
-          <li>
-            <Link href="https://nestjs.com">NestJS</Link>
-          </li>
-        </ul>
-      </div>
-    </main>
+      </section>
+    </div>
   );
 }

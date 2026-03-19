@@ -1,0 +1,25 @@
+{
+  "name": "@newt-app/components",
+  "version": "0.0.20",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.tsx"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0"
+  },
+  "dependencies": {
+    "@newt-app/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@newt-app/eslint-config": "workspace:*",
+    "@newt-app/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "^4.0.8",
+    "@turbo/gen": "^2.4.2",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4.0.8"
+  }
+}

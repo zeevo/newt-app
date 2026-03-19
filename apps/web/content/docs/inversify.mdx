@@ -1,0 +1,174 @@
+---
+title: "inversify"
+description: "Dead simple Dependency Injection"
+---
+
+```bash
+pnpm create newt-app -m inversify
+```
+
+`inversify` is a popular Dependency Injection container for TypeScript applications.
+It allows developers to achieve several important properties necessary for 
+[SOLID](https://en.wikipedia.org/wiki/SOLID) code. Large enterprise codebases
+that want to use Object Oriented patterns alongside Next.js may find it useful
+to use `inversify`.
+
+Selecting `inversify` adds a new package `services`. Inside, you can make `injectables`:
+
+```ts
+// packages/services/src/hello.service
+
+@injectable()
+class HelloService {
+  sayHello(name: string) {
+    return `Hello, ${name}!`;
+  }
+}
+```
+
+A new file `container.ts` is added. This is where you can register `injectables`.
+
+```ts
+// apps/web/src/container.ts
+import "reflect-metadata"
+import { Container } from "inversify";
+import { HelloService } from "@myapp/services/hello.service";
+
+const container = new Container({ autobind: true });
+
+constainer.bind(HelloService).toSelf();
+
+export { container };
+```
+
+You can then resolve dependencies in server components and API routes using the `inject` utility.
+
+
+```tsx
+// apps/web/src/app/page.ts
+
+import { HelloService } from "@example/services/hello.service";
+import Link from "next/link";
+import { inject } from "@/inject";
+
+const service = inject(HelloService);
+
+export default async function Page() {
+  return <p>{service.sayHello("World")}</p>
+}
+```
+
+## Server Actions
+
+Inversify is great for handling server actions cleanly.
+Define an `AuthService` to handle authorization logic.
+
+```ts
+// packages/services/src/auth.service.ts
+import { Database } from "@myapp/database";
+import { inject, injectable } from "inversify";
+import { DB } from "./db.service";
+import { Kysely } from "kysely";
+
+@injectable()
+export class AuthService {
+  constructor(@inject(DB) private db: Kysely<Database>) {}
+
+  async hasAccess(id: string) {
+    // this.db.selectFrom("user") ...
+
+    return true;
+  }
+}
+```
+
+Use `AuthService` in other services.
+
+```ts
+// packages/services/src/todo.service.ts
+import { Database } from "@myapp/database";
+import { inject, injectable } from "inversify";
+import { Kysely } from "kysely";
+import { AuthService } from "./auth.service";
+import { DB } from "./db.service";
+
+@injectable()
+export class TodoService {
+  constructor(
+    private authService: AuthService,
+    @inject(DB) private db: Kysely<Database>
+  ) {}
+
+  async createTodo(ownerId: string, content: string) {
+    const hasAccess = await this.authService.hasAccess(ownerId);
+
+    if (hasAccess) {
+      await this.db
+        .insertInto("todo")
+        .values({ content, ownerId })
+        .returningAll()
+        .execute();
+    }
+
+    throw new Error("Forbidden");
+  }
+}
+```
+
+Now that you have your `services` defined, use them in a Next.js server action:
+
+```tsx
+import { container } from "@/container";
+import { auth } from "@myapp/auth/auth";
+import { TodoService } from "@myapp/services/todo.service";
+import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+
+const todoService = container.get(TodoService);
+
+export function CreateTodo() {
+  return (
+    <form
+      action={async (formData: FormData) => {
+        "use server";
+        const session = await auth.api.getSession({
+          headers: await headers(),
+        });
+
+        const content = formData.get("content");
+
+        if (session?.user && content) {
+          await todoService.createTodo(session.user.id, String(content));
+          revalidatePath("/");
+        }
+      }}
+      className="flex items-center gap-2"
+    >
+      <input
+        type="text"
+        name="content"
+        placeholder="New todo…"
+        className="flex-1 rounded border px-3 py-2"
+        autoComplete="off"
+        required
+      />
+      <button
+        type="submit"
+        className="rounded bg-black px-4 py-2 text-white hover:opacity-90 cursor-pointer"
+      >
+        Add
+      </button>
+    </form>
+  );
+}
+```
+
+Using `inversify` + Next.js like this creates a strong Separation of Concerns, and allows you to implement SOLID code.
+
+Note: Inversify should only be used for server-side code. It is not an appropriate solution for dependency injection inside Next.js client components.
+If you need dependency injection in client components, we recommend using [Context](https://react.dev/learn/passing-data-deeply-with-context) or 
+[Redux Toolkit](https://redux-toolkit.js.org/).
+
+## Read more
+
+- [inversify](https://github.com/inversify/monorepo)

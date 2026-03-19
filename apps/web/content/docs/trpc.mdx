@@ -1,0 +1,108 @@
+---
+title: "tRPC"
+description: "Build end-to-end type safe APIs using T3's tRPC setup"
+---
+
+```bash
+pnpm create newt-app -m trpc
+```
+
+This module adds several new files to `apps/web`.
+
+```md
+├── package.json
+├── postcss.config.mjs
+├── public
+│   └── favicon.ico
+├── src
+│   ├── app
+│   ├── server
+│   │   └── api
+│   │       ├── root.ts     # final root router
+│   │       ├── routers     
+│   │       │   └── post.ts # example post router
+│   │       └── trpc.ts     # T3 tRPC logging, middleware
+│   └── trpc
+│       ├── query-client.ts # T3/tanstack-query query client
+│       ├── react.tsx       # T3 React tRPC context
+│       └── server.ts       # T3 tRPC server
+└── tsconfig.json
+```
+
+## Routers
+
+Create new routers in `apps/web/src/server/api/routers`
+
+```ts
+// apps/web/src/server/api/routers/post.ts
+
+import { z } from "zod";
+import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { connect } from "@myapp/database";
+
+const db = connect();
+
+export const postRouter = createTRPCRouter({
+  hello: publicProcedure
+    .input(z.object({ text: z.string() }))
+    .query(({ input }) => {
+      return {
+        greeting: `Hello ${input.text}`,
+      };
+    }),
+});
+```
+
+Read from your database using `connect()`.
+
+```ts
+export const postRouter = createTRPCRouter({
+  hello: publicProcedure
+    .input(z.object({ text: z.string() }))
+    .query(({ input }) => {
+      return {
+        greeting: `Hello ${input.text}`,
+      };
+    }),
+
+  getLatest: publicProcedure.query(() => {
+    return db.selectFrom("post").orderBy("createdAt", "desc").limit(1);
+  }),
+});
+```
+
+Update your database using `mutation`.
+
+```ts
+export const postRouter = createTRPCRouter({
+  hello: publicProcedure
+    .input(z.object({ text: z.string() }))
+    .query(({ input }) => {
+      return {
+        greeting: `Hello ${input.text}`,
+      };
+    }),
+
+  getLatest: publicProcedure.query(() => {
+    return db.selectFrom("post").orderBy("createdAt", "desc").limit(1);
+  }),
+
+  create: publicProcedure
+    .input(z.object({ content: z.string().min(1) }))
+    .mutation(async ({ input }) => {
+      return await db
+        .insertInto("post")
+        .values({
+          createdAt: new Date(),
+          content: input.content,
+        })
+        .returningAll();
+    }),
+});
+```
+
+## Read more
+
+- [T3 App](https://create.t3.gg/)
+- [tRPC](https://github.com/trpc/trpc)
+- [tRPC - GraphQL KILLER??!](https://www.youtube.com/watch?v=KIJUUtWjl48)
