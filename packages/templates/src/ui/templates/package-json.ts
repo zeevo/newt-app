@@ -5,6 +5,8 @@ export default {
   "version": "0.0.0",
   "private": true,
   "exports": {
+    "./globals.css": "./src/globals.css",
+    "./postcss.config": "./postcss.config.mjs",
     "./utils": "./src/utils.ts",
     "./*": "./src/*.tsx"
   },
@@ -15,6 +17,8 @@ export default {
   "devDependencies": {
     "@<%= projectName %>/eslint-config": "workspace:*",
     "@<%= projectName %>/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "^4.0.0",
+    "tailwindcss": "^4.0.0",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",

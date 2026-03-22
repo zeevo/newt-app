@@ -40,3 +40,25 @@ To re-test from scratch:
 ```bash
 rm -rf /tmp/test-app
 ```
+
+## Running a newt app
+
+No database setup needed for smoke testing. Just:
+
+```bash
+lsof -ti:3000,3001 | xargs kill -9 2>/dev/null  # free ports
+rm -rf /tmp/test-app
+cd /tmp && node /path/to/newt-app/packages/create-newt-app/dist/index.js test-app --no-git
+cd /tmp/test-app && cp .env.example .env && pnpm dev &
+```
+
+Check it's up: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`
+
+## What's working well
+
+- Always rebuild templates (`pnpm build --filter=@newt-app/templates --filter=create-newt-app`) before scaffolding — faster than full `pnpm build`
+- globals.css lives in `packages/ui/src/globals.css` and is imported by the web app as `@projectName/ui/globals.css`
+- PostCSS config lives in `packages/ui/postcss.config.mjs` and web app delegates to it
+- UI package owns: `button.tsx`, `link.tsx`, `utils.ts` (cn), `globals.css`, `postcss.config.mjs`
+- CSS variables use dark-only oklch values in `:root` — no light mode, no `.dark` class needed
+- Semantic Tailwind classes (`text-foreground`, `text-muted-foreground`, `decoration-muted-foreground`) work because `@theme inline` maps the CSS variables

@@ -2,18 +2,13 @@ export default {
   filename: "apps/web/app/globals.css",
   template: `@import 'tailwindcss';
 
-html,
 body {
-  height: 100%;
-}
-
-body {
-  color: #f9fafb;
-  background-color: #111827;
+  color: oklch(0.985 0 0);
+  background-color: oklch(0.145 0 0);
   -webkit-font-smoothing: antialiased;
 }
 
 * {
-  @apply border-gray-700;
+  border-color: oklch(0.469 0 0);
 }`,
 };

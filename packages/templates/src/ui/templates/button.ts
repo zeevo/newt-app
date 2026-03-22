@@ -19,7 +19,14 @@ export const Button = ({ children, onClick, type = "button", disabled, className
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={cn("bg-white text-gray-900 rounded px-4 py-2 text-sm font-medium hover:bg-gray-100 disabled:opacity-40", className)}
+      className={cn(
+        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all",
+        "h-9 px-4 py-2",
+        "bg-white text-gray-900 shadow-xs hover:bg-gray-100",
+        "disabled:pointer-events-none disabled:opacity-50",
+        "outline-none focus-visible:ring-2 focus-visible:ring-white/50",
+        className
+      )}
     >
       {children}
     </button>

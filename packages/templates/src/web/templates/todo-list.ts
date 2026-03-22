@@ -91,7 +91,7 @@ export function TodoList({
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="New todo…"
-              className="flex-1 border border-gray-700 bg-gray-800 rounded px-3 py-2 text-sm"
+              className="flex h-9 flex-1 rounded-md border border-neutral-700 bg-neutral-800/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
             />
           )}
         </form.Field>
@@ -108,7 +108,7 @@ export function TodoList({
       {isPending ? (
         <p className="text-sm text-gray-400">Loading…</p>
       ) : (
-        <ul className="divide-y divide-gray-700">
+        <ul className="divide-y divide-neutral-700">
           {todos.map((todo) => (
             <li key={todo.id} className="flex items-center gap-3 py-3">
               <input

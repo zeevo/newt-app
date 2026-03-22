@@ -3,7 +3,7 @@ export default {
   template: `import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Providers from "./providers";
-import "./globals.css";
+import "@<%= projectName %>/ui/globals.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,6 +17,13 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "<%= projectName %>",
   description: "Next + Nest = Newt",
+  icons: {
+    icon: [
+      { url: "/icon0.svg", type: "image/svg+xml" },
+      { url: "/icon1.png", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -26,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={\`\${geistSans.variable} \${geistMono.variable}\`}>
+      <body className={\`\${geistSans.variable} \${geistMono.variable} h-full\`}>
         <Providers>{children}</Providers>
       </body>
     </html>

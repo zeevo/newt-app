@@ -1,11 +1,12 @@
 export default {
-  filename: "apps/web/app/page.tsx",
+  filename: 'apps/web/app/page.tsx',
   template: `'use client';
 
 import { useQuery } from '@tanstack/react-query';
 import { authClient } from '../lib/auth-client';
 import { AuthForm } from './auth-form';
 import { Link } from '@<%= projectName %>/ui/link';
+import { Logo } from '@<%= projectName %>/ui/logo';
 import { TodoList } from './todo-list';
 
 export default function Home() {
@@ -17,41 +18,42 @@ export default function Home() {
   });
 
   return (
-    <main className="max-w-lg mx-auto border-r border-l h-full">
+    <main className="max-w-lg mx-auto border-r border-l min-h-full">
       <div className="border-b p-4">
         <p className="font-mono">apps/web/page.tsx</p>
         <p className="text-gray-400">Delete me to get started!</p>
       </div>
       <div className="border-b p-4">
-        <h1 className="pb-2 text-5xl font-black tracking-tight bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-          <%= projectName %>
-        </h1>
+        <div className="flex items-center gap-3 pb-2">
+          <Logo className="w-10 h-auto text-foreground" />
+          <h1 className="text-5xl font-black tracking-tight">
+            <%= projectName %>
+          </h1>
+        </div>
         <p className="mt-2 text-sm text-gray-400 tracking-widest uppercase">
           Next + Nest = Newt 💜
         </p>
         <p className="text-gray-400">The perfect TypeScript monorepo setup</p>
       </div>
-      <div className="border-b p-4 text-gray-500">
-        <div className="flex justify-end text-gray-400">
-          <h2 className="uppercase">Next.js</h2>
+      <div className="border-b p-4">
+        <div className="flex justify-end text-gray-400 uppercase">
+          <h2>next.js</h2>
         </div>
         <p className="font-mono">apps/web/layout.tsx</p>
-        <p>Next.js rendering</p>
+        <p className="text-gray-400">Next.js rendering</p>
       </div>
 
       <div className="p-4 border-b">
-        <div className="flex justify-end text-gray-400">
-          <h2 className="uppercase">Nest</h2>
+        <div className="flex justify-end text-gray-400 uppercase">
+          <h2>nest.js</h2>
         </div>
-        <span className="font-mono text-gray-400 text-xs">
-          HTTP GET /api/hello
-        </span>
-        <pre className="border p-2 rounded bg-gray-800">
+        <p className="font-mono">GET /api/hello</p>
+        <pre className="mt-2 border rounded-md p-3 text-sm bg-neutral-800">
           <code>{JSON.stringify(hello, null, 2)}</code>
         </pre>
       </div>
       <div className="p-4 border-b">
-        <div className="flex justify-end text-gray-400">
+        <div className="flex justify-end text-gray-400 uppercase">
           <h2>better-auth</h2>
         </div>
         {isPending ? (

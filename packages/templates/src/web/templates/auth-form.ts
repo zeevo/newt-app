@@ -8,7 +8,7 @@ import { authClient } from '../lib/auth-client';
 import { Button } from '@<%= projectName %>/ui/button';
 
 export function AuthForm() {
-  const [tab, setTab] = useState<'signin' | 'signup'>('signin');
+  const [tab, setTab] = useState<'signin' | 'signup'>('signup');
   const [error, setError] = useState('');
 
   const form = useForm({
@@ -29,17 +29,6 @@ export function AuthForm() {
     <>
       <div className="flex gap-2 mb-6 text-sm">
         <button
-          onClick={() => setTab('signin')}
-          className={
-            tab === 'signin'
-              ? 'font-semibold'
-              : 'text-gray-400 hover:text-gray-200'
-          }
-        >
-          Sign in
-        </button>
-        <span className="text-gray-600">|</span>
-        <button
           onClick={() => setTab('signup')}
           className={
             tab === 'signup'
@@ -48,6 +37,17 @@ export function AuthForm() {
           }
         >
           Sign up
+        </button>
+        <span className="text-gray-600">|</span>
+        <button
+          onClick={() => setTab('signin')}
+          className={
+            tab === 'signin'
+              ? 'font-semibold'
+              : 'text-gray-400 hover:text-gray-200'
+          }
+        >
+          Sign in
         </button>
       </div>
 
@@ -68,7 +68,7 @@ export function AuthForm() {
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   required
-                  className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 text-sm"
+                  className="flex h-9 w-full rounded-md border border-neutral-700 bg-neutral-800/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
                 />
               </div>
             )}
@@ -84,7 +84,7 @@ export function AuthForm() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
-                className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 text-sm"
+                className="flex h-9 w-full rounded-md border border-neutral-700 bg-neutral-800/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
               />
             </div>
           )}
@@ -100,7 +100,7 @@ export function AuthForm() {
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
                 minLength={8}
-                className="w-full border border-gray-700 bg-gray-800 rounded px-3 py-2 text-sm"
+                className="flex h-9 w-full rounded-md border border-neutral-700 bg-neutral-800/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
               />
             </div>
           )}

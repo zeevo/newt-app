@@ -1,19 +1,26 @@
 export default {
   filename: "packages/ui/src/link.tsx",
-  template: `"use client";
+  template: `import NextLink, { type LinkProps } from "next/link";
+import { type PropsWithChildren } from "react";
+import { cn } from "./utils";
 
-import { AnchorHTMLAttributes } from "react";
-
-export function Link({ children, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+export function Link({
+  href,
+  children,
+  className,
+  ...rest
+}: PropsWithChildren<LinkProps & { className?: string }>) {
   return (
-    <a
-      target="_blank"
-      rel="noopener noreferrer"
-      className="hover:underline underline-offset-2 hover:text-gray-900 transition-colors"
-      {...props}
+    <NextLink
+      href={href}
+      {...rest}
+      className={cn(
+        "underline decoration-muted-foreground hover:decoration-foreground transition-colors",
+        className
+      )}
     >
       {children}
-    </a>
+    </NextLink>
   );
 }`,
 };
