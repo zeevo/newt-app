@@ -6,6 +6,11 @@
 
 When someone runs `create-newt-app my-thing`, the CLI reads templates from `packages/templates/src/` and writes them out as a new project.
 
+## Terminology
+
+- **newt app** — a project created by running `create-newt-app`. Lives outside this repo (e.g. `/tmp/test-app`). Not to be confused with `apps/web`.
+- **`apps/web`** / **`apps/api`** / **`packages/ui`** — the dev/demo app that lives *inside* this monorepo. Used for development and testing templates. Run with `pnpm --filter=web dev`.
+
 ## Key distinction
 
 - **`packages/templates/src/`** — source of truth for what gets scaffolded. Edit these when changing the default app.
@@ -23,13 +28,13 @@ Do not edit `apps/web` or other live packages unless explicitly asked.
 
 ## Iterating on templates
 
-After editing any template source file, the packages must be rebuilt before the CLI reflects the changes:
+After editing any template source file, rebuild with the fast filter command (not full `pnpm build`):
 
 ```bash
-# 1. Rebuild (from repo root)
-pnpm build
+# 1. Rebuild only what's needed
+pnpm build --filter=@newt-app/templates --filter=create-newt-app
 
-# 2. Scaffold a test app
+# 2. Scaffold a test app (--no-install skips pnpm install, faster for iteration)
 cd /tmp && node /path/to/newt-app/packages/create-newt-app/dist/index.js test-app --no-install --no-git
 
 # 3. Install and verify
@@ -38,27 +43,53 @@ cd /tmp/test-app && pnpm install && pnpm check-types && pnpm lint
 
 To re-test from scratch:
 ```bash
-rm -rf /tmp/test-app
+chmod -R 755 /tmp/test-app && rm -rf /tmp/test-app
 ```
+
+(`chmod` first — NestJS build can create root-owned files that block `rm -rf`.)
 
 ## Running a newt app
 
 No database setup needed for smoke testing. Just:
 
 ```bash
-lsof -ti:3000,3001 | xargs kill -9 2>/dev/null  # free ports
-rm -rf /tmp/test-app
+# Free ports — only kill Node processes, not browsers
+for pid in $(lsof -ti:3000,3001 2>/dev/null); do
+  comm=$(ps -p $pid -o comm= 2>/dev/null)
+  if [[ "$comm" == *node* ]]; then kill -9 $pid 2>/dev/null; fi
+done
+
+chmod -R 755 /tmp/test-app 2>/dev/null && rm -rf /tmp/test-app
 cd /tmp && node /path/to/newt-app/packages/create-newt-app/dist/index.js test-app --no-git
 cd /tmp/test-app && cp .env.example .env && pnpm dev &
 ```
 
 Check it's up: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`
 
+## Adding a new template file
+
+Three places to update when adding a template (e.g. a new UI component):
+
+1. **Create the template** in `packages/templates/src/ui/templates/my-component.ts` (or `web/templates/`)
+2. **Register it** in the module index (`packages/templates/src/ui/index.ts`):
+   - Add the import
+   - Add to the `templates: []` array
+3. **Export it** (UI components only) — add an entry to `exports` in `packages/templates/src/ui/templates/package-json.ts`
+
+## Adding a static file (fonts, favicons, images)
+
+Static files (binaries, fonts, SVGs) live in `packages/templates/src/web/static/` and are mapped to output paths via `staticFiles` in `packages/templates/src/web/index.ts`.
+
+To add a new static file:
+1. Copy the file into `packages/templates/src/web/static/` (or a subdirectory)
+2. Add a `{ src: "web/static/...", filename: "apps/web/..." }` entry to `staticFiles` in `packages/templates/src/web/index.ts`
+
+Public files (served at `/`) go to `apps/web/public/`. Next.js special files (favicon, icons, manifest) go to `apps/web/app/`.
+
 ## What's working well
 
-- Always rebuild templates (`pnpm build --filter=@newt-app/templates --filter=create-newt-app`) before scaffolding — faster than full `pnpm build`
 - globals.css lives in `packages/ui/src/globals.css` and is imported by the web app as `@projectName/ui/globals.css`
 - PostCSS config lives in `packages/ui/postcss.config.mjs` and web app delegates to it
-- UI package owns: `button.tsx`, `link.tsx`, `utils.ts` (cn), `globals.css`, `postcss.config.mjs`
+- UI package owns: `button.tsx`, `link.tsx`, `logo.tsx`, `utils.ts` (cn), `globals.css`, `postcss.config.mjs`
 - CSS variables use dark-only oklch values in `:root` — no light mode, no `.dark` class needed
 - Semantic Tailwind classes (`text-foreground`, `text-muted-foreground`, `decoration-muted-foreground`) work because `@theme inline` maps the CSS variables
