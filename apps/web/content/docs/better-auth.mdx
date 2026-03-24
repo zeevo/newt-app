@@ -1,0 +1,28 @@
+---
+title: "Better Auth"
+description: "Authentication in newt-app"
+---
+
+newt-app uses [Better Auth](https://www.better-auth.com) for authentication, configured across both the Next.js frontend and NestJS backend.
+
+## Client
+
+Use the auth client in your React components:
+
+```ts
+import { authClient } from '@/lib/auth-client';
+
+const { data: session } = authClient.useSession();
+```
+
+## Sign Up / Sign In
+
+The scaffolded app includes a ready-to-use `AuthForm` component with email/password sign up and sign in.
+
+## Database
+
+Better Auth requires a PostgreSQL database. Set `DATABASE_URL` in your `.env` file and run:
+
+```bash
+pnpm db:migrate
+```

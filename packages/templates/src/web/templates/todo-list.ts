@@ -4,7 +4,7 @@ export default {
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from '@tanstack/react-form';
-import { authClient } from '../lib/auth-client';
+import { authClient } from '@/lib/auth-client';
 import { Button } from '@<%= projectName %>/ui/button';
 
 interface Todo {

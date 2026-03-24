@@ -20,15 +20,16 @@ export default {
     "@tailwindcss/postcss": "^4.0.0",
     "tailwindcss": "^4.0.0",
     "@types/node": "^22.15.3",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "eslint": "^9.39.1",
-    "typescript": "5.9.2"
+    "typescript": "6.0.2"
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "next": "^16.2.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "tailwind-merge": "^3.3.0"
   }
 }`,

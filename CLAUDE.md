@@ -8,8 +8,8 @@ When someone runs `create-newt-app my-thing`, the CLI reads templates from `pack
 
 ## Terminology
 
-- **newt app** — a project created by running `create-newt-app`. Lives outside this repo (e.g. `/tmp/test-app`). Not to be confused with `apps/web`.
-- **`apps/web`** / **`apps/api`** / **`packages/ui`** — the dev/demo app that lives *inside* this monorepo. Used for development and testing templates. Run with `pnpm --filter=web dev`.
+- **newt app** — a project created by running `create-newt-app`. Lives outside this repo (e.g. `/tmp/test-app`). Not to be confused with the newt-app site.
+- **the docs** — `apps/web` / `apps/api` / `packages/ui` inside this monorepo. The docs site for newt-app. Run with `pnpm --filter=web dev`.
 
 ## Key distinction
 

@@ -1,0 +1,18 @@
+---
+title: "Next.js"
+description: "Next.js in newt-app"
+---
+
+newt-app uses [Next.js](https://nextjs.org) as the frontend framework, running inside the `apps/web` package of your monorepo.
+
+## App Router
+
+newt-app uses the Next.js App Router with server and client components, layouts, and file-based routing.
+
+## UI Package
+
+Shared components live in `packages/ui` and are imported into your Next.js app as a workspace package.
+
+```ts
+import { Button } from '@my-project/ui/button';
+```

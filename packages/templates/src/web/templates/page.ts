@@ -3,11 +3,11 @@ export default {
   template: `'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { authClient } from '../lib/auth-client';
-import { AuthForm } from './auth-form';
+import { authClient } from '@/lib/auth-client';
+import { AuthForm } from '@/app/auth-form';
 import { Link } from '@<%= projectName %>/ui/link';
 import { Logo } from '@<%= projectName %>/ui/logo';
-import { TodoList } from './todo-list';
+import { TodoList } from '@/app/todo-list';
 
 export default function Home() {
   const { data: session, isPending } = authClient.useSession();

@@ -4,7 +4,7 @@ export default {
 
 import { useForm } from '@tanstack/react-form';
 import { useState } from 'react';
-import { authClient } from '../lib/auth-client';
+import { authClient } from '@/lib/auth-client';
 import { Button } from '@<%= projectName %>/ui/button';
 
 export function AuthForm() {

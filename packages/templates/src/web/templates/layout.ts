@@ -2,7 +2,7 @@ export default {
   filename: "apps/web/app/layout.tsx",
   template: `import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Providers from "./providers";
+import Providers from "@/app/providers";
 import "@<%= projectName %>/ui/globals.css";
 
 const geistSans = localFont({
