@@ -2,7 +2,7 @@ import { siteConfig } from "@/lib/config";
 
 export function SiteFooter() {
   return (
-    <footer className="container mx-auto">
+    <footer className="container mx-auto mt-16">
       <div className="flex h-(--footer-height) items-center justify-between">
         <div className="text-muted-foreground w-full px-1 text-center text-xs leading-loose sm:text-sm">
           Built by{" "}

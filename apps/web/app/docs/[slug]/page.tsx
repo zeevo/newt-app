@@ -2,6 +2,13 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getDocsPostBySlug, getDocsPostSlugs, getMDXContent } from '@/lib/docs';
 import { TableOfContents } from '@/components/table-of-contents';
+import Image from 'next/image';
+
+const slugLogos: Record<string, { src: string; alt: string; invert?: boolean }> = {
+  nextjs: { src: '/logos/nextjs.svg', alt: 'Next.js logo', invert: true },
+  nestjs: { src: '/logos/nestjs.svg', alt: 'NestJS logo' },
+  'better-auth': { src: '/logos/better-auth.svg', alt: 'Better Auth logo', invert: true },
+};
 
 interface DocsPostPageProps {
   params: Promise<{
@@ -54,7 +61,16 @@ export default async function DocsPostPage({ params }: DocsPostPageProps) {
           <article>
             <div className="mb-6">
               <div className="mb-8">
-                <h1 className="text-4xl font-bold tracking-tight mb-4">
+                <h1 className="text-4xl font-bold tracking-tight mb-4 flex items-center gap-3">
+                  {slugLogos[param.slug] && (
+                    <Image
+                      src={slugLogos[param.slug].src}
+                      alt={slugLogos[param.slug].alt}
+                      width={36}
+                      height={36}
+                      className={slugLogos[param.slug].invert ? 'shrink-0 dark:invert' : 'shrink-0'}
+                    />
+                  )}
                   {post.title}
                 </h1>
                 <p className="text-xl text-muted-foreground mb-4">
