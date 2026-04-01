@@ -3,7 +3,7 @@ import { FileIcon } from "lucide-react";
 type IconProps = React.HTMLAttributes<SVGElement>;
 
 export const Icons = {
-  logo: (_props: IconProps) => (
+  logo: () => (
     <svg
       width="220"
       height="150"

@@ -1,34 +1,8 @@
-// @ts-expect-error
-
 import { PropsWithChildren } from 'react';
-import { CodeBlock } from './code-block';
-import { HeadingWithAnchor } from './heading-with-anchor';
 import NextLink, { LinkProps } from 'next/link';
 import { cn } from '@newt-app/ui/lib/utils';
-import { CopyButton } from './copy-button';
-import { Check, Clipboard } from 'lucide-react';
 import Pre from './pre';
-import { useTheme } from 'next-themes';
 import { FileTree } from './file-tree';
-
-interface MDXHeadingProps {
-  children: React.ReactNode;
-  id?: string;
-  className?: string;
-}
-
-function generateId(children: React.ReactNode): string {
-  if (typeof children === 'string') {
-    return children
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
-  }
-  if (Array.isArray(children)) {
-    return children.map((child) => generateId(child)).join('-');
-  }
-  return '';
-}
 
 export const mdxComponents = {
   FileTree,
@@ -161,7 +135,6 @@ export const mdxComponents = {
     />
   ),
   pre: Pre,
-
   figure: ({
     className,
     ...props
@@ -194,10 +167,8 @@ export const mdxComponents = {
   },
   code: ({
     className,
-
     ...props
   }: React.ComponentProps<'code'>) => {
-    // Inline Code.
     if (typeof props.children === 'string') {
       return (
         <code
@@ -210,12 +181,7 @@ export const mdxComponents = {
       );
     }
 
-    return (
-      <>
-        {/* {__raw__ && <CopyButton value={__raw__} src={__src__} />} */}
-        <code {...props} />
-      </>
-    );
+    return <code {...props} />;
   },
   a(
     props: PropsWithChildren<
