@@ -3,12 +3,13 @@ import { FileIcon } from "lucide-react";
 type IconProps = React.HTMLAttributes<SVGElement>;
 
 export const Icons = {
-  logo: () => (
+  logo: (props: IconProps) => (
     <svg
       width="220"
       height="150"
       viewBox="0 0 220 150"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <path
         d="

@@ -62,15 +62,18 @@ export default async function DocsPostPage({ params }: DocsPostPageProps) {
             <div className="mb-6">
               <div className="mb-8">
                 <h1 className="text-4xl font-bold tracking-tight mb-4 flex items-center gap-3">
-                  {slugLogos[param.slug] && (
-                    <Image
-                      src={slugLogos[param.slug].src}
-                      alt={slugLogos[param.slug].alt}
-                      width={36}
-                      height={36}
-                      className={slugLogos[param.slug].invert ? 'shrink-0 dark:invert' : 'shrink-0'}
-                    />
-                  )}
+                  {(() => {
+                    const logo = slugLogos[param.slug];
+                    return logo ? (
+                      <Image
+                        src={logo.src}
+                        alt={logo.alt}
+                        width={36}
+                        height={36}
+                        className={logo.invert ? 'shrink-0 dark:invert' : 'shrink-0'}
+                      />
+                    ) : null;
+                  })()}
                   {post.title}
                 </h1>
                 <p className="text-xl text-muted-foreground mb-4">

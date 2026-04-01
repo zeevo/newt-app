@@ -6,7 +6,8 @@ function getTextContent(node: React.ReactNode): string {
   if (typeof node === "string") return node;
   if (Array.isArray(node)) return node.map(getTextContent).join("");
   if (node && typeof node === "object" && "props" in node) {
-    return getTextContent((node as React.ReactElement).props.children);
+    const el = node as React.ReactElement<{ children?: React.ReactNode }>;
+    return getTextContent(el.props.children);
   }
   return "";
 }
