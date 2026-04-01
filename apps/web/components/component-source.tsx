@@ -21,7 +21,7 @@ export async function ComponentSource({
     return null;
   }
 
-  let code = "console.log('here');\nconst a = 1+1=;";
+  const code = "console.log('here');\nconst a = 1+1=;";
 
   const lang = language ?? title?.split('.').pop() ?? 'tsx';
   const highlightedCode = await highlightCode(code, lang);

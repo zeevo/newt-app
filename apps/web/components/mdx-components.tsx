@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 
 import { PropsWithChildren } from 'react';
 import { CodeBlock } from './code-block';
