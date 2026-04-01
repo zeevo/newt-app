@@ -73,19 +73,6 @@ export function TableOfContents() {
     return <div>No headings found in this article.</div>;
   }
 
-  const scrollToHeading = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const headerHeight = 80; // Approximate header height
-      const elementPosition = element.offsetTop - headerHeight;
-
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth',
-      });
-    }
-  };
-
   return (
     <nav className="space-y-4">
       <h4 className="text-muted-foreground mb-4">On this page</h4>

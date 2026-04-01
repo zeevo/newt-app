@@ -5,8 +5,6 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import { mdxComponents } from "@/components/mdx-components";
 import rehypePrettyCode from "rehype-pretty-code";
 
-import { transformerCopyButton } from "@rehype-pretty/transformers";
-
 const docsDirectory = path.join(process.cwd(), "content/docs");
 
 export interface DocsPost {
