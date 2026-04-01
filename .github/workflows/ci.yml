@@ -1,15 +1,15 @@
-name: Pull Request
+name: CI
 
 on:
-  pull_request:
-    branches: [main, develop]
+  push:
+    branches: [main]
 
 env:
   NODE_VERSION: "22"
   PNPM_VERSION: "9.0.0"
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

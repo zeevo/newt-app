@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "check-types": "tsc --noEmit",
     "dev": "dotenv -e ../../.env -- next dev --turbopack",
-    "lint": "next lint",
-    "start": "next start"
+    "lint": "eslint . --max-warnings 0 && tsc --noEmit",
+    "start": "next start",
+    "test": "jest"
   },
   "dependencies": {
     "@newt-app/components": "workspace:*",
@@ -35,12 +35,19 @@
   },
   "devDependencies": {
     "@newt-app/eslint-config": "workspace:*",
+    "eslint": "^9.0.0",
     "@newt-app/typescript-config": "workspace:*",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/d3": "^7.4.3",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.15.3",
     "@types/pg": "^8.15.4",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
     "typescript": "6.0.2"
   }
 }

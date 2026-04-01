@@ -10,9 +10,6 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
-    },
     "build:watch": {
       "cache": false,
       "persistent": true
@@ -27,6 +24,10 @@
     },
     "generate": {
       "cache": false
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     }
   }
 }
