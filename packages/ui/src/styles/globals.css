@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@source "../../../apps/**/*.{ts,tsx}";
-@source "../../../components/**/*.{ts,tsx}";
+@source "../../../../apps/**/*.{ts,tsx}";
+@source "../../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
 
 @import "tw-animate-css";
@@ -82,14 +82,12 @@
   --code: oklch(20% 0 0);
 }
 
-html.light,
-html.light span {
+html.light pre span {
   color: var(--shiki-light);
   background-color: var(--shiki-light-bg);
 }
 
-html.dark,
-html.dark span {
+html.dark pre span {
   color: var(--shiki-dark);
   background-color: var(--shiki-dark-bg);
 }

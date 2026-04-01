@@ -1,0 +1,65 @@
+---
+title: "Introduction"
+description: "What newt-app is and why it exists"
+---
+
+Most full-stack starters make you choose: a minimal boilerplate that leaves too much undone, or a bloated template that ships opinions you don't want and dependencies you'll spend the first week ripping out.
+
+`newt-app` is neither. It scaffolds a production-ready monorepo with the things every serious app needs — a typed frontend, a structured backend, authentication, and a shared component library — without padding it with things you'll never use.
+
+## Motivation
+
+The goal is to eliminate the gap between "I have an idea" and "I have something running." Not by hiding complexity, but by making the right choices up front so you don't have to.
+
+Every piece in the stack was chosen because it's good at exactly one thing:
+
+- **Next.js** handles the frontend. App Router, server components, file-based routing.
+- **NestJS** handles the backend. Structured, testable, scales when you need it to.
+- **Better Auth** handles authentication. Runs across both apps without duplication.
+- **pnpm workspaces** hold it together. `apps/` for runnable apps, `packages/` for shared code.
+- **Turborepo** makes builds fast. Cached, parallel, monorepo-aware.
+
+## How it works
+
+When you run `create-newt-app my-app`, the CLI reads a set of source templates and writes them out as a new project on disk.
+
+```bash
+pnpm dlx create-newt-app my-app
+cd my-app
+pnpm install
+pnpm dev
+```
+
+The output is a fully-formed monorepo:
+
+<FileTree name="my-app">
+  <FileTree.Folder name="apps">
+    <FileTree.Folder name="web" annotation="Next.js frontend">
+      <FileTree.Folder name="app">
+        <FileTree.Folder name="dashboard">
+          <FileTree.File name="page.tsx" annotation="dashboard route" />
+        </FileTree.Folder>
+        <FileTree.File name="layout.tsx" />
+        <FileTree.File name="page.tsx" annotation="home route" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+    <FileTree.Folder name="api" annotation="NestJS backend">
+      <FileTree.Folder name="src">
+        <FileTree.Folder name="hello">
+          <FileTree.File name="hello.controller.ts" />
+          <FileTree.File name="hello.module.ts" />
+        </FileTree.Folder>
+        <FileTree.File name="app.module.ts" />
+        <FileTree.File name="main.ts" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+  <FileTree.Folder name="packages">
+    <FileTree.Folder name="ui" annotation="Shared component library" />
+    <FileTree.Folder name="auth" annotation="Better Auth configuration" />
+    <FileTree.Folder name="eslint-config" annotation="Shared ESLint config" />
+    <FileTree.Folder name="typescript-config" annotation="Shared TypeScript config" />
+  </FileTree.Folder>
+</FileTree>
+
+There is no runtime dependency on `newt-app` itself. The generated project is entirely standalone — own it, change it, grow it.

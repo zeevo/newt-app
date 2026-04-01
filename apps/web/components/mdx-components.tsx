@@ -9,6 +9,7 @@ import { CopyButton } from './copy-button';
 import { Check, Clipboard } from 'lucide-react';
 import Pre from './pre';
 import { useTheme } from 'next-themes';
+import { FileTree } from './file-tree';
 
 interface MDXHeadingProps {
   children: React.ReactNode;
@@ -30,6 +31,7 @@ function generateId(children: React.ReactNode): string {
 }
 
 export const mdxComponents = {
+  FileTree,
   h1: ({ className, ...props }: React.ComponentProps<'h1'>) => (
     <h1
       className={cn(

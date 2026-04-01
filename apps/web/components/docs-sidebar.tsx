@@ -2,7 +2,7 @@
 
 import { SidebarSection } from '@/app/_components/sidebar-section';
 import { Sidebar, SidebarContent } from '@newt-app/ui/components/sidebar';
-import { Download, Server, Shield, Triangle } from 'lucide-react';
+import { BookOpen, Download, Server, Shield, Triangle } from 'lucide-react';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
@@ -13,6 +13,10 @@ export type Item = {
 };
 
 const gettingStarted: Item[] = [
+  {
+    title: 'Introduction',
+    url: '/docs/introduction',
+  },
   {
     title: 'Installation',
     url: '/docs/installation',
@@ -35,6 +39,7 @@ const modules: Item[] = [
 ];
 
 const urlToIconMap: Record<string, ReactElement> = {
+  '/docs/introduction': <BookOpen />,
   '/docs/installation': <Download />,
   '/docs/nextjs': <Triangle />,
   '/docs/nestjs': <Server />,
