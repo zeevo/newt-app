@@ -20,7 +20,7 @@ export default {
     "@types/pg": "^8.11.13",
     "auth": "^1.5.5",
     "dotenv-cli": "^11.0.0",
-    "typescript": "5.9.2"
+    "typescript": "6.0.2"
   }
 }`,
 };
