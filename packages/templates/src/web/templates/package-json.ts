@@ -9,8 +9,7 @@ export default {
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit",
+    "lint": "eslint --max-warnings 0 && next typegen && tsc --noEmit",
     "db:migrate": "better-auth migrate"
   },
   "dependencies": {
