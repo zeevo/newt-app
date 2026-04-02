@@ -1,13 +1,7 @@
-# @newt-app/templates
+# @newt-app/eslint-config
 
 ## 0.1.0
 
 ### Minor Changes
 
 - 8bf53d1: ci, jest, typescript 6, new shadcn components, and template improvements
-
-## 0.0.2
-
-### Patch Changes
-
-- 83647ca: Initial publish

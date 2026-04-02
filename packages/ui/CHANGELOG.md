@@ -1,5 +1,11 @@
 # @newt-app/ui
 
+## 0.1.0
+
+### Minor Changes
+
+- 8bf53d1: ci, jest, typescript 6, new shadcn components, and template improvements
+
 ## 0.0.20
 
 ### Patch Changes
