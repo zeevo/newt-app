@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.1.1
+
+### Patch Changes
+
+- 683e84e: fix npm publish permissions and group packages into fixed release
+- Updated dependencies [683e84e]
+  - @newt-app/templates@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

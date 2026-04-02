@@ -1,5 +1,11 @@
 # @newt-app/templates
 
+## 0.1.1
+
+### Patch Changes
+
+- 683e84e: fix npm publish permissions and group packages into fixed release
+
 ## 0.1.0
 
 ### Minor Changes
