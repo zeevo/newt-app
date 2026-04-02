@@ -1,5 +1,16 @@
 # create-newt-app
 
+## 0.1.0
+
+### Minor Changes
+
+- 8bf53d1: ci, jest, typescript 6, new shadcn components, and template improvements
+
+### Patch Changes
+
+- Updated dependencies [8bf53d1]
+  - @newt-app/templates@0.1.0
+
 ## 0.0.2
 
 ### Patch Changes
