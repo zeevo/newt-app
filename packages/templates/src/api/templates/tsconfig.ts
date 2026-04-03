@@ -16,7 +16,6 @@ export default {
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
