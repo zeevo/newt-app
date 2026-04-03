@@ -51,11 +51,8 @@ export default {
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.475.0",
-    "next": "^15.0.0",
     "next-themes": "^0.4.6",
-    "react": "^19.2.4",
     "react-day-picker": "^9.8.1",
-    "react-dom": "^19.2.4",
     "react-hook-form": "^7.61.1",
     "react-resizable-panels": "^3.0.3",
     "recharts": "^2.15.4",
@@ -64,6 +61,11 @@ export default {
     "tw-animate-css": "^1.2.4",
     "vaul": "^1.1.2",
     "zod": "^3.25.76"
+  },
+  "peerDependencies": {
+    "next": ">=15.0.0",
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
   },
   "devDependencies": {
     "@<%= projectName %>/eslint-config": "workspace:*",
