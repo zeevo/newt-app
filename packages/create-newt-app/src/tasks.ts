@@ -7,7 +7,7 @@ import {
   validateProjectName,
 } from "./utils.js";
 
-export async function scaffold(modules: Module[], options: { name: string }) {
+export async function scaffold(modules: Module[], options: { name: string; testing: 'jest' | 'vitest' }) {
   const validation = validateProjectName(options.name);
   if (!validation.valid) {
     console.error(`Error: ${validation.error}`);
@@ -16,6 +16,7 @@ export async function scaffold(modules: Module[], options: { name: string }) {
 
   const templateData: TemplateData = {
     projectName: options.name,
+    testing: options.testing,
   };
 
   await renderTemplatesToDisk(modules, options.name, templateData);

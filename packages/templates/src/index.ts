@@ -7,6 +7,8 @@ import ui from "./ui/index";
 import shadcnUi from "./shadcn-ui/index";
 import eslintConfig from "./eslint-config/index";
 import typescriptConfig from "./typescript-config/index";
+import testingJest from "./testing-jest/index";
+import testingVitest from "./testing-vitest/index";
 
 export * from "./types";
 
@@ -27,4 +29,6 @@ export const templates = {
   shadcnUi,
   eslintConfig,
   typescriptConfig,
+  testingJest,
+  testingVitest,
 };

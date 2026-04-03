@@ -1,4 +1,4 @@
-export type TemplateData = { projectName: string };
+export type TemplateData = { projectName: string; testing: 'jest' | 'vitest' };
 export type Template = { filename: string; template: string };
 export type File = { src: string; filename: string };
 export type Package = { package: string; module: string; version: string; dev?: boolean };
