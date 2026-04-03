@@ -4,6 +4,7 @@ import web from "./web/index";
 import api from "./api/index";
 import auth from "./auth/index";
 import ui from "./ui/index";
+import shadcnUi from "./shadcn-ui/index";
 import eslintConfig from "./eslint-config/index";
 import typescriptConfig from "./typescript-config/index";
 
@@ -23,6 +24,7 @@ export const templates = {
   api,
   auth,
   ui,
+  shadcnUi,
   eslintConfig,
   typescriptConfig,
 };

@@ -11,6 +11,8 @@ type Options = {
   name?: string;
   install: boolean;
   git: boolean;
+  ci: boolean;
+  shadcn: boolean;
 };
 
 class TaskBuilder {
@@ -35,6 +37,13 @@ export async function doInit(options: Options) {
           },
         }),
     }),
+    ...(!options.ci && {
+      shadcn: () =>
+        p.confirm({
+          message: "Use shadcn/ui?",
+          initialValue: true,
+        }),
+    }),
   };
 
   try {
@@ -45,12 +54,14 @@ export async function doInit(options: Options) {
       },
     });
 
+    const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
+
     const allModules = [
       templates.root,
       templates.web,
       templates.api,
       templates.auth,
-      templates.ui,
+      useShadcn ? templates.shadcnUi : templates.ui,
       templates.eslintConfig,
       templates.typescriptConfig,
     ];
@@ -132,12 +143,16 @@ program
   .argument("[name]")
   .option("-ni, --no-install", "Skip pnpm install", true)
   .option("-ng, --no-git", "Skip git initialization", true)
+  .option("--ci", "Non-interactive mode (uses --shadcn flag)", false)
+  .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
   .action(
     async (
       name: string,
       options: {
         install: boolean;
         git: boolean;
+        ci: boolean;
+        shadcn: boolean;
       }
     ) => {
       console.log("\n");
@@ -148,6 +163,8 @@ program
         name,
         install: options.install,
         git: options.git,
+        ci: options.ci,
+        shadcn: options.shadcn,
       });
     }
   );
