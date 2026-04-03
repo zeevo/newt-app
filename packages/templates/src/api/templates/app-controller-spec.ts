@@ -1,7 +1,6 @@
 export default {
   filename: "apps/api/src/app.controller.spec.ts",
-  template: `import { describe, it, expect, beforeEach } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
+  template: `import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 
 describe('AppController', () => {
