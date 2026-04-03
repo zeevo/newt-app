@@ -14,7 +14,7 @@ import todosService from "./templates/todos-service";
 import e2eSpec from "./templates/e2e-spec";
 import jestE2e from "./templates/jest-e2e";
 import readme from "./templates/readme";
-import nestjsBetterAuthMock from "./templates/nestjs-better-auth-mock";
+import vitestConfig from "./templates/vitest-config";
 
 const api: Module = {
   templates: [
@@ -33,7 +33,7 @@ const api: Module = {
     e2eSpec,
     jestE2e,
     readme,
-    nestjsBetterAuthMock,
+    vitestConfig,
   ],
 };
 
