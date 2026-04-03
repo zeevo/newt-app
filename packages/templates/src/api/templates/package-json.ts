@@ -63,7 +63,10 @@ export default {
     },
     "collectCoverageFrom": ["**/*.(t|j)s"],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@thallesp/nestjs-better-auth$": "<rootDir>/../__mocks__/@thallesp/nestjs-better-auth.js"
+    }
   }
 }`,
 };
