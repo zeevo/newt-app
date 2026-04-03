@@ -53,7 +53,7 @@ export async function doInit(options: Options) {
             { value: "vitest", label: "Vitest" },
             { value: "jest", label: "Jest" },
           ],
-          initialValue: "vitest",
+          initialValue: "jest",
         }),
     }),
   };
@@ -67,7 +67,7 @@ export async function doInit(options: Options) {
     });
 
     const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
-    const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'vitest';
+    const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
 
     const allModules = [
       templates.root,
@@ -159,7 +159,7 @@ program
   .option("-ng, --no-git", "Skip git initialization", true)
   .option("--ci", "Non-interactive mode", false)
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
-  .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "vitest")
+  .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
   .action(
     async (
       name: string,
