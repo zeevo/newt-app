@@ -8,6 +8,10 @@ import tsconfig from "./templates/tsconfig";
 import eslintConfig from "./templates/eslint-config";
 import link from "./templates/link";
 import logo from "./templates/logo";
+import layout from "./templates/layout";
+import page from "./templates/page";
+import authForm from "./templates/auth-form";
+import todoList from "./templates/todo-list";
 import accordion from "./templates/accordion";
 import alertDialog from "./templates/alert-dialog";
 import alert from "./templates/alert";
@@ -66,6 +70,10 @@ const shadcnUi: Module = {
     eslintConfig,
     link,
     logo,
+    layout,
+    page,
+    authForm,
+    todoList,
     accordion,
     alertDialog,
     alert,
