@@ -7,12 +7,15 @@ import * as p from "@clack/prompts";
 import { templates } from "@newt-app/templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 
+type Testing = 'jest' | 'vitest';
+
 type Options = {
   name?: string;
   install: boolean;
   git: boolean;
   ci: boolean;
   shadcn: boolean;
+  testing: Testing;
 };
 
 class TaskBuilder {
@@ -43,6 +46,15 @@ export async function doInit(options: Options) {
           message: "Use shadcn/ui?",
           initialValue: true,
         }),
+      testing: () =>
+        p.select<Testing>({
+          message: "Testing framework?",
+          options: [
+            { value: "vitest", label: "Vitest" },
+            { value: "jest", label: "Jest" },
+          ],
+          initialValue: "jest",
+        }),
     }),
   };
 
@@ -55,6 +67,7 @@ export async function doInit(options: Options) {
     });
 
     const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
+    const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
 
     const allModules = [
       templates.root,
@@ -64,6 +77,7 @@ export async function doInit(options: Options) {
       useShadcn ? templates.shadcnUi : templates.ui,
       templates.eslintConfig,
       templates.typescriptConfig,
+      testing === 'vitest' ? templates.testingVitest : templates.testingJest,
     ];
 
     const name = (group as { name?: string }).name ?? options.name ?? "";
@@ -74,7 +88,7 @@ export async function doInit(options: Options) {
       title: "Scaffolding project",
       task: async () => {
         try {
-          await scaffold(allModules, { name });
+          await scaffold(allModules, { name, testing });
         } catch (e) {
           console.log(e);
         }
@@ -143,8 +157,9 @@ program
   .argument("[name]")
   .option("-ni, --no-install", "Skip pnpm install", true)
   .option("-ng, --no-git", "Skip git initialization", true)
-  .option("--ci", "Non-interactive mode (uses --shadcn flag)", false)
+  .option("--ci", "Non-interactive mode", false)
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
+  .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
   .action(
     async (
       name: string,
@@ -153,6 +168,7 @@ program
         git: boolean;
         ci: boolean;
         shadcn: boolean;
+        testing: string;
       }
     ) => {
       console.log("\n");
@@ -165,6 +181,7 @@ program
         git: options.git,
         ci: options.ci,
         shadcn: options.shadcn,
+        testing: (options.testing === 'jest' ? 'jest' : 'vitest') as Testing,
       });
     }
   );

@@ -16,14 +16,14 @@ export default {
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "types": ["jest", "node"]
-  }
+    "types": [<% if (testing === 'jest') { %>"jest", <% } %>"node"]
+  },
+  "exclude": ["vitest.config.ts", "vitest.config.e2e.ts", "node_modules", "dist"]
 }`,
 };

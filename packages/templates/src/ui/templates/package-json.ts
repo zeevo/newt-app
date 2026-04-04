@@ -25,11 +25,13 @@ export default {
     "eslint": "^9.39.1",
     "typescript": "6.0.2"
   },
+  "peerDependencies": {
+    "next": ">=15.0.0",
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
+  },
   "dependencies": {
     "clsx": "^2.1.1",
-    "next": "^16.2.1",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
     "tailwind-merge": "^3.3.0"
   }
 }`,
