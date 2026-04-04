@@ -1,5 +1,11 @@
 # @newt-app/templates
 
+## 0.2.0
+
+### Minor Changes
+
+- 9ba4ec3: add shadcn/ui option to create-newt-app
+
 ## 0.1.1
 
 ### Patch Changes
