@@ -2,7 +2,7 @@
 
 import { SidebarSection } from '@/app/_components/sidebar-section';
 import { Sidebar, SidebarContent } from '@newt-app/ui/components/sidebar';
-import { BookOpen, Download, Rocket, Server, Shield, Triangle } from 'lucide-react';
+import { BookOpen, Download, Server, Shield, Triangle } from 'lucide-react';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
@@ -63,10 +63,6 @@ const urlToIconMap: Record<string, ReactElement> = {
   '/docs/nextjs': <Triangle />,
   '/docs/nestjs': <Server />,
   '/docs/better-auth': <Shield />,
-  '/docs/deployment-standalone': <Rocket />,
-  '/docs/deployment-single-image': <Rocket />,
-  '/docs/deployment-spa': <Rocket />,
-  '/docs/deployment-vercel': <Rocket />,
 };
 
 export function DocsSidebar() {
