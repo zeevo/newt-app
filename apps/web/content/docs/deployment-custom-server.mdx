@@ -13,9 +13,7 @@ apps/web/server.ts   →  port 3000  (routes to Next.js or NestJS)
 
 Give `apps/api` a workspace package name so it can be imported from `apps/web`:
 
-**`apps/api/package.json`**
-
-```json
+```json title="apps/api/package.json"
 {
   "name": "@my-app/api",
   "exports": {
@@ -24,17 +22,13 @@ Give `apps/api` a workspace package name so it can be imported from `apps/web`:
 }
 ```
 
-**`apps/api/src/index.ts`**
-
-```ts
+```ts title="apps/api/src/index.ts"
 export { AppModule } from './app.module';
 ```
 
 Add the dependency and `tsx` to `apps/web`:
 
-**`apps/web/package.json`**
-
-```json
+```json title="apps/web/package.json"
 {
   "dependencies": {
     "@my-app/api": "workspace:*"
@@ -50,9 +44,7 @@ Add the dependency and `tsx` to `apps/web`:
 
 ## server.ts
 
-**`apps/web/server.ts`**
-
-```ts
+```ts title="apps/web/server.ts"
 import 'reflect-metadata';
 import dotenv from 'dotenv';
 import { resolve } from 'path';
@@ -101,9 +93,7 @@ main().catch(console.error);
 
 NestJS decorators require `emitDecoratorMetadata`. Add a separate tsconfig for the server entry point so it doesn't affect the Next.js build:
 
-**`apps/web/tsconfig.server.json`**
-
-```json
+```json title="apps/web/tsconfig.server.json"
 {
   "compilerOptions": {
     "module": "nodenext",
@@ -125,7 +115,7 @@ NestJS decorators require `emitDecoratorMetadata`. Add a separate tsconfig for t
 
 Remove the rewrite — there is no separate API server to proxy to:
 
-```js
+```js title="apps/web/next.config.js"
 const nextConfig = {
   output: "standalone",
 };
@@ -141,7 +131,7 @@ pnpm --filter=web dev
 
 # Production
 pnpm --filter=web build
-node apps/web/server.js  # or use the standalone output
+node apps/web/server.js
 ```
 
 ## Tradeoffs

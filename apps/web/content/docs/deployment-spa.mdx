@@ -17,7 +17,7 @@ apps/api   →  port 3000  (NestJS serves static files + API)
 
 ## next.config.js
 
-```js
+```js title="apps/web/next.config.js"
 const isProduction = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
@@ -38,7 +38,7 @@ const nextConfig = {
 
 ## app.module.ts
 
-```ts
+```ts title="apps/api/src/app.module.ts"
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 

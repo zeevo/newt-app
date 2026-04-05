@@ -9,9 +9,7 @@ The `pages/api` directory works alongside the App Router — Next.js supports bo
 
 ## pages/api/[...path].ts
 
-Create this file in `apps/web/pages/api/`:
-
-```ts
+```ts title="apps/web/pages/api/[...path].ts"
 import 'reflect-metadata';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { INestApplication } from '@nestjs/common';
@@ -48,9 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 For `@my-app/api` to resolve, give `apps/api` a workspace package name and an exports field:
 
-**`apps/api/package.json`**
-
-```json
+```json title="apps/api/package.json"
 {
   "name": "@my-app/api",
   "exports": {
@@ -59,15 +55,11 @@ For `@my-app/api` to resolve, give `apps/api` a workspace package name and an ex
 }
 ```
 
-**`apps/api/src/index.ts`**
-
-```ts
+```ts title="apps/api/src/index.ts"
 export { AppModule } from './app.module';
 ```
 
-**`apps/web/package.json`** — add the dependency:
-
-```json
+```json title="apps/web/package.json"
 {
   "dependencies": {
     "@my-app/api": "workspace:*"
@@ -79,7 +71,7 @@ export { AppModule } from './app.module';
 
 The catch-all file needs `emitDecoratorMetadata`. Add `apps/web/tsconfig.api.json`:
 
-```json
+```json title="apps/web/tsconfig.api.json"
 {
   "compilerOptions": {
     "emitDecoratorMetadata": true,
