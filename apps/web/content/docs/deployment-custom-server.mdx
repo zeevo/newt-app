@@ -5,8 +5,6 @@ description: "Next.js and NestJS share one HTTP server on a single port"
 
 Replace the default Next.js dev server with a custom Node.js entry point that boots both Next.js and NestJS in the same process. Requests to `/api/*` are dispatched to NestJS; everything else goes to Next.js. One process, one port, no proxy.
 
-`/api/auth/*` is carved out and sent to Next.js so that better-auth's own route handler (`app/api/auth/[...all]/route.ts`) continues to work — the same as in the default setup where `afterFiles` rewrites only apply after internal route handlers are checked.
-
 ```
 apps/web/server.ts   →  port 3000  (routes to Next.js or NestJS)
 ```
@@ -76,9 +74,7 @@ async function main() {
     .listeners('request')[0] as (req: any, res: any) => void;
 
   const server = createServer((req, res) => {
-    // Route /api/* to NestJS, but carve out /api/auth/* so better-auth's
-    // Next.js handler (app/api/auth/[...all]/route.ts) continues to work.
-    if (req.url?.startsWith('/api/') && !req.url.startsWith('/api/auth/')) {
+    if (req.url?.startsWith('/api/')) {
       nestListener(req, res);
     } else {
       handle(req, res);
