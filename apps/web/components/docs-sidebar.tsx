@@ -48,6 +48,10 @@ const deployment: Item[] = [
     url: '/docs/deployment-single-image',
   },
   {
+    title: 'Custom Server',
+    url: '/docs/deployment-custom-server',
+  },
+  {
     title: 'SPA Mode',
     url: '/docs/deployment-spa',
   },
