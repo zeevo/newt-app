@@ -12,6 +12,18 @@ apps/api   →  container on port 3001  (NestJS)
 
 This works on any container platform — Railway, Fly.io, Render, AWS ECS, and others.
 
+## CORS
+
+The Next.js rewrite proxy forwards `/api/*` server-side to NestJS, so the browser never makes a cross-origin request — CORS is not required for the normal request path.
+
+Set `CORS_ORIGIN` to your production frontend URL in the API container's environment so direct access to the API is still handled correctly:
+
+```yaml title="docker-compose.yml"
+  api:
+    environment:
+      - CORS_ORIGIN=https://your-app.com
+```
+
 ## next.config.js
 
 Update the rewrite destination to use your internal service hostname instead of `localhost`:
