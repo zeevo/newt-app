@@ -16,6 +16,7 @@ type Options = {
   ci: boolean;
   shadcn: boolean;
   testing: Testing;
+  singleProcess: boolean;
 };
 
 class TaskBuilder {
@@ -55,6 +56,11 @@ export async function doInit(options: Options) {
           ],
           initialValue: "jest",
         }),
+      singleProcess: () =>
+        p.confirm({
+          message: "Single-process mode? (NestJS runs inside Next.js via pages/api catch-all)",
+          initialValue: false,
+        }),
     }),
   };
 
@@ -68,6 +74,7 @@ export async function doInit(options: Options) {
 
     const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
     const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
+    const useSingleProcess = options.ci ? options.singleProcess : (group as { singleProcess?: boolean }).singleProcess ?? false;
 
     const allModules = [
       templates.root,
@@ -78,6 +85,7 @@ export async function doInit(options: Options) {
       templates.eslintConfig,
       templates.typescriptConfig,
       testing === 'vitest' ? templates.testingVitest : templates.testingJest,
+      ...(useSingleProcess ? [templates.singleProcessPages] : []),
     ];
 
     const name = (group as { name?: string }).name ?? options.name ?? "";
@@ -159,6 +167,7 @@ program
   .option("--ci", "Non-interactive mode", false)
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
   .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
+  .option("--single-process", "Single-process mode: NestJS runs inside Next.js via pages/api catch-all (used with --ci)", false)
   .action(
     async (
       name: string,
@@ -168,6 +177,7 @@ program
         ci: boolean;
         shadcn: boolean;
         testing: string;
+        singleProcess: boolean;
       }
     ) => {
       console.log("\n");
@@ -181,6 +191,7 @@ program
         ci: options.ci,
         shadcn: options.shadcn,
         testing: (options.testing === 'jest' ? 'jest' : 'vitest') as Testing,
+        singleProcess: options.singleProcess,
       });
     }
   );
