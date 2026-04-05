@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.3.0
+
+### Minor Changes
+
+- b5af71d: update page.tsx layout to use rounded cards and remove border-l/border-r columns
+
+### Patch Changes
+
+- @newt-app/templates@0.3.0
+
 ## 0.2.2
 
 ### Patch Changes
