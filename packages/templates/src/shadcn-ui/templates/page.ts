@@ -3,15 +3,19 @@ export default {
   template: `'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useTheme } from 'next-themes';
+import { Moon, Sun } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import { AuthForm } from '@/app/auth-form';
 import { Link } from '@<%= projectName %>/ui/link';
 import { Logo } from '@<%= projectName %>/ui/logo';
 import { TodoList } from '@/app/todo-list';
+import { Button } from '@<%= projectName %>/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@<%= projectName %>/ui/card';
 
 export default function Home() {
   const { data: session, isPending } = authClient.useSession();
+  const { resolvedTheme, setTheme } = useTheme();
 
   const { data: hello } = useQuery({
     queryKey: ['hello'],
@@ -20,9 +24,20 @@ export default function Home() {
 
   return (
     <main className="max-w-lg mx-auto min-h-full px-4 py-8 space-y-4">
-      <div className="pb-4 border-b">
-        <p className="font-mono text-sm text-muted-foreground">apps/web/page.tsx</p>
-        <p className="text-sm text-muted-foreground">Delete me to get started!</p>
+      <div className="pb-4 border-b flex items-start justify-between">
+        <div>
+          <p className="font-mono text-sm text-muted-foreground">apps/web/page.tsx</p>
+          <p className="text-sm text-muted-foreground">Delete me to get started!</p>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+        >
+          <Sun className="hidden dark:block" />
+          <Moon className="block dark:hidden" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
       </div>
 
       <div className="flex items-center gap-3 py-2">
