@@ -1,5 +1,18 @@
 # create-newt-app
 
+## 0.4.0
+
+### Minor Changes
+
+- 37b7d8a: consistent filename styling across page.tsx in both default and shadcn modes
+- b0cb35b: show jest before vitest in the testing framework prompt
+- 0c160dc: load root .env in api and web so monorepo apps pick up a single .env at the repo root
+- 81b3730: scaffold .env directly instead of .env.example
+
+### Patch Changes
+
+- @newt-app/templates@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes
