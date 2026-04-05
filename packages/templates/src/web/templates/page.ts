@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <main className="max-w-lg mx-auto min-h-full px-4 py-8 space-y-4">
       <div className="pb-4 border-b">
-        <p className="font-mono text-xs text-gray-400">apps/web/page.tsx</p>
+        <p className="font-mono text-sm text-gray-400">apps/web/page.tsx</p>
         <p className="text-sm text-gray-400">Delete me to get started!</p>
       </div>
 
@@ -36,13 +36,13 @@ export default function Home() {
 
       <div className="rounded-xl border p-6 space-y-1">
         <p className="text-xs font-mono uppercase tracking-widest text-gray-400">next.js</p>
-        <p className="font-mono text-sm">apps/web/layout.tsx</p>
+        <p className="font-mono text-sm text-gray-400">apps/web/layout.tsx</p>
         <p className="text-sm text-gray-400">Next.js rendering</p>
       </div>
 
       <div className="rounded-xl border p-6 space-y-1">
         <p className="text-xs font-mono uppercase tracking-widest text-gray-400">nest.js</p>
-        <p className="font-mono text-sm">GET /api/hello</p>
+        <p className="font-mono text-sm text-gray-400">GET /api/hello</p>
         <pre className="mt-2 border rounded-md p-3 text-sm bg-neutral-800">
           <code>{JSON.stringify(hello, null, 2)}</code>
         </pre>
