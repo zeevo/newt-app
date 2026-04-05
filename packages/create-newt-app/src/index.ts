@@ -50,8 +50,8 @@ export async function doInit(options: Options) {
         p.select<Testing>({
           message: "Testing framework?",
           options: [
-            { value: "vitest", label: "Vitest" },
             { value: "jest", label: "Jest" },
+            { value: "vitest", label: "Vitest" },
           ],
           initialValue: "jest",
         }),
