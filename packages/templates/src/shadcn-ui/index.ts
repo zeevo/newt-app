@@ -10,6 +10,7 @@ import link from "./templates/link";
 import logo from "./templates/logo";
 import layout from "./templates/layout";
 import page from "./templates/page";
+import providers from "./templates/providers";
 import authForm from "./templates/auth-form";
 import todoList from "./templates/todo-list";
 import accordion from "./templates/accordion";
@@ -72,6 +73,7 @@ const shadcnUi: Module = {
     logo,
     layout,
     page,
+    providers,
     authForm,
     todoList,
     accordion,
@@ -120,6 +122,9 @@ const shadcnUi: Module = {
     toggleGroup,
     toggle,
     tooltip,
+  ],
+  packages: [
+    { package: "next-themes", module: "apps/web", version: "^0.4.6" },
   ],
 };
 
