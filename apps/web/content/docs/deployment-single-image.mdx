@@ -74,22 +74,4 @@ async rewrites() {
 
 **Startup order:** Next.js may start serving before NestJS is ready. The first few `/api/*` requests during startup may fail. For production, consider adding a readiness check or a short startup delay in the web process.
 
-**Crash isolation:** if NestJS crashes, `concurrently` exits the container. Consider `pm2` instead of `concurrently` for automatic restarts:
-
-```dockerfile
-RUN npm install -g pm2
-
-COPY ecosystem.config.cjs .
-
-CMD ["pm2-runtime", "ecosystem.config.cjs"]
-```
-
-```js
-// ecosystem.config.cjs
-module.exports = {
-  apps: [
-    { name: 'web', script: 'apps/web/server.js' },
-    { name: 'api', script: 'apps/api/dist/main.js' },
-  ],
-};
-```
+**Crash isolation:** if NestJS crashes, `concurrently` exits the container and your platform's restart policy will bring it back up. Configure your orchestrator (Docker restart policy, Railway, Fly.io, etc.) to restart on exit.
