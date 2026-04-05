@@ -30,7 +30,9 @@ async function main() {
     .listeners('request')[0] as (req: any, res: any) => void;
 
   const server = createServer((req, res) => {
-    if (req.url?.startsWith('/api/')) {
+    // Route /api/* to NestJS, but carve out /api/auth/* so better-auth's
+    // Next.js handler (app/api/auth/[...all]/route.ts) continues to work.
+    if (req.url?.startsWith('/api/') && !req.url.startsWith('/api/auth/')) {
       nestListener(req, res);
     } else {
       handle(req, res);
