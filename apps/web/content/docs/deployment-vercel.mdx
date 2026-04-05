@@ -1,0 +1,101 @@
+---
+title: "Vercel"
+description: "Deploy to Vercel with NestJS running as a serverless function"
+---
+
+To deploy on Vercel, the NestJS API runs as a serverless function using a `pages/api` catch-all route. The Next.js frontend deploys normally to Vercel's edge network; the catch-all forwards all `/api/*` requests to a lazily-initialized NestJS instance.
+
+The `pages/api` directory works alongside the App Router — Next.js supports both simultaneously.
+
+## pages/api/[...path].ts
+
+Create this file in `apps/web/pages/api/`:
+
+```ts
+import 'reflect-metadata';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { INestApplication } from '@nestjs/common';
+
+export const config = {
+  api: {
+    bodyParser: false,
+    externalResolver: true,
+  },
+};
+
+let app: INestApplication | null = null;
+
+async function getApp(): Promise<INestApplication> {
+  if (!app) {
+    const { NestFactory } = await import('@nestjs/core');
+    const { AppModule } = await import('@my-app/api');
+    app = await NestFactory.create(AppModule, { bodyParser: false });
+    app.setGlobalPrefix('api');
+    await app.init();
+  }
+  return app;
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const nestApp = await getApp();
+  const express = nestApp.getHttpAdapter().getInstance() as (
+    req: NextApiRequest,
+    res: NextApiResponse
+  ) => void;
+  express(req, res);
+}
+```
+
+For `@my-app/api` to resolve, give `apps/api` a workspace package name and an exports field:
+
+**`apps/api/package.json`**
+
+```json
+{
+  "name": "@my-app/api",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
+```
+
+**`apps/api/src/index.ts`**
+
+```ts
+export { AppModule } from './app.module';
+```
+
+**`apps/web/package.json`** — add the dependency:
+
+```json
+{
+  "dependencies": {
+    "@my-app/api": "workspace:*"
+  }
+}
+```
+
+## tsconfig for decorator metadata
+
+The catch-all file needs `emitDecoratorMetadata`. Add `apps/web/tsconfig.api.json`:
+
+```json
+{
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "skipLibCheck": true
+  },
+  "include": ["pages/api/[...path].ts"]
+}
+```
+
+## Considerations
+
+- NestJS initializes lazily on the first request and is cached for the lifetime of the function container — subsequent requests within the same container are fast
+- Cold starts add latency on the first request after inactivity
+- Serverless functions have no persistent in-memory state between containers — use a database for all state
+- Vercel's function timeout applies (default 10s on Hobby, 60s on Pro)
+- The `apps/api` container is not deployed separately — it only exists as a dependency of the serverless function

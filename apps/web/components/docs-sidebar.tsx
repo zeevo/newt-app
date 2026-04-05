@@ -40,8 +40,20 @@ const modules: Item[] = [
 
 const deployment: Item[] = [
   {
-    title: 'Deployment',
-    url: '/docs/deployment',
+    title: 'Standalone + Dockerfile',
+    url: '/docs/deployment-standalone',
+  },
+  {
+    title: 'Single Docker Image',
+    url: '/docs/deployment-single-image',
+  },
+  {
+    title: 'SPA Mode',
+    url: '/docs/deployment-spa',
+  },
+  {
+    title: 'Vercel',
+    url: '/docs/deployment-vercel',
   },
 ];
 
@@ -51,7 +63,10 @@ const urlToIconMap: Record<string, ReactElement> = {
   '/docs/nextjs': <Triangle />,
   '/docs/nestjs': <Server />,
   '/docs/better-auth': <Shield />,
-  '/docs/deployment': <Rocket />,
+  '/docs/deployment-standalone': <Rocket />,
+  '/docs/deployment-single-image': <Rocket />,
+  '/docs/deployment-spa': <Rocket />,
+  '/docs/deployment-vercel': <Rocket />,
 };
 
 export function DocsSidebar() {
@@ -78,7 +93,7 @@ export function DocsSidebar() {
             </Link>
           )}
         </SidebarSection>
-        <SidebarSection title={'Guides'} items={deployment}>
+        <SidebarSection title={'Deployment'} items={deployment}>
           {(item) => (
             <Link href={item.url}>
               {urlToIconMap[item.url]}
