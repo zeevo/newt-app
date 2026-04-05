@@ -16,6 +16,7 @@ export default {
     "@<%= projectName %>/auth": "workspace:*",
     "@<%= projectName %>/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.2.1",
+    "dotenv": "^17.3.1",
     "@tanstack/react-form": "^1.28.5",
     "@tanstack/react-query": "^5.90.21",
     "better-auth": "^1.2.8",
