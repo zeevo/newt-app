@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.2.1
+
+### Patch Changes
+
+- 8962d3f: shadcn apps now default to dark mode with shadcn Input, Label, Checkbox, and Card components in page, auth-form, and todo-list
+  - @newt-app/templates@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes
