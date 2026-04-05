@@ -8,7 +8,6 @@ import postcssConfig from "./templates/postcss-config";
 import tsconfig from "./templates/tsconfig";
 import layout from "./templates/layout";
 import page from "./templates/page";
-import providers from "./templates/providers";
 import authForm from "./templates/auth-form";
 import todoList from "./templates/todo-list";
 import authRoute from "./templates/auth-route";
@@ -26,7 +25,6 @@ const web: Module = {
     tsconfig,
     layout,
     page,
-    providers,
     authForm,
     todoList,
     authRoute,

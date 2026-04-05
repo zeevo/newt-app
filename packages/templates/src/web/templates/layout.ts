@@ -1,8 +1,10 @@
 export default {
   filename: "apps/web/app/layout.tsx",
-  template: `import type { Metadata } from "next";
+  template: `'use client';
+
 import localFont from "next/font/local";
-import Providers from "@/app/providers";
+import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@<%= projectName %>/ui/globals.css";
 
 const geistSans = localFont({
@@ -14,27 +16,22 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
 });
 
-export const metadata: Metadata = {
-  title: "<%= projectName %>",
-  description: "Next + Nest = Newt",
-  icons: {
-    icon: [
-      { url: "/icon0.svg", type: "image/svg+xml" },
-      { url: "/icon1.png", type: "image/png" },
-    ],
-    apple: "/apple-icon.png",
-  },
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
     <html lang="en">
+      <head>
+        <title><%= projectName %></title>
+      </head>
       <body className={\`\${geistSans.variable} \${geistMono.variable} h-full\`}>
-        <Providers>{children}</Providers>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
       </body>
     </html>
   );
