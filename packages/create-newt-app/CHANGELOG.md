@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.4.1
+
+### Patch Changes
+
+- a65f089: use CORS_ORIGIN env var in NestJS main.ts, falling back to localhost:3000
+  - @newt-app/templates@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes
