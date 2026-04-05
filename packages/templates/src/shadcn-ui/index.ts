@@ -59,6 +59,7 @@ import textarea from "./templates/textarea";
 import toggleGroup from "./templates/toggle-group";
 import toggle from "./templates/toggle";
 import tooltip from "./templates/tooltip";
+import modeToggle from "./templates/mode-toggle";
 
 const shadcnUi: Module = {
   templates: [
@@ -122,6 +123,7 @@ const shadcnUi: Module = {
     toggleGroup,
     toggle,
     tooltip,
+    modeToggle,
   ],
   packages: [
     { package: "next-themes", module: "apps/web", version: "^0.4.6" },
