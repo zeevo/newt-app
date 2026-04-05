@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.2.2
+
+### Patch Changes
+
+- 7fb209f: add next-themes support when shadcn/ui is selected
+  - @newt-app/templates@0.2.2
+
 ## 0.2.1
 
 ### Patch Changes
