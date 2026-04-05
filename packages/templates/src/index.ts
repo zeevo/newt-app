@@ -9,6 +9,7 @@ import eslintConfig from "./eslint-config/index";
 import typescriptConfig from "./typescript-config/index";
 import testingJest from "./testing-jest/index";
 import testingVitest from "./testing-vitest/index";
+import singleProcessStaticExport from "./single-process-static-export/index";
 
 export * from "./types";
 
@@ -31,4 +32,5 @@ export const templates = {
   typescriptConfig,
   testingJest,
   testingVitest,
+  singleProcessStaticExport,
 };
