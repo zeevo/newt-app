@@ -8,6 +8,7 @@ import { templates } from "@newt-app/templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 
 type Testing = 'jest' | 'vitest';
+type Deployment = 'standalone' | 'custom-server' | 'spa' | 'vercel';
 
 type Options = {
   name?: string;
@@ -16,6 +17,7 @@ type Options = {
   ci: boolean;
   shadcn: boolean;
   testing: Testing;
+  deployment: Deployment;
 };
 
 class TaskBuilder {
@@ -55,6 +57,17 @@ export async function doInit(options: Options) {
           ],
           initialValue: "jest",
         }),
+      deployment: () =>
+        p.select<Deployment>({
+          message: "Deployment strategy?",
+          options: [
+            { value: "standalone", label: "Standalone + Dockerfile", hint: "default" },
+            { value: "custom-server", label: "Custom Server", hint: "single process, single port" },
+            { value: "spa", label: "SPA Mode", hint: "static export served by NestJS" },
+            { value: "vercel", label: "Vercel", hint: "serverless function" },
+          ],
+          initialValue: "standalone",
+        }),
     }),
   };
 
@@ -68,6 +81,13 @@ export async function doInit(options: Options) {
 
     const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
     const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
+    const deployment: Deployment = options.ci ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'standalone';
+
+    const deploymentModule =
+      deployment === 'custom-server' ? templates.deploymentCustomServer :
+      deployment === 'spa' ? templates.deploymentSpa :
+      deployment === 'vercel' ? templates.deploymentVercel :
+      null;
 
     const allModules = [
       templates.root,
@@ -78,6 +98,7 @@ export async function doInit(options: Options) {
       templates.eslintConfig,
       templates.typescriptConfig,
       testing === 'vitest' ? templates.testingVitest : templates.testingJest,
+      ...(deploymentModule ? [deploymentModule] : []),
     ];
 
     const name = (group as { name?: string }).name ?? options.name ?? "";
@@ -159,6 +180,7 @@ program
   .option("--ci", "Non-interactive mode", false)
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
   .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
+  .option("--deployment <strategy>", "Deployment strategy: standalone, custom-server, spa, vercel (used with --ci)", "standalone")
   .action(
     async (
       name: string,
@@ -168,6 +190,7 @@ program
         ci: boolean;
         shadcn: boolean;
         testing: string;
+        deployment: string;
       }
     ) => {
       intro(`Create a ${chalk.blue("newt")} app.`);
@@ -178,7 +201,10 @@ program
         git: options.git,
         ci: options.ci,
         shadcn: options.shadcn,
-        testing: (options.testing === 'jest' ? 'jest' : 'vitest') as Testing,
+        testing: (options.testing === 'vitest' ? 'vitest' : 'jest') as Testing,
+        deployment: (['custom-server', 'spa', 'vercel'].includes(options.deployment)
+          ? options.deployment
+          : 'standalone') as Deployment,
       });
     }
   );
