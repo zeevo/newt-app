@@ -8,7 +8,7 @@ import { templates } from "@newt-app/templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 
 type Testing = 'jest' | 'vitest';
-type Deployment = 'standalone' | 'custom-server' | 'spa' | 'vercel';
+type Deployment = 'none' | 'standalone' | 'custom-server' | 'spa' | 'vercel';
 
 type Options = {
   name?: string;
@@ -59,14 +59,15 @@ export async function doInit(options: Options) {
         }),
       deployment: () =>
         p.select<Deployment>({
-          message: "Deployment strategy?",
+          message: "Deployment extras?",
           options: [
-            { value: "standalone", label: "Standalone + Dockerfile", hint: "default" },
+            { value: "none", label: "None", hint: "skip" },
+            { value: "standalone", label: "Standalone + Dockerfile", hint: "Dockerfiles + docker-compose.yml" },
             { value: "custom-server", label: "Custom Server", hint: "single process, single port" },
             { value: "spa", label: "SPA Mode", hint: "static export served by NestJS" },
             { value: "vercel", label: "Vercel", hint: "serverless function" },
           ],
-          initialValue: "standalone",
+          initialValue: "none",
         }),
     }),
   };
@@ -81,9 +82,10 @@ export async function doInit(options: Options) {
 
     const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
     const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
-    const deployment: Deployment = options.ci ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'standalone';
+    const deployment: Deployment = options.ci ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'none';
 
     const deploymentModule =
+      deployment === 'standalone' ? templates.deploymentStandalone :
       deployment === 'custom-server' ? templates.deploymentCustomServer :
       deployment === 'spa' ? templates.deploymentSpa :
       deployment === 'vercel' ? templates.deploymentVercel :
@@ -180,7 +182,7 @@ program
   .option("--ci", "Non-interactive mode", false)
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
   .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
-  .option("--deployment <strategy>", "Deployment strategy: standalone, custom-server, spa, vercel (used with --ci)", "standalone")
+  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa, vercel (used with --ci)", "none")
   .action(
     async (
       name: string,
@@ -202,9 +204,9 @@ program
         ci: options.ci,
         shadcn: options.shadcn,
         testing: (options.testing === 'vitest' ? 'vitest' : 'jest') as Testing,
-        deployment: (['custom-server', 'spa', 'vercel'].includes(options.deployment)
+        deployment: (['standalone', 'custom-server', 'spa', 'vercel'].includes(options.deployment)
           ? options.deployment
-          : 'standalone') as Deployment,
+          : 'none') as Deployment,
       });
     }
   );
