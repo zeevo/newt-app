@@ -6,7 +6,7 @@ export const siteConfig = {
     "Everything you want. Nothing you don't need. The monorepo-first way to build Next.js apps.",
   links: {
     twitter: 'https://twitter.com/zeevoexe',
-    github: 'https://github.com/zeevosec/newt-app',
+    github: 'https://github.com/zeevo/newt-app',
   },
   navItems: [
     {
