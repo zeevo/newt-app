@@ -5,11 +5,6 @@ description: "Deploy Next.js and NestJS as separate containers"
 
 The default deployment model. Next.js builds with `output: "standalone"`, producing a self-contained Node.js server. NestJS compiles to `dist/`. Each app runs in its own container, and the Next.js rewrite proxy forwards `/api/*` to the NestJS service.
 
-```
-apps/web   →  container on port 3000  (Next.js standalone)
-apps/api   →  container on port 3001  (NestJS)
-```
-
 This works on any container platform — Railway, Fly.io, Render, AWS ECS, and others.
 
 <svg viewBox="0 0 480 105" style={{display:'block',maxWidth:'540px',margin:'1.5rem auto'}} role="img" aria-label="Standalone deployment: two separate containers connected by API proxy">
