@@ -170,8 +170,6 @@ program
         testing: string;
       }
     ) => {
-      console.log("\n");
-
       intro(`Create a ${chalk.blue("newt")} app.`);
 
       await doInit({
