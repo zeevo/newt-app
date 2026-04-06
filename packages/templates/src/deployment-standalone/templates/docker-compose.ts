@@ -5,6 +5,8 @@ export default {
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        - API_HOST=api
     ports:
       - "3000:3000"
     environment:

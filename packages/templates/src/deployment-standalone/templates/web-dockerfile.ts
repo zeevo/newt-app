@@ -1,6 +1,7 @@
 export default {
   filename: "apps/web/Dockerfile",
   template: `FROM node:22-alpine AS base
+RUN corepack enable
 
 FROM base AS deps
 WORKDIR /app
@@ -10,10 +11,12 @@ COPY packages/ui/package.json ./packages/ui/package.json
 COPY packages/auth/package.json ./packages/auth/package.json
 COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
 COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
-RUN corepack enable && pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 FROM base AS builder
 WORKDIR /app
+ARG API_HOST=localhost
+ENV API_HOST=$API_HOST
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN pnpm build --filter=web
