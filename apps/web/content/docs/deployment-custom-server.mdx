@@ -5,9 +5,11 @@ description: "Next.js and NestJS share one HTTP server on a single port"
 
 Replace the default Next.js dev server with a custom Node.js entry point that boots both Next.js and NestJS in the same process. Requests to `/api/*` are dispatched to NestJS; everything else goes to Next.js. One process, one port, no proxy.
 
-```
-apps/web/server.ts   →  port 3000  (routes to Next.js or NestJS)
-```
+<svg viewBox="0 0 420 90" style={{display:'block',maxWidth:'480px'}} role="img" aria-label="Custom server: Next.js and NestJS in a single process on one port">
+  <rect x="10" y="10" width="400" height="70" rx="8" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
+  <text x="210" y="37" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">Next.js + NestJS</text>
+  <text x="210" y="57" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">single process · port 3000</text>
+</svg>
 
 ## Setup
 
