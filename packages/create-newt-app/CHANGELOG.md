@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.6.0
+
+### Minor Changes
+
+- ace40a1: add deployment strategy option to CLI: standalone (default), custom server, SPA mode, Vercel
+
+### Patch Changes
+
+- @newt-app/templates@0.6.0
+
 ## 0.5.0
 
 ### Minor Changes
