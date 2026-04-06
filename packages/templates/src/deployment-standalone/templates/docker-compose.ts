@@ -8,7 +8,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
+      target: web
       args:
         - API_HOST=api
     ports:
@@ -18,10 +18,22 @@ services:
     depends_on:
       - api
 
+  migrate:
+    build:
+      context: .
+      target: migrate
+    command: ["/app/packages/auth/node_modules/.bin/auth", "migrate", "--config", "src/index.ts", "-y"]
+    environment:
+      <<: *app-env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
+      target: api
     ports:
       - "3001:3001"
     environment:
@@ -29,6 +41,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   db:
     image: postgres:17-alpine
