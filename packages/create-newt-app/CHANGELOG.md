@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.5.0
+
+### Minor Changes
+
+- fb26655: minor release
+
+### Patch Changes
+
+- @newt-app/templates@0.5.0
+
 ## 0.4.1
 
 ### Patch Changes
