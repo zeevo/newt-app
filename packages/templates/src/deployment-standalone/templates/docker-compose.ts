@@ -1,6 +1,10 @@
 export default {
   filename: "docker-compose.yml",
-  template: `services:
+  template: `x-app-env: &app-env
+  BETTER_AUTH_SECRET: \${BETTER_AUTH_SECRET}
+  DATABASE_URL: postgresql://postgres:\${POSTGRES_PASSWORD:-postgres}@db:5432/postgres
+
+services:
   web:
     build:
       context: .
@@ -10,8 +14,7 @@ export default {
     ports:
       - "3000:3000"
     environment:
-      - BETTER_AUTH_SECRET=\${BETTER_AUTH_SECRET}
-      - DATABASE_URL=postgresql://postgres:\${POSTGRES_PASSWORD:-postgres}@db:5432/postgres
+      <<: *app-env
     depends_on:
       - api
 
@@ -22,8 +25,7 @@ export default {
     ports:
       - "3001:3001"
     environment:
-      - BETTER_AUTH_SECRET=\${BETTER_AUTH_SECRET}
-      - DATABASE_URL=postgresql://postgres:\${POSTGRES_PASSWORD:-postgres}@db:5432/postgres
+      <<: *app-env
     depends_on:
       db:
         condition: service_healthy
