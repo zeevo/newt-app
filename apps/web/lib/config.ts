@@ -1,12 +1,12 @@
 export const siteConfig = {
-  name: 'Next newt',
-  url: 'https://next-newt.com',
-  ogImage: 'https://next-newt.com/og.jpg',
+  name: 'Newt App',
+  url: 'https://newt-app.com',
+  ogImage: 'https://newt-app.com/og.jpg',
   description:
     "Everything you want. Nothing you don't need. The monorepo-first way to build Next.js apps.",
   links: {
-    twitter: 'https://twitter.com/zeevosec',
-    github: 'https://github.com/zeevosec/next-newt',
+    twitter: 'https://twitter.com/zeevoexe',
+    github: 'https://github.com/zeevo/newt-app',
   },
   navItems: [
     {

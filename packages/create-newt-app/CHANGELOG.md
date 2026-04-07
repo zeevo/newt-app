@@ -1,5 +1,32 @@
 # create-newt-app
 
+## 0.6.0
+
+### Minor Changes
+
+- ace40a1: add deployment strategy option to CLI: standalone (default), custom server, SPA mode, Vercel
+
+### Patch Changes
+
+- @newt-app/templates@0.6.0
+
+## 0.5.0
+
+### Minor Changes
+
+- fb26655: minor release
+
+### Patch Changes
+
+- @newt-app/templates@0.5.0
+
+## 0.4.1
+
+### Patch Changes
+
+- a65f089: use CORS_ORIGIN env var in NestJS main.ts, falling back to localhost:3000
+  - @newt-app/templates@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes
