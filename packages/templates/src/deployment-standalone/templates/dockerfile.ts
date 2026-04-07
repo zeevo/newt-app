@@ -11,8 +11,9 @@ COPY . .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 ARG API_HOST=localhost
 ENV API_HOST=$API_HOST
-RUN pnpm build --filter=web --filter=api
-RUN pnpm deploy --filter=@<%= projectName %>/auth /deploy/auth
+RUN pnpm build --filter=web --filter=api --filter=@<%= projectName %>/auth
+RUN pnpm deploy --filter=api --prod /deploy/api
+RUN pnpm deploy --filter=@<%= projectName %>/auth --prod /deploy/auth
 
 # --- web ---
 FROM base AS web
@@ -26,13 +27,9 @@ CMD ["node", "apps/web/server.js"]
 
 # --- api ---
 FROM base AS api
-WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=build /app/apps/api/dist ./apps/api/dist
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
-COPY --from=build /app/packages/auth ./packages/auth
-WORKDIR /app/apps/api
+COPY --from=build /deploy/api /app
+WORKDIR /app
 EXPOSE 3001
 CMD ["node", "dist/main"]
 

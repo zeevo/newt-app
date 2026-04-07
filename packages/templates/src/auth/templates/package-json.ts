@@ -5,9 +5,13 @@ export default {
   "version": "0.0.0",
   "private": true,
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "scripts": {
+    "build": "tsc",
     "migrate": "dotenv -e .env -- auth migrate --config src/index.ts",
     "generate": "dotenv -e .env -- auth generate --config src/index.ts"
   },
