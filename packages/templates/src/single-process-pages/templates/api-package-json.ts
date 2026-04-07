@@ -8,7 +8,10 @@ export default {
   "private": true,
   "license": "UNLICENSED",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "scripts": {
     "build": "nest build",
@@ -22,7 +25,12 @@ export default {
   "dependencies": {
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
+    "@nestjs/graphql": "^13.0.0",
+    "@nestjs/microservices": "^11.0.0",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/websockets": "^11.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "@<%= projectName %>/auth": "workspace:*",
     "@thallesp/nestjs-better-auth": "^2.5.1",
     "dotenv": "^17.3.1",

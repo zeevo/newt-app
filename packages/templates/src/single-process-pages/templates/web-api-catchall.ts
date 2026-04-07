@@ -15,8 +15,8 @@ let app: INestApplication | null = null;
 
 async function getApp(): Promise<INestApplication> {
   if (!app) {
-    const { NestFactory } = await import('@nestjs/core');
-    const { AppModule } = await import('@<%= projectName %>/api');
+    const { NestFactory } = await import(/* webpackIgnore: true */ '@nestjs/core');
+    const { AppModule } = await import(/* webpackIgnore: true */ '@<%= projectName %>/api');
     app = await NestFactory.create(AppModule, { bodyParser: false });
     app.setGlobalPrefix('api');
     await app.init();
