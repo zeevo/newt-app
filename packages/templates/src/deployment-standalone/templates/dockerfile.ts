@@ -8,7 +8,7 @@ RUN corepack enable
 FROM base AS build
 WORKDIR /app
 COPY . .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 ARG API_HOST=localhost
 ENV API_HOST=$API_HOST
 RUN pnpm build --filter=web --filter=api --filter=@<%= projectName %>/auth
