@@ -2,7 +2,7 @@
 
 import { SidebarSection } from '@/app/_components/sidebar-section';
 import { Sidebar, SidebarContent } from '@newt-app/ui/components/sidebar';
-import { BookOpen, Download, Server, Shield, Triangle } from 'lucide-react';
+import { BookOpen, Download, Server, Shield, Terminal, Triangle } from 'lucide-react';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
@@ -38,6 +38,13 @@ const modules: Item[] = [
   },
 ];
 
+const cli: Item[] = [
+  {
+    title: 'create-newt-app',
+    url: '/docs/cli',
+  },
+];
+
 const deployment: Item[] = [
   {
     title: 'Standalone + Dockerfile',
@@ -67,6 +74,7 @@ const urlToIconMap: Record<string, ReactElement> = {
   '/docs/nextjs': <Triangle />,
   '/docs/nestjs': <Server />,
   '/docs/better-auth': <Shield />,
+  '/docs/cli': <Terminal />,
 };
 
 export function DocsSidebar() {
@@ -86,6 +94,14 @@ export function DocsSidebar() {
           )}
         </SidebarSection>
         <SidebarSection title={'Modules'} items={modules}>
+          {(item) => (
+            <Link href={item.url}>
+              {urlToIconMap[item.url]}
+              <span>{item.title}</span>
+            </Link>
+          )}
+        </SidebarSection>
+        <SidebarSection title={'CLI'} items={cli}>
           {(item) => (
             <Link href={item.url}>
               {urlToIconMap[item.url]}
