@@ -9,33 +9,44 @@ pnpm dlx create-newt-app [name] [options]
 
 The `[name]` argument is optional. If omitted, the CLI will prompt for it.
 
-## Options
+## --no-install
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--no-install` | install enabled | Skip `pnpm install` |
-| `--no-git` | git enabled | Skip `git init` and initial commit |
-| `--ci` | `false` | Non-interactive mode, skip all prompts |
-| `--shadcn` | `false` | Include shadcn/ui (only with `--ci`) |
-| `--testing <framework>` | `jest` | Testing framework: `jest` or `vitest` (only with `--ci`) |
+Skip `pnpm install` and `pnpm format` after scaffolding.
 
-## Interactive mode
-
-By default the CLI prompts for anything not provided as a flag:
-
-```
-◆ What is your project named?
-◆ Would you like to add shadcn/ui?
-◆ Which testing framework?
+```bash
+pnpm dlx create-newt-app my-app --no-install
 ```
 
-## CI mode
+## --no-git
 
-Use `--ci` to skip all prompts and accept defaults (or pass flags explicitly):
+Skip `git init` and the initial commit.
+
+```bash
+pnpm dlx create-newt-app my-app --no-git
+```
+
+## --ci
+
+Non-interactive mode. Skips all prompts and uses flag values or defaults.
 
 ```bash
 pnpm dlx create-newt-app my-app --ci
-pnpm dlx create-newt-app my-app --ci --shadcn --testing vitest
+```
+
+## --shadcn
+
+Include shadcn/ui. Only applies in `--ci` mode — in interactive mode the CLI prompts for this.
+
+```bash
+pnpm dlx create-newt-app my-app --ci --shadcn
+```
+
+## --testing
+
+Choose a testing framework. Accepts `jest` (default) or `vitest`. Only applies in `--ci` mode.
+
+```bash
+pnpm dlx create-newt-app my-app --ci --testing vitest
 ```
 
 ## What happens after scaffolding
