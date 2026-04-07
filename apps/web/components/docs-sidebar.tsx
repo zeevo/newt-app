@@ -38,6 +38,29 @@ const modules: Item[] = [
   },
 ];
 
+const deployment: Item[] = [
+  {
+    title: 'Standalone + Dockerfile',
+    url: '/docs/deployment-standalone',
+  },
+  {
+    title: 'Single Docker Image',
+    url: '/docs/deployment-single-image',
+  },
+  {
+    title: 'Custom Server',
+    url: '/docs/deployment-custom-server',
+  },
+  {
+    title: 'SPA Mode',
+    url: '/docs/deployment-spa',
+  },
+  {
+    title: 'Vercel',
+    url: '/docs/deployment-vercel',
+  },
+];
+
 const urlToIconMap: Record<string, ReactElement> = {
   '/docs/introduction': <BookOpen />,
   '/docs/installation': <Download />,
@@ -63,6 +86,14 @@ export function DocsSidebar() {
           )}
         </SidebarSection>
         <SidebarSection title={'Modules'} items={modules}>
+          {(item) => (
+            <Link href={item.url}>
+              {urlToIconMap[item.url]}
+              <span>{item.title}</span>
+            </Link>
+          )}
+        </SidebarSection>
+        <SidebarSection title={'Deployment'} items={deployment}>
           {(item) => (
             <Link href={item.url}>
               {urlToIconMap[item.url]}

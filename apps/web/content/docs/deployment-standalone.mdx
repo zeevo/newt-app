@@ -1,0 +1,132 @@
+---
+title: "Standalone + Dockerfile"
+description: "Deploy Next.js and NestJS as separate containers"
+---
+
+The default deployment model. Next.js builds with `output: "standalone"`, producing a self-contained Node.js server. NestJS compiles to `dist/`. Each app runs in its own container, and the Next.js rewrite proxy forwards `/api/*` to the NestJS service.
+
+This works on any container platform — Railway, Fly.io, Render, AWS ECS, and others.
+
+<svg viewBox="0 0 480 105" style={{display:'block',maxWidth:'540px',margin:'1.5rem auto'}} role="img" aria-label="Standalone deployment: two separate containers connected by API proxy">
+  <rect x="10" y="15" width="165" height="65" rx="8" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
+  <text x="92" y="44" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">Next.js</text>
+  <text x="92" y="62" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">:3000</text>
+  <line x1="175" y1="47" x2="290" y2="47" stroke="var(--muted-foreground)" strokeWidth={1.5} />
+  <polyline points="282,41 290,47 282,53" stroke="var(--muted-foreground)" strokeWidth={1.5} fill="none" />
+  <text x="232" y="40" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">/api/*</text>
+  <rect x="300" y="15" width="165" height="65" rx="8" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
+  <text x="382" y="44" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">NestJS</text>
+  <text x="382" y="62" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">:3001</text>
+  <text x="10" y="97" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">container</text>
+  <text x="300" y="97" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">container</text>
+</svg>
+
+## CORS
+
+The Next.js rewrite proxy forwards `/api/*` server-side to NestJS, so the browser never makes a cross-origin request — CORS is not required for the normal request path.
+
+Set `CORS_ORIGIN` to your production frontend URL in the API container's environment so direct access to the API is still handled correctly:
+
+```yaml title="docker-compose.yml"
+  api:
+    environment:
+      - CORS_ORIGIN=https://your-app.com
+```
+
+## next.config.js
+
+Update the rewrite destination to use your internal service hostname instead of `localhost`:
+
+```js title="apps/web/next.config.js"
+async rewrites() {
+  return [
+    {
+      source: '/api/:path*',
+      destination: 'http://api:3001/api/:path*',
+    },
+  ];
+},
+```
+
+## Dockerfiles
+
+```dockerfile title="apps/web/Dockerfile"
+FROM node:22-alpine AS base
+
+FROM base AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/auth/package.json ./packages/auth/package.json
+COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
+COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
+RUN corepack enable && pnpm install --frozen-lockfile
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN pnpm build --filter=web
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/apps/web/public ./apps/web/public
+EXPOSE 3000
+CMD ["node", "apps/web/server.js"]
+```
+
+```dockerfile title="apps/api/Dockerfile"
+FROM node:22-alpine AS base
+
+FROM base AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/package.json
+COPY packages/auth/package.json ./packages/auth/package.json
+COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
+RUN corepack enable && pnpm install --frozen-lockfile
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN pnpm build --filter=api
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/node_modules ./node_modules
+WORKDIR /app/apps/api
+EXPOSE 3001
+CMD ["node", "dist/main"]
+```
+
+```yaml title="docker-compose.yml"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - DATABASE_URL=${DATABASE_URL}
+```
