@@ -1,0 +1,57 @@
+---
+title: "create-newt-app"
+description: "CLI reference for create-newt-app"
+---
+
+```bash
+pnpm dlx create-newt-app [name] [options]
+```
+
+The `[name]` argument is optional. If omitted, the CLI will prompt for it.
+
+## --no-install
+
+Skip `pnpm install` and `pnpm format` after scaffolding.
+
+```bash
+pnpm dlx create-newt-app my-app --no-install
+```
+
+## --no-git
+
+Skip `git init` and the initial commit.
+
+```bash
+pnpm dlx create-newt-app my-app --no-git
+```
+
+## --ci
+
+Non-interactive mode. Skips all prompts and uses flag values or defaults.
+
+```bash
+pnpm dlx create-newt-app my-app --ci
+```
+
+## --shadcn
+
+Include shadcn/ui. Only applies in `--ci` mode — in interactive mode the CLI prompts for this.
+
+```bash
+pnpm dlx create-newt-app my-app --ci --shadcn
+```
+
+## --testing
+
+Choose a testing framework. Accepts `jest` (default) or `vitest`. Only applies in `--ci` mode.
+
+```bash
+pnpm dlx create-newt-app my-app --ci --testing vitest
+```
+
+## What happens after scaffolding
+
+1. Templates are written to disk
+2. `pnpm install` runs (unless `--no-install`)
+3. `pnpm format` runs (unless `--no-install`)
+4. `git init` + initial commit (unless `--no-git`)
