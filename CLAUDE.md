@@ -86,6 +86,22 @@ To add a new static file:
 
 Public files (served at `/`) go to `apps/web/public/`. Next.js special files (favicon, icons, manifest) go to `apps/web/app/`.
 
+## PR workflow
+
+**Always work in a feature branch — never commit directly to main.**
+
+1. `git checkout main && git pull`
+2. `git checkout -b <descriptive-kebab-case-name>`
+3. Implement and commit with short lowercase messages (no prefixes, no period)
+4. Add a changeset with `/changeset` skill — required before merging
+5. Push and open PR with `gh pr create`
+
+**PR body:** summary bullets + test plan only. No "Generated with Claude Code" attribution.
+
+**Changesets:** all packages version together via the `fixed` group in `.changeset/config.json` — one changeset bumps all in lockstep.
+
+**CI checks:** `pnpm lint`, `pnpm test`, `pnpm build` on the monorepo root. Does NOT check scaffolded app correctness.
+
 ## What's working well
 
 - globals.css lives in `packages/ui/src/globals.css` and is imported by the web app as `@projectName/ui/globals.css`
