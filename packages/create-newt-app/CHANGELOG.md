@@ -1,5 +1,17 @@
 # create-newt-app
 
+## 0.7.0
+
+### Minor Changes
+
+- bc79044: fix github link in docs config
+- 185b61c: update docs logo to newt icon
+
+### Patch Changes
+
+- ee695c7: add deployment docs
+  - @newt-app/templates@0.7.0
+
 ## 0.6.0
 
 ### Minor Changes
