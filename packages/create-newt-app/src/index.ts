@@ -60,7 +60,7 @@ export async function doInit(options: Options) {
         }),
       nestDiOnly: () =>
         p.confirm({
-          message: "Use NestJS for dependency injection only (no HTTP server)?",
+          message: "Use NestJS for dependency injection only?",
           initialValue: false,
         }),
       deployment: () =>
@@ -191,7 +191,7 @@ program
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
   .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
   .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa, vercel (used with --ci)", "none")
-  .option("--nest-di-only", "Use NestJS for dependency injection only, no HTTP server (used with --ci)", false)
+  .option("--nest-di-only", "Use NestJS for dependency injection only (used with --ci)", false)
   .action(
     async (
       name: string,
