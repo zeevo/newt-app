@@ -11,7 +11,8 @@ export default {
     "rootDir": "src",
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2021"
+    "target": "ES2021",
+    "types": ["jest", "node"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

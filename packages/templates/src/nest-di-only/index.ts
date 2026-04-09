@@ -11,6 +11,9 @@ import webTodosIdRoute from './templates/web-todos-id-route';
 import webTodosToggleRoute from './templates/web-todos-toggle-route';
 import webPackageJson from './templates/web-package-json';
 import webNextConfig from './templates/web-next-config';
+import stubControllerSpec from './templates/stub-controller-spec';
+import stubE2eSpec from './templates/stub-e2e-spec';
+import apiTodosServiceSpec from './templates/api-todos-service-spec';
 
 const nestDiOnly: Module = {
   templates: [
@@ -26,6 +29,9 @@ const nestDiOnly: Module = {
     webTodosToggleRoute,
     webPackageJson,
     webNextConfig,
+    stubControllerSpec,
+    stubE2eSpec,
+    apiTodosServiceSpec,
   ],
 };
 

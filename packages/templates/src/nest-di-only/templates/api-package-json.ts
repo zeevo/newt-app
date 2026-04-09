@@ -23,6 +23,7 @@ export default {
   },
   "devDependencies": {
     "@<%= projectName %>/typescript-config": "workspace:*",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.15.3",
     "typescript": "6.0.2"
   }
