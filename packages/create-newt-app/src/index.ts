@@ -101,7 +101,7 @@ export async function doInit(options: Options) {
     const allModules = [
       templates.root,
       templates.web,
-      ...(nestDiOnly ? [] : [templates.api]),
+      templates.api,
       templates.auth,
       useShadcn ? templates.shadcnUi : templates.ui,
       templates.eslintConfig,
