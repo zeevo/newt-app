@@ -1,5 +1,5 @@
 export default {
-  filename: "packages/api/src/todos/todos.service.spec.ts",
+  filename: "apps/api/src/todos/todos.service.spec.ts",
   template: `import { TodosService } from './todos.service';
 
 describe('TodosService', () => {

@@ -1,5 +1,5 @@
 export default {
-  filename: "packages/api/src/todos/todos.module.ts",
+  filename: "apps/api/src/todos/todos.module.ts",
   template: `import { Module } from '@nestjs/common';
 import { TodosService } from './todos.service';
 

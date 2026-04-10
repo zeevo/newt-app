@@ -1,5 +1,5 @@
 export default {
-  filename: "packages/api/src/todos/todos.service.ts",
+  filename: "apps/api/src/todos/todos.service.ts",
   template: `import { Injectable, NotFoundException } from '@nestjs/common';
 
 export interface Todo {

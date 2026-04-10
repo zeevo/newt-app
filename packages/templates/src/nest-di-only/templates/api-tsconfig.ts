@@ -1,5 +1,5 @@
 export default {
-  filename: "packages/api/tsconfig.json",
+  filename: "apps/api/tsconfig.json",
   template: `{
   "compilerOptions": {
     "declaration": true,

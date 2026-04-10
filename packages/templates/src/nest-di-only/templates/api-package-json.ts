@@ -1,5 +1,5 @@
 export default {
-  filename: "packages/api/package.json",
+  filename: "apps/api/package.json",
   template: `{
   "name": "@<%= projectName %>/api",
   "version": "0.0.1",
