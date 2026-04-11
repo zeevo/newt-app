@@ -1,5 +1,5 @@
 ---
-"create-newt-app": patch
+"create-newt-app": minor
 ---
 
 move controllers and guards to api-controllers module, excluded in di-only mode
