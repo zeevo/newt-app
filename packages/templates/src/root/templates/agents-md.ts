@@ -1,5 +1,5 @@
 export default {
-  filename: "apps/web/AGENTS.md",
+  filename: "AGENTS.md",
   template: `<!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 

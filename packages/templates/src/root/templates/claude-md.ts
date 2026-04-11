@@ -1,4 +1,4 @@
 export default {
-  filename: "apps/web/CLAUDE.md",
+  filename: "CLAUDE.md",
   template: `@AGENTS.md`,
 };
