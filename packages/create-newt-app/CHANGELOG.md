@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.9.0
+
+### Minor Changes
+
+- 4fb6ed6: move controllers and guards to api-controllers module, excluded in di-only mode
+
+### Patch Changes
+
+- @newt-app/templates@0.9.0
+
 ## 0.8.3
 
 ### Patch Changes
