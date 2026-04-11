@@ -17,7 +17,8 @@ export default {
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \\"{src,apps,libs,test}/**/*.ts\\" --fix"
+    "lint": "eslint \\"{src,apps,libs,test}/**/*.ts\\" --fix",
+    "lint:check": "eslint \\"{src,apps,libs,test}/**/*.ts\\""
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
