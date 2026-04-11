@@ -14,6 +14,8 @@ import todoList from "./templates/todo-list";
 import authRoute from "./templates/auth-route";
 import authClient from "./templates/auth-client";
 import manifest from "./templates/manifest";
+import agentsMd from "./templates/agents-md";
+import claudeMd from "./templates/claude-md";
 
 const web: Module = {
   templates: [
@@ -32,6 +34,8 @@ const web: Module = {
     authRoute,
     authClient,
     manifest,
+    agentsMd,
+    claudeMd,
   ],
   staticFiles: [
     { src: "web/static/fonts/GeistVF.woff", filename: "apps/web/app/fonts/GeistVF.woff" },
