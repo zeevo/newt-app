@@ -5,7 +5,6 @@ import nestCli from "./templates/nest-cli";
 import tsconfig from "./templates/tsconfig";
 import tsconfigBuild from "./templates/tsconfig-build";
 import appModule from "./templates/app-module";
-import main from "./templates/main";
 import todosModule from "./templates/todos-module";
 import todosService from "./templates/todos-service";
 import readme from "./templates/readme";
@@ -18,7 +17,6 @@ const api: Module = {
     tsconfig,
     tsconfigBuild,
     appModule,
-    main,
     todosModule,
     todosService,
     readme,
