@@ -14,7 +14,6 @@ import todoList from "./templates/todo-list";
 import authRoute from "./templates/auth-route";
 import authClient from "./templates/auth-client";
 import manifest from "./templates/manifest";
-
 const web: Module = {
   templates: [
     packageJson,
