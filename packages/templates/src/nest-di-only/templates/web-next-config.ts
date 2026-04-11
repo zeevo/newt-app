@@ -12,7 +12,11 @@ const nextConfig = {
     '@<%= projectName %>/api',
     '@nestjs/core',
     '@nestjs/common',
+    '@nestjs/microservices',
+    '@nestjs/websockets',
+    '@thallesp/nestjs-better-auth',
     'reflect-metadata',
+    'express',
   ],
 };
 

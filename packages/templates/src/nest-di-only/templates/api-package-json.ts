@@ -12,7 +12,7 @@ export default {
   },
   "scripts": {
     "build": "nest build",
-    "lint": "eslint \\"{src,apps,libs,test}/**/*.ts\\" --fix"
+    "lint": "eslint \\"src/**/*.ts\\" --fix"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
