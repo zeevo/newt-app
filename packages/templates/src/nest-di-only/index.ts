@@ -9,12 +9,14 @@ import webTodosToggleRoute from './templates/web-todos-toggle-route';
 import webPackageJson from './templates/web-package-json';
 import webNextConfig from './templates/web-next-config';
 import webTsconfig from './templates/web-tsconfig';
+import webHelloRoute from './templates/web-hello-route';
 const nestDiOnly: Module = {
   templates: [
     apiPackageJson,
     apiTsconfig,
     apiIndex,
     webNestContext,
+    webHelloRoute,
     webTodosRoute,
     webTodosIdRoute,
     webTodosToggleRoute,
