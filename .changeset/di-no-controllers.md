@@ -1,5 +1,5 @@
 ---
-"create-newt-app": patch
+"create-newt-app": minor
 ---
 
 remove controllers and guards from di-only mode
