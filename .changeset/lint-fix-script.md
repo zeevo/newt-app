@@ -2,4 +2,4 @@
 "create-newt-app": patch
 ---
 
-add lint:fix script and make lint check-only across all templates
+lint runs --fix by default, add lint:check for check-only
