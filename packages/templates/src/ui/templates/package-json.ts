@@ -12,6 +12,7 @@ export default {
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
