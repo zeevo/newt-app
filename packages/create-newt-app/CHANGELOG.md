@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.8.0
+
+### Minor Changes
+
+- 582ec04: publish nest-di-only mode and next.config fixes
+
+### Patch Changes
+
+- @newt-app/templates@0.8.0
+
 ## 0.7.0
 
 ### Minor Changes
