@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.8.3
+
+### Patch Changes
+
+- 48318a2: add /api/hello route for di-only mode
+  - @newt-app/templates@0.8.3
+
 ## 0.8.2
 
 ### Patch Changes
