@@ -1,5 +1,18 @@
 # create-newt-app
 
+## 0.7.0
+
+### Minor Changes
+
+- bc79044: fix github link in docs config
+- 9b1b647: add nest-di-only mode: NestJS as a DI container inside Next.js, with App Router route handlers calling services directly
+- 185b61c: update docs logo to newt icon
+
+### Patch Changes
+
+- 86bfddc: remove standalone output from base next.config, add AGENTS.md and CLAUDE.md to web template
+  - @newt-app/templates@0.7.0
+
 ## 0.6.0
 
 ### Minor Changes
