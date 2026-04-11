@@ -9,9 +9,6 @@ import webTodosToggleRoute from './templates/web-todos-toggle-route';
 import webPackageJson from './templates/web-package-json';
 import webNextConfig from './templates/web-next-config';
 import webTsconfig from './templates/web-tsconfig';
-import stubControllerSpec from './templates/stub-controller-spec';
-import stubE2eSpec from './templates/stub-e2e-spec';
-
 const nestDiOnly: Module = {
   templates: [
     apiPackageJson,
@@ -24,8 +21,6 @@ const nestDiOnly: Module = {
     webPackageJson,
     webNextConfig,
     webTsconfig,
-    stubControllerSpec,
-    stubE2eSpec,
   ],
 };
 
