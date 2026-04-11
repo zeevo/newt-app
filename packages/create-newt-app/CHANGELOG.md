@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.10.0
+
+### Minor Changes
+
+- 4133089: remove main.ts from di-only mode
+
+### Patch Changes
+
+- @newt-app/templates@0.10.0
+
 ## 0.9.0
 
 ### Minor Changes
