@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.8.2
+
+### Patch Changes
+
+- 247b9cd: release
+  - @newt-app/templates@0.8.2
+
 ## 0.8.1
 
 ### Patch Changes
