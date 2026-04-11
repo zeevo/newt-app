@@ -10,6 +10,7 @@ import main from "./templates/main";
 import todosController from "./templates/todos-controller";
 import todosModule from "./templates/todos-module";
 import todosService from "./templates/todos-service";
+import todosServiceSpec from "./templates/todos-service-spec";
 import readme from "./templates/readme";
 
 const api: Module = {
@@ -25,6 +26,7 @@ const api: Module = {
     todosController,
     todosModule,
     todosService,
+    todosServiceSpec,
     readme,
   ],
 };
