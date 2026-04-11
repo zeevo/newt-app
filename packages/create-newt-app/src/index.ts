@@ -108,7 +108,7 @@ export async function doInit(options: Options) {
       templates.typescriptConfig,
       testing === 'vitest' ? templates.testingVitest : templates.testingJest,
       ...(deploymentModule ? [deploymentModule] : []),
-      ...(nestDiOnly ? [templates.nestDiOnly] : []),
+      ...(nestDiOnly ? [templates.nestDiOnly] : [templates.apiControllers]),
     ];
 
     const name = (group as { name?: string }).name ?? options.name ?? "";
