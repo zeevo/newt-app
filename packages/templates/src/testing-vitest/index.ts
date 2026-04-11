@@ -3,9 +3,10 @@ import vitestConfig from "./templates/vitest-config";
 import vitestConfigE2e from "./templates/vitest-config-e2e";
 import appControllerSpec from "./templates/app-controller-spec";
 import e2eSpec from "./templates/e2e-spec";
+import todosServiceSpec from "./templates/todos-service-spec";
 
 const testingVitest: Module = {
-  templates: [vitestConfig, vitestConfigE2e, appControllerSpec, e2eSpec],
+  templates: [vitestConfig, vitestConfigE2e, appControllerSpec, e2eSpec, todosServiceSpec],
   packages: [
     { package: "vitest", module: "apps/api", version: "^3.0.0", dev: true },
     { package: "@vitest/coverage-v8", module: "apps/api", version: "^3.0.0", dev: true },

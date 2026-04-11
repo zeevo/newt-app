@@ -1,0 +1,22 @@
+export default {
+  filename: "apps/api/src/todos/todos.service.spec.ts",
+  template: `import { describe, it, expect, beforeEach } from 'vitest';
+import { Test, TestingModule } from '@nestjs/testing';
+import { TodosService } from './todos.service';
+
+describe('TodosService', () => {
+  let service: TodosService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [TodosService],
+    }).compile();
+
+    service = module.get<TodosService>(TodosService);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+});`,
+};
