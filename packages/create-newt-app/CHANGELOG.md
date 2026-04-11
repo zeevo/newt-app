@@ -1,5 +1,14 @@
 # create-newt-app
 
+## 0.8.1
+
+### Patch Changes
+
+- e75e57f: add todos service spec to jest and vitest template variants
+- 8ff37e3: lint runs --fix by default, add lint:check for check-only
+- 2e5e5c7: remove server scripts and platform-express from nest-di-only api package
+  - @newt-app/templates@0.8.1
+
 ## 0.8.0
 
 ### Minor Changes
