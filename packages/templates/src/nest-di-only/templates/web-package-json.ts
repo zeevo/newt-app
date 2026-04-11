@@ -10,6 +10,7 @@ export default {
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0 && next typegen && tsc --noEmit",
+    "lint:fix": "eslint --fix && next typegen && tsc --noEmit",
     "db:migrate": "better-auth migrate"
   },
   "dependencies": {
