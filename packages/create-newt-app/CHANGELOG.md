@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.11.0
+
+### Minor Changes
+
+- f3d4274: release
+
+### Patch Changes
+
+- @newt-app/templates@0.11.0
+
 ## 0.10.0
 
 ### Minor Changes
