@@ -5,6 +5,8 @@ import nestCli from "./templates/nest-cli";
 import tsconfig from "./templates/tsconfig";
 import tsconfigBuild from "./templates/tsconfig-build";
 import appModule from "./templates/app-module";
+import appService from "./templates/app-service";
+import appServiceSpec from "./templates/app-service-spec";
 import todosModule from "./templates/todos-module";
 import todosService from "./templates/todos-service";
 import todosServiceSpec from "./templates/todos-service-spec";
@@ -18,6 +20,8 @@ const api: Module = {
     tsconfig,
     tsconfigBuild,
     appModule,
+    appService,
+    appServiceSpec,
     todosModule,
     todosService,
     todosServiceSpec,

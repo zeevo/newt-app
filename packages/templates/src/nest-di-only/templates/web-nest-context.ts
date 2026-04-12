@@ -7,7 +7,7 @@ import type { INestApplicationContext } from '@nestjs/common';
 
 let context: INestApplicationContext | null = null;
 
-export async function getNestApp(): Promise<INestApplicationContext> {
+export async function getContext(): Promise<INestApplicationContext> {
   if (!context) {
     context = await NestFactory.createApplicationContext(AppModule, {
       logger: false,
