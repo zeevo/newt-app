@@ -7,15 +7,12 @@ import type { INestApplicationContext } from '@nestjs/common';
 
 declare global {
   // eslint-disable-next-line no-var
-  var __nestApp: INestApplicationContext | undefined;
+  var __nestApp: Promise<INestApplicationContext> | undefined;
 }
 
-export async function getNestApp(): Promise<INestApplicationContext> {
-  if (!global.__nestApp) {
-    global.__nestApp = await NestFactory.createApplicationContext(AppModule, {
-      logger: false,
-    });
-  }
-  return global.__nestApp;
+global.__nestApp ??= NestFactory.createApplicationContext(AppModule, { logger: false });
+
+export function getNestApp(): Promise<INestApplicationContext> {
+  return global.__nestApp!;
 }`,
 };
