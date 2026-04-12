@@ -5,14 +5,17 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@<%= projectName %>/api';
 import type { INestApplicationContext } from '@nestjs/common';
 
-let context: INestApplicationContext | null = null;
+declare global {
+  // eslint-disable-next-line no-var
+  var __nestApp: INestApplicationContext | undefined;
+}
 
 export async function getNestApp(): Promise<INestApplicationContext> {
-  if (!context) {
-    context = await NestFactory.createApplicationContext(AppModule, {
+  if (!global.__nestApp) {
+    global.__nestApp = await NestFactory.createApplicationContext(AppModule, {
       logger: false,
     });
   }
-  return context;
+  return global.__nestApp;
 }`,
 };
