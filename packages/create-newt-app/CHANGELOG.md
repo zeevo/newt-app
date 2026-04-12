@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.12.0
+
+### Minor Changes
+
+- facdf47: add AppService, rename getNestApp to getContext, wire AppService into /api/hello
+
+### Patch Changes
+
+- @newt-app/templates@0.12.0
+
 ## 0.11.0
 
 ### Minor Changes
