@@ -18,6 +18,7 @@ type Options = {
   shadcn: boolean;
   testing: Testing;
   deployment: Deployment;
+  nestDiOnly: boolean;
 };
 
 class TaskBuilder {
@@ -57,6 +58,11 @@ export async function doInit(options: Options) {
           ],
           initialValue: "jest",
         }),
+      nestDiOnly: () =>
+        p.confirm({
+          message: "Use NestJS for dependency injection only?",
+          initialValue: false,
+        }),
       deployment: () =>
         p.select<Deployment>({
           message: "Deployment extras?",
@@ -83,6 +89,7 @@ export async function doInit(options: Options) {
     const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
     const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
     const deployment: Deployment = options.ci ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'none';
+    const nestDiOnly = options.ci ? options.nestDiOnly : (group as { nestDiOnly?: boolean }).nestDiOnly ?? false;
 
     const deploymentModule =
       deployment === 'standalone' ? templates.deploymentStandalone :
@@ -101,6 +108,7 @@ export async function doInit(options: Options) {
       templates.typescriptConfig,
       testing === 'vitest' ? templates.testingVitest : templates.testingJest,
       ...(deploymentModule ? [deploymentModule] : []),
+      ...(nestDiOnly ? [templates.nestDiOnly] : [templates.apiControllers]),
     ];
 
     const name = (group as { name?: string }).name ?? options.name ?? "";
@@ -183,6 +191,7 @@ program
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
   .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
   .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa, vercel (used with --ci)", "none")
+  .option("--nest-di-only", "Use NestJS for dependency injection only (used with --ci)", false)
   .action(
     async (
       name: string,
@@ -193,6 +202,7 @@ program
         shadcn: boolean;
         testing: string;
         deployment: string;
+        nestDiOnly: boolean;
       }
     ) => {
       intro(`Create a ${chalk.blue("newt")} app.`);
@@ -207,6 +217,7 @@ program
         deployment: (['standalone', 'custom-server', 'spa', 'vercel'].includes(options.deployment)
           ? options.deployment
           : 'none') as Deployment,
+        nestDiOnly: options.nestDiOnly,
       });
     }
   );

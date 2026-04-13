@@ -23,7 +23,7 @@ export function SidebarSection({
   title: string;
   className?: string;
   children: (thing: Item) => React.ReactNode;
-}) {
+}): React.ReactElement {
   return (
     <SidebarGroup className={cn('p-0', className)}>
       <SidebarGroupLabel>{title}</SidebarGroupLabel>

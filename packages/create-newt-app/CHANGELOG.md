@@ -1,5 +1,115 @@
 # create-newt-app
 
+## 0.13.2
+
+### Patch Changes
+
+- 080bf98: revert pull_request trigger from release workflow; fix squash commit format instead
+  - @newt-app/templates@0.13.2
+
+## 0.13.1
+
+### Patch Changes
+
+- b05930e: fix release workflow not triggering when Version Packages PR is merged
+  - @newt-app/templates@0.13.1
+
+## 0.13.0
+
+### Minor Changes
+
+- fd98f57: test PAT-triggered release workflow
+
+### Patch Changes
+
+- @newt-app/templates@0.13.0
+
+## 0.12.0
+
+### Minor Changes
+
+- facdf47: add AppService, rename getNestApp to getContext, wire AppService into /api/hello
+
+### Patch Changes
+
+- @newt-app/templates@0.12.0
+
+## 0.11.0
+
+### Minor Changes
+
+- f3d4274: release
+
+### Patch Changes
+
+- @newt-app/templates@0.11.0
+
+## 0.10.0
+
+### Minor Changes
+
+- 4133089: remove main.ts from di-only mode
+
+### Patch Changes
+
+- @newt-app/templates@0.10.0
+
+## 0.9.0
+
+### Minor Changes
+
+- 4fb6ed6: move controllers and guards to api-controllers module, excluded in di-only mode
+
+### Patch Changes
+
+- @newt-app/templates@0.9.0
+
+## 0.8.3
+
+### Patch Changes
+
+- 48318a2: add /api/hello route for di-only mode
+  - @newt-app/templates@0.8.3
+
+## 0.8.2
+
+### Patch Changes
+
+- 247b9cd: release
+  - @newt-app/templates@0.8.2
+
+## 0.8.1
+
+### Patch Changes
+
+- e75e57f: add todos service spec to jest and vitest template variants
+- 8ff37e3: lint runs --fix by default, add lint:check for check-only
+- 2e5e5c7: remove server scripts and platform-express from nest-di-only api package
+  - @newt-app/templates@0.8.1
+
+## 0.8.0
+
+### Minor Changes
+
+- 582ec04: publish nest-di-only mode and next.config fixes
+
+### Patch Changes
+
+- @newt-app/templates@0.8.0
+
+## 0.7.0
+
+### Minor Changes
+
+- bc79044: fix github link in docs config
+- 9b1b647: add nest-di-only mode: NestJS as a DI container inside Next.js, with App Router route handlers calling services directly
+- 185b61c: update docs logo to newt icon
+
+### Patch Changes
+
+- 86bfddc: remove standalone output from base next.config, add AGENTS.md and CLAUDE.md to web template
+  - @newt-app/templates@0.7.0
+
 ## 0.6.0
 
 ### Minor Changes

@@ -13,6 +13,8 @@ import deploymentStandalone from "./deployment-standalone/index";
 import deploymentCustomServer from "./single-process-custom-server/index";
 import deploymentSpa from "./single-process-static-export/index";
 import deploymentVercel from "./single-process-pages/index";
+import nestDiOnly from "./nest-di-only/index";
+import apiControllers from "./api-controllers/index";
 
 export * from "./types";
 
@@ -39,4 +41,6 @@ export const templates = {
   deploymentCustomServer,
   deploymentSpa,
   deploymentVercel,
+  nestDiOnly,
+  apiControllers,
 };

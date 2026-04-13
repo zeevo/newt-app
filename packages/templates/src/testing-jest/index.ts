@@ -1,12 +1,11 @@
 import type { Module } from "../types";
 import jestConfig from "./templates/jest-config";
 import jestE2eConfig from "./templates/jest-e2e-config";
-import appControllerSpec from "./templates/app-controller-spec";
 import e2eSpec from "./templates/e2e-spec";
 import nestjsBetterAuthMock from "./templates/nestjs-better-auth-mock";
 
 const testingJest: Module = {
-  templates: [jestConfig, jestE2eConfig, appControllerSpec, e2eSpec, nestjsBetterAuthMock],
+  templates: [jestConfig, jestE2eConfig, e2eSpec, nestjsBetterAuthMock],
   packages: [
     { package: "jest", module: "apps/api", version: "^30.0.0", dev: true },
     { package: "ts-jest", module: "apps/api", version: "^29.2.5", dev: true },

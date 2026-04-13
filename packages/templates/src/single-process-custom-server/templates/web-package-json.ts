@@ -9,7 +9,8 @@ export default {
     "dev": "tsx watch --tsconfig tsconfig.server.json server.ts",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --max-warnings 0 && next typegen && tsc --noEmit",
+    "lint": "eslint --fix && next typegen && tsc --noEmit",
+    "lint:check": "eslint --max-warnings 0 && next typegen && tsc --noEmit",
     "db:migrate": "better-auth migrate"
   },
   "dependencies": {

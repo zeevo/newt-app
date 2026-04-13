@@ -14,7 +14,8 @@ export default {
     "./*": "./src/components/*.tsx"
   },
   "scripts": {
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --fix",
+    "lint:check": "eslint . --max-warnings 0"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

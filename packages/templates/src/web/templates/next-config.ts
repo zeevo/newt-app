@@ -9,7 +9,6 @@ dotenv.config({ path: resolve(process.cwd(), '.env') });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
   async rewrites() {
     return [
       {
