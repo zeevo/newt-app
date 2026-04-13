@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.13.0
+
+### Minor Changes
+
+- fd98f57: test PAT-triggered release workflow
+
+### Patch Changes
+
+- @newt-app/templates@0.13.0
+
 ## 0.12.0
 
 ### Minor Changes
