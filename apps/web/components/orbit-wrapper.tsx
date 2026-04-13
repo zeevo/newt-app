@@ -13,8 +13,6 @@ function useBreakpoint() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  console.log(width);
-
   if (width <= 768) return "mobile"; // < md
   if (width <= 1024) return "tablet"; // md–lg
   if (width <= 1512) return "desktop";
@@ -24,21 +22,20 @@ function useBreakpoint() {
 export default function ResponsiveComponent() {
   const breakpoint = useBreakpoint();
 
-  console.log(breakpoint);
-
   if (breakpoint === "mobile") {
     return null;
   }
   if (breakpoint === "tablet" || breakpoint === "desktop") {
     return (
       <Orbit
-        width={600}
-        height={600}
-        satelliteFontSize={9}
-        satelliteRadius={34}
-        orbitRadius={260}
+        width={900}
+        height={900}
+        satelliteFontSize={11}
+        satelliteRadius={44}
+        orbitRadius={390}
+        speed={0.005}
       />
     );
   }
-  return <Orbit />;
+  return <Orbit speed={0.005} orbitRadius={620} width={1400} height={1400} />;
 }
