@@ -3,8 +3,8 @@ import OrbitWrapper from '@/components/orbit-wrapper';
 
 export default function Home() {
   return (
-    <div className="flex flex-col justify-center flex-1">
-      <section className="container mx-auto relative flex items-center justify-center overflow-hidden py-40">
+    <div className="flex flex-col flex-1">
+      <section className="relative flex flex-1 items-center justify-center overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center -translate-y-1/4 pointer-events-none">
           <OrbitWrapper />
         </div>
