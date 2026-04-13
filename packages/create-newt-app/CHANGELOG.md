@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.13.1
+
+### Patch Changes
+
+- b05930e: fix release workflow not triggering when Version Packages PR is merged
+  - @newt-app/templates@0.13.1
+
 ## 0.13.0
 
 ### Minor Changes
