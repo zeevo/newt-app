@@ -1,0 +1,92 @@
+---
+title: "Single Docker Image"
+description: "Run Next.js and NestJS together in one container"
+---
+
+Package both apps into a single Docker image and start them with a process manager. This simplifies ops — one image to build, push, and deploy — at the cost of independent scaling.
+
+Next.js still runs on port 3000, NestJS on port 3001. The existing rewrite proxy in `next.config.js` forwards `/api/*` internally. Only port 3000 is exposed externally.
+
+<svg viewBox="0 0 480 136" style={{display:'block',maxWidth:'540px',margin:'1.5rem auto'}} role="img" aria-label="Single Docker image: both processes inside one container">
+  <rect x="10" y="30" width="460" height="88" rx="8" fill="none" stroke="var(--border)" strokeWidth={1} strokeDasharray="5 3" />
+  <text x="22" y="24" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">Docker image</text>
+  <rect x="30" y="48" width="150" height="55" rx="6" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
+  <text x="105" y="72" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">Next.js</text>
+  <text x="105" y="89" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">:3000</text>
+  <line x1="180" y1="75" x2="290" y2="75" stroke="var(--muted-foreground)" strokeWidth={1.5} />
+  <polyline points="282,69 290,75 282,81" stroke="var(--muted-foreground)" strokeWidth={1.5} fill="none" />
+  <text x="235" y="67" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">/api/*</text>
+  <rect x="300" y="48" width="150" height="55" rx="6" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
+  <text x="375" y="72" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">NestJS</text>
+  <text x="375" y="89" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">:3001</text>
+  <text x="458" y="132" textAnchor="end" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">:3000 exposed</text>
+</svg>
+
+## Dockerfile
+
+```dockerfile title="Dockerfile"
+FROM node:22-alpine AS base
+
+FROM base AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/web/package.json ./apps/web/package.json
+COPY apps/api/package.json ./apps/api/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/auth/package.json ./packages/auth/package.json
+COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
+COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
+RUN corepack enable && pnpm install --frozen-lockfile
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN pnpm build --filter=web --filter=api
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+# Next.js standalone output
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/apps/web/public ./apps/web/public
+
+# NestJS compiled output
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/node_modules ./node_modules
+
+RUN npm install -g concurrently
+
+EXPOSE 3000
+
+CMD ["concurrently", \
+  "node apps/web/server.js", \
+  "node apps/api/dist/main.js"]
+```
+
+## next.config.js
+
+The rewrite destination stays as `localhost` since both processes share the same container:
+
+```js title="apps/web/next.config.js"
+async rewrites() {
+  return [
+    {
+      source: '/api/:path*',
+      destination: 'http://localhost:3001/api/:path*',
+    },
+  ];
+},
+```
+
+## Tradeoffs
+
+**Simpler ops:** one image, one deploy, one place to check logs (if you aggregate stdout).
+
+**No independent scaling:** you can't scale the API without also scaling the frontend, and vice versa. If NestJS is the bottleneck, you're scaling the whole image.
+
+**Startup order:** Next.js may start serving before NestJS is ready. The first few `/api/*` requests during startup may fail. For production, consider adding a readiness check or a short startup delay in the web process.
+
+**Crash isolation:** if NestJS crashes, `concurrently` exits the container and your platform's restart policy will bring it back up. Configure your orchestrator (Docker restart policy, Railway, Fly.io, etc.) to restart on exit.
