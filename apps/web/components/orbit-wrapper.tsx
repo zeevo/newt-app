@@ -30,12 +30,23 @@ export default function ResponsiveComponent() {
       <Orbit
         width={1100}
         height={1100}
-        satelliteFontSize={13}
-        satelliteRadius={52}
-        orbitRadius={480}
+        satelliteRadius={110}
+        orbitRadius={440}
         speed={0.005}
+        showOrbit={false}
+        showLabels={false}
       />
     );
   }
-  return <Orbit speed={0.005} orbitRadius={740} width={1700} height={1700} satelliteFontSize={15} satelliteRadius={60} />;
+  return (
+    <Orbit
+      width={1800}
+      height={1800}
+      satelliteRadius={160}
+      orbitRadius={700}
+      speed={0.005}
+      showOrbit={false}
+      showLabels={false}
+    />
+  );
 }

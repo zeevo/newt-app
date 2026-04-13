@@ -29,6 +29,7 @@ export default function Orbit({
   // 1 = clockwise, -1 = counterclockwise
   direction = 1,
   showOrbit = true,
+  showLabels = true,
 }: {
   width?: number;
   height?: number;
@@ -42,6 +43,7 @@ export default function Orbit({
   speed?: number;
   direction?: 1 | -1;
   showOrbit?: boolean;
+  showLabels?: boolean;
 }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const timerRef = useRef<d3.Timer | null>(null);
@@ -155,40 +157,41 @@ export default function Orbit({
     satellitesGroup
       .append('circle')
       .attr('r', satelliteRadius)
-      .attr('class', 'fill-secondary/40 stroke-primary/15');
+      .attr('class', showLabels ? 'fill-secondary/40 stroke-primary/15' : 'fill-foreground/[0.04] stroke-none');
 
-    // ...after you create `satelliteText`
-    const satelliteText = satellitesGroup
-      .append('text')
-      .text((d, i) => `${satelliteTexts[i]!}`)
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'middle')
-      .attr('font-size', satelliteFontSize)
-      .attr('class', 'stroke-none fill-foreground/40 font-mono');
+    let satelliteText: d3.Selection<SVGTextElement, number, SVGGElement, unknown> | null = null;
+    let satelliteRects: d3.Selection<SVGRectElement, unknown, SVGGElement, unknown> | null = null;
 
-    // 👉 NEW: draw a rounded rect behind each label (based on its bbox)
-    const paddingX = 10;
-    const paddingY = 6;
-    const corner = 8;
+    if (showLabels) {
+      satelliteText = satellitesGroup
+        .append('text')
+        .text((d, i) => `${satelliteTexts[i]!}`)
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'middle')
+        .attr('font-size', satelliteFontSize)
+        .attr('class', 'stroke-none fill-foreground/40 font-mono');
 
-    satellitesGroup.each(function () {
-      const g = d3.select(this as SVGGElement);
-      const t = g.select<SVGTextElement>('text').node()!;
-      const bbox = t.getBBox();
+      const paddingX = 10;
+      const paddingY = 6;
+      const corner = 8;
 
-      g.insert('rect', 'text')
-        .attr('x', bbox.x - paddingX)
-        .attr('y', bbox.y - paddingY)
-        .attr('width', bbox.width + paddingX * 2)
-        .attr('height', bbox.height + paddingY * 2)
-        .attr('rx', corner)
-        .attr('ry', corner)
-        // Tailwind/shadcn-ish coloring; swap to explicit fill/stroke if you prefer
-        .attr('class', 'fill-background/50 stroke-primary/10');
-    });
+      satellitesGroup.each(function () {
+        const g = d3.select(this as SVGGElement);
+        const t = g.select<SVGTextElement>('text').node()!;
+        const bbox = t.getBBox();
 
-    // Keep selections to counter-rotate both text *and* its rects
-    const satelliteRects = satellitesGroup.select<SVGRectElement>('rect');
+        g.insert('rect', 'text')
+          .attr('x', bbox.x - paddingX)
+          .attr('y', bbox.y - paddingY)
+          .attr('width', bbox.width + paddingX * 2)
+          .attr('height', bbox.height + paddingY * 2)
+          .attr('rx', corner)
+          .attr('ry', corner)
+          .attr('class', 'fill-background/50 stroke-primary/10');
+      });
+
+      satelliteRects = satellitesGroup.select<SVGRectElement>('rect');
+    }
     const reduceMotion =
       typeof window !== 'undefined' &&
       window.matchMedia &&
@@ -216,9 +219,8 @@ export default function Orbit({
 
         const angle = accumulatedAngleRef.current;
         orbitGroup.attr('transform', `rotate(${angle} ${cx} ${cy})`);
-        satelliteText.attr('transform', () => `rotate(${-angle} 0 0)`); // keep labels upright
-        satelliteText.attr('transform', () => `rotate(${-angle} 0 0)`);
-        satelliteRects.attr('transform', () => `rotate(${-angle} 0 0)`);
+        satelliteText?.attr('transform', () => `rotate(${-angle} 0 0)`);
+        satelliteRects?.attr('transform', () => `rotate(${-angle} 0 0)`);
       });
     }
 
@@ -240,6 +242,7 @@ export default function Orbit({
     speed,
     direction,
     showOrbit,
+    showLabels,
   ]);
 
   return (

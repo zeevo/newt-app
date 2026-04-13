@@ -3,9 +3,9 @@ import OrbitWrapper from '@/components/orbit-wrapper';
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1">
-      <section className="relative flex flex-1 items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center -translate-y-1/4 pointer-events-none">
+    <div className="flex flex-col flex-1 min-h-0">
+      <section className="relative flex flex-1 min-h-0 items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <OrbitWrapper />
         </div>
         <div className="relative flex items-center lg:justify-center flex-col gap-2 z-10">
