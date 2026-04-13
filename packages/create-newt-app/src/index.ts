@@ -8,7 +8,7 @@ import { templates } from "@newt-app/templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 
 type Testing = 'jest' | 'vitest';
-type Deployment = 'none' | 'standalone' | 'custom-server' | 'spa' | 'vercel';
+type Deployment = 'none' | 'standalone' | 'custom-server' | 'spa';
 
 type Options = {
   name?: string;
@@ -71,7 +71,6 @@ export async function doInit(options: Options) {
             { value: "standalone", label: "Standalone + Dockerfile", hint: "Dockerfiles + docker-compose.yml" },
             { value: "custom-server", label: "Custom Server", hint: "single process, single port" },
             { value: "spa", label: "SPA Mode", hint: "static export served by NestJS" },
-            { value: "vercel", label: "Vercel", hint: "serverless function" },
           ],
           initialValue: "none",
         }),
@@ -95,7 +94,6 @@ export async function doInit(options: Options) {
       deployment === 'standalone' ? templates.deploymentStandalone :
       deployment === 'custom-server' ? templates.deploymentCustomServer :
       deployment === 'spa' ? templates.deploymentSpa :
-      deployment === 'vercel' ? templates.deploymentVercel :
       null;
 
     const allModules = [
@@ -190,7 +188,7 @@ program
   .option("--ci", "Non-interactive mode", false)
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
   .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
-  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa, vercel (used with --ci)", "none")
+  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa (used with --ci)", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only (used with --ci)", false)
   .action(
     async (
@@ -214,7 +212,7 @@ program
         ci: options.ci,
         shadcn: options.shadcn,
         testing: (options.testing === 'vitest' ? 'vitest' : 'jest') as Testing,
-        deployment: (['standalone', 'custom-server', 'spa', 'vercel'].includes(options.deployment)
+        deployment: (['standalone', 'custom-server', 'spa'].includes(options.deployment)
           ? options.deployment
           : 'none') as Deployment,
         nestDiOnly: options.nestDiOnly,
