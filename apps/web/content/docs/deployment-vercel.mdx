@@ -1,107 +1,93 @@
 ---
 title: "Vercel"
-description: "Deploy to Vercel with NestJS running as a serverless function"
+description: "Deploy to Vercel using NestJS di-only mode"
 ---
 
-To deploy on Vercel, the NestJS API runs as a serverless function using a `pages/api` catch-all route. The Next.js frontend deploys normally to Vercel's edge network; the catch-all forwards all `/api/*` requests to a lazily-initialized NestJS instance.
+The recommended way to deploy a newt app to Vercel is with **NestJS di-only mode** (`--nest-di-only`). In this mode, NestJS runs as an application context — no HTTP server — so your entire app is a single Next.js project that deploys to Vercel without any extra infrastructure.
 
-The `pages/api` directory works alongside the App Router — Next.js supports both simultaneously.
-
-<svg viewBox="0 0 480 130" style={{display:'block',maxWidth:'540px',margin:'1.5rem auto'}} role="img" aria-label="Vercel deployment: Next.js on the edge, NestJS as a serverless function">
+<svg viewBox="0 0 480 130" style={{display:'block',maxWidth:'540px',margin:'1.5rem auto'}} role="img" aria-label="Vercel deployment: Next.js app with NestJS running as application context">
   <rect x="10" y="30" width="460" height="88" rx="8" fill="none" stroke="var(--border)" strokeWidth={1} strokeDasharray="5 3" />
   <text x="22" y="24" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">Vercel</text>
-  <rect x="30" y="48" width="150" height="55" rx="6" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
-  <text x="105" y="72" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">Next.js</text>
-  <text x="105" y="89" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">edge / node</text>
-  <line x1="180" y1="75" x2="278" y2="75" stroke="var(--muted-foreground)" strokeWidth={1.5} />
+  <rect x="30" y="48" width="200" height="55" rx="6" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
+  <text x="130" y="69" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">Next.js</text>
+  <text x="130" y="86" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">API routes</text>
+  <line x1="230" y1="75" x2="278" y2="75" stroke="var(--muted-foreground)" strokeWidth={1.5} />
   <polyline points="270,69 278,75 270,81" stroke="var(--muted-foreground)" strokeWidth={1.5} fill="none" />
-  <text x="229" y="67" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">/api/*</text>
   <rect x="288" y="48" width="162" height="55" rx="6" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
   <text x="369" y="69" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">NestJS</text>
-  <text x="369" y="86" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">serverless fn</text>
+  <text x="369" y="86" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">app context</text>
 </svg>
 
-## pages/api/[...path].ts
+## How it works
 
-```ts title="apps/web/pages/api/[...path].ts"
-import 'reflect-metadata';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import type { INestApplication } from '@nestjs/common';
+When you scaffold with `--nest-di-only`, NestJS is initialized via `NestFactory.createApplicationContext` — no HTTP server. NestJS services are accessed directly from Next.js API routes using the `inject` helper in `apps/web/lib/nest.ts`:
 
-export const config = {
-  api: {
-    bodyParser: false,
-    externalResolver: true,
-  },
-};
+```ts title="apps/web/app/api/hello/route.ts"
+import { NextResponse } from 'next/server';
+import { inject } from '@/lib/nest';
+import { AppService } from '@my-app/api';
 
-let app: INestApplication | null = null;
+export async function GET() {
+  const appService = await inject(AppService);
+  return NextResponse.json({ message: appService.getHello() });
+}
+```
 
-async function getApp(): Promise<INestApplication> {
-  if (!app) {
-    const { NestFactory } = await import('@nestjs/core');
-    const { AppModule } = await import('@my-app/api');
-    app = await NestFactory.create(AppModule, { bodyParser: false });
-    app.setGlobalPrefix('api');
-    await app.init();
+The context is lazily initialized on the first request and cached for the lifetime of the function container:
+
+```ts title="apps/web/lib/nest.ts"
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from '@my-app/api';
+import type { INestApplicationContext, Type, Abstract } from '@nestjs/common';
+
+let context: INestApplicationContext | null = null;
+
+export async function getContext(): Promise<INestApplicationContext> {
+  if (!context) {
+    context = await NestFactory.createApplicationContext(AppModule, { logger: false });
   }
-  return app;
+  return context;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const nestApp = await getApp();
-  const express = nestApp.getHttpAdapter().getInstance() as (
-    req: NextApiRequest,
-    res: NextApiResponse
-  ) => void;
-  express(req, res);
+export async function inject<T>(token: Type<T> | Abstract<T> | string | symbol): Promise<T> {
+  const ctx = await getContext();
+  return ctx.get<T>(token);
 }
 ```
 
-For `@my-app/api` to resolve, give `apps/api` a workspace package name and an exports field:
+## Deploying to Vercel
 
-```json title="apps/api/package.json"
-{
-  "name": "@my-app/api",
-  "exports": {
-    ".": "./src/index.ts"
-  }
-}
+1. Push your repo to GitHub
+2. Import the project at [vercel.com/new](https://vercel.com/new)
+3. Set the **root directory** to `apps/web`
+4. Add your environment variables (see below)
+5. Deploy
+
+Vercel auto-detects Next.js — no build configuration needed.
+
+## Environment variables
+
+Set these in the Vercel dashboard under **Settings → Environment Variables**:
+
+```bash
+DATABASE_URL=        # your database connection string
+BETTER_AUTH_SECRET=  # generate with: openssl rand -base64 32
+NEXT_PUBLIC_APP_URL= # your Vercel deployment URL, e.g. https://my-app.vercel.app
 ```
 
-```ts title="apps/api/src/index.ts"
-export { AppModule } from './app.module';
-```
+## Database
 
-```json title="apps/web/package.json"
-{
-  "dependencies": {
-    "@my-app/api": "workspace:*"
-  }
-}
-```
+Vercel doesn't include a database. Use any Postgres provider — [Neon](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app) all work well.
 
-## tsconfig for decorator metadata
+Run migrations before your first deploy:
 
-The catch-all file needs `emitDecoratorMetadata`. Add `apps/web/tsconfig.api.json`:
-
-```json title="apps/web/tsconfig.api.json"
-{
-  "compilerOptions": {
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "skipLibCheck": true
-  },
-  "include": ["pages/api/[...path].ts"]
-}
+```bash
+pnpm db:migrate
 ```
 
 ## Considerations
 
-- NestJS initializes lazily on the first request and is cached for the lifetime of the function container — subsequent requests within the same container are fast
+- NestJS initializes lazily on the first request and is cached for the lifetime of the function container — subsequent requests within the same container skip initialization
 - Cold starts add latency on the first request after inactivity
-- Serverless functions have no persistent in-memory state between containers — use a database for all state
-- Vercel's function timeout applies (default 10s on Hobby, 60s on Pro)
-- The `apps/api` container is not deployed separately — it only exists as a dependency of the serverless function
+- No persistent in-memory state between containers — use a database for all state
+- Vercel's function timeout applies (10s on Hobby, 60s on Pro)
