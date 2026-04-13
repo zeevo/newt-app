@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.13.2
+
+### Patch Changes
+
+- 080bf98: revert pull_request trigger from release workflow; fix squash commit format instead
+  - @newt-app/templates@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes
