@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [closed]
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
@@ -21,12 +17,6 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'push' ||
-      (github.event_name == 'pull_request' &&
-       github.event.pull_request.merged == true &&
-       github.event.pull_request.head.ref == 'changeset-release/main')
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
