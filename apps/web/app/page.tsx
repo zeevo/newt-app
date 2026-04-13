@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="flex flex-col justify-center flex-1">
       <section className="container mx-auto relative flex items-center justify-center overflow-hidden py-40">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center -translate-y-1/4 pointer-events-none">
           <OrbitWrapper />
         </div>
         <div className="relative flex items-center lg:justify-center flex-col gap-2 z-10">

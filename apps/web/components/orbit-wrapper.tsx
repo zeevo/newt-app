@@ -28,14 +28,14 @@ export default function ResponsiveComponent() {
   if (breakpoint === "tablet" || breakpoint === "desktop") {
     return (
       <Orbit
-        width={900}
-        height={900}
-        satelliteFontSize={11}
-        satelliteRadius={44}
-        orbitRadius={390}
+        width={1100}
+        height={1100}
+        satelliteFontSize={13}
+        satelliteRadius={52}
+        orbitRadius={480}
         speed={0.005}
       />
     );
   }
-  return <Orbit speed={0.005} orbitRadius={620} width={1400} height={1400} />;
+  return <Orbit speed={0.005} orbitRadius={740} width={1700} height={1700} satelliteFontSize={15} satelliteRadius={60} />;
 }

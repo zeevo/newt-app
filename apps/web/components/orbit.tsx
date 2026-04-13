@@ -89,7 +89,7 @@ export default function Orbit({
         .attr('r', orbitRadius)
         .attr('fill', 'none')
         .attr('stroke', 'currentColor')
-        .attr('opacity', 0.35)
+        .attr('opacity', 0.12)
         .attr('stroke-dasharray', '4,6');
     }
 
@@ -155,7 +155,7 @@ export default function Orbit({
     satellitesGroup
       .append('circle')
       .attr('r', satelliteRadius)
-      .attr('class', 'fill-secondary stroke-primary/30'); // shadcn colors
+      .attr('class', 'fill-secondary/40 stroke-primary/15');
 
     // ...after you create `satelliteText`
     const satelliteText = satellitesGroup
@@ -164,7 +164,7 @@ export default function Orbit({
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
       .attr('font-size', satelliteFontSize)
-      .attr('class', 'stroke-primary fill-primary font-mono');
+      .attr('class', 'stroke-none fill-foreground/40 font-mono');
 
     // 👉 NEW: draw a rounded rect behind each label (based on its bbox)
     const paddingX = 10;
@@ -184,7 +184,7 @@ export default function Orbit({
         .attr('rx', corner)
         .attr('ry', corner)
         // Tailwind/shadcn-ish coloring; swap to explicit fill/stroke if you prefer
-        .attr('class', 'fill-background/80 stroke-primary/30');
+        .attr('class', 'fill-background/50 stroke-primary/10');
     });
 
     // Keep selections to counter-rotate both text *and* its rects
