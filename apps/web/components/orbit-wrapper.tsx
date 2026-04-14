@@ -33,8 +33,8 @@ export default function ResponsiveComponent() {
         satelliteRadius={110}
         orbitRadius={440}
         speed={0.005}
-        showOrbit={false}
-        showLabels={false}
+        showOrbit={true}
+        showLabels={true}
       />
     );
   }
@@ -45,8 +45,8 @@ export default function ResponsiveComponent() {
       satelliteRadius={160}
       orbitRadius={700}
       speed={0.005}
-      showOrbit={false}
-      showLabels={false}
+      showOrbit={true}
+      showLabels={true}
     />
   );
 }
