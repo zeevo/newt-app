@@ -249,8 +249,8 @@ export default function Orbit({
     <div className="w-full h-full flex items-center justify-center text-foreground">
       <svg
         ref={svgRef}
-        width={width}
-        height={height}
+        width="100%"
+        height="100%"
         aria-label="Orbiting circles visualization"
         className="text-foreground"
       />
