@@ -44,7 +44,7 @@ export default function ResponsiveComponent() {
         satelliteRadius={310}
         orbitRadius={1060}
         speed={0.005}
-        showOrbit={true}
+        showOrbit={false}
         showLabels={true}
         logos={logos}
       />
@@ -57,7 +57,7 @@ export default function ResponsiveComponent() {
       satelliteRadius={220}
       orbitRadius={960}
       speed={0.005}
-      showOrbit={true}
+      showOrbit={false}
       showLabels={true}
       logos={logos}
     />
