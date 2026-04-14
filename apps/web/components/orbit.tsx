@@ -126,8 +126,7 @@ export default function Orbit({
           .attr('y', -logoSize)
           .attr('width', logoSize * 2)
           .attr('height', logoSize * 2)
-          .style('filter', 'brightness(0) invert(1)')
-          .style('opacity', '0.35');
+          .attr('class', 'satellite-logo');
       } else {
         satelliteText = satellitesGroup
           .append('text')
