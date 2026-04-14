@@ -32,7 +32,7 @@ export default function ResponsiveComponent() {
         height={1400}
         satelliteRadius={360}
         orbitRadius={1060}
-        satelliteFontSize={28}
+        satelliteFontSize={48}
         speed={0.005}
         showOrbit={true}
         showLabels={true}
@@ -45,7 +45,7 @@ export default function ResponsiveComponent() {
       height={1800}
       satelliteRadius={260}
       orbitRadius={960}
-      satelliteFontSize={28}
+      satelliteFontSize={48}
       speed={0.005}
       showOrbit={true}
       showLabels={true}
