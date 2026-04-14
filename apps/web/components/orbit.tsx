@@ -251,7 +251,7 @@ export default function Orbit({
         ref={svgRef}
         width="100%"
         height="100%"
-aria-label="Orbiting circles visualization"
+        aria-label="Orbiting circles visualization"
         className="text-foreground"
       />
     </div>
