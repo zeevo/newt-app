@@ -157,7 +157,7 @@ export default function Orbit({
     satellitesGroup
       .append('circle')
       .attr('r', satelliteRadius)
-      .attr('class', showLabels ? 'fill-background stroke-primary/15' : 'fill-foreground/[0.04] stroke-none');
+      .attr('class', showLabels ? 'fill-secondary stroke-primary/15' : 'fill-foreground/[0.04] stroke-none');
 
     let satelliteText: d3.Selection<SVGTextElement, number, SVGGElement, unknown> | null = null;
     let satelliteRects: d3.Selection<SVGRectElement, unknown, SVGGElement, unknown> | null = null;
