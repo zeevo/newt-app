@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div>
       <section className="relative flex items-center justify-center overflow-hidden h-[calc(100svh-var(--header-height)-var(--footer-height))]">
-        <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <OrbitWrapper />
         </div>
         <div className="relative flex items-center lg:justify-center flex-col gap-2 z-10">

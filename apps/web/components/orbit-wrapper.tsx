@@ -28,10 +28,10 @@ export default function ResponsiveComponent() {
   if (breakpoint === "tablet" || breakpoint === "desktop") {
     return (
       <Orbit
-        width={1100}
-        height={1100}
-        satelliteRadius={110}
-        orbitRadius={440}
+        width={1000}
+        height={1000}
+        satelliteRadius={130}
+        orbitRadius={380}
         speed={0.005}
         showOrbit={true}
         showLabels={true}
@@ -40,10 +40,10 @@ export default function ResponsiveComponent() {
   }
   return (
     <Orbit
-      width={1800}
-      height={1800}
-      satelliteRadius={160}
-      orbitRadius={700}
+      width={1400}
+      height={1400}
+      satelliteRadius={180}
+      orbitRadius={540}
       speed={0.005}
       showOrbit={true}
       showLabels={true}
