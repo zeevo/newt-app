@@ -61,9 +61,9 @@ function posOnPath(segs: Segment[], progress: number): { x: number; y: number } 
 }
 
 const boxes = [
-  { label: 'Browser',  sublabel: undefined,  cx: BROWSER_CX, cy: BROWSER_CY },
-  { label: 'Next.js',  sublabel: ':3000',    cx: RIGHT_CX,   cy: NEXTJS_CY },
-  { label: 'NestJS',   sublabel: ':3001',    cx: RIGHT_CX,   cy: NESTJS_CY },
+  { label: 'Browser', sublabel: undefined,  cx: BROWSER_CX, cy: BROWSER_CY, logo: undefined },
+  { label: 'Next.js', sublabel: ':3000',    cx: RIGHT_CX,   cy: NEXTJS_CY,  logo: '/logos/nextjs.svg' },
+  { label: 'NestJS',  sublabel: ':3001',    cx: RIGHT_CX,   cy: NESTJS_CY,  logo: '/logos/nestjs.svg' },
 ];
 
 export default function RequestFlow() {
@@ -120,10 +120,23 @@ export default function RequestFlow() {
         .attr('class', 'fill-secondary/50 stroke-foreground/10')
         .attr('stroke-width', 1);
 
+      if (b.logo) {
+        const LOGO_SIZE = 14;
+        const logoX = BOX_W / 2 - LOGO_SIZE / 2;
+        const logoY = BOX_H / 2 - LOGO_SIZE - 2;
+        g.append('image')
+          .attr('href', b.logo)
+          .attr('x', logoX)
+          .attr('y', logoY)
+          .attr('width', LOGO_SIZE)
+          .attr('height', LOGO_SIZE)
+          .attr('class', 'satellite-logo');
+      }
+
       g.append('text')
         .text(b.label)
         .attr('x', BOX_W / 2)
-        .attr('y', b.sublabel ? BOX_H / 2 - 7 : BOX_H / 2)
+        .attr('y', b.logo ? BOX_H / 2 + 3 : b.sublabel ? BOX_H / 2 - 7 : BOX_H / 2)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
         .attr('font-size', 12)
@@ -133,7 +146,7 @@ export default function RequestFlow() {
         g.append('text')
           .text(b.sublabel)
           .attr('x', BOX_W / 2)
-          .attr('y', BOX_H / 2 + 9)
+          .attr('y', b.logo ? BOX_H / 2 + 16 : BOX_H / 2 + 9)
           .attr('text-anchor', 'middle')
           .attr('dominant-baseline', 'middle')
           .attr('font-size', 10)
