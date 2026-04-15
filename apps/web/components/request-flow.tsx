@@ -121,9 +121,9 @@ export default function RequestFlow() {
         .attr('stroke-width', 1);
 
       if (b.logo) {
-        const LOGO_SIZE = 14;
+        const LOGO_SIZE = 22;
         const logoX = BOX_W / 2 - LOGO_SIZE / 2;
-        const logoY = BOX_H / 2 - LOGO_SIZE - 2;
+        const logoY = BOX_H / 2 - LOGO_SIZE / 2;
         g.append('image')
           .attr('href', b.logo)
           .attr('x', logoX)
@@ -131,26 +131,15 @@ export default function RequestFlow() {
           .attr('width', LOGO_SIZE)
           .attr('height', LOGO_SIZE)
           .attr('class', 'satellite-logo');
-      }
-
-      g.append('text')
-        .text(b.label)
-        .attr('x', BOX_W / 2)
-        .attr('y', b.logo ? BOX_H / 2 + 3 : b.sublabel ? BOX_H / 2 - 7 : BOX_H / 2)
-        .attr('text-anchor', 'middle')
-        .attr('dominant-baseline', 'middle')
-        .attr('font-size', 12)
-        .attr('class', 'fill-foreground/80 font-sans');
-
-      if (b.sublabel) {
+      } else {
         g.append('text')
-          .text(b.sublabel)
+          .text(b.label)
           .attr('x', BOX_W / 2)
-          .attr('y', b.logo ? BOX_H / 2 + 16 : BOX_H / 2 + 9)
+          .attr('y', BOX_H / 2)
           .attr('text-anchor', 'middle')
           .attr('dominant-baseline', 'middle')
-          .attr('font-size', 10)
-          .attr('class', 'fill-foreground/35 font-mono');
+          .attr('font-size', 12)
+          .attr('class', 'fill-foreground/80 font-sans');
       }
     });
 
