@@ -3,6 +3,7 @@ import { SiteHeader } from '@/components/site-header';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
 import { Toaster } from '@newt-app/ui/components/sonner';
 import '@newt-app/ui/globals.css';
+import './styles.css';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { ThemeProvider } from './_components/theme-provider';

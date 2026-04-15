@@ -3,12 +3,12 @@ import OrbitWrapper from '@/components/orbit-wrapper';
 
 export default function Home() {
   return (
-    <div className="flex flex-col justify-center flex-1">
-      <section className="container mx-auto grid place-items-center relative">
-        <div className="">
+    <div>
+      <section className="relative flex items-center justify-center h-[calc(100svh-var(--header-height)-var(--footer-height))]">
+        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-0">
           <OrbitWrapper />
         </div>
-        <div className="absolute flex items-center lg:justify-center flex-col gap-2 z-10">
+        <div className="relative flex items-center lg:justify-center flex-col gap-2 z-10">
           <h1 className="p-1 rounded text-6xl font-semibold tracking-tight text-balance lg:leading-[1.1] lg:font-semibold xl:text-8xl xl:tracking-tighter max-w-4xl bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 bg-clip-text text-transparent">
             newt-app
           </h1>

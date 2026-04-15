@@ -13,18 +13,25 @@ function useBreakpoint() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  console.log(width);
-
   if (width <= 768) return "mobile"; // < md
   if (width <= 1024) return "tablet"; // md–lg
   if (width <= 1512) return "desktop";
   return "ultrawide"; // ≥ lg
 }
 
+// Order matches satelliteTexts: kysely, auth, packages, next.js, tailwind, shadcn, nest
+const logos = [
+  '/logos/kysely.svg',
+  '/logos/better-auth.svg',
+  '/logos/nextjs.svg',
+  '/vercel.svg',
+  '/logos/tailwind.svg',
+  '/logos/shadcn.svg',
+  '/logos/nestjs.svg',
+];
+
 export default function ResponsiveComponent() {
   const breakpoint = useBreakpoint();
-
-  console.log(breakpoint);
 
   if (breakpoint === "mobile") {
     return null;
@@ -32,13 +39,27 @@ export default function ResponsiveComponent() {
   if (breakpoint === "tablet" || breakpoint === "desktop") {
     return (
       <Orbit
-        width={600}
-        height={600}
-        satelliteFontSize={9}
-        satelliteRadius={34}
-        orbitRadius={260}
+        width={1400}
+        height={1400}
+        satelliteRadius={310}
+        orbitRadius={1060}
+        speed={0.005}
+        showOrbit={false}
+        showLabels={true}
+        logos={logos}
       />
     );
   }
-  return <Orbit />;
+  return (
+    <Orbit
+      width={1800}
+      height={1800}
+      satelliteRadius={220}
+      orbitRadius={960}
+      speed={0.005}
+      showOrbit={false}
+      showLabels={true}
+      logos={logos}
+    />
+  );
 }
