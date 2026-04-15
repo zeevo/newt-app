@@ -2,26 +2,27 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-type Node = {
-  label: string;
-  sublabel?: string;
+const VIEWBOX_W = 620;
+const VIEWBOX_H = 180;
+const BOX_W = 110;
+const BOX_H = 52;
+const PARTICLES_PER_WIRE = 4;
+const SPEED = 0.28;
+
+type Wire = {
+  x1: number; y1: number;
+  x2: number; y2: number;
+  label?: string;
 };
 
-const defaultNodes: Node[] = [
-  { label: 'Browser' },
-  { label: 'Next.js', sublabel: ':3000' },
-  { label: 'NestJS', sublabel: ':3001' },
-  { label: 'Database' },
-];
+type Box = {
+  label: string;
+  sublabel?: string;
+  cx: number;
+  cy: number;
+};
 
-const VIEWBOX_W = 640;
-const VIEWBOX_H = 110;
-const BOX_W = 100;
-const BOX_H = 52;
-const PARTICLES_PER_SEGMENT = 4;
-const SPEED = 0.28; // segments per second
-
-export default function RequestFlow({ nodes = defaultNodes }: { nodes?: Node[] }) {
+export default function RequestFlow() {
   const svgRef = useRef<SVGSVGElement>(null);
   const timerRef = useRef<d3.Timer | null>(null);
 
@@ -30,51 +31,61 @@ export default function RequestFlow({ nodes = defaultNodes }: { nodes?: Node[] }
     svg.selectAll('*').remove();
     svg.attr('viewBox', `0 0 ${VIEWBOX_W} ${VIEWBOX_H}`);
 
-    const cy = VIEWBOX_H / 2;
-    const totalGap = VIEWBOX_W - nodes.length * BOX_W;
-    const gap = totalGap / (nodes.length - 1);
+    const browserCx = 110;
+    const browserCy = VIEWBOX_H / 2;
+    const rightCx = 490;
+    const nextjsCy = 52;
+    const nestjsCy = 128;
 
-    const positions = nodes.map((node, i) => ({
-      ...node,
-      cx: BOX_W / 2 + i * (BOX_W + gap),
-      cy,
-    }));
+    const boxes: Box[] = [
+      { label: 'Browser', cx: browserCx, cy: browserCy },
+      { label: 'Next.js', sublabel: ':3000', cx: rightCx, cy: nextjsCy },
+      { label: 'NestJS', sublabel: ':3001', cx: rightCx, cy: nestjsCy },
+    ];
 
-    // Wire segments (box right-edge → next box left-edge)
-    const segments = positions.slice(0, -1).map((pos, i) => ({
-      x1: pos.cx + BOX_W / 2,
-      y1: cy,
-      x2: positions[i + 1]!.cx - BOX_W / 2,
-      y2: cy,
-    }));
+    const wires: Wire[] = [
+      {
+        x1: browserCx + BOX_W / 2, y1: browserCy,
+        x2: rightCx - BOX_W / 2,  y2: nextjsCy,
+      },
+      {
+        x1: browserCx + BOX_W / 2, y1: browserCy,
+        x2: rightCx - BOX_W / 2,  y2: nestjsCy,
+        label: '/api',
+      },
+    ];
 
     const root = svg.append('g');
 
     // Wires
-    segments.forEach((seg) => {
+    wires.forEach((w) => {
       root
         .append('line')
-        .attr('x1', seg.x1).attr('y1', seg.y1)
-        .attr('x2', seg.x2).attr('y2', seg.y2)
+        .attr('x1', w.x1).attr('y1', w.y1)
+        .attr('x2', w.x2).attr('y2', w.y2)
         .attr('stroke', 'currentColor')
         .attr('stroke-width', 1)
         .attr('opacity', 0.15);
 
-      // Arrowhead
-      const ax = seg.x2;
-      const ay = seg.y2;
-      root
-        .append('polygon')
-        .attr('points', `${ax},${ay} ${ax - 7},${ay - 3.5} ${ax - 7},${ay + 3.5}`)
-        .attr('fill', 'currentColor')
-        .attr('opacity', 0.2);
+      if (w.label) {
+        const mx = (w.x1 + w.x2) / 2;
+        const my = (w.y1 + w.y2) / 2;
+        root
+          .append('text')
+          .text(w.label)
+          .attr('x', mx)
+          .attr('y', my + 14)
+          .attr('text-anchor', 'middle')
+          .attr('font-size', 10)
+          .attr('class', 'fill-foreground/30 font-mono');
+      }
     });
 
     // Boxes
-    positions.forEach((pos) => {
+    boxes.forEach((b) => {
       const g = root
         .append('g')
-        .attr('transform', `translate(${pos.cx - BOX_W / 2},${cy - BOX_H / 2})`);
+        .attr('transform', `translate(${b.cx - BOX_W / 2},${b.cy - BOX_H / 2})`);
 
       g.append('rect')
         .attr('width', BOX_W)
@@ -84,17 +95,17 @@ export default function RequestFlow({ nodes = defaultNodes }: { nodes?: Node[] }
         .attr('stroke-width', 1);
 
       g.append('text')
-        .text(pos.label)
+        .text(b.label)
         .attr('x', BOX_W / 2)
-        .attr('y', pos.sublabel ? BOX_H / 2 - 7 : BOX_H / 2)
+        .attr('y', b.sublabel ? BOX_H / 2 - 7 : BOX_H / 2)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
         .attr('font-size', 12)
         .attr('class', 'fill-foreground/80 font-sans');
 
-      if (pos.sublabel) {
+      if (b.sublabel) {
         g.append('text')
-          .text(pos.sublabel)
+          .text(b.sublabel)
           .attr('x', BOX_W / 2)
           .attr('y', BOX_H / 2 + 9)
           .attr('text-anchor', 'middle')
@@ -105,11 +116,11 @@ export default function RequestFlow({ nodes = defaultNodes }: { nodes?: Node[] }
     });
 
     // Particles
-    type Particle = { segmentIndex: number; progress: number };
-    const particles: Particle[] = segments.flatMap((_, si) =>
-      Array.from({ length: PARTICLES_PER_SEGMENT }, (_, pi) => ({
-        segmentIndex: si,
-        progress: pi / PARTICLES_PER_SEGMENT,
+    type Particle = { wireIndex: number; progress: number };
+    const particles: Particle[] = wires.flatMap((_, wi) =>
+      Array.from({ length: PARTICLES_PER_WIRE }, (_, pi) => ({
+        wireIndex: wi,
+        progress: pi / PARTICLES_PER_WIRE,
       })),
     );
 
@@ -119,29 +130,28 @@ export default function RequestFlow({ nodes = defaultNodes }: { nodes?: Node[] }
       .join('circle')
       .attr('class', 'particle')
       .attr('r', 2.5)
-      .attr('fill', 'currentColor')
-      .attr('opacity', 0.5);
+      .attr('fill', 'currentColor');
 
-    const updatePositions = () => {
+    const update = () => {
       particleEls
         .attr('cx', (d) => {
-          const s = segments[d.segmentIndex]!;
-          return s.x1 + (s.x2 - s.x1) * d.progress;
+          const w = wires[d.wireIndex]!;
+          return w.x1 + (w.x2 - w.x1) * d.progress;
         })
         .attr('cy', (d) => {
-          const s = segments[d.segmentIndex]!;
-          return s.y1 + (s.y2 - s.y1) * d.progress;
+          const w = wires[d.wireIndex]!;
+          return w.y1 + (w.y2 - w.y1) * d.progress;
         })
         .attr('opacity', (d) => {
           const t = d.progress;
           const edge = 0.12;
-          if (t < edge) return (t / edge) * 0.55;
-          if (t > 1 - edge) return ((1 - t) / edge) * 0.55;
-          return 0.55;
+          if (t < edge) return (t / edge) * 0.5;
+          if (t > 1 - edge) return ((1 - t) / edge) * 0.5;
+          return 0.5;
         });
     };
 
-    updatePositions();
+    update();
 
     let lastElapsed = 0;
     timerRef.current?.stop();
@@ -152,14 +162,14 @@ export default function RequestFlow({ nodes = defaultNodes }: { nodes?: Node[] }
         p.progress += SPEED * delta;
         if (p.progress >= 1) p.progress -= 1;
       });
-      updatePositions();
+      update();
     });
 
     return () => {
       timerRef.current?.stop();
       timerRef.current = null;
     };
-  }, [nodes]);
+  }, []);
 
   return (
     <div className="w-full my-8 text-foreground">
