@@ -6,21 +6,65 @@ const VIEWBOX_W = 620;
 const VIEWBOX_H = 180;
 const BOX_W = 110;
 const BOX_H = 52;
-const PARTICLES_PER_WIRE = 4;
+const PARTICLES_PER_PATH = 4;
 const SPEED = 0.28;
 
-type Wire = {
-  x1: number; y1: number;
-  x2: number; y2: number;
-  label?: string;
-};
+// Positions
+const BROWSER_CX = 110;
+const BROWSER_CY = VIEWBOX_H / 2;
+const RIGHT_CX = 490;
+const NEXTJS_CY = 52;
+const NESTJS_CY = 128;
+const JUNCTION_X = 290;
 
-type Box = {
-  label: string;
-  sublabel?: string;
-  cx: number;
-  cy: number;
-};
+const BROWSER_RIGHT = BROWSER_CX + BOX_W / 2;
+const RIGHT_LEFT = RIGHT_CX - BOX_W / 2;
+
+type Segment = { x1: number; y1: number; x2: number; y2: number };
+
+// Two L-shaped paths from browser, meeting at junction then bending to each box
+const paths: { segments: Segment[]; label?: string }[] = [
+  {
+    segments: [
+      { x1: BROWSER_RIGHT, y1: BROWSER_CY, x2: JUNCTION_X, y2: BROWSER_CY },
+      { x1: JUNCTION_X, y1: BROWSER_CY, x2: JUNCTION_X, y2: NEXTJS_CY },
+      { x1: JUNCTION_X, y1: NEXTJS_CY, x2: RIGHT_LEFT, y2: NEXTJS_CY },
+    ],
+  },
+  {
+    segments: [
+      { x1: BROWSER_RIGHT, y1: BROWSER_CY, x2: JUNCTION_X, y2: BROWSER_CY },
+      { x1: JUNCTION_X, y1: BROWSER_CY, x2: JUNCTION_X, y2: NESTJS_CY },
+      { x1: JUNCTION_X, y1: NESTJS_CY, x2: RIGHT_LEFT, y2: NESTJS_CY },
+    ],
+    label: '/api',
+  },
+];
+
+function segLen(s: Segment) {
+  return Math.hypot(s.x2 - s.x1, s.y2 - s.y1);
+}
+
+function posOnPath(segs: Segment[], progress: number): { x: number; y: number } {
+  const total = segs.reduce((sum, s) => sum + segLen(s), 0);
+  let dist = progress * total;
+  for (const seg of segs) {
+    const len = segLen(seg);
+    if (dist <= len) {
+      const t = dist / len;
+      return { x: seg.x1 + (seg.x2 - seg.x1) * t, y: seg.y1 + (seg.y2 - seg.y1) * t };
+    }
+    dist -= len;
+  }
+  const last = segs[segs.length - 1]!;
+  return { x: last.x2, y: last.y2 };
+}
+
+const boxes = [
+  { label: 'Browser',  sublabel: undefined,  cx: BROWSER_CX, cy: BROWSER_CY },
+  { label: 'Next.js',  sublabel: ':3000',    cx: RIGHT_CX,   cy: NEXTJS_CY },
+  { label: 'NestJS',   sublabel: ':3001',    cx: RIGHT_CX,   cy: NESTJS_CY },
+];
 
 export default function RequestFlow() {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -31,57 +75,39 @@ export default function RequestFlow() {
     svg.selectAll('*').remove();
     svg.attr('viewBox', `0 0 ${VIEWBOX_W} ${VIEWBOX_H}`);
 
-    const browserCx = 110;
-    const browserCy = VIEWBOX_H / 2;
-    const rightCx = 490;
-    const nextjsCy = 52;
-    const nestjsCy = 128;
-
-    const boxes: Box[] = [
-      { label: 'Browser', cx: browserCx, cy: browserCy },
-      { label: 'Next.js', sublabel: ':3000', cx: rightCx, cy: nextjsCy },
-      { label: 'NestJS', sublabel: ':3001', cx: rightCx, cy: nestjsCy },
-    ];
-
-    const wires: Wire[] = [
-      {
-        x1: browserCx + BOX_W / 2, y1: browserCy,
-        x2: rightCx - BOX_W / 2,  y2: nextjsCy,
-      },
-      {
-        x1: browserCx + BOX_W / 2, y1: browserCy,
-        x2: rightCx - BOX_W / 2,  y2: nestjsCy,
-        label: '/api',
-      },
-    ];
-
     const root = svg.append('g');
 
-    // Wires
-    wires.forEach((w) => {
+    // Draw wires as polylines
+    paths.forEach((path) => {
+      const points = [
+        ...path.segments.map((s) => [s.x1, s.y1] as [number, number]),
+        [path.segments[path.segments.length - 1]!.x2, path.segments[path.segments.length - 1]!.y2] as [number, number],
+      ];
+
       root
-        .append('line')
-        .attr('x1', w.x1).attr('y1', w.y1)
-        .attr('x2', w.x2).attr('y2', w.y2)
+        .append('polyline')
+        .attr('points', points.map((p) => p.join(',')).join(' '))
+        .attr('fill', 'none')
         .attr('stroke', 'currentColor')
         .attr('stroke-width', 1)
         .attr('opacity', 0.15);
 
-      if (w.label) {
-        const mx = (w.x1 + w.x2) / 2;
-        const my = (w.y1 + w.y2) / 2;
+      if (path.label) {
+        // Place label just below the bottom horizontal segment midpoint
+        const lastSeg = path.segments[path.segments.length - 1]!;
+        const mx = (lastSeg.x1 + lastSeg.x2) / 2;
         root
           .append('text')
-          .text(w.label)
+          .text(path.label)
           .attr('x', mx)
-          .attr('y', my + 14)
+          .attr('y', NESTJS_CY + 16)
           .attr('text-anchor', 'middle')
           .attr('font-size', 10)
           .attr('class', 'fill-foreground/30 font-mono');
       }
     });
 
-    // Boxes
+    // Draw boxes
     boxes.forEach((b) => {
       const g = root
         .append('g')
@@ -116,11 +142,11 @@ export default function RequestFlow() {
     });
 
     // Particles
-    type Particle = { wireIndex: number; progress: number };
-    const particles: Particle[] = wires.flatMap((_, wi) =>
-      Array.from({ length: PARTICLES_PER_WIRE }, (_, pi) => ({
-        wireIndex: wi,
-        progress: pi / PARTICLES_PER_WIRE,
+    type Particle = { pathIndex: number; progress: number };
+    const particles: Particle[] = paths.flatMap((_, pi) =>
+      Array.from({ length: PARTICLES_PER_PATH }, (_, i) => ({
+        pathIndex: pi,
+        progress: i / PARTICLES_PER_PATH,
       })),
     );
 
@@ -134,20 +160,12 @@ export default function RequestFlow() {
 
     const update = () => {
       particleEls
-        .attr('cx', (d) => {
-          const w = wires[d.wireIndex]!;
-          return w.x1 + (w.x2 - w.x1) * d.progress;
-        })
-        .attr('cy', (d) => {
-          const w = wires[d.wireIndex]!;
-          return w.y1 + (w.y2 - w.y1) * d.progress;
-        })
-        .attr('opacity', (d) => {
+        .each(function (d) {
+          const { x, y } = posOnPath(paths[d.pathIndex]!.segments, d.progress);
           const t = d.progress;
-          const edge = 0.12;
-          if (t < edge) return (t / edge) * 0.5;
-          if (t > 1 - edge) return ((1 - t) / edge) * 0.5;
-          return 0.5;
+          const edge = 0.1;
+          const opacity = t < edge ? (t / edge) * 0.5 : t > 1 - edge ? ((1 - t) / edge) * 0.5 : 0.5;
+          d3.select(this).attr('cx', x).attr('cy', y).attr('opacity', opacity);
         });
     };
 
