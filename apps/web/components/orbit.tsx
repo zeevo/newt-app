@@ -113,7 +113,7 @@ export default function Orbit({
       .attr('class', showLabels ? 'fill-secondary/40 stroke-primary/15' : 'fill-foreground/[0.04] stroke-none');
 
     let satelliteText: d3.Selection<SVGTextElement, number, SVGGElement, unknown> | null = null;
-    let satelliteRects: d3.Selection<SVGRectElement, unknown, SVGGElement, unknown> | null = null;
+    let satelliteRects: d3.Selection<SVGRectElement, number, SVGGElement, unknown> | null = null;
     let satelliteImages: d3.Selection<SVGImageElement, number, SVGGElement, unknown> | null = null;
 
     if (showLabels) {
