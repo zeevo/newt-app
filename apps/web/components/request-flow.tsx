@@ -6,7 +6,7 @@ const VIEWBOX_W = 620;
 const VIEWBOX_H = 180;
 const BOX_W = 110;
 const BOX_H = 52;
-const PARTICLES_PER_PATH = 4;
+const PARTICLE_COUNT = 5;
 const SPEED = 0.28;
 
 // Positions
@@ -141,14 +141,12 @@ export default function RequestFlow() {
       }
     });
 
-    // Particles
+    // Particles — staggered, alternating path on each loop
     type Particle = { pathIndex: number; progress: number };
-    const particles: Particle[] = paths.flatMap((_, pi) =>
-      Array.from({ length: PARTICLES_PER_PATH }, (_, i) => ({
-        pathIndex: pi,
-        progress: i / PARTICLES_PER_PATH,
-      })),
-    );
+    const particles: Particle[] = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
+      pathIndex: i % 2,
+      progress: i / PARTICLE_COUNT,
+    }));
 
     const particleEls = root
       .selectAll<SVGCircleElement, Particle>('circle.particle')
@@ -178,7 +176,10 @@ export default function RequestFlow() {
       lastElapsed = elapsed;
       particles.forEach((p) => {
         p.progress += SPEED * delta;
-        if (p.progress >= 1) p.progress -= 1;
+        if (p.progress >= 1) {
+          p.progress -= 1;
+          p.pathIndex = 1 - p.pathIndex; // alternate path each loop
+        }
       });
       update();
     });
