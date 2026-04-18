@@ -1,4 +1,3 @@
-import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
 import { Toaster } from '@newt-app/ui/components/sonner';
@@ -37,7 +36,6 @@ export default function RootLayout({
             <div className="dot-fade-bg absolute inset-0 z-[-1]"></div>
             <SiteHeader />
             <main className="flex flex-1 flex-col">{children}</main>
-            <SiteFooter />
           </div>
           <Toaster />
         </ThemeProvider>
