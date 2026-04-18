@@ -1,5 +1,18 @@
 # create-newt-app
 
+## 0.14.0
+
+### Minor Changes
+
+- f042342: add inject helper to nest di-only mode
+- b9d8ae8: remove vercel deployment option; update deployment docs to be di-only mode centric
+
+### Patch Changes
+
+- 073716c: make homepage orbit animation larger and slower
+- e573358: add deployment docs
+  - @newt-app/templates@0.14.0
+
 ## 0.13.2
 
 ### Patch Changes

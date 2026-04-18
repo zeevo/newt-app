@@ -1,5 +1,6 @@
 import { CopyButton } from '@/components/copy-button';
 import OrbitWrapper from '@/components/orbit-wrapper';
+import { SiteFooter } from '@/components/site-footer';
 
 export default function Home() {
   return (
@@ -31,6 +32,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <SiteFooter />
     </div>
   );
 }
