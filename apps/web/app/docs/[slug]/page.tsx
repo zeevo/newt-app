@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getDocsPostBySlug, getDocsPostSlugs, getMDXContent } from '@/lib/docs';
 import { TableOfContents } from '@/components/table-of-contents';
+import { DocsPager } from '@/components/docs-pager';
 import Image from 'next/image';
 
 const slugLogos: Record<string, { src: string; alt: string; invert?: boolean }> = {
@@ -53,6 +54,8 @@ export default async function DocsPostPage({ params }: DocsPostPageProps) {
   }
 
   const mdxContent = await getMDXContent(post.content);
+  const prevPost = post.prev ? getDocsPostBySlug(post.prev) : null;
+  const nextPost = post.next ? getDocsPostBySlug(post.next) : null;
 
   return (
     <div className="h-full flex">
@@ -83,6 +86,10 @@ export default async function DocsPostPage({ params }: DocsPostPageProps) {
             </div>
 
             <div className="max-w-none">{mdxContent}</div>
+            <DocsPager
+              prev={prevPost ? { slug: prevPost.slug, title: prevPost.title } : null}
+              next={nextPost ? { slug: nextPost.slug, title: nextPost.title } : null}
+            />
           </article>
         </div>
       </div>

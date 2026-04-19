@@ -1,6 +1,8 @@
 ---
 title: "Standalone + Dockerfile"
 description: "Deploy Next.js and NestJS as separate containers"
+prev: "cli"
+next: "deployment-single-image"
 ---
 
 The default deployment model. A single root `Dockerfile` with multiple build targets produces three containers — `web`, `api`, and `migrate` — orchestrated by `docker-compose.yml`. Next.js builds with `output: "standalone"`, and `/api/*` requests are proxied server-side to NestJS.

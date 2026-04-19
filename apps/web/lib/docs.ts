@@ -16,6 +16,8 @@ export interface DocsPost {
   author: string;
   tags: string[];
   content: string;
+  next?: string;
+  prev?: string;
 }
 
 export interface DocsPostMeta {
@@ -57,6 +59,8 @@ export function getDocsPostBySlug(slug: string): DocsPost | null {
       author: data.author,
       tags: data.tags || [],
       content,
+      next: data.next,
+      prev: data.prev,
     };
   } catch (error) {
     console.error(`Error reading docs post ${slug}:`, error);
