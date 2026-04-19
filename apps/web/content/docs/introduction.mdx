@@ -19,6 +19,12 @@ Every piece in the stack was chosen because it's good at exactly one thing:
 - **pnpm workspaces** hold it together. `apps/` for runnable apps, `packages/` for shared code.
 - **Turborepo** makes builds fast. Cached, parallel, monorepo-aware.
 
+## Request flow
+
+Each request flows from the browser through Next.js, which handles rendering and routing, then to NestJS for API and business logic.
+
+<RequestFlow />
+
 ## How it works
 
 When you run `create-newt-app my-app`, the CLI reads a set of source templates and writes them out as a new project on disk.

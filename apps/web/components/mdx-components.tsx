@@ -3,9 +3,11 @@ import NextLink, { LinkProps } from 'next/link';
 import { cn } from '@newt-app/ui/lib/utils';
 import Pre from './pre';
 import { FileTree } from './file-tree';
+import RequestFlow from './request-flow';
 
 export const mdxComponents = {
   FileTree,
+  RequestFlow,
   h1: ({ className, ...props }: React.ComponentProps<'h1'>) => (
     <h1
       className={cn(
