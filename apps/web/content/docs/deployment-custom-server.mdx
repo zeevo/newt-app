@@ -1,6 +1,8 @@
 ---
 title: "Custom Server"
 description: "Next.js and NestJS share one HTTP server on a single port"
+prev: "deployment-single-image"
+next: "deployment-spa"
 ---
 
 Replace the default Next.js dev server with a custom Node.js entry point that boots both Next.js and NestJS in the same process. Requests to `/api/*` are dispatched to NestJS; everything else goes to Next.js. One process, one port, no proxy.
