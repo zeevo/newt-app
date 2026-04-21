@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.14.1
+
+### Patch Changes
+
+- ff8f91e: add prev/next pager navigation to docs pages
+- c161ff7: add animated request flow diagram to introduction docs
+  - @newt-app/templates@0.14.1
+
 ## 0.14.0
 
 ### Minor Changes
