@@ -145,7 +145,7 @@ export const mdxComponents = {
   }) => {
     return (
       <figure
-        className={cn('my-4 rounded-lg bg-accent dark:bg-zinc-900', className)}
+        className={cn('my-4 rounded-lg bg-code', className)}
         {...props}
       />
     );

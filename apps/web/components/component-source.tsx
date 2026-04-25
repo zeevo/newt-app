@@ -50,11 +50,11 @@ function ComponentCode({
   title: string | undefined;
 }) {
   return (
-    <figure data-rehype-pretty-code-figure="" className="[&>pre]:max-h-96">
+    <figure data-rehype-pretty-code-figure="" className="rounded-lg bg-code [&>pre]:max-h-96">
       {title && (
         <figcaption
           data-rehype-pretty-code-title=""
-          className="text-code-foreground [&_svg]:text-code-foreground flex items-center gap-2 [&_svg]:size-4 [&_svg]:opacity-70"
+          className="text-muted-foreground border-b border-border flex items-center gap-2 px-4 py-2 font-mono text-xs [&_svg]:size-4 [&_svg]:opacity-70"
           data-language={language}
         >
           {title}

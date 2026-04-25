@@ -17,7 +17,7 @@ export function CodeBlock({ children, ...props }: React.ComponentProps<"div">) {
 
   return (
     <div className="relative group">
-      <pre className="overflow-x-auto border rounded bg-red-500 cursor-text">
+      <pre className="overflow-x-auto border border-border rounded-lg bg-code cursor-text">
         <code {...props}>{children}</code>
       </pre>
       <div className="absolute top-2 right-2 pointer-events-none">
