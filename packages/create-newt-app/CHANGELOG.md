@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.14.2
+
+### Patch Changes
+
+- 37aae9b: use inject utility in di-only route templates instead of getContext + ctx.get
+  - @newt-app/templates@0.14.2
+
 ## 0.14.1
 
 ### Patch Changes
