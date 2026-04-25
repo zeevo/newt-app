@@ -59,7 +59,7 @@ export function TableOfContents() {
           .replace(/^-|-$/g, '') ||
         '';
       if (!el.id) el.id = id;
-      items.push({ id, text: el.textContent || '', level: parseInt(el.tagName[1]) });
+      items.push({ id, text: el.textContent || '', level: parseInt(el.tagName.charAt(1)) });
     });
 
     setHeadings(items);
