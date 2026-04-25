@@ -110,6 +110,13 @@ export async function getMDXContent(content: string) {
                 dark: "github-dark",
                 light: "github-light",
               },
+              transformers: [
+                {
+                  code(node: { properties: Record<string, string> }) {
+                    node.properties["data-line-numbers"] = "";
+                  },
+                },
+              ],
             },
           ],
         ],

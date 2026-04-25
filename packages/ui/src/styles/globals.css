@@ -43,6 +43,9 @@
   --sidebar-ring: oklch(0.708 0 0);
   /* other */
   --code: oklch(0.98 0 0);
+  --code-foreground: var(--foreground);
+  --code-highlight: oklch(0.94 0 0);
+  --code-number: oklch(0.56 0 0);
 }
 
 .dark {
@@ -80,16 +83,17 @@
   --sidebar-ring: oklch(0.439 0 0);
   /* other */
   --code: oklch(20% 0 0);
+  --code-foreground: oklch(0.708 0 0);
+  --code-highlight: oklch(0.22 0 0);
+  --code-number: oklch(0.5 0 0);
 }
 
-html.light pre span {
+[data-line] span {
   color: var(--shiki-light);
-  background-color: var(--shiki-light-bg);
 }
 
-html.dark pre span {
-  color: var(--shiki-dark);
-  background-color: var(--shiki-dark-bg);
+.dark [data-line] span {
+  color: var(--shiki-dark) !important;
 }
 
 @theme inline {
@@ -133,6 +137,9 @@ html.dark pre span {
   /* Other */
 
   --color-code: var(--code);
+  --color-code-foreground: var(--code-foreground);
+  --color-code-highlight: var(--code-highlight);
+  --color-code-number: var(--code-number);
 }
 
 @layer base {
@@ -166,17 +173,67 @@ html {
   @apply bg-muted-foreground/50;
 }
 
-pre {
-  overflow-x: auto;
-  padding: 1rem 0;
-  @apply rounded-lg;
+[data-rehype-pretty-code-figure] {
+  background-color: var(--color-code);
+  color: var(--color-code-foreground);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  font-size: 0.875rem;
+  position: relative;
+  margin-top: 1.5rem;
 }
 
-pre [data-line] {
-  padding: 0 1rem;
+[data-rehype-pretty-code-title] {
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+  padding: 0.625rem 1rem;
+  font-size: 0.8125rem;
+  font-family: ui-monospace, monospace;
+  color: var(--color-code-foreground);
 }
 
-figure {
+[data-line] {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  min-height: 0.25rem;
+  width: 100%;
+  display: inline-block;
+  padding-inline: 1rem;
+}
+
+[data-highlighted-line] {
+  background-color: var(--color-code-highlight);
+  padding-inline: 0;
+  padding-left: calc(1rem - 2px);
+  border-left: 2px solid color-mix(in oklab, var(--muted-foreground) 50%, transparent);
+}
+
+[data-line-numbers] {
+  display: grid;
+  min-width: 100%;
+  white-space: pre;
+  counter-reset: line;
+}
+
+[data-line-numbers] [data-line] {
+  padding-inline: 0;
+}
+
+[data-line-numbers] [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 4rem;
+  padding-right: 1.5rem;
+  text-align: right;
+  color: var(--color-code-number);
+  background-color: var(--color-code);
+  position: sticky;
+  left: 0;
+  font-size: 0.875rem;
+}
+
+[data-line-numbers] [data-highlighted-line]::before {
+  background-color: var(--color-code-highlight);
 }
 
 @layer utilities {
