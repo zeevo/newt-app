@@ -1,8 +1,7 @@
 'use client';
 
 import { cn } from '@newt-app/ui/lib/utils';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 interface TocItem {
   id: string;
@@ -10,98 +9,87 @@ interface TocItem {
   level: number;
 }
 
-export function TableOfContents() {
-  const [headings, setHeadings] = useState<TocItem[]>([]);
+function useActiveItem(ids: string[]) {
   const [activeId, setActiveId] = useState<string>('');
 
   useEffect(() => {
-    // Extract headings from the page
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: '0% 0% -80% 0%' },
+    );
+
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    }
+
+    return () => {
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el) observer.unobserve(el);
+      }
+    };
+  }, [ids]);
+
+  return activeId;
+}
+
+export function TableOfContents() {
+  const [headings, setHeadings] = useState<TocItem[]>([]);
+
+  useEffect(() => {
     const article = document.querySelector('article');
     if (!article) return;
 
-    const headingElements = article.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    const tocItems: TocItem[] = [];
+    const els = article.querySelectorAll('h2, h3, h4, h5, h6');
+    const items: TocItem[] = [];
 
-    headingElements.forEach((heading) => {
+    els.forEach((el) => {
       const id =
-        heading.id ||
-        heading.textContent
+        el.id ||
+        el.textContent
           ?.toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '') ||
         '';
-      if (!heading.id) {
-        heading.id = id;
-      }
-
-      tocItems.push({
-        id,
-        text: heading.textContent || '',
-        level: parseInt(heading.tagName.charAt(1)),
-      });
+      if (!el.id) el.id = id;
+      items.push({ id, text: el.textContent || '', level: parseInt(el.tagName[1]) });
     });
 
-    setHeadings(tocItems);
-
-    // Set up intersection observer for scroll highlighting
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: '-20% 0px -80% 0px',
-        threshold: 0,
-      },
-    );
-
-    headingElements.forEach((heading) => {
-      observer.observe(heading);
-    });
-
-    return () => {
-      headingElements.forEach((heading) => {
-        observer.unobserve(heading);
-      });
-    };
+    setHeadings(items);
   }, []);
 
-  if (headings.length === 0) {
-    return <div>No headings found in this article.</div>;
-  }
+  const ids = useMemo(() => headings.map((h) => h.id), [headings]);
+  const activeId = useActiveItem(ids);
+
+  if (headings.length === 0) return null;
 
   return (
-    <nav className="space-y-4">
-      <h4 className="text-muted-foreground mb-4">On this page</h4>
-      <ul className="space-y-1">
-        {headings.map((heading) => (
-          <li key={heading.id}>
-            <Link
-              href={`#${heading.id}`}
-              className={cn(
-                // "text-left w-full px-3 py-2 text-sm rounded-md transition-all duration-200",
-                // "hover:bg-accent hover:text-accent-foreground",
-                // "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-                activeId === heading.id
-                  ? 'text-foreground'
-                  : 'text-muted-foreground',
-                heading.level === 1 && '',
-                heading.level === 2 && 'ml-4',
-                heading.level === 3 && 'ml-6',
-                heading.level === 4 && 'ml-8',
-                heading.level === 5 && 'ml-10',
-                heading.level === 6 && 'ml-12',
-                'hover:text-foreground',
-              )}
-            >
-              {heading.text}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <div className="flex flex-col gap-2 p-4 pt-0 text-sm">
+      <p className="sticky top-0 h-6 bg-background text-xs font-medium text-muted-foreground">
+        On This Page
+      </p>
+      {headings.map((heading) => (
+        <a
+          key={heading.id}
+          href={`#${heading.id}`}
+          data-active={activeId === heading.id}
+          data-depth={heading.level}
+          className={cn(
+            'text-[0.8rem] text-muted-foreground no-underline transition-colors hover:text-foreground',
+            'data-[active=true]:font-medium data-[active=true]:text-foreground',
+            'data-[depth=3]:pl-4 data-[depth=4]:pl-6 data-[depth=5]:pl-8 data-[depth=6]:pl-10',
+          )}
+        >
+          {heading.text}
+        </a>
+      ))}
+    </div>
   );
 }
