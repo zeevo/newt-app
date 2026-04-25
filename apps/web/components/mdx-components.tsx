@@ -137,19 +137,9 @@ export const mdxComponents = {
     />
   ),
   pre: Pre,
-  figure: ({
-    className,
-    ...props
-  }: React.ComponentProps<'figure'> & {
+  figure: ({ className, ...props }: React.ComponentProps<'figure'> & {
     'data-rehype-pretty-code-figure'?: string;
-  }) => {
-    return (
-      <figure
-        className={cn('my-4 rounded-lg bg-accent dark:bg-zinc-900', className)}
-        {...props}
-      />
-    );
-  },
+  }) => <figure className={cn(className)} {...props} />,
   figcaption: ({
     className,
     children,
