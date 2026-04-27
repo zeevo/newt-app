@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.14.3
+
+### Patch Changes
+
+- fc92e32: port copy button from shadcn/ui with legacy clipboard fallback and consistent positioning
+- caf14aa: restyle docs right-hand sidebar to match shadcn/ui toc patterns
+  - @newt-app/templates@0.14.3
+
 ## 0.14.2
 
 ### Patch Changes

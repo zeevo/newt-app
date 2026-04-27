@@ -1,5 +1,11 @@
 # @newt-app/ui
 
+## 0.14.3
+
+### Patch Changes
+
+- e896fc9: use css variables for code block styling, matching shadcn/ui patterns
+
 ## 0.14.2
 
 ## 0.14.1
