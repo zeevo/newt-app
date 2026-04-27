@@ -1,22 +1,51 @@
 'use client';
 
 import { Button } from '@newt-app/ui/components/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@newt-app/ui/components/tooltip';
 import { cn } from '@newt-app/ui/lib/utils';
 import { CheckIcon, ClipboardIcon } from 'lucide-react';
 import * as React from 'react';
 
-export function copyToClipboardWithMeta(value: string) {
-  navigator.clipboard.writeText(value);
+function legacyCopyToClipboard(value: string) {
+  const textArea = document.createElement('textarea');
+  textArea.value = value;
+  textArea.setAttribute('readonly', '');
+  textArea.style.position = 'fixed';
+  textArea.style.opacity = '0';
+  textArea.style.pointerEvents = 'none';
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  textArea.setSelectionRange(0, value.length);
+  let hasCopied = false;
+  try {
+    hasCopied = document.execCommand('copy');
+  } catch {
+    hasCopied = false;
+  }
+  document.body.removeChild(textArea);
+  return hasCopied;
+}
+
+export async function copyToClipboardWithMeta(value: string) {
+  if (typeof window === 'undefined' || !value) return false;
+  let hasCopied = false;
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      hasCopied = true;
+    } catch {
+      hasCopied = legacyCopyToClipboard(value);
+    }
+  } else {
+    hasCopied = legacyCopyToClipboard(value);
+  }
+  return hasCopied;
 }
 
 export function CopyButton({
   value,
   className,
+  variant = 'ghost',
   ...props
 }: React.ComponentProps<typeof Button> & {
   value: string;
@@ -24,27 +53,31 @@ export function CopyButton({
 }) {
   const [hasCopied, setHasCopied] = React.useState(false);
 
+  React.useEffect(() => {
+    if (hasCopied) {
+      const timer = setTimeout(() => setHasCopied(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [hasCopied]);
+
   return (
-    <Tooltip open={hasCopied}>
-      <TooltipTrigger asChild>
-        <Button
-          size={'icon'}
-          variant={'ghost'}
-          className={cn('cursor-pointer z-10', className)}
-          onClick={() => {
-            copyToClipboardWithMeta(value);
-            setHasCopied(true);
-            setTimeout(() => {
-              setHasCopied(false);
-            }, 2000);
-          }}
-          {...props}
-        >
-          <span className="sr-only">Copy</span>
-          {hasCopied ? <CheckIcon /> : <ClipboardIcon />}
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>Copied</TooltipContent>
-    </Tooltip>
+    <Button
+      data-slot="copy-button"
+      data-copied={hasCopied}
+      size="icon"
+      variant={variant}
+      className={cn(
+        'absolute top-3 right-2 z-10 size-7 bg-code hover:opacity-100 focus-visible:opacity-100',
+        className,
+      )}
+      onClick={async () => {
+        const copied = await copyToClipboardWithMeta(value);
+        if (copied) setHasCopied(true);
+      }}
+      {...props}
+    >
+      <span className="sr-only">Copy</span>
+      {hasCopied ? <CheckIcon /> : <ClipboardIcon />}
+    </Button>
   );
 }
