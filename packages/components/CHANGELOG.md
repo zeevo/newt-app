@@ -1,5 +1,12 @@
 # @newt-app/components
 
+## 0.14.3
+
+### Patch Changes
+
+- Updated dependencies [e896fc9]
+  - @newt-app/ui@0.14.3
+
 ## 0.14.2
 
 ### Patch Changes
