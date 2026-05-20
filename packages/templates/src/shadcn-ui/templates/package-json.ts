@@ -19,6 +19,7 @@ export default {
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
+    "shadcn": "^4.7.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
