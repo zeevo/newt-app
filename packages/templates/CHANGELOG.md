@@ -1,5 +1,11 @@
 # @newt-app/templates
 
+## 0.15.0
+
+### Minor Changes
+
+- 673ee97: update shadcn-ui components to v4.7 with @base-ui/react
+
 ## 0.14.3
 
 ## 0.14.2

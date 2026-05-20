@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.15.0
+
+### Patch Changes
+
+- Updated dependencies [673ee97]
+  - @newt-app/templates@0.15.0
+
 ## 0.14.3
 
 ### Patch Changes
