@@ -1,13 +1,24 @@
 export default {
   filename: "packages/ui/src/components/aspect-ratio.tsx",
-  template: `"use client"
-
-import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio"
+  template: `import { cn } from "@<%= projectName %>/ui/lib/utils"
 
 function AspectRatio({
+  ratio,
+  className,
   ...props
-}: React.ComponentProps<typeof AspectRatioPrimitive.Root>) {
-  return <AspectRatioPrimitive.Root data-slot="aspect-ratio" {...props} />
+}: React.ComponentProps<"div"> & { ratio: number }) {
+  return (
+    <div
+      data-slot="aspect-ratio"
+      style={
+        {
+          "--ratio": ratio,
+        } as React.CSSProperties
+      }
+      className={cn("relative aspect-(--ratio)", className)}
+      {...props}
+    />
+  )
 }
 
 export { AspectRatio }
