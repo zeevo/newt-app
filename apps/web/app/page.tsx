@@ -7,10 +7,10 @@ export default function Home() {
     <div>
       <section className="relative flex items-center justify-center h-[calc(100svh-var(--header-height)-var(--footer-height))]">
         <div
-          className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+          className="fixed inset-0 pointer-events-none z-0"
           style={{
-            maskImage: 'radial-gradient(ellipse 65% 70% at 84% 26%, black 25%, transparent 70%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 65% 70% at 84% 26%, black 25%, transparent 70%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 14%), radial-gradient(ellipse 65% 70% at 84% 46%, black 25%, transparent 70%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 14%), radial-gradient(ellipse 65% 70% at 84% 46%, black 25%, transparent 70%)',
           }}
         >
           <div
