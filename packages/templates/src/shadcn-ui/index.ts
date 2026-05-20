@@ -28,12 +28,21 @@ import chart from "./templates/chart";
 import checkbox from "./templates/checkbox";
 import collapsible from "./templates/collapsible";
 import command from "./templates/command";
+import combobox from "./templates/combobox";
 import contextMenu from "./templates/context-menu";
 import dialog from "./templates/dialog";
+import direction from "./templates/direction";
 import drawer from "./templates/drawer";
 import dropdownMenu from "./templates/dropdown-menu";
-import form from "./templates/form";
+import empty from "./templates/empty";
+import field from "./templates/field";
 import hoverCard from "./templates/hover-card";
+import buttonGroup from "./templates/button-group";
+import inputGroup from "./templates/input-group";
+import item from "./templates/item";
+import kbd from "./templates/kbd";
+import nativeSelect from "./templates/native-select";
+import spinner from "./templates/spinner";
 import inputOtp from "./templates/input-otp";
 import input from "./templates/input";
 import label from "./templates/label";
@@ -92,12 +101,21 @@ const shadcnUi: Module = {
     checkbox,
     collapsible,
     command,
+    combobox,
     contextMenu,
     dialog,
+    direction,
     drawer,
     dropdownMenu,
-    form,
+    empty,
+    field,
     hoverCard,
+    buttonGroup,
+    inputGroup,
+    item,
+    kbd,
+    nativeSelect,
+    spinner,
     inputOtp,
     input,
     label,
