@@ -5,9 +5,9 @@ import { SiteFooter } from '@/components/site-footer';
 export default function Home() {
   return (
     <div>
-      <section className="relative flex items-center justify-center h-[calc(100svh-var(--header-height)-var(--footer-height))]">
+      <section className="relative flex items-center justify-center h-[calc(100svh-var(--header-height)-var(--footer-height))] overflow-hidden">
         <div
-          className="fixed inset-0 pointer-events-none z-0"
+          className="absolute inset-0 pointer-events-none z-0"
           style={{
             maskImage: [
               'linear-gradient(to bottom, transparent 0%, black 12%)',
@@ -54,6 +54,12 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </section>
+      <section className="relative flex items-center justify-center h-svh border-t border-border/50">
+        <p className="text-muted-foreground text-sm">Section 2</p>
+      </section>
+      <section className="relative flex items-center justify-center h-svh border-t border-border/50">
+        <p className="text-muted-foreground text-sm">Section 3</p>
       </section>
       <SiteFooter />
     </div>
