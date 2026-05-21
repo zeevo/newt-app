@@ -6,8 +6,31 @@ export default function Home() {
   return (
     <div>
       <section className="relative flex items-center justify-center h-[calc(100svh-var(--header-height)-var(--footer-height))]">
-        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-0">
-          <OrbitWrapper />
+        <div
+          className="fixed inset-0 pointer-events-none z-0"
+          style={{
+            maskImage: [
+              'linear-gradient(to bottom, transparent 0%, black 12%)',
+              'linear-gradient(to left, transparent 0%, black 10%)',
+              'linear-gradient(to top, transparent 0%, black 10%)',
+              'radial-gradient(ellipse 65% 70% at 82% 44%, black 22%, transparent 72%)',
+            ].join(', '),
+            WebkitMaskImage: [
+              'linear-gradient(to bottom, transparent 0%, black 12%)',
+              'linear-gradient(to left, transparent 0%, black 10%)',
+              'linear-gradient(to top, transparent 0%, black 10%)',
+              'radial-gradient(ellipse 65% 70% at 82% 44%, black 22%, transparent 72%)',
+            ].join(', '),
+          }}
+        >
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{
+              transform: 'translate(60%, -18%)',
+            }}
+          >
+            <OrbitWrapper />
+          </div>
         </div>
         <div className="relative flex items-center lg:justify-center flex-col gap-2 z-10">
           <h1 className="p-1 rounded text-6xl font-semibold tracking-tight text-balance lg:leading-[1.1] lg:font-semibold xl:text-8xl xl:tracking-tighter max-w-4xl bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 bg-clip-text text-transparent">
