@@ -5,7 +5,7 @@ import { SiteFooter } from '@/components/site-footer';
 export default function Home() {
   return (
     <div>
-      <section className="relative flex items-center justify-center h-[calc(100svh-var(--header-height)-var(--footer-height))] overflow-hidden">
+      <section className="relative flex items-center justify-center h-[calc(100svh-var(--header-height)-var(--footer-height))] overflow-hidden border-b">
         <div
           className="absolute inset-0 pointer-events-none z-0"
           style={{
