@@ -9,14 +9,24 @@ export default function Home() {
         <div
           className="fixed inset-0 pointer-events-none z-0"
           style={{
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 14%), radial-gradient(ellipse 65% 70% at 84% 46%, black 25%, transparent 70%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 14%), radial-gradient(ellipse 65% 70% at 84% 46%, black 25%, transparent 70%)',
+            maskImage: [
+              'linear-gradient(to bottom, transparent 0%, black 12%)',
+              'linear-gradient(to left, transparent 0%, black 10%)',
+              'linear-gradient(to top, transparent 0%, black 10%)',
+              'radial-gradient(ellipse 65% 70% at 82% 44%, black 22%, transparent 72%)',
+            ].join(', '),
+            WebkitMaskImage: [
+              'linear-gradient(to bottom, transparent 0%, black 12%)',
+              'linear-gradient(to left, transparent 0%, black 10%)',
+              'linear-gradient(to top, transparent 0%, black 10%)',
+              'radial-gradient(ellipse 65% 70% at 82% 44%, black 22%, transparent 72%)',
+            ].join(', '),
           }}
         >
           <div
             className="w-full h-full flex items-center justify-center"
             style={{
-              transform: 'translate(60%, -18%) rotate(-12deg) scaleY(0.62)',
+              transform: 'translate(60%, -18%)',
             }}
           >
             <OrbitWrapper />
