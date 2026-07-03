@@ -21,8 +21,8 @@ const ANGLE = (32 * Math.PI) / 180;
 const DIR_X = -Math.cos(ANGLE);
 const DIR_Y = Math.sin(ANGLE);
 
-const MIN_SIZE = 60;
-const MAX_SIZE = 130;
+const MIN_SIZE = 78;
+const MAX_SIZE = 140;
 
 // clearance kept between chips when picking spawn points
 const SPACING = 40;
@@ -73,7 +73,7 @@ function respawn(star: Star, others: Star[]) {
 
 export default function LogoRain({
   density = 1,
-  speedFactor = 0.14,
+  speedFactor = 0.11,
 }: {
   density?: number;
   speedFactor?: number;
