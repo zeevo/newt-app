@@ -27,25 +27,23 @@ export default function Home() {
         >
           <LogoRain />
         </div>
-        <div className="relative flex items-center lg:justify-center flex-col gap-2 z-10">
-          <h1 className="p-1 rounded text-6xl font-semibold tracking-tight text-balance lg:leading-[1.1] lg:font-semibold xl:text-8xl xl:tracking-tighter max-w-4xl bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 bg-clip-text text-transparent">
+        <div className="relative z-10 flex flex-col items-center gap-2">
+          <h1 className="pb-1 text-6xl font-semibold tracking-tight text-balance lg:leading-[1.1] xl:text-8xl xl:tracking-tighter bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
             newt-app
           </h1>
-          <p className="text-center max-w-2xl lg:max-w-4xl text-lg lg:text-2xl text-gray-600 text-balance">
+          <p className="text-center max-w-2xl lg:max-w-4xl text-lg lg:text-2xl text-muted-foreground text-balance">
             Everything you want. Nothing you don&apos;t need. The monorepo-first
             way to build full-stack TypeScript apps.
           </p>
-          <div className="mx-auto flex flex-col items-center gap-4 pt-2 sm:flex-row">
-            <div className="flex h-10 items-center gap-2 whitespace-nowrap rounded-md border bg-background py-2 pr-2 pl-4 text-foreground text-sm shadow-sm">
-              <p className="pointer-events-none shrink-0 select-none text-muted-foreground">
-                $
-              </p>
-              <span className="font-mono">npm create newt-app</span>
-              <CopyButton
-                value={'npm create newt-app'}
-                className="static shrink-0"
-              />
-            </div>
+          <div className="mt-2 flex h-10 items-center gap-2 whitespace-nowrap rounded-md border bg-background pr-2 pl-4 text-foreground text-sm shadow-sm">
+            <span className="pointer-events-none shrink-0 select-none text-muted-foreground">
+              $
+            </span>
+            <span className="font-mono">npm create newt-app</span>
+            <CopyButton
+              value={'npm create newt-app'}
+              className="static shrink-0"
+            />
           </div>
         </div>
       </section>
