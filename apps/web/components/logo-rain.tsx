@@ -94,12 +94,22 @@ export default function LogoRain({
     const stars: Star[] = [];
     d3.range(logos.length * density).forEach(() => {
       const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
-      // seed across the whole view so it starts populated, avoiding overlaps
-      let x = -MARGIN + Math.random() * (VIEW_W + MARGIN * 2);
-      let y = -MARGIN + Math.random() * (VIEW_H + MARGIN * 2);
-      for (let attempt = 0; attempt < 24 && tooClose(x, y, size, stars); attempt++) {
-        x = -MARGIN + Math.random() * (VIEW_W + MARGIN * 2);
-        y = -MARGIN + Math.random() * (VIEW_H + MARGIN * 2);
+      // seed across the whole view so it starts populated; best-candidate
+      // sampling keeps the initial placement evenly spread out
+      let x = 0;
+      let y = 0;
+      let bestDist = -Infinity;
+      for (let candidate = 0; candidate < 24; candidate++) {
+        const cx = -MARGIN + Math.random() * (VIEW_W + MARGIN * 2);
+        const cy = -MARGIN + Math.random() * (VIEW_H + MARGIN * 2);
+        const dist =
+          d3.min(stars, (o) => Math.hypot(o.x - cx, o.y - cy) - o.size) ??
+          Infinity;
+        if (dist > bestDist) {
+          bestDist = dist;
+          x = cx;
+          y = cy;
+        }
       }
       stars.push({
         x,
