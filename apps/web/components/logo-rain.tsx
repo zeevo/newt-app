@@ -73,7 +73,7 @@ function respawn(star: Star, others: Star[]) {
 
 export default function LogoRain({
   density = 1,
-  speedFactor = 0.17,
+  speedFactor = 0.14,
 }: {
   density?: number;
   speedFactor?: number;
