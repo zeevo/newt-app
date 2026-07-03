@@ -30,7 +30,7 @@ export default function Home() {
           <div
             className="w-full h-full flex items-center justify-center"
             style={{
-              transform: 'translate(35%, -18%)',
+              transform: 'translate(20%, -18%)',
             }}
           >
             <OrbitWrapper />
