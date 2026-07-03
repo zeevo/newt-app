@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 import NextLink, { LinkProps } from 'next/link';
 import { cn } from '@newt-app/ui/lib/utils';
+import { InlineCode } from './inline-code';
 import Pre from './pre';
 import { FileTree } from './file-tree';
 import RequestFlow from './request-flow';
@@ -137,7 +138,10 @@ export const mdxComponents = {
     />
   ),
   pre: Pre,
-  figure: ({ className, ...props }: React.ComponentProps<'figure'> & {
+  figure: ({
+    className,
+    ...props
+  }: React.ComponentProps<'figure'> & {
     'data-rehype-pretty-code-figure'?: string;
   }) => <figure className={cn(className)} {...props} />,
   figcaption: ({
@@ -157,22 +161,10 @@ export const mdxComponents = {
       </figcaption>
     );
   },
-  code: ({
-    className,
-    ...props
-  }: React.ComponentProps<'code'>) => {
+  code: ({ className, ...props }: React.ComponentProps<'code'>) => {
     if (typeof props.children === 'string') {
-      return (
-        <code
-          className={cn(
-            'bg-muted relative rounded-md px-[0.3rem] py-[0.2rem] font-mono text-[0.8rem] break-words outline-none',
-            className,
-          )}
-          {...props}
-        />
-      );
+      return <InlineCode className={className} {...props} />;
     }
-
     return <code {...props} />;
   },
   a(
