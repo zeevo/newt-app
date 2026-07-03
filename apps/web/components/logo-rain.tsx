@@ -94,12 +94,12 @@ export default function LogoRain({
     const stars: Star[] = [];
     d3.range(logos.length * density).forEach(() => {
       const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
-      // seed across the whole view so it starts populated; best-candidate
-      // sampling keeps the initial placement evenly spread out
+      // seed across the whole view so it starts populated; a few best-candidate
+      // samples gently discourage clumping without looking gridded
       let x = 0;
       let y = 0;
       let bestDist = -Infinity;
-      for (let candidate = 0; candidate < 24; candidate++) {
+      for (let candidate = 0; candidate < 4; candidate++) {
         const cx = -MARGIN + Math.random() * (VIEW_W + MARGIN * 2);
         const cy = -MARGIN + Math.random() * (VIEW_H + MARGIN * 2);
         const dist =
