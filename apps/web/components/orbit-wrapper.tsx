@@ -41,8 +41,8 @@ export default function ResponsiveComponent() {
       <Orbit
         width={1400}
         height={1400}
-        satelliteRadius={310}
-        orbitRadius={1060}
+        satelliteRadius={440}
+        orbitRadius={1520}
         speed={0.005}
         showOrbit={false}
         showLabels={true}
@@ -54,8 +54,8 @@ export default function ResponsiveComponent() {
     <Orbit
       width={1800}
       height={1800}
-      satelliteRadius={220}
-      orbitRadius={960}
+      satelliteRadius={320}
+      orbitRadius={1380}
       speed={0.005}
       showOrbit={false}
       showLabels={true}
