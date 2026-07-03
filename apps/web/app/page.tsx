@@ -3,7 +3,7 @@ import { CopyButton } from '@/components/copy-button';
 import { FeatureSection } from '@/components/feature-section';
 import { FileTree } from '@/components/file-tree';
 import { InlineCode } from '@/components/inline-code';
-import OrbitWrapper from '@/components/orbit-wrapper';
+import LogoRain from '@/components/logo-rain';
 import { SiteFooter } from '@/components/site-footer';
 
 export default function Home() {
@@ -17,24 +17,15 @@ export default function Home() {
               'linear-gradient(to bottom, transparent 0%, black 12%)',
               'linear-gradient(to left, transparent 0%, black 10%)',
               'linear-gradient(to top, transparent 0%, black 10%)',
-              'radial-gradient(ellipse 65% 70% at 82% 44%, black 22%, transparent 72%)',
             ].join(', '),
             WebkitMaskImage: [
               'linear-gradient(to bottom, transparent 0%, black 12%)',
               'linear-gradient(to left, transparent 0%, black 10%)',
               'linear-gradient(to top, transparent 0%, black 10%)',
-              'radial-gradient(ellipse 65% 70% at 82% 44%, black 22%, transparent 72%)',
             ].join(', '),
           }}
         >
-          <div
-            className="w-full h-full flex items-center justify-center"
-            style={{
-              transform: 'translate(20%, -18%)',
-            }}
-          >
-            <OrbitWrapper />
-          </div>
+          <LogoRain />
         </div>
         <div className="relative flex items-center lg:justify-center flex-col gap-2 z-10">
           <h1 className="p-1 rounded text-6xl font-semibold tracking-tight text-balance lg:leading-[1.1] lg:font-semibold xl:text-8xl xl:tracking-tighter max-w-4xl bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 bg-clip-text text-transparent">
