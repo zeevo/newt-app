@@ -1,5 +1,17 @@
 # create-newt-app
 
+## 0.16.0
+
+### Minor Changes
+
+- 14f779b: upgrade next.js to 16.2.10 in all web app templates and bump @next/eslint-plugin-next to match
+
+### Patch Changes
+
+- 5cee2c4: fix release flow: single version commit, publish, then push with tags
+- 2454ca9: refresh the docs site ui package to the base-ui shadcn generation the templates ship
+  - @newt-app/templates@0.16.0
+
 ## 0.15.1
 
 ### Patch Changes
