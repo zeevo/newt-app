@@ -203,28 +203,31 @@ export async function POST(req: Request) {
           <FeatureSection>
             <CodeShowcase
               filename="terminal"
-              language="bash"
-              code={`$ pnpm dlx shadcn add dialog
+              language="txt"
+              code={`$ npm create newt-app
 
-✔ Checking registry.
-✔ Installing dependencies.
-✔ Created 1 file:
-  - packages/ui/src/components/dialog.tsx`}
+◇  What is your project named?
+│  my-app
+│
+◆  Use shadcn/ui?
+│  ● Yes / ○ No
+│
+◇  Testing framework?
+│  vitest`}
             />
             <div className="flex flex-col gap-4 justify-center">
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.1] text-balance">
-                shadcn/ui support, built in.
+                Build your own design system.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                The shared ui package ships with{' '}
-                <InlineCode>components.json</InlineCode> preconfigured, so the
-                shadcn CLI works from day one. Components land in{' '}
-                <InlineCode>packages/ui</InlineCode>, styled by your design
-                tokens.
+                Leverage the leading UI ecosystem, including shadcn/ui. Say yes
+                at scaffold time and the full component set lands in{' '}
+                <InlineCode>packages/ui</InlineCode> — plain source files,
+                yours to restyle.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Every app in the monorepo imports them the same way:{' '}
-                <InlineCode>@my-app/ui/components/dialog</InlineCode>.
+                Change the design tokens once and every component in every app
+                follows. Swap primitives, add components, make it yours.
               </p>
             </div>
           </FeatureSection>
