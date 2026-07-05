@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.15.1
+
+### Patch Changes
+
+- d53bad4: clean up hero markup: semantic color tokens and remove dead classes
+- 0732928: replace orbit with logo-rain animation on the docs homepage
+  - @newt-app/templates@0.15.1
+
 ## 0.15.0
 
 ### Patch Changes
