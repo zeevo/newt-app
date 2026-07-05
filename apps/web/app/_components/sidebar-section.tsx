@@ -22,7 +22,7 @@ export function SidebarSection({
   items: Item[];
   title: string;
   className?: string;
-  children: (thing: Item) => React.ReactNode;
+  children: (thing: Item) => React.ReactElement;
 }): React.ReactElement {
   return (
     <SidebarGroup className={cn('p-0', className)}>
@@ -32,7 +32,7 @@ export function SidebarSection({
           {items.map((item) => {
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>{children(item)}</SidebarMenuButton>
+                <SidebarMenuButton render={children(item)} />
               </SidebarMenuItem>
             );
           })}

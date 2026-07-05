@@ -13,31 +13,31 @@ export function SiteHeader() {
         <div className="flex h-(--header-height) items-center gap-2 **:data-[slot=separator]:!h-4">
           <MobileNav items={siteConfig.navItems} className="flex lg:hidden" />
           <Button
-            asChild
             variant="ghost"
             size="icon"
             className="hidden size-8 lg:flex"
+            nativeButton={false}
+            render={<Link href="/" />}
           >
-            <Link href="/">
-              <Icons.logo className="size-5" />
-              <span className="sr-only">{siteConfig.name}</span>
-            </Link>
+            <Icons.logo className="size-5" />
+            <span className="sr-only">{siteConfig.name}</span>
           </Button>
           <MainNav items={siteConfig.navItems} className="hidden lg:flex" />
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
             <Button
-              asChild
               size="sm"
               variant="ghost"
               className="h-8 w-8 shadow-none"
+              nativeButton={false}
+              render={
+                <Link
+                  href={siteConfig.links.github}
+                  target="_blank"
+                  rel="noreferrer"
+                />
+              }
             >
-              <Link
-                href={siteConfig.links.github}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Icons.gitHub />
-              </Link>
+              <Icons.gitHub />
             </Button>
             <ModeToggle />
           </div>
