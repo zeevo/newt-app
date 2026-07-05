@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.18.3
+
+### Patch Changes
+
+- 714353c: fix homepage layout on mobile: auto-sizing overlap card, shorter hero, no-wrap file tree rows
+  - @newt-app/templates@0.18.3
+
 ## 0.18.2
 
 ### Patch Changes
