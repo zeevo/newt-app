@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.18.2
+
+### Patch Changes
+
+- 4f34c3e: add docs sections to the mobile nav menu
+  - @newt-app/templates@0.18.2
+
 ## 0.18.1
 
 ### Patch Changes
