@@ -42,7 +42,7 @@ function Folder({
       <div className={cn('absolute left-0 top-0 w-px bg-border', _isLast ? 'h-3.5' : 'h-full')} />
       {/* Horizontal connector */}
       <div className="absolute left-0 top-3.5 h-px w-4 bg-border" />
-      <div className="flex h-7 items-center gap-2 font-mono text-sm">
+      <div className="flex h-7 items-center gap-2 font-mono text-sm whitespace-nowrap">
         <FolderIcon className="size-3.5 shrink-0 text-muted-foreground" />
         <span className="text-foreground">{name}</span>
         {annotation && (
@@ -59,7 +59,7 @@ function File({ name, annotation, _isLast = true, className, ...props }: FileTre
     <div data-slot="file-tree-file" className={cn('relative pl-5', className)} {...props}>
       <div className={cn('absolute left-0 top-0 w-px bg-border', _isLast ? 'h-3.5' : 'h-full')} />
       <div className="absolute left-0 top-3.5 h-px w-4 bg-border" />
-      <div className="flex h-7 items-center gap-2 font-mono text-sm">
+      <div className="flex h-7 items-center gap-2 font-mono text-sm whitespace-nowrap">
         <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />
         <span className="text-foreground">{name}</span>
         {annotation && (

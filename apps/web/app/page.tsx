@@ -9,7 +9,7 @@ import { SiteFooter } from '@/components/site-footer';
 export default function Home() {
   return (
     <div>
-      <section className="relative flex items-start justify-center pt-34 h-[775px] overflow-hidden border-b bg-background">
+      <section className="relative flex items-start justify-center pt-34 h-[560px] md:h-[775px] overflow-hidden border-b bg-background">
         <div
           className="absolute inset-0 pointer-events-none z-0"
           style={{
@@ -47,8 +47,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="bg-code h-[500px]">
-        <div className="border rounded-lg -translate-y-40 shadow-lg max-w-[1200px] mx-auto bg-background p-4">
+      <section className="bg-code">
+        <div className="relative border rounded-lg -mt-40 shadow-lg max-w-[1200px] mx-4 xl:mx-auto bg-background p-4">
           <div className="flex flex-col sm:flex-row justify-between p-4">
             <div className="flex-1">
               <FileTree
