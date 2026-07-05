@@ -1,11 +1,9 @@
 {
   "extends": "@newt-app/typescript-config/react-library.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@newt-app/ui/*": ["./src/*"]
-    }
+    "outDir": "dist",
+    "strictNullChecks": true
   },
-  "include": ["."],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }
