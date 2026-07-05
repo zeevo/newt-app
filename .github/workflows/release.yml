@@ -43,11 +43,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           pnpm changeset version
-          pnpm install --frozen-lockfile=false
-          pnpm release
+          pnpm install --lockfile-only
           git add -A
           git commit -m "version packages"
-          git push
+          pnpm release
+          git push --follow-tags
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
