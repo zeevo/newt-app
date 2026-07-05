@@ -198,6 +198,38 @@ export async function POST(req: Request) {
           </FeatureSection>
         </div>
       </section>
+      <section className="py-24 border-t bg-background">
+        <div className="max-w-[1200px] mx-auto px-4">
+          <FeatureSection>
+            <CodeShowcase
+              filename="terminal"
+              language="bash"
+              code={`$ pnpm dlx shadcn add dialog
+
+✔ Checking registry.
+✔ Installing dependencies.
+✔ Created 1 file:
+  - packages/ui/src/components/dialog.tsx`}
+            />
+            <div className="flex flex-col gap-4 justify-center">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.1] text-balance">
+                shadcn/ui support, built in.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                The shared ui package ships with{' '}
+                <InlineCode>components.json</InlineCode> preconfigured, so the
+                shadcn CLI works from day one. Components land in{' '}
+                <InlineCode>packages/ui</InlineCode>, styled by your design
+                tokens.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Every app in the monorepo imports them the same way:{' '}
+                <InlineCode>@my-app/ui/components/dialog</InlineCode>.
+              </p>
+            </div>
+          </FeatureSection>
+        </div>
+      </section>
       <div className="bg-background">
         <SiteFooter />
       </div>
