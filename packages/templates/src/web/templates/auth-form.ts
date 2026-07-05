@@ -33,7 +33,7 @@ export function AuthForm() {
           className={
             tab === 'signup'
               ? 'font-semibold'
-              : 'text-gray-400 hover:text-gray-200'
+              : 'text-muted-foreground hover:text-gray-200'
           }
         >
           Sign up
@@ -44,7 +44,7 @@ export function AuthForm() {
           className={
             tab === 'signin'
               ? 'font-semibold'
-              : 'text-gray-400 hover:text-gray-200'
+              : 'text-muted-foreground hover:text-gray-200'
           }
         >
           Sign in
@@ -68,7 +68,7 @@ export function AuthForm() {
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   required
-                  className="flex h-9 w-full rounded-md border border-neutral-700 bg-neutral-800/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
+                  className="flex h-9 w-full rounded-md border border-neutral-700 bg-muted/50/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
                 />
               </div>
             )}
@@ -84,7 +84,7 @@ export function AuthForm() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
-                className="flex h-9 w-full rounded-md border border-neutral-700 bg-neutral-800/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
+                className="flex h-9 w-full rounded-md border border-neutral-700 bg-muted/50/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
               />
             </div>
           )}
@@ -100,7 +100,7 @@ export function AuthForm() {
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
                 minLength={8}
-                className="flex h-9 w-full rounded-md border border-neutral-700 bg-neutral-800/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
+                className="flex h-9 w-full rounded-md border border-neutral-700 bg-muted/50/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
               />
             </div>
           )}
