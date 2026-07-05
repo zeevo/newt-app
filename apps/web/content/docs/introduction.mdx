@@ -43,18 +43,21 @@ The output is a fully-formed monorepo:
   <FileTree.Folder name="apps">
     <FileTree.Folder name="web" annotation="Next.js frontend">
       <FileTree.Folder name="app">
-        <FileTree.Folder name="dashboard">
-          <FileTree.File name="page.tsx" annotation="dashboard route" />
-        </FileTree.Folder>
         <FileTree.File name="layout.tsx" />
         <FileTree.File name="page.tsx" annotation="home route" />
+        <FileTree.File name="auth-form.tsx" />
+        <FileTree.File name="todo-list.tsx" />
+      </FileTree.Folder>
+      <FileTree.Folder name="lib">
+        <FileTree.File name="auth-client.ts" annotation="Better Auth client" />
       </FileTree.Folder>
     </FileTree.Folder>
     <FileTree.Folder name="api" annotation="NestJS backend">
       <FileTree.Folder name="src">
-        <FileTree.Folder name="hello">
-          <FileTree.File name="hello.controller.ts" />
-          <FileTree.File name="hello.module.ts" />
+        <FileTree.Folder name="todos">
+          <FileTree.File name="todos.controller.ts" />
+          <FileTree.File name="todos.module.ts" />
+          <FileTree.File name="todos.service.ts" annotation="business logic" />
         </FileTree.Folder>
         <FileTree.File name="app.module.ts" />
         <FileTree.File name="main.ts" />

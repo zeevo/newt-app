@@ -58,21 +58,27 @@ export default function Home() {
                 <FileTree.Folder name="apps">
                   <FileTree.Folder name="web" annotation="Next.js frontend">
                     <FileTree.Folder name="app">
-                      <FileTree.Folder name="dashboard">
-                        <FileTree.File
-                          name="page.tsx"
-                          annotation="dashboard route"
-                        />
-                      </FileTree.Folder>
                       <FileTree.File name="layout.tsx" />
                       <FileTree.File name="page.tsx" annotation="home route" />
+                      <FileTree.File name="auth-form.tsx" />
+                      <FileTree.File name="todo-list.tsx" />
+                    </FileTree.Folder>
+                    <FileTree.Folder name="lib">
+                      <FileTree.File
+                        name="auth-client.ts"
+                        annotation="Better Auth client"
+                      />
                     </FileTree.Folder>
                   </FileTree.Folder>
                   <FileTree.Folder name="api" annotation="NestJS backend">
                     <FileTree.Folder name="src">
-                      <FileTree.Folder name="hello">
-                        <FileTree.File name="hello.controller.ts" />
-                        <FileTree.File name="hello.module.ts" />
+                      <FileTree.Folder name="todos">
+                        <FileTree.File name="todos.controller.ts" />
+                        <FileTree.File name="todos.module.ts" />
+                        <FileTree.File
+                          name="todos.service.ts"
+                          annotation="business logic"
+                        />
                       </FileTree.Folder>
                       <FileTree.File name="app.module.ts" />
                       <FileTree.File name="main.ts" />
@@ -122,22 +128,24 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-4">
           <FeatureSection>
             <CodeShowcase
-              filename="apps/web/app/dashboard/page.tsx"
+              filename="apps/web/app/page.tsx"
               language="tsx"
-              code={`import { Button } from '@my-app/ui/components/button';
-import { cn } from '@my-app/ui/lib/utils';
-import { auth } from '@my-app/auth';
-import { headers } from 'next/headers';
+              code={`'use client';
 
-export default async function Dashboard() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+import { authClient } from '@/lib/auth-client';
+import { AuthForm } from '@/app/auth-form';
+import { TodoList } from '@/app/todo-list';
+import { Logo } from '@my-app/ui/logo';
+
+export default function Home() {
+  const { data: session, isPending } = authClient.useSession();
+
+  if (isPending) return <p>Loading…</p>;
 
   return (
-    <main className={cn('flex min-h-screen flex-col p-8')}>
-      <h1>Welcome back, {session?.user.name}</h1>
-      <Button variant="outline">Sign out</Button>
+    <main className="mx-auto max-w-lg space-y-4">
+      <Logo className="w-10 text-foreground" />
+      {session ? <TodoList session={session} /> : <AuthForm />}
     </main>
   );
 }`}
@@ -168,7 +176,8 @@ export default async function Dashboard() {
                 A structure that can scale.
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Inject NestJS services directly inside Next.js route handlers.
+                Run the NestJS API as a standalone server, or opt in to
+                injecting its services directly inside Next.js route handlers.
                 Keep your business logic separate from your frontend, organized
                 into modules and providers from day one.
               </p>
