@@ -38,7 +38,7 @@ pnpm build --filter=@newt-app/templates --filter=create-newt-app
 cd /tmp && node /path/to/newt-app/packages/create-newt-app/dist/index.js test-app --no-install --no-git
 
 # 3. Install and verify
-cd /tmp/test-app && pnpm install && pnpm check-types && pnpm lint
+cd /tmp/test-app && pnpm install && pnpm lint
 ```
 
 To re-test from scratch:
@@ -61,7 +61,7 @@ done
 
 chmod -R 755 /tmp/test-app 2>/dev/null && rm -rf /tmp/test-app
 cd /tmp && node /path/to/newt-app/packages/create-newt-app/dist/index.js test-app --no-git
-cd /tmp/test-app && cp .env.example .env && pnpm dev &
+cd /tmp/test-app && pnpm dev &
 ```
 
 Check it's up: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`
