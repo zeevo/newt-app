@@ -5,9 +5,9 @@ export default {
 import { useQuery } from '@tanstack/react-query';
 import { authClient } from '@/lib/auth-client';
 import { AuthForm } from '@/app/auth-form';
-import { Button } from '@<%= projectName %>/ui/button';
 import { Link } from '@<%= projectName %>/ui/link';
 import { Logo } from '@<%= projectName %>/ui/logo';
+import { TodoList } from '@/app/todo-list';
 
 export default function Home() {
   const { data: session, isPending } = authClient.useSession();
@@ -53,12 +53,7 @@ export default function Home() {
         {isPending ? (
           <p className="text-sm text-gray-400">Loading…</p>
         ) : session ? (
-          <div className="space-y-3">
-            <p className="text-sm">Signed in as {session.user.name}</p>
-            <Button onClick={() => void authClient.signOut()}>
-              Sign out
-            </Button>
-          </div>
+          <TodoList session={session} />
         ) : (
           <AuthForm />
         )}

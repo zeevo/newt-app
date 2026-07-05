@@ -14,6 +14,13 @@ import deploymentCustomServer from "./single-process-custom-server/index";
 import deploymentSpa from "./single-process-static-export/index";
 import nestDiOnly from "./nest-di-only/index";
 import apiControllers from "./api-controllers/index";
+import {
+  todoExampleApi,
+  todoExampleControllers,
+  todoExampleDi,
+  todoExampleWeb,
+  todoExampleShadcn,
+} from "./todo-example/index";
 
 export * from "./types";
 
@@ -41,4 +48,9 @@ export const templates = {
   deploymentSpa,
   nestDiOnly,
   apiControllers,
+  todoExampleApi,
+  todoExampleControllers,
+  todoExampleDi,
+  todoExampleWeb,
+  todoExampleShadcn,
 };

@@ -12,7 +12,6 @@ import layout from "./templates/layout";
 import page from "./templates/page";
 import providers from "./templates/providers";
 import authForm from "./templates/auth-form";
-import todoList from "./templates/todo-list";
 import accordion from "./templates/accordion";
 import alertDialog from "./templates/alert-dialog";
 import alert from "./templates/alert";
@@ -85,7 +84,6 @@ const shadcnUi: Module = {
     page,
     providers,
     authForm,
-    todoList,
     accordion,
     alertDialog,
     alert,

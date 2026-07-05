@@ -51,6 +51,14 @@ Choose a testing framework. Accepts `jest` (default) or `vitest`. Only applies i
 pnpm dlx create-newt-app my-app --ci --testing vitest
 ```
 
+## --bare
+
+Skip the todo example. By default every scaffold includes a small todos feature — a `TodosService` in the api and a `TodoList` on the web homepage — as a working reference for how the pieces connect. Pass `--bare` to leave it out; the signed-in homepage shows a session greeting and sign-out button instead. Only applies in `--ci` mode — in interactive mode the CLI prompts **Include the todo example?**
+
+```bash
+pnpm dlx create-newt-app my-app --ci --bare
+```
+
 ## What happens after scaffolding
 
 1. Templates are written to disk

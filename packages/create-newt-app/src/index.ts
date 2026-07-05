@@ -19,6 +19,7 @@ type Options = {
   testing: Testing;
   deployment: Deployment;
   nestDiOnly: boolean;
+  bare: boolean;
 };
 
 class TaskBuilder {
@@ -63,6 +64,11 @@ export async function doInit(options: Options) {
           message: "Use NestJS for dependency injection only?",
           initialValue: false,
         }),
+      todoExample: () =>
+        p.confirm({
+          message: "Include the todo example?",
+          initialValue: true,
+        }),
       deployment: () =>
         p.select<Deployment>({
           message: "Deployment extras?",
@@ -89,6 +95,7 @@ export async function doInit(options: Options) {
     const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
     const deployment: Deployment = options.ci ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'none';
     const nestDiOnly = options.ci ? options.nestDiOnly : (group as { nestDiOnly?: boolean }).nestDiOnly ?? false;
+    const todoExample = options.ci ? !options.bare : (group as { todoExample?: boolean }).todoExample ?? true;
 
     const deploymentModule =
       deployment === 'standalone' ? templates.deploymentStandalone :
@@ -107,6 +114,13 @@ export async function doInit(options: Options) {
       testing === 'vitest' ? templates.testingVitest : templates.testingJest,
       ...(deploymentModule ? [deploymentModule] : []),
       ...(nestDiOnly ? [templates.nestDiOnly] : [templates.apiControllers]),
+      ...(todoExample
+        ? [
+            templates.todoExampleApi,
+            ...(nestDiOnly ? [templates.todoExampleDi] : [templates.todoExampleControllers]),
+            useShadcn ? templates.todoExampleShadcn : templates.todoExampleWeb,
+          ]
+        : []),
     ];
 
     const name = (group as { name?: string }).name ?? options.name ?? "";
@@ -190,6 +204,7 @@ program
   .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
   .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa (used with --ci)", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only (used with --ci)", false)
+  .option("--bare", "Skip the todo example (used with --ci)", false)
   .action(
     async (
       name: string,
@@ -201,6 +216,7 @@ program
         testing: string;
         deployment: string;
         nestDiOnly: boolean;
+        bare: boolean;
       }
     ) => {
       intro(`Create a ${chalk.blue("newt")} app.`);
@@ -216,6 +232,7 @@ program
           ? options.deployment
           : 'none') as Deployment,
         nestDiOnly: options.nestDiOnly,
+        bare: options.bare,
       });
     }
   );
