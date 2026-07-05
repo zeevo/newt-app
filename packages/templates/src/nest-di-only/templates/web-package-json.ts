@@ -25,7 +25,7 @@ export default {
     "@tanstack/react-form": "^1.28.5",
     "@tanstack/react-query": "^5.90.21",
     "better-auth": "^1.2.8",
-    "next": "16.2.1",
+    "next": "16.2.10",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.1"
