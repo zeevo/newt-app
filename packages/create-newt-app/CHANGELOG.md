@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.18.0
+
+### Minor Changes
+
+- 72472a3: scaffold a preconfigured components.json so shadcn add works from day one
+
+### Patch Changes
+
+- @newt-app/templates@0.18.0
+
 ## 0.17.1
 
 ### Patch Changes
