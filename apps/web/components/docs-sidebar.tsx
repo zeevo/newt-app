@@ -2,7 +2,7 @@
 
 import { SidebarSection } from '@/app/_components/sidebar-section';
 import { Sidebar, SidebarContent } from '@newt-app/ui/components/sidebar';
-import { BookOpen, Download, Server, Shield, Terminal, Triangle } from 'lucide-react';
+import { BookOpen, Component, Download, Server, Shield, Terminal, Triangle } from 'lucide-react';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
@@ -35,6 +35,10 @@ const modules: Item[] = [
   {
     title: 'Better Auth',
     url: '/docs/better-auth',
+  },
+  {
+    title: 'shadcn/ui',
+    url: '/docs/shadcn-ui',
   },
 ];
 
@@ -74,6 +78,7 @@ const urlToIconMap: Record<string, ReactElement> = {
   '/docs/nextjs': <Triangle />,
   '/docs/nestjs': <Server />,
   '/docs/better-auth': <Shield />,
+  '/docs/shadcn-ui': <Component />,
   '/docs/cli': <Terminal />,
 };
 

@@ -1,0 +1,97 @@
+---
+title: "shadcn/ui"
+description: "A full component library you own"
+prev: "better-auth"
+next: "cli"
+---
+
+`newt-app` can scaffold the shared ui package with the complete shadcn/ui component set, built on [Base UI](https://base-ui.com) primitives. The components are vendored into `packages/ui` as plain source files — you own the code, and every app in the monorepo imports from the same package.
+
+The interactive CLI asks **Use shadcn/ui?** (enabled by default). In non-interactive mode, pass `--shadcn`:
+
+```bash
+pnpm dlx create-newt-app my-app --ci --shadcn
+```
+
+## What gets scaffolded
+
+The ui package ships with the full component set — around 60 components, from `accordion` to `tooltip` — plus the supporting pieces:
+
+<FileTree name="packages/ui">
+  <FileTree.Folder name="src">
+    <FileTree.Folder name="components">
+      <FileTree.File name="button.tsx" />
+      <FileTree.File name="dialog.tsx" />
+      <FileTree.File name="sidebar.tsx" />
+      <FileTree.File name="mode-toggle.tsx" annotation="theme switcher" />
+      <FileTree.File name="..." annotation="~60 components" />
+    </FileTree.Folder>
+    <FileTree.Folder name="hooks">
+      <FileTree.File name="use-mobile.ts" />
+    </FileTree.Folder>
+    <FileTree.Folder name="lib">
+      <FileTree.File name="utils.ts" annotation="cn()" />
+    </FileTree.Folder>
+    <FileTree.Folder name="styles">
+      <FileTree.File name="globals.css" annotation="design tokens" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+There is no registry fetch at scaffold time — the components are written out with the rest of the project, on the current Base UI generation of shadcn/ui.
+
+## Using components
+
+Import components by package name from any app in the monorepo:
+
+```tsx
+'use client';
+
+import { Button } from '@my-app/ui/components/button';
+import { cn } from '@my-app/ui/lib/utils';
+
+export function SignOut({ className }: { className?: string }) {
+  return (
+    <Button variant="outline" className={cn('w-full', className)}>
+      Sign out
+    </Button>
+  );
+}
+```
+
+The scaffolded web app already uses them — `auth-form.tsx` and `todo-list.tsx` are built from the same package.
+
+Base UI composition uses the `render` prop (not Radix's `asChild`) when you need a component to render as something else:
+
+```tsx
+<Button variant="ghost" nativeButton={false} render={<Link href="/docs" />}>
+  Docs
+</Button>
+```
+
+## Design tokens
+
+All components read their colors, radii, and typography from CSS variables defined in `packages/ui/src/styles/globals.css`. The variables are mapped to Tailwind utilities through `@theme inline`, so semantic classes like `bg-primary`, `text-muted-foreground`, and `border-border` work everywhere the ui package is imported. Change the tokens once and every component in every app follows.
+
+## Dark mode
+
+The web app is scaffolded with [next-themes](https://github.com/pacocoursey/next-themes) wired into `app/providers.tsx`, and the ui package includes a ready-made `ModeToggle` component:
+
+```tsx
+import { ModeToggle } from '@my-app/ui/components/mode-toggle';
+```
+
+## Adding more components
+
+The `shadcn` CLI is a dependency of the ui package, so you can pull additional components from the registry as they're released:
+
+```bash
+cd packages/ui
+pnpm exec shadcn add <component>
+```
+
+New components land in `packages/ui/src/components` alongside the vendored set and are immediately importable from both apps.
+
+## Opting out
+
+Answer no at the prompt (or omit `--shadcn` with `--ci`) and the ui package scaffolds a minimal set instead — `button`, `card`, `code`, `link`, and `logo`, plus the same `cn()` utility and global styles. Everything else about the package layout stays identical, so you can adopt shadcn/ui later without restructuring.
