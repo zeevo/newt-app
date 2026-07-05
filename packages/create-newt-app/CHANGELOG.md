@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.17.1
+
+### Patch Changes
+
+- 1f9f576: replace hardcoded grays with theme tokens in the base web templates
+  - @newt-app/templates@0.17.1
+
 ## 0.17.0
 
 ### Minor Changes
