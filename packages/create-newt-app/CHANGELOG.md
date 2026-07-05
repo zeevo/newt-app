@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.17.0
+
+### Minor Changes
+
+- 896e211: add --bare option and interactive prompt to scaffold without the todo example
+
+### Patch Changes
+
+- @newt-app/templates@0.17.0
+
 ## 0.16.0
 
 ### Minor Changes
