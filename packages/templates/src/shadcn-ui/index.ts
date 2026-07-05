@@ -1,4 +1,5 @@
 import type { Module } from "../types";
+import componentsJson from "./templates/components-json";
 import packageJson from "./templates/package-json";
 import utils from "./templates/utils";
 import useMobile from "./templates/use-mobile";
@@ -140,6 +141,7 @@ const shadcnUi: Module = {
     toggle,
     tooltip,
     modeToggle,
+    componentsJson,
   ],
   packages: [
     { package: "next-themes", module: "apps/web", version: "^0.4.6" },
