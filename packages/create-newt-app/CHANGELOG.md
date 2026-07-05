@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.18.4
+
+### Patch Changes
+
+- 87d8d6c: remove unused video showcase component and demo stub from the docs site
+  - @newt-app/templates@0.18.4
+
 ## 0.18.3
 
 ### Patch Changes
