@@ -10,7 +10,6 @@ import layout from "./templates/layout";
 import page from "./templates/page";
 import providers from "./templates/providers";
 import authForm from "./templates/auth-form";
-import todoList from "./templates/todo-list";
 import authRoute from "./templates/auth-route";
 import authClient from "./templates/auth-client";
 import manifest from "./templates/manifest";
@@ -27,7 +26,6 @@ const web: Module = {
     page,
     providers,
     authForm,
-    todoList,
     authRoute,
     authClient,
     manifest,
