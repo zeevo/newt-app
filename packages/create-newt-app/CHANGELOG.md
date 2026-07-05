@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.18.1
+
+### Patch Changes
+
+- d36be35: fix react/prop-types lint warnings in the scaffolded shadcn calendar
+  - @newt-app/templates@0.18.1
+
 ## 0.18.0
 
 ### Minor Changes
