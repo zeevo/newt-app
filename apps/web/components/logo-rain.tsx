@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
 const logos = [
-  '/logos/kysely.svg',
   '/logos/better-auth.svg',
   '/logos/nextjs.svg',
   '/vercel.svg',
