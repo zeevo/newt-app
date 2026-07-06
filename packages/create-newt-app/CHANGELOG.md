@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.18.7
+
+### Patch Changes
+
+- 129a8eb: fix scaffolded app.controller.spec: provide AppService in the testing module
+  - @newt-app/templates@0.18.7
+
 ## 0.18.6
 
 ### Patch Changes
