@@ -36,3 +36,47 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+  scaffold:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        flags:
+          - "--ci"
+          - "--ci --bare"
+          - "--ci --shadcn"
+          - "--ci --bare --nest-di-only"
+    name: scaffold (${{ matrix.flags }})
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build CLI
+        run: pnpm build --filter=@newt-app/templates --filter=create-newt-app
+
+      - name: Scaffold app
+        run: |
+          cd ${{ runner.temp }}
+          node $GITHUB_WORKSPACE/packages/create-newt-app/dist/index.js test-app ${{ matrix.flags }} --no-install --no-git
+
+      - name: Install scaffolded app
+        run: pnpm install
+        working-directory: ${{ runner.temp }}/test-app
+
+      - name: Lint scaffolded app
+        run: pnpm lint
+        working-directory: ${{ runner.temp }}/test-app
