@@ -6,6 +6,7 @@ import todosController from "./templates/todos-controller";
 import todosModuleControllers from "./templates/todos-module-controllers";
 import appModuleControllers from "./templates/app-module-controllers";
 import appModuleDi from "./templates/app-module-di";
+import apiIndex from "./templates/api-index";
 import webTodosRoute from "./templates/web-todos-route";
 import webTodosIdRoute from "./templates/web-todos-id-route";
 import webTodosToggleRoute from "./templates/web-todos-toggle-route";
@@ -26,7 +27,7 @@ export const todoExampleControllers: Module = {
 
 // nest-di-only mode: Next.js route handlers plus app.module wired with TodosModule.
 export const todoExampleDi: Module = {
-  templates: [webTodosRoute, webTodosIdRoute, webTodosToggleRoute, appModuleDi],
+  templates: [webTodosRoute, webTodosIdRoute, webTodosToggleRoute, appModuleDi, apiIndex],
 };
 
 // Web UI: TodoList component and the homepage that renders it.

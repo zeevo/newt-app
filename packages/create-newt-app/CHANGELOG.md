@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.18.5
+
+### Patch Changes
+
+- 23e6b04: drop the kysely logo from the homepage animation
+  - @newt-app/templates@0.18.5
+
 ## 0.18.4
 
 ### Patch Changes
