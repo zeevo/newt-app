@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.18.8
+
+### Patch Changes
+
+- 23a89d0: add vitest/globals to the scaffolded api tsconfig so typed lint resolves test globals
+  - @newt-app/templates@0.18.8
+
 ## 0.18.7
 
 ### Patch Changes
