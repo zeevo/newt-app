@@ -45,7 +45,7 @@ jobs:
         flags:
           - "--ci"
           - "--ci --bare"
-          - "--ci --shadcn"
+          - "--ci --shadcn --testing vitest"
           - "--ci --bare --nest-di-only"
     name: scaffold (${{ matrix.flags }})
     steps:
@@ -79,4 +79,8 @@ jobs:
 
       - name: Lint scaffolded app
         run: pnpm lint
+        working-directory: ${{ runner.temp }}/test-app
+
+      - name: Test scaffolded app
+        run: pnpm test
         working-directory: ${{ runner.temp }}/test-app
