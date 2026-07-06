@@ -182,7 +182,7 @@ export class UserController {
 
 ## Database
 
-Better Auth requires a PostgreSQL database. Set `DATABASE_URL` in your `.env` file and run:
+Better Auth stores its data in a local SQLite file (`dev.db` at the repo root) by default, so a fresh scaffold works with zero configuration. To use PostgreSQL instead, set `DATABASE_URL` in your `.env` file. Either way, create the tables with:
 
 ```bash
 pnpm db:migrate

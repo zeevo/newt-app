@@ -7,7 +7,7 @@ Full-stack monorepo: Next.js 16 + NestJS 11 + better-auth + PostgreSQL.
 ## Quick start
 
 \`\`\`sh
-cp .env.example .env   # fill in DATABASE_URL
+# optional: set DATABASE_URL in .env for Postgres (defaults to local SQLite)
 pnpm install
 pnpm db:migrate
 pnpm dev
