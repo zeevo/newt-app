@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.18.6
+
+### Patch Changes
+
+- 0ee50e7: fix --bare with --nest-di-only: api index no longer exports the removed todos service
+  - @newt-app/templates@0.18.6
+
 ## 0.18.5
 
 ### Patch Changes
