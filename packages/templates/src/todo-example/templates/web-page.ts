@@ -43,8 +43,8 @@ export default function Home() {
       <div className="rounded-xl border p-6 space-y-1">
         <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">nest.js</p>
         <p className="font-mono text-sm text-muted-foreground">GET /api/hello</p>
-        <pre className="mt-2 border rounded-md p-3 text-sm bg-muted/50">
-          <code>{JSON.stringify(hello, null, 2)}</code>
+        <pre className="mt-2 border rounded-md p-3 text-sm bg-muted/50 overflow-x-auto">
+          <code>{hello ? JSON.stringify(hello, null, 2) : 'Loading…'}</code>
         </pre>
       </div>
 
