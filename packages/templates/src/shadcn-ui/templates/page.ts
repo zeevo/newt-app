@@ -59,8 +59,8 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <p className="font-mono text-sm text-muted-foreground">GET /api/hello</p>
-          <pre className="mt-2 rounded-md border p-3 text-sm bg-muted/50">
-            <code>{JSON.stringify(hello, null, 2)}</code>
+          <pre className="mt-2 rounded-md border p-3 text-sm bg-muted/50 overflow-x-auto">
+            <code>{hello ? JSON.stringify(hello, null, 2) : 'Loading…'}</code>
           </pre>
         </CardContent>
       </Card>
