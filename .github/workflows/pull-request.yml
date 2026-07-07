@@ -37,6 +37,9 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Check ui drift against templates
+        run: pnpm check-ui-drift
+
   scaffold:
     runs-on: ubuntu-latest
     strategy:
