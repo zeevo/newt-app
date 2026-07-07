@@ -7,14 +7,6 @@ import LogoRain from '@/components/logo-rain';
 import { SiteFooter } from '@/components/site-footer';
 import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
 
-const heroLogos = [
-  { name: 'Next.js', src: '/logos/nextjs.svg' },
-  { name: 'NestJS', src: '/logos/nestjs.svg' },
-  { name: 'Better Auth', src: '/logos/better-auth.svg' },
-  { name: 'shadcn/ui', src: '/logos/shadcn.svg' },
-  { name: 'Tailwind CSS', src: '/logos/tailwind.svg' },
-];
-
 export default function Home() {
   return (
     <div>
@@ -50,20 +42,44 @@ export default function Home() {
           <h1 className="max-w-5xl pb-1 text-center text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
             A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter for{' '}
             <span className="inline-flex translate-y-1 items-center -space-x-2.5 align-baseline xl:-space-x-4 xl:translate-y-2">
-              {heroLogos.map((logo) => (
-                <span
-                  key={logo.src}
-                  title={logo.name}
-                  className="inline-flex size-10 items-center justify-center rounded-full bg-muted ring-3 ring-background sm:size-12 xl:size-16 xl:ring-4"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={logo.src}
-                    alt={logo.name}
-                    className="logo-rain-logo size-1/2"
-                  />
-                </span>
-              ))}
+              <span
+                title="Next.js"
+                className="inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[0] sm:size-12 xl:size-16"
+              >
+                <img src="/logos/nextjs.svg" alt="Next.js" className="size-1/2" />
+              </span>
+              <span
+                title="NestJS"
+                className="inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[1] sm:size-12 xl:size-16"
+              >
+                <img src="/logos/nestjs.svg" alt="NestJS" className="size-1/2" />
+              </span>
+              <span
+                title="Better Auth"
+                className="inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[2] sm:size-12 xl:size-16"
+              >
+                <img
+                  src="/logos/better-auth.svg"
+                  alt="Better Auth"
+                  className="size-1/2"
+                />
+              </span>
+              <span
+                title="shadcn/ui"
+                className="inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[3] sm:size-12 xl:size-16"
+              >
+                <img src="/logos/shadcn.svg" alt="shadcn/ui" className="size-1/2" />
+              </span>
+              <span
+                title="Tailwind CSS"
+                className="text-red-500 inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[4] sm:size-12 xl:size-16"
+              >
+                <img
+                  src="/logos/tailwind.svg"
+                  alt="Tailwind CSS"
+                  className="size-1/2"
+                />
+              </span>
             </span>
           </h1>
           <p className="text-center max-w-2xl lg:max-w-3xl text-lg lg:text-xl text-muted-foreground text-balance">
@@ -82,7 +98,7 @@ export default function Home() {
             />
           </div>
         </div>
-      </section>
+      </section >
       <section className="bg-code">
         <div className="relative border rounded-lg -mt-40 shadow-lg max-w-[1200px] mx-4 xl:mx-auto bg-background p-4">
           <div className="flex flex-col sm:flex-row justify-between p-4">
@@ -237,6 +253,6 @@ export async function POST(req: Request) {
       <div className="bg-background">
         <SiteFooter />
       </div>
-    </div>
+    </div >
   );
 }
