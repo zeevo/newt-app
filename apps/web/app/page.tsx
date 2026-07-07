@@ -5,11 +5,20 @@ import { FileTree } from '@/components/file-tree';
 import { InlineCode } from '@/components/inline-code';
 import LogoRain from '@/components/logo-rain';
 import { SiteFooter } from '@/components/site-footer';
+import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
+
+const heroLogos = [
+  { name: 'Next.js', src: '/logos/nextjs.svg' },
+  { name: 'NestJS', src: '/logos/nestjs.svg' },
+  { name: 'Better Auth', src: '/logos/better-auth.svg' },
+  { name: 'shadcn/ui', src: '/logos/shadcn.svg' },
+  { name: 'Tailwind CSS', src: '/logos/tailwind.svg' },
+];
 
 export default function Home() {
   return (
     <div>
-      <section className="relative flex items-start justify-center pt-34 h-[560px] md:h-[775px] overflow-hidden border-b bg-background">
+      <section className="relative flex items-start justify-center pt-24 sm:pt-34 h-[775px] overflow-hidden border-b bg-background">
         <div
           className="absolute inset-0 pointer-events-none z-0"
           style={{
@@ -27,15 +36,42 @@ export default function Home() {
         >
           <LogoRain />
         </div>
-        <div className="relative z-10 flex flex-col items-center gap-2">
-          <h1 className="pb-1 text-6xl font-semibold tracking-tight text-balance lg:leading-[1.1] xl:text-8xl xl:tracking-tighter bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-            newt-app
+        <div className="relative z-10 flex flex-col items-center gap-5 px-4">
+          <a
+            href="https://www.npmjs.com/package/create-newt-app"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
+          >
+            <span className="size-2 rounded-full bg-green-500" />
+            Latest update — v{cliVersion} released
+            <span aria-hidden>→</span>
+          </a>
+          <h1 className="max-w-5xl pb-1 text-center text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+            A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter for{' '}
+            <span className="inline-flex translate-y-1 items-center gap-2 align-baseline xl:translate-y-2">
+              {heroLogos.map((logo) => (
+                <span
+                  key={logo.src}
+                  title={logo.name}
+                  className="inline-flex size-10 items-center justify-center rounded-full border bg-muted/50 sm:size-12 xl:size-16"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={logo.src}
+                    alt={logo.name}
+                    className="logo-rain-logo size-1/2"
+                  />
+                </span>
+              ))}
+            </span>
           </h1>
-          <p className="text-center max-w-2xl lg:max-w-4xl text-lg lg:text-2xl text-muted-foreground text-balance">
-            Everything you want. Nothing you don&apos;t need. The monorepo-first
-            way to build full-stack TypeScript apps.
+          <p className="text-center max-w-2xl lg:max-w-3xl text-lg lg:text-xl text-muted-foreground text-balance">
+            newt-app scaffolds everything you want and nothing you don&apos;t —
+            Next.js, NestJS, Better Auth, and shadcn/ui, wired together in one
+            TypeScript monorepo.
           </p>
-          <div className="mt-2 flex h-10 items-center gap-2 whitespace-nowrap rounded-md border bg-background pr-2 pl-4 text-foreground text-sm shadow-sm">
+          <div className="mt-1 flex h-11 items-center gap-2 whitespace-nowrap rounded-full border bg-background pr-2 pl-5 text-foreground text-sm shadow-sm">
             <span className="pointer-events-none shrink-0 select-none text-muted-foreground">
               $
             </span>
