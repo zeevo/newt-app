@@ -68,7 +68,7 @@ Check it's up: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`
 
 ## Keeping packages/ui in sync
 
-`packages/ui` is generated from the shadcn-ui templates (`pnpm check-ui-drift` verifies, `--write` syncs). Edit the templates first, then sync — CI fails on drift.
+`packages/ui` is generated from the shadcn-ui templates (`pnpm check-ui-drift` verifies, `--write` syncs). Edit the templates first, then sync.
 
 ## Adding a new template file
 
