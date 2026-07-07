@@ -49,12 +49,12 @@ export default function Home() {
           </a>
           <h1 className="max-w-5xl pb-1 text-center text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
             A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter for{' '}
-            <span className="inline-flex translate-y-1 items-center gap-2 align-baseline xl:translate-y-2">
+            <span className="inline-flex translate-y-1 items-center -space-x-2.5 align-baseline xl:-space-x-4 xl:translate-y-2">
               {heroLogos.map((logo) => (
                 <span
                   key={logo.src}
                   title={logo.name}
-                  className="inline-flex size-10 items-center justify-center rounded-full border bg-muted/50 sm:size-12 xl:size-16"
+                  className="inline-flex size-10 items-center justify-center rounded-full bg-muted ring-3 ring-background sm:size-12 xl:size-16 xl:ring-4"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
