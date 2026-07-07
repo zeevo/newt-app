@@ -65,13 +65,13 @@ export default function Home() {
                 title="shadcn/ui"
                 className="inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[3] sm:size-12 xl:size-16"
               >
-                <Image src="/logos/shadcn.svg" alt="shadcn/ui" width={32} height={32} className="size-1/2" />
+                <Image src="/logos/shadcn.svg" alt="shadcn/ui" width={32} height={32} className="size-1/2 brightness-0" />
               </span>
               <span
                 title="Tailwind CSS"
                 className="text-red-500 inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[4] sm:size-12 xl:size-16"
               >
-                <Image src="/logos/tailwind.svg" alt="Tailwind CSS" width={32} height={32} className="size-1/2" />
+                <Image src="/logos/tailwind.svg" alt="Tailwind CSS" width={32} height={32} className="size-1/2 brightness-0" />
               </span>
             </span>
           </h1>
