@@ -3,6 +3,7 @@ import { CopyButton } from '@/components/copy-button';
 import { FeatureSection } from '@/components/feature-section';
 import { FileTree } from '@/components/file-tree';
 import { InlineCode } from '@/components/inline-code';
+import Image from 'next/image';
 import LogoRain from '@/components/logo-rain';
 import { SiteFooter } from '@/components/site-footer';
 import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
@@ -46,39 +47,31 @@ export default function Home() {
                 title="Next.js"
                 className="inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[0] sm:size-12 xl:size-16"
               >
-                <img src="/logos/nextjs.svg" alt="Next.js" className="size-1/2" />
+                <Image src="/logos/nextjs.svg" alt="Next.js" width={32} height={32} className="size-1/2" />
               </span>
               <span
                 title="NestJS"
                 className="inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[1] sm:size-12 xl:size-16"
               >
-                <img src="/logos/nestjs.svg" alt="NestJS" className="size-1/2" />
+                <Image src="/logos/nestjs.svg" alt="NestJS" width={32} height={32} className="size-1/2" />
               </span>
               <span
                 title="Better Auth"
                 className="inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[2] sm:size-12 xl:size-16"
               >
-                <img
-                  src="/logos/better-auth.svg"
-                  alt="Better Auth"
-                  className="size-1/2"
-                />
+                <Image src="/logos/better-auth.svg" alt="Better Auth" width={32} height={32} className="size-1/2" />
               </span>
               <span
                 title="shadcn/ui"
                 className="inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[3] sm:size-12 xl:size-16"
               >
-                <img src="/logos/shadcn.svg" alt="shadcn/ui" className="size-1/2" />
+                <Image src="/logos/shadcn.svg" alt="shadcn/ui" width={32} height={32} className="size-1/2" />
               </span>
               <span
                 title="Tailwind CSS"
                 className="text-red-500 inline-flex size-10 items-center justify-center rounded-full border border-1 ring-muted z-[4] sm:size-12 xl:size-16"
               >
-                <img
-                  src="/logos/tailwind.svg"
-                  alt="Tailwind CSS"
-                  className="size-1/2"
-                />
+                <Image src="/logos/tailwind.svg" alt="Tailwind CSS" width={32} height={32} className="size-1/2" />
               </span>
             </span>
           </h1>
