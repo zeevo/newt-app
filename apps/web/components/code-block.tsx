@@ -16,8 +16,8 @@ export function CodeBlock({ children, ...props }: React.ComponentProps<"div">) {
   const textToCopy = getTextContent(children).trim();
 
   return (
-    <div className="relative group">
-      <pre className="overflow-x-auto border border-border rounded-lg bg-code cursor-text">
+    <div className="group relative">
+      <pre className="cursor-text overflow-x-auto rounded-lg border border-border bg-code">
         <code {...props}>{children}</code>
       </pre>
       <CopyButton value={textToCopy} />
