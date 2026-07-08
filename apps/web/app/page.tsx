@@ -11,9 +11,9 @@ import { version as cliVersion } from '../../../packages/create-newt-app/package
 export default function Home() {
   return (
     <div>
-      <section className="relative flex items-start justify-center pt-24 sm:pt-34 h-[775px] overflow-hidden border-b bg-background">
+      <section className="relative flex h-[775px] items-start justify-center overflow-hidden border-b bg-background pt-24 sm:pt-34">
         <div
-          className="absolute inset-0 pointer-events-none z-0"
+          className="pointer-events-none absolute inset-0 z-0"
           style={{
             maskImage: [
               'linear-gradient(to bottom, transparent 0%, black 12%)',
@@ -40,9 +40,9 @@ export default function Home() {
             Latest update — v{cliVersion} released
             <span aria-hidden>→</span>
           </a>
-          <h1 className="max-w-5xl pb-1 text-center text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+          <h1 className="max-w-5xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text pb-1 text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
             A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter for{' '}
-            <span className="inline-flex translate-y-1 items-center -space-x-2.5 align-baseline xl:-space-x-4 xl:translate-y-2">
+            <span className="inline-flex translate-y-1 items-center -space-x-2.5 align-baseline xl:translate-y-2 xl:-space-x-4">
               <span
                 title="Next.js"
                 className="z-[0] inline-flex size-10 items-center justify-center rounded-full border border-background bg-black sm:size-12 xl:size-16"
@@ -107,13 +107,13 @@ export default function Home() {
               </span>
             </span>
           </h1>
-          <p className="text-center max-w-2xl lg:max-w-3xl text-lg lg:text-xl text-muted-foreground text-balance">
+          <p className="max-w-2xl text-center text-lg text-balance text-muted-foreground lg:max-w-3xl lg:text-xl">
             newt-app scaffolds everything you want and nothing you don&apos;t —
             Next.js, NestJS, Better Auth, and shadcn/ui, wired together in one
             TypeScript monorepo.
           </p>
-          <div className="mt-1 flex h-11 items-center gap-2 whitespace-nowrap rounded-full border bg-background pr-2 pl-5 text-foreground text-sm shadow-sm">
-            <span className="pointer-events-none shrink-0 select-none text-muted-foreground">
+          <div className="mt-1 flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
+            <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
               $
             </span>
             <span className="font-mono">npm create newt-app</span>
@@ -125,8 +125,8 @@ export default function Home() {
         </div>
       </section >
       <section className="bg-code">
-        <div className="relative border rounded-lg -mt-40 shadow-lg max-w-[1200px] mx-4 xl:mx-auto bg-background p-4">
-          <div className="flex flex-col sm:flex-row justify-between p-4">
+        <div className="relative mx-4 -mt-40 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg xl:mx-auto">
+          <div className="flex flex-col justify-between p-4 sm:flex-row">
             <div className="flex-1">
               <FileTree
                 name="my-app"
@@ -176,17 +176,17 @@ export default function Home() {
                 </FileTree.Folder>
               </FileTree>
             </div>
-            <div className="flex-1 p-4 gap-8 flex flex-col">
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.1] text-balance">
+            <div className="flex flex-1 flex-col gap-8 p-4">
+              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
                 A Project Structure for modern TypeScript
               </h2>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="leading-relaxed text-muted-foreground">
                 newt-app scaffolds a monorepo with a Next.js frontend, a NestJS
                 API, and a shared UI package, all wired together from day one.
                 No manual tsconfig paths, no copy-pasted ESLint configs, no
                 guessing how packages reference each other.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="leading-relaxed text-muted-foreground">
                 Shared components live in <InlineCode>packages/ui</InlineCode>,
                 auth config in <InlineCode>packages/auth</InlineCode>, and each
                 app imports them by package name.
@@ -195,8 +195,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="py-24 border-t bg-background">
-        <div className="max-w-[1200px] mx-auto px-4">
+      <section className="border-t bg-background py-24">
+        <div className="mx-auto max-w-[1200px] px-4">
           <FeatureSection>
             <CodeShowcase
               filename="apps/web/app/dashboard/page.tsx"
@@ -219,17 +219,17 @@ export default async function Dashboard() {
   );
 }`}
             />
-            <div className="flex flex-col gap-4 justify-center">
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.1] text-balance">
+            <div className="flex flex-col justify-center gap-4">
+              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
                 Share code between apps, not copy it.
               </h2>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="leading-relaxed text-muted-foreground">
                 <InlineCode>@my-app/ui</InlineCode> and{' '}
                 <InlineCode>@my-app/auth</InlineCode> are importable by name
                 from day one, in both <InlineCode>apps/web</InlineCode> and{' '}
                 <InlineCode>apps/api</InlineCode>.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="leading-relaxed text-muted-foreground">
                 No relative path climbing, no publishing to a registry, no
                 manual workspace links.
               </p>
@@ -237,19 +237,19 @@ export default async function Dashboard() {
           </FeatureSection>
         </div>
       </section>
-      <section className="py-24 border-t bg-background">
-        <div className="max-w-[1200px] mx-auto px-4">
+      <section className="border-t bg-background py-24">
+        <div className="mx-auto max-w-[1200px] px-4">
           <FeatureSection>
-            <div className="flex flex-col gap-4 justify-center">
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.1] text-balance">
+            <div className="flex flex-col justify-center gap-4">
+              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
                 A structure that can scale.
               </h2>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="leading-relaxed text-muted-foreground">
                 Inject NestJS services directly inside Next.js route handlers.
                 Keep your business logic separate from your frontend, organized
                 into modules and providers from day one.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="leading-relaxed text-muted-foreground">
                 Add services, swap implementations, or move to a standalone API
                 when you&apos;re ready.
               </p>
