@@ -11,7 +11,7 @@ import { version as cliVersion } from '../../../packages/create-newt-app/package
 export default function Home() {
   return (
     <div>
-      <section className="relative flex h-[775px] items-start justify-center overflow-hidden border-b bg-background pt-24 sm:pt-34">
+      <section className="relative flex h-[775px] items-start justify-center overflow-hidden border-b bg-background pt-12 sm:pt-24">
         <div
           className="pointer-events-none absolute inset-0 z-0"
           style={{
@@ -124,8 +124,8 @@ export default function Home() {
           </div>
         </div>
       </section >
-      <section className="bg-code">
-        <div className="relative mx-4 -mt-40 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg xl:mx-auto">
+      <section className="bg-code pb-16">
+        <div className="relative mx-4 -mt-20 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg xl:mx-auto">
           <div className="flex flex-col justify-between p-4 sm:flex-row">
             <div className="flex-1">
               <FileTree
