@@ -40,7 +40,7 @@ export default function Home() {
             Latest update — v{cliVersion} released
             <span aria-hidden>→</span>
           </a>
-          <h1 className="max-w-5xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text pb-1 text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
+          <h1 className="max-w-5xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
             A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter for{' '}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
               <span
@@ -112,7 +112,7 @@ export default function Home() {
             Next.js, NestJS, Better Auth, and shadcn/ui, wired together in one
             TypeScript monorepo.
           </p>
-          <div className="mt-1 flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
+          <div className="flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
             <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
               $
             </span>
