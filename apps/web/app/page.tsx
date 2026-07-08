@@ -40,7 +40,7 @@ export default function Home() {
             Latest update — v{cliVersion} released
             <span aria-hidden>→</span>
           </a>
-          <h1 className="max-w-5xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
+          <h1 className="max-w-4xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
             A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter for{' '}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
               <span
@@ -107,7 +107,7 @@ export default function Home() {
               </span>
             </span>
           </h1>
-          <p className="max-w-2xl text-center text-lg text-balance text-muted-foreground lg:max-w-3xl lg:text-xl">
+          <p className="max-w-lg text-center text-lg text-balance text-muted-foreground lg:max-w-xl lg:text-xl">
             newt-app scaffolds everything you want and nothing you don&apos;t —
             Next.js, NestJS, Better Auth, and shadcn/ui, wired together in one
             TypeScript monorepo.
