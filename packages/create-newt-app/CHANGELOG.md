@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.18.9
+
+### Patch Changes
+
+- 0501de8: add tailwind eslint rules to the docs site and fix a conflicting border class
+- 0501de8: rework the homepage hero: release pill, descriptive headline with inline logo chips
+  - @newt-app/templates@0.18.9
+
 ## 0.18.8
 
 ### Patch Changes
