@@ -8,7 +8,7 @@ import { ModeToggle } from '@/app/_components/mode-toggle';
 
 export function SiteHeader() {
   return (
-    <header className="bg-background sticky top-0 z-50 w-full border-b">
+    <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container">
         <div className="flex h-(--header-height) items-center gap-2 **:data-[slot=separator]:!h-4">
           <MobileNav items={siteConfig.navItems} className="flex lg:hidden" />

@@ -171,7 +171,7 @@ export default function LogoRain({
   }, [density, speedFactor]);
 
   return (
-    <div className="w-full h-full text-foreground">
+    <div className="h-full w-full text-foreground">
       <svg
         ref={svgRef}
         width="100%"
