@@ -45,55 +45,55 @@ export default function Home() {
             <span className="inline-flex translate-y-1 items-center -space-x-2.5 align-baseline xl:translate-y-2 xl:-space-x-4">
               <span
                 title="Next.js"
-                className="z-[0] inline-flex size-10 items-center justify-center rounded-full border border-background bg-black sm:size-12 xl:size-16"
+                className="z-[0] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <svg
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   role="img"
                   aria-label="Next.js"
-                  className="size-1/2 text-white"
+                  className="size-1/2 text-background"
                 >
                   <path d="M18.665 21.978C16.758 23.255 14.465 24 12 24 5.377 24 0 18.623 0 12S5.377 0 12 0s12 5.377 12 12c0 3.583-1.574 6.801-4.067 9.001L9.219 7.2H7.2v9.596h1.615V9.251l9.85 12.727Zm-3.332-8.533 1.6 2.061V7.2h-1.6v6.245Z" />
                 </svg>
               </span>
               <span
                 title="NestJS"
-                className="z-[1] inline-flex size-10 items-center justify-center rounded-full border border-background bg-white sm:size-12 xl:size-16"
+                className="z-[1] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <Image src="/logos/nestjs.svg" alt="NestJS" width={32} height={32} className="size-1/2" />
               </span>
               <span
                 title="Better Auth"
-                className="z-[2] inline-flex size-10 items-center justify-center rounded-full border border-background bg-black sm:size-12 xl:size-16"
+                className="z-[2] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <svg
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   role="img"
                   aria-label="Better Auth"
-                  className="size-1/2 text-white"
+                  className="size-1/2 text-background"
                 >
                   <path d="M0 3.39v17.22h5.783V15.06h6.434V8.939H5.783V3.39ZM12.217 8.94h5.638v6.122h-5.638v5.548H24V3.391H12.217Z" />
                 </svg>
               </span>
               <span
                 title="shadcn/ui"
-                className="z-[3] inline-flex size-10 items-center justify-center rounded-full border border-background bg-black sm:size-12 xl:size-16"
+                className="z-[3] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <svg
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   role="img"
                   aria-label="shadcn/ui"
-                  className="size-1/2 text-white"
+                  className="size-1/2 text-background"
                 >
                   <path d="M22.219 11.784 11.784 22.219c-.407.407-.407 1.068 0 1.476.407.407 1.068.407 1.476 0L23.695 13.26c.407-.408.407-1.069 0-1.476-.408-.407-1.069-.407-1.476 0ZM20.132.305.305 20.132c-.407.407-.407 1.068 0 1.476.408.407 1.069.407 1.476 0L21.608 1.781c.407-.407.407-1.068 0-1.476-.408-.407-1.069-.407-1.476 0Z" />
                 </svg>
               </span>
               <span
                 title="Tailwind CSS"
-                className="z-[4] inline-flex size-10 items-center justify-center rounded-full border border-background bg-white sm:size-12 xl:size-16"
+                className="z-[4] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <svg
                   viewBox="0 0 24 24"
