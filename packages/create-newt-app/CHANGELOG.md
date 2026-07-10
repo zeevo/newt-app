@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.20.0
+
+### Minor Changes
+
+- b160cdc: zero-config first run: auth defaults to a local sqlite database when DATABASE_URL is unset
+
+### Patch Changes
+
+- @newt-app/templates@0.20.0
+
 ## 0.19.3
 
 ### Patch Changes
