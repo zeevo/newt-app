@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.19.2
+
+### Patch Changes
+
+- e3ad1b8: remove the Considerations section from the Vercel deployment docs
+  - @newt-app/templates@0.19.2
+
 ## 0.19.1
 
 ### Patch Changes
