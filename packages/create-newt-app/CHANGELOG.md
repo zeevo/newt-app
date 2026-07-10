@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.19.1
+
+### Patch Changes
+
+- 135703e: redesign the deployment docs diagrams with a consistent, crisp SVG system
+  - @newt-app/templates@0.19.1
+
 ## 0.19.0
 
 ### Minor Changes
