@@ -113,7 +113,7 @@ NestJS decorators require `emitDecoratorMetadata`. Add a separate tsconfig for t
 
 ## next.config.js
 
-Remove the rewrite — there is no separate API server to proxy to:
+Remove the rewrite, since there is no separate API server to proxy to:
 
 ```js title="apps/web/next.config.js"
 const nextConfig = {
@@ -126,7 +126,7 @@ export default nextConfig;
 ## Running
 
 ```bash
-# Dev — tsx watches server.ts and restarts on changes
+# Dev - tsx watches server.ts and restarts on changes
 pnpm --filter=web dev
 
 # Production

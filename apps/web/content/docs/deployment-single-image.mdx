@@ -5,7 +5,7 @@ prev: "deployment-standalone"
 next: "deployment-custom-server"
 ---
 
-Package both apps into a single Docker image and start them with a process manager. This simplifies ops — one image to build, push, and deploy — at the cost of independent scaling.
+Package both apps into a single Docker image and start them with a process manager. This simplifies ops (one image to build, push, and deploy) at the cost of independent scaling.
 
 Next.js still runs on port 3000, NestJS on port 3001. The existing rewrite proxy in `next.config.js` forwards `/api/*` internally. Only port 3000 is exposed externally.
 
