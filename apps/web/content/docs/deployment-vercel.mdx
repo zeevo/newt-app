@@ -4,13 +4,13 @@ description: "Deploy to Vercel using NestJS di-only mode"
 prev: "deployment-spa"
 ---
 
-The recommended way to deploy a newt app to Vercel is with **NestJS di-only mode** (`--nest-di-only`). In this mode, NestJS runs as an application context — no HTTP server — so your entire app is a single Next.js project that deploys to Vercel without any extra infrastructure.
+The recommended way to deploy a newt app to Vercel is with **NestJS di-only mode** (`--nest-di-only`). In this mode, NestJS runs as an application context (no HTTP server) so your entire app is a single Next.js project that deploys to Vercel without any extra infrastructure.
 
 <VercelDiagram />
 
 ## How it works
 
-When you scaffold with `--nest-di-only`, NestJS is initialized via `NestFactory.createApplicationContext` — no HTTP server. NestJS services are accessed directly from Next.js API routes using the `inject` helper in `apps/web/lib/nest.ts`:
+When you scaffold with `--nest-di-only`, NestJS is initialized via `NestFactory.createApplicationContext`, with no HTTP server. NestJS services are accessed directly from Next.js API routes using the `inject` helper in `apps/web/lib/nest.ts`:
 
 ```ts title="apps/web/app/api/hello/route.ts"
 import { NextResponse } from 'next/server';
@@ -53,7 +53,7 @@ export async function inject<T>(token: Type<T> | Abstract<T> | string | symbol):
 4. Add your environment variables (see below)
 5. Deploy
 
-Vercel auto-detects Next.js — no build configuration needed.
+Vercel auto-detects Next.js. No build configuration needed.
 
 ## Environment variables
 
@@ -67,7 +67,7 @@ NEXT_PUBLIC_APP_URL= # your Vercel deployment URL, e.g. https://my-app.vercel.ap
 
 ## Database
 
-Vercel doesn't include a database. Use any Postgres provider — [Neon](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app) all work well.
+Vercel doesn't include a database. Use any Postgres provider: [Neon](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app) all work well.
 
 Run migrations before your first deploy:
 

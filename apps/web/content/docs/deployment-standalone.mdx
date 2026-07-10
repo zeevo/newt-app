@@ -5,9 +5,9 @@ prev: "cli"
 next: "deployment-single-image"
 ---
 
-The default deployment model. A single root `Dockerfile` with multiple build targets produces three containers — `web`, `api`, and `migrate` — orchestrated by `docker-compose.yml`. Next.js builds with `output: "standalone"`, and `/api/*` requests are proxied server-side to NestJS.
+The default deployment model. A single root `Dockerfile` with multiple build targets produces three containers (`web`, `api`, and `migrate`) orchestrated by `docker-compose.yml`. Next.js builds with `output: "standalone"`, and `/api/*` requests are proxied server-side to NestJS.
 
-This works on any container platform — Railway, Fly.io, Render, AWS ECS, and others.
+This works on any container platform: Railway, Fly.io, Render, AWS ECS, and others.
 
 <StandaloneDiagram />
 
@@ -53,10 +53,10 @@ Both are forwarded to all services via a YAML anchor in `docker-compose.yml`.
 
 The `Dockerfile` uses a single multi-stage build shared across all services:
 
-1. **`build`** — installs all dependencies, compiles `web`, `api`, and `packages/auth` with `pnpm build`, then runs `pnpm deploy --filter=api --prod` to produce a self-contained api bundle
-2. **`web`** — copies only the Next.js standalone output from `build`
-3. **`api`** — copies only the `pnpm deploy` output from `build`
-4. **`migrate`** — copies the full monorepo source and runs `pnpm install`, then invokes the Better Auth CLI directly
+1. **`build`**: installs all dependencies, compiles `web`, `api`, and `packages/auth` with `pnpm build`, then runs `pnpm deploy --filter=api --prod` to produce a self-contained api bundle
+2. **`web`**: copies only the Next.js standalone output from `build`
+3. **`api`**: copies only the `pnpm deploy` output from `build`
+4. **`migrate`**: copies the full monorepo source and runs `pnpm install`, then invokes the Better Auth CLI directly
 
 The `web` and `api` stages are lean production images with no dev dependencies. The `migrate` stage is heavier but only runs once on startup.
 
@@ -169,7 +169,7 @@ volumes:
 
 ## Migrations
 
-The migrate container calls the Better Auth CLI directly with `-y` to run non-interactively — bypassing Turborepo, which requires a TTY for tasks marked as interactive. `DATABASE_URL` is injected from the docker-compose environment, so no `.env` file is needed inside the container.
+The migrate container calls the Better Auth CLI directly with `-y` to run non-interactively, bypassing Turborepo, which requires a TTY for tasks marked as interactive. `DATABASE_URL` is injected from the docker-compose environment, so no `.env` file is needed inside the container.
 
 To run migrations locally:
 
