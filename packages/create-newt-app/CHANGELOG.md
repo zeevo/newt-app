@@ -1,5 +1,72 @@
 # create-newt-app
 
+## 0.19.3
+
+### Patch Changes
+
+- ca55955: remove em dashes from documentation and the scaffolded README
+  - @newt-app/templates@0.19.3
+
+## 0.19.2
+
+### Patch Changes
+
+- e3ad1b8: remove the Considerations section from the Vercel deployment docs
+  - @newt-app/templates@0.19.2
+
+## 0.19.1
+
+### Patch Changes
+
+- 135703e: redesign the deployment docs diagrams with a consistent, crisp SVG system
+  - @newt-app/templates@0.19.1
+
+## 0.19.0
+
+### Minor Changes
+
+- 60ccbe6: run db migrations automatically before dev via a turbo dependsOn, so `pnpm dev` is a single command to get going
+
+### Patch Changes
+
+- @newt-app/templates@0.19.0
+
+## 0.18.9
+
+### Patch Changes
+
+- 0501de8: add tailwind eslint rules to the docs site and fix a conflicting border class
+- 0501de8: rework the homepage hero: release pill, descriptive headline with inline logo chips
+  - @newt-app/templates@0.18.9
+
+## 0.18.8
+
+### Patch Changes
+
+- 23a89d0: add vitest/globals to the scaffolded api tsconfig so typed lint resolves test globals
+  - @newt-app/templates@0.18.8
+
+## 0.18.7
+
+### Patch Changes
+
+- 129a8eb: fix scaffolded app.controller.spec: provide AppService in the testing module
+  - @newt-app/templates@0.18.7
+
+## 0.18.6
+
+### Patch Changes
+
+- 0ee50e7: fix --bare with --nest-di-only: api index no longer exports the removed todos service
+  - @newt-app/templates@0.18.6
+
+## 0.18.5
+
+### Patch Changes
+
+- 23e6b04: drop the kysely logo from the homepage animation
+  - @newt-app/templates@0.18.5
+
 ## 0.18.4
 
 ### Patch Changes

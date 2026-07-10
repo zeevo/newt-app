@@ -4,24 +4,13 @@ description: "Deploy to Vercel using NestJS di-only mode"
 prev: "deployment-spa"
 ---
 
-The recommended way to deploy a newt app to Vercel is with **NestJS di-only mode** (`--nest-di-only`). In this mode, NestJS runs as an application context — no HTTP server — so your entire app is a single Next.js project that deploys to Vercel without any extra infrastructure.
+The recommended way to deploy a newt app to Vercel is with **NestJS di-only mode** (`--nest-di-only`). In this mode, NestJS runs as an application context (no HTTP server) so your entire app is a single Next.js project that deploys to Vercel without any extra infrastructure.
 
-<svg viewBox="0 0 480 130" style={{display:'block',maxWidth:'540px',margin:'1.5rem auto'}} role="img" aria-label="Vercel deployment: Next.js app with NestJS running as application context">
-  <rect x="10" y="30" width="460" height="88" rx="8" fill="none" stroke="var(--border)" strokeWidth={1} strokeDasharray="5 3" />
-  <text x="22" y="24" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">Vercel</text>
-  <rect x="30" y="48" width="200" height="55" rx="6" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
-  <text x="130" y="69" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">Next.js</text>
-  <text x="130" y="86" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">API routes</text>
-  <line x1="230" y1="75" x2="278" y2="75" stroke="var(--muted-foreground)" strokeWidth={1.5} />
-  <polyline points="270,69 278,75 270,81" stroke="var(--muted-foreground)" strokeWidth={1.5} fill="none" />
-  <rect x="288" y="48" width="162" height="55" rx="6" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
-  <text x="369" y="69" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">NestJS</text>
-  <text x="369" y="86" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">app context</text>
-</svg>
+<VercelDiagram />
 
 ## How it works
 
-When you scaffold with `--nest-di-only`, NestJS is initialized via `NestFactory.createApplicationContext` — no HTTP server. NestJS services are accessed directly from Next.js API routes using the `inject` helper in `apps/web/lib/nest.ts`:
+When you scaffold with `--nest-di-only`, NestJS is initialized via `NestFactory.createApplicationContext`, with no HTTP server. NestJS services are accessed directly from Next.js API routes using the `inject` helper in `apps/web/lib/nest.ts`:
 
 ```ts title="apps/web/app/api/hello/route.ts"
 import { NextResponse } from 'next/server';
@@ -64,7 +53,7 @@ export async function inject<T>(token: Type<T> | Abstract<T> | string | symbol):
 4. Add your environment variables (see below)
 5. Deploy
 
-Vercel auto-detects Next.js — no build configuration needed.
+Vercel auto-detects Next.js. No build configuration needed.
 
 ## Environment variables
 
@@ -78,17 +67,10 @@ NEXT_PUBLIC_APP_URL= # your Vercel deployment URL, e.g. https://my-app.vercel.ap
 
 ## Database
 
-Vercel doesn't include a database. Use any Postgres provider — [Neon](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app) all work well.
+Vercel doesn't include a database. Use any Postgres provider: [Neon](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app) all work well.
 
 Run migrations before your first deploy:
 
 ```bash
 pnpm db:migrate
 ```
-
-## Considerations
-
-- NestJS initializes lazily on the first request and is cached for the lifetime of the function container — subsequent requests within the same container skip initialization
-- Cold starts add latency on the first request after inactivity
-- No persistent in-memory state between containers — use a database for all state
-- Vercel's function timeout applies (10s on Hobby, 60s on Pro)

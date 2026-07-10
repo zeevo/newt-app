@@ -1,6 +1,6 @@
 {
   "name": "create-newt-app",
-  "version": "0.18.4",
+  "version": "0.19.3",
   "private": false,
   "type": "module",
   "bin": {

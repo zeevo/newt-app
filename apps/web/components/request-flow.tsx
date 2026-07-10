@@ -193,7 +193,7 @@ export default function RequestFlow() {
   }, []);
 
   return (
-    <div className="w-full my-8 text-foreground">
+    <div className="my-8 w-full text-foreground">
       <svg
         ref={svgRef}
         width="100%"

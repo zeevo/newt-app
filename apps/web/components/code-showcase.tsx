@@ -14,9 +14,9 @@ export async function CodeShowcase({
   const html = await highlightCode(code, language);
 
   return (
-    <div className="rounded-lg border bg-code overflow-hidden">
+    <div className="overflow-hidden rounded-lg border bg-code">
       {filename && (
-        <div className="border-b px-4 py-2 text-xs font-mono text-muted-foreground">
+        <div className="border-b px-4 py-2 font-mono text-xs text-muted-foreground">
           {filename}
         </div>
       )}
