@@ -176,6 +176,7 @@ html {
 [data-rehype-pretty-code-figure] {
   background-color: var(--color-code);
   color: var(--color-code-foreground);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
   font-size: 0.875rem;
