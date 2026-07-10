@@ -1,6 +1,6 @@
 {
   "name": "@newt-app/templates",
-  "version": "0.19.2",
+  "version": "0.19.3",
   "private": false,
   "description": "Templates for newt-app",
   "type": "module",

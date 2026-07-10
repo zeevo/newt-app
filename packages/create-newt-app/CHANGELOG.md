@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.19.3
+
+### Patch Changes
+
+- ca55955: remove em dashes from documentation and the scaffolded README
+  - @newt-app/templates@0.19.3
+
 ## 0.19.2
 
 ### Patch Changes

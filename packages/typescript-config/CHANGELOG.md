@@ -1,5 +1,7 @@
 # @newt-app/typescript-config
 
+## 0.19.3
+
 ## 0.19.2
 
 ## 0.19.1
