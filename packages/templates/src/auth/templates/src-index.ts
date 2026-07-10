@@ -5,8 +5,6 @@ import { Pool } from "pg";
 import Database from "better-sqlite3";
 import path from "node:path";
 
-// Postgres when DATABASE_URL is set; otherwise a local SQLite file at the
-// repo root so a fresh scaffold works with zero configuration.
 const database = process.env.DATABASE_URL
   ? new Pool({ connectionString: process.env.DATABASE_URL })
   : new Database(path.resolve(process.cwd(), "../../dev.db"));
