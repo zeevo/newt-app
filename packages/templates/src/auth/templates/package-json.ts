@@ -8,7 +8,7 @@ export default {
     ".": "./src/index.ts"
   },
   "scripts": {
-    "migrate": "dotenv -e .env -- auth migrate --config src/index.ts",
+    "migrate": "dotenv -e .env -- auth migrate -y --config src/index.ts",
     "generate": "dotenv -e .env -- auth generate --config src/index.ts"
   },
   "dependencies": {

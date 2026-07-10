@@ -18,12 +18,12 @@ export default {
       "outputs": ["coverage/**"]
     },
     "dev": {
+      "dependsOn": ["^migrate"],
       "cache": false,
       "persistent": true
     },
     "migrate": {
-      "cache": false,
-      "interactive": true
+      "cache": false
     },
     "generate": {
       "cache": false
