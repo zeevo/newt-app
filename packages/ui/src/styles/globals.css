@@ -216,7 +216,7 @@ html {
   background-color: var(--color-code-highlight);
   padding-inline: 0;
   padding-left: calc(1rem - 2px);
-  border-left: 2px solid color-mix(in oklab, var(--muted-foreground) 50%, transparent);
+  border-left: 1px solid color-mix(in oklab, var(--muted-foreground) 50%, transparent);
 }
 
 [data-line-numbers] {

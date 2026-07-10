@@ -45,7 +45,7 @@ export default function Home() {
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
               <span
                 title="Next.js"
-                className="z-[0] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[0] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -59,13 +59,13 @@ export default function Home() {
               </span>
               <span
                 title="NestJS"
-                className="z-[1] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[1] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <Image src="/logos/nestjs.svg" alt="NestJS" width={32} height={32} className="size-3/5" />
               </span>
               <span
                 title="Better Auth"
-                className="z-[2] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[2] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -79,7 +79,7 @@ export default function Home() {
               </span>
               <span
                 title="shadcn/ui"
-                className="z-[3] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[3] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -93,7 +93,7 @@ export default function Home() {
               </span>
               <span
                 title="Tailwind CSS"
-                className="z-[4] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[4] inline-flex size-10 items-center justify-center rounded-full border border-background bg-foreground sm:size-12 xl:size-16"
               >
                 <svg
                   viewBox="0 0 24 24"

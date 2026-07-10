@@ -42,7 +42,7 @@ function Node({
         rx={RX}
         fill="var(--muted)"
         stroke="var(--border)"
-        strokeWidth={1.5}
+        strokeWidth={1}
       />
       <text
         x={cx}
@@ -88,7 +88,7 @@ function Arrow({
         x2={tip - 6}
         y2={y}
         stroke="var(--muted-foreground)"
-        strokeWidth={1.5}
+        strokeWidth={1}
       />
       <polygon
         points={`${tip},${y} ${tip - 8},${y - 4.5} ${tip - 8},${y + 4.5}`}
@@ -143,7 +143,7 @@ function FlowDiagram({
             rx={12}
             fill="none"
             stroke="var(--border)"
-            strokeWidth={1.5}
+            strokeWidth={1}
             strokeDasharray="5 4"
           />
           <text x={OUTER + BPAD} y={OUTER + 15} className={boundaryLabel}>
@@ -195,7 +195,7 @@ function StackDiagram({
         rx={12}
         fill="var(--muted)"
         stroke="var(--border)"
-        strokeWidth={1.5}
+        strokeWidth={1}
       />
       {rows ? (
         <text x={inner} y={OUTER + 16} className={boundaryLabel}>
