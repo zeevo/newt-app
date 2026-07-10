@@ -85,10 +85,3 @@ Run migrations before your first deploy:
 ```bash
 pnpm db:migrate
 ```
-
-## Considerations
-
-- NestJS initializes lazily on the first request and is cached for the lifetime of the function container — subsequent requests within the same container skip initialization
-- Cold starts add latency on the first request after inactivity
-- No persistent in-memory state between containers — use a database for all state
-- Vercel's function timeout applies (10s on Hobby, 60s on Pro)
