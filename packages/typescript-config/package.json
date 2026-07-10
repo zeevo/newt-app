@@ -1,6 +1,6 @@
 {
   "name": "@newt-app/typescript-config",
-  "version": "0.18.9",
+  "version": "0.19.2",
   "private": true,
   "license": "MIT",
   "publishConfig": {

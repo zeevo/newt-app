@@ -1,5 +1,29 @@
 # create-newt-app
 
+## 0.19.2
+
+### Patch Changes
+
+- e3ad1b8: remove the Considerations section from the Vercel deployment docs
+  - @newt-app/templates@0.19.2
+
+## 0.19.1
+
+### Patch Changes
+
+- 135703e: redesign the deployment docs diagrams with a consistent, crisp SVG system
+  - @newt-app/templates@0.19.1
+
+## 0.19.0
+
+### Minor Changes
+
+- 60ccbe6: run db migrations automatically before dev via a turbo dependsOn, so `pnpm dev` is a single command to get going
+
+### Patch Changes
+
+- @newt-app/templates@0.19.0
+
 ## 0.18.9
 
 ### Patch Changes

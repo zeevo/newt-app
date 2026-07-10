@@ -5,10 +5,22 @@ import { InlineCode } from './inline-code';
 import Pre from './pre';
 import { FileTree } from './file-tree';
 import RequestFlow from './request-flow';
+import {
+  StandaloneDiagram,
+  SingleImageDiagram,
+  VercelDiagram,
+  CustomServerDiagram,
+  SpaDiagram,
+} from './deployment-diagram';
 
 export const mdxComponents = {
   FileTree,
   RequestFlow,
+  StandaloneDiagram,
+  SingleImageDiagram,
+  VercelDiagram,
+  CustomServerDiagram,
+  SpaDiagram,
   h1: ({ className, ...props }: React.ComponentProps<'h1'>) => (
     <h1
       className={cn(
