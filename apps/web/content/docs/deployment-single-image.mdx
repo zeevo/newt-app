@@ -9,20 +9,7 @@ Package both apps into a single Docker image and start them with a process manag
 
 Next.js still runs on port 3000, NestJS on port 3001. The existing rewrite proxy in `next.config.js` forwards `/api/*` internally. Only port 3000 is exposed externally.
 
-<svg viewBox="0 0 480 136" style={{display:'block',maxWidth:'540px',margin:'1.5rem auto'}} role="img" aria-label="Single Docker image: both processes inside one container">
-  <rect x="10" y="30" width="460" height="88" rx="8" fill="none" stroke="var(--border)" strokeWidth={1} strokeDasharray="5 3" />
-  <text x="22" y="24" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">Docker image</text>
-  <rect x="30" y="48" width="150" height="55" rx="6" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
-  <text x="105" y="72" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">Next.js</text>
-  <text x="105" y="89" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">:3000</text>
-  <line x1="180" y1="75" x2="290" y2="75" stroke="var(--muted-foreground)" strokeWidth={1.5} />
-  <polyline points="282,69 290,75 282,81" stroke="var(--muted-foreground)" strokeWidth={1.5} fill="none" />
-  <text x="235" y="67" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">/api/*</text>
-  <rect x="300" y="48" width="150" height="55" rx="6" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
-  <text x="375" y="72" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={13} fill="var(--foreground)">NestJS</text>
-  <text x="375" y="89" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">:3001</text>
-  <text x="458" y="132" textAnchor="end" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">:3000 exposed</text>
-</svg>
+<SingleImageDiagram />
 
 ## Dockerfile
 

@@ -7,14 +7,7 @@ next: "deployment-vercel"
 
 If your app doesn't need server-side rendering, you can build Next.js as a static export and serve it directly from NestJS. This means a single process and a single port in production — no reverse proxy, no separate web container.
 
-<svg viewBox="0 0 440 120" style={{display:'block',maxWidth:'500px',margin:'1.5rem auto'}} role="img" aria-label="SPA mode: NestJS serves both API routes and static Next.js build on one port">
-  <rect x="10" y="10" width="420" height="100" rx="8" fill="var(--accent)" stroke="var(--border)" strokeWidth={1} />
-  <text x="22" y="30" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">NestJS · port 3000</text>
-  <rect x="30" y="38" width="375" height="28" rx="4" fill="var(--background)" stroke="var(--border)" strokeWidth={1} />
-  <text x="50" y="52" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">/api/*  →  controllers</text>
-  <rect x="30" y="74" width="375" height="28" rx="4" fill="var(--background)" stroke="var(--border)" strokeWidth={1} />
-  <text x="50" y="88" dominantBaseline="middle" fontFamily="ui-monospace, monospace" fontSize={11} fill="var(--muted-foreground)">/*      →  static files (Next.js build)</text>
-</svg>
+<SpaDiagram />
 
 ## How it works
 
