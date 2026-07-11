@@ -191,7 +191,6 @@ export async function doInit(options: Options) {
     console.log("Next steps:");
     console.log();
     console.log(chalk.blue(`  cd ${name}`));
-    console.log(chalk.blue(`  pnpm db:migrate`));
     console.log(chalk.blue(`  pnpm dev`));
     console.log();
   } catch (error) {
