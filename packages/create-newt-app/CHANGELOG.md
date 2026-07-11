@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.20.1
+
+### Patch Changes
+
+- c6270aa: wire up sonner in the shadcn scaffold: mount the Toaster and re-export toast so toasts work out of the box
+  - @newt-app/templates@0.20.1
+
 ## 0.20.0
 
 ### Minor Changes
