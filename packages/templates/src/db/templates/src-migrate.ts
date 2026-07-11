@@ -5,8 +5,6 @@ import path from "node:path";
 import { FileMigrationProvider, Migrator } from "kysely";
 import { db } from "./index.js";
 
-// Applies every pending migration in ./migrations to the connected database
-// (SQLite in dev, Postgres when DATABASE_URL is set). Run with \`pnpm db:migrate\`.
 async function main() {
   const migrator = new Migrator({
     db,

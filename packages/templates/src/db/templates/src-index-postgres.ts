@@ -4,8 +4,6 @@ export default {
 import { Pool } from "pg";
 import type { DB } from "./schema.js";
 
-// Postgres connection (DATABASE_URL), shared by Better Auth (\`driver\`) and your
-// app (\`db\`).
 export const driver = new Pool({ connectionString: process.env.DATABASE_URL });
 
 export const db = new Kysely<DB>({

@@ -9,7 +9,6 @@ import packageJsonPostgres from "./templates/package-json-postgres";
 import srcIndexSqlite from "./templates/src-index-sqlite";
 import srcIndexPostgres from "./templates/src-index-postgres";
 
-// Shared across both databases: schema, migration runner + generator, tsconfig.
 const shared = [
   tsconfig,
   srcSchema,

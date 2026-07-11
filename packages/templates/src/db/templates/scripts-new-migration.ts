@@ -3,7 +3,6 @@ export default {
   template: `import { promises as fs } from "node:fs";
 import path from "node:path";
 
-// Scaffolds a timestamped migration file. Run with \`pnpm db:make <name>\`.
 async function main() {
   const name = process.argv[2];
   if (!name) {

@@ -5,8 +5,6 @@ import { Kysely, SqliteDialect } from "kysely";
 import path from "node:path";
 import type { DB } from "./schema.js";
 
-// Local SQLite file (dev.db at the repo root), shared by Better Auth (\`driver\`)
-// and your app (\`db\`).
 export const driver = new BetterSqlite3(
   path.resolve(process.cwd(), "../../dev.db"),
 );
