@@ -3,6 +3,7 @@ export default {
   template: `{
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
+  "globalEnv": ["API_URL"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
