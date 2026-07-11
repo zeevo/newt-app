@@ -145,6 +145,7 @@ const shadcnUi: Module = {
   ],
   packages: [
     { package: "next-themes", module: "apps/web", version: "^0.4.6" },
+    { package: "sonner", module: "apps/web", version: "^2.0.7" },
   ],
 };
 
