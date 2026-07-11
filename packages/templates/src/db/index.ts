@@ -1,22 +1,27 @@
 import type { Module } from "../types";
-import packageJson from "./templates/package-json";
 import tsconfig from "./templates/tsconfig";
-import srcIndex from "./templates/src-index";
 import srcSchema from "./templates/src-schema";
 import srcMigrate from "./templates/src-migrate";
 import scriptsNewMigration from "./templates/scripts-new-migration";
 import migrationsReadme from "./templates/migrations-readme";
+import packageJsonSqlite from "./templates/package-json-sqlite";
+import packageJsonPostgres from "./templates/package-json-postgres";
+import srcIndexSqlite from "./templates/src-index-sqlite";
+import srcIndexPostgres from "./templates/src-index-postgres";
 
-const db: Module = {
-  templates: [
-    packageJson,
-    tsconfig,
-    srcIndex,
-    srcSchema,
-    srcMigrate,
-    scriptsNewMigration,
-    migrationsReadme,
-  ],
+// Shared across both databases: schema, migration runner + generator, tsconfig.
+const shared = [
+  tsconfig,
+  srcSchema,
+  srcMigrate,
+  scriptsNewMigration,
+  migrationsReadme,
+];
+
+export const dbSqlite: Module = {
+  templates: [...shared, packageJsonSqlite, srcIndexSqlite],
 };
 
-export default db;
+export const dbPostgres: Module = {
+  templates: [...shared, packageJsonPostgres, srcIndexPostgres],
+};
