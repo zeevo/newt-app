@@ -65,8 +65,8 @@ export async function doInit(options: Options) {
         p.select<Database>({
           message: "Database?",
           options: [
-            { value: "sqlite", label: "SQLite", hint: "zero-config, local dev.db" },
-            { value: "postgres", label: "Postgres", hint: "needs a running database" },
+            { value: "sqlite", label: "SQLite" },
+            { value: "postgres", label: "Postgres" },
           ],
           initialValue: "sqlite",
         }),
@@ -84,10 +84,10 @@ export async function doInit(options: Options) {
         p.select<Deployment>({
           message: "Deployment extras?",
           options: [
-            { value: "none", label: "None", hint: "skip" },
-            { value: "standalone", label: "Standalone + Dockerfile", hint: "Dockerfiles + docker-compose.yml" },
-            { value: "custom-server", label: "Custom Server", hint: "single process, single port" },
-            { value: "spa", label: "SPA Mode", hint: "static export served by NestJS" },
+            { value: "none", label: "None" },
+            { value: "standalone", label: "Standalone + Dockerfile" },
+            { value: "custom-server", label: "Custom Server" },
+            { value: "spa", label: "SPA Mode" },
           ],
           initialValue: "none",
         }),
