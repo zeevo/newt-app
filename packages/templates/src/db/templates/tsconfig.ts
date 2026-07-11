@@ -1,5 +1,5 @@
 export default {
-  filename: "packages/auth/tsconfig.json",
+  filename: "packages/db/tsconfig.json",
   template: `{
   "compilerOptions": {
     "esModuleInterop": true,
@@ -11,7 +11,7 @@ export default {
     "strict": true,
     "target": "ES2022"
   },
-  "include": ["src"],
+  "include": ["src", "scripts"],
   "exclude": ["node_modules", "dist"]
 }`,
 };

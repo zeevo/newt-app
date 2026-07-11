@@ -12,15 +12,12 @@ export default {
     "generate": "dotenv -e ../../.env -- auth generate --config src/index.ts"
   },
   "dependencies": {
+    "@<%= projectName %>/db": "workspace:*",
     "auth": "^1.5.5",
-    "better-auth": "^1.2.8",
-    "better-sqlite3": "^12.11.1",
-    "pg": "^8.14.1"
+    "better-auth": "^1.2.8"
   },
   "devDependencies": {
     "@<%= projectName %>/typescript-config": "workspace:*",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/pg": "^8.11.13",
     "dotenv-cli": "^11.0.0",
     "typescript": "6.0.2"
   }

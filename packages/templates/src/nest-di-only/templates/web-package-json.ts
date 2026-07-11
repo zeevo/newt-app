@@ -16,6 +16,7 @@ export default {
   "dependencies": {
     "@<%= projectName %>/api": "workspace:*",
     "@<%= projectName %>/auth": "workspace:*",
+    "@<%= projectName %>/db": "workspace:*",
     "@<%= projectName %>/ui": "workspace:*",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",

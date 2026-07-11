@@ -10,6 +10,7 @@ export default {
     "test": "turbo run test",
     "format": "prettier --write \\"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\\"",
     "format:check": "prettier --check \\"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\\"",
+    "db:make": "pnpm --filter @<%= projectName %>/db run make",
     "db:migrate": "turbo run migrate",
     "db:generate": "turbo run generate"
   },

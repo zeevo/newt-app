@@ -8,6 +8,7 @@ import { templates } from "@newt-app/templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 
 type Testing = 'jest' | 'vitest';
+type Database = 'sqlite' | 'postgres';
 type Deployment = 'none' | 'standalone' | 'custom-server' | 'spa';
 
 type Options = {
@@ -17,6 +18,7 @@ type Options = {
   ci: boolean;
   shadcn: boolean;
   testing: Testing;
+  database: Database;
   deployment: Deployment;
   nestDiOnly: boolean;
   bare: boolean;
@@ -59,6 +61,15 @@ export async function doInit(options: Options) {
           ],
           initialValue: "jest",
         }),
+      database: () =>
+        p.select<Database>({
+          message: "Database?",
+          options: [
+            { value: "sqlite", label: "SQLite" },
+            { value: "postgres", label: "Postgres" },
+          ],
+          initialValue: "sqlite",
+        }),
       nestDiOnly: () =>
         p.confirm({
           message: "Use NestJS for dependency injection only?",
@@ -93,6 +104,7 @@ export async function doInit(options: Options) {
 
     const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
     const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
+    const database: Database = options.ci ? options.database : (group as { database?: Database }).database ?? 'sqlite';
     const deployment: Deployment = options.ci ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'none';
     const nestDiOnly = options.ci ? options.nestDiOnly : (group as { nestDiOnly?: boolean }).nestDiOnly ?? false;
     const todoExample = options.ci ? !options.bare : (group as { todoExample?: boolean }).todoExample ?? true;
@@ -107,6 +119,7 @@ export async function doInit(options: Options) {
       templates.root,
       templates.web,
       templates.api,
+      database === 'postgres' ? templates.dbPostgres : templates.dbSqlite,
       templates.auth,
       useShadcn ? templates.shadcnUi : templates.ui,
       templates.eslintConfig,
@@ -131,7 +144,7 @@ export async function doInit(options: Options) {
       title: "Scaffolding project",
       task: async () => {
         try {
-          await scaffold(allModules, { name, testing });
+          await scaffold(allModules, { name, testing, database });
         } catch (e) {
           console.log(e);
         }
@@ -201,6 +214,7 @@ program
   .option("--ci", "Non-interactive mode", false)
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
   .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
+  .option("--database <database>", "Database: sqlite or postgres (used with --ci)", "sqlite")
   .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa (used with --ci)", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only (used with --ci)", false)
   .option("--bare", "Skip the todo example (used with --ci)", false)
@@ -213,6 +227,7 @@ program
         ci: boolean;
         shadcn: boolean;
         testing: string;
+        database: string;
         deployment: string;
         nestDiOnly: boolean;
         bare: boolean;
@@ -227,6 +242,7 @@ program
         ci: options.ci,
         shadcn: options.shadcn,
         testing: (options.testing === 'vitest' ? 'vitest' : 'jest') as Testing,
+        database: (options.database === 'postgres' ? 'postgres' : 'sqlite') as Database,
         deployment: (['standalone', 'custom-server', 'spa'].includes(options.deployment)
           ? options.deployment
           : 'none') as Deployment,

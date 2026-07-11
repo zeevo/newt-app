@@ -7,6 +7,6 @@ import { TodosService } from '@<%= projectName %>/api';
 export async function PATCH(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const todos = await inject(TodosService);
-  return NextResponse.json(todos.toggle(Number(id)));
+  return NextResponse.json(await todos.toggle(id));
 }`,
 };

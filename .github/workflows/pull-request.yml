@@ -47,6 +47,7 @@ jobs:
           - "--ci --bare"
           - "--ci --shadcn --testing vitest"
           - "--ci --bare --nest-di-only"
+          - "--ci --database postgres"
     name: scaffold (${{ matrix.flags }})
     steps:
       - name: Checkout code

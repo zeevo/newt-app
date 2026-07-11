@@ -27,12 +27,12 @@ export class TodosController {
 
   @Patch(':id/toggle')
   toggle(@Param('id') id: string) {
-    return this.todosService.toggle(Number(id));
+    return this.todosService.toggle(id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.todosService.remove(Number(id));
+    return this.todosService.remove(id);
   }
 }`,
 };

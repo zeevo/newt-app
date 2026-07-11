@@ -7,7 +7,7 @@ import { TodosService } from '@<%= projectName %>/api';
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const todos = await inject(TodosService);
-  todos.remove(Number(id));
+  await todos.remove(id);
   return new NextResponse(null, { status: 204 });
 }`,
 };
