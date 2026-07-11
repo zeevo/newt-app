@@ -1,16 +1,13 @@
 export default {
   filename: "packages/auth/src/index.ts",
   template: `import { betterAuth } from "better-auth";
-import { Pool } from "pg";
-import Database from "better-sqlite3";
-import path from "node:path";
+import { driver } from "@<%= projectName %>/db";
 
-const database = process.env.DATABASE_URL
-  ? new Pool({ connectionString: process.env.DATABASE_URL })
-  : new Database(path.resolve(process.cwd(), "../../dev.db"));
-
+// Better Auth shares the same connection as the rest of the app (see
+// packages/db). It owns the auth tables; run \`pnpm db:generate\` after changing
+// auth config, then \`pnpm db:migrate\` applies both auth and app migrations.
 export const auth = betterAuth({
-  database,
+  database: driver,
   emailAndPassword: { enabled: true },
   trustedOrigins: [process.env.BETTER_AUTH_URL ?? "http://localhost:3000"],
 });

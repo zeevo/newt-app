@@ -6,12 +6,12 @@ import { TodosService } from '@<%= projectName %>/api';
 
 export async function GET() {
   const todos = await inject(TodosService);
-  return NextResponse.json(todos.findAll());
+  return NextResponse.json(await todos.findAll());
 }
 
 export async function POST(req: Request) {
   const { title } = await req.json();
   const todos = await inject(TodosService);
-  return NextResponse.json(todos.create(title), { status: 201 });
+  return NextResponse.json(await todos.create(title), { status: 201 });
 }`,
 };

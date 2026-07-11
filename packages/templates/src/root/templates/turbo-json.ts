@@ -23,6 +23,7 @@ export default {
       "persistent": true
     },
     "migrate": {
+      "dependsOn": ["^migrate"],
       "cache": false
     },
     "generate": {

@@ -1,0 +1,17 @@
+export default {
+  filename: "packages/db/tsconfig.json",
+  template: `{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": ["es2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022"
+  },
+  "include": ["src", "scripts"],
+  "exclude": ["node_modules", "dist"]
+}`,
+};

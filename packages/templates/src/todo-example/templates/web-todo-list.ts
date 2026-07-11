@@ -8,7 +8,7 @@ import { authClient } from '@/lib/auth-client';
 import { Button } from '@<%= projectName %>/ui/button';
 
 interface Todo {
-  id: number;
+  id: string;
   title: string;
   done: boolean;
 }
@@ -21,9 +21,9 @@ const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title }),
     }).then((r) => r.json()),
-  toggleTodo: (id: number): Promise<Todo> =>
+  toggleTodo: (id: string): Promise<Todo> =>
     fetch(\`/api/todos/\${id}/toggle\`, { method: 'PATCH' }).then((r) => r.json()),
-  deleteTodo: (id: number): Promise<void> =>
+  deleteTodo: (id: string): Promise<void> =>
     fetch(\`/api/todos/\${id}\`, { method: 'DELETE' }).then(() => undefined),
 };
 

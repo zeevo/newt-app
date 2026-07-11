@@ -107,6 +107,7 @@ export async function doInit(options: Options) {
       templates.root,
       templates.web,
       templates.api,
+      templates.db,
       templates.auth,
       useShadcn ? templates.shadcnUi : templates.ui,
       templates.eslintConfig,
