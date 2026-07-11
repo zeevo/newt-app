@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.20.2
+
+### Patch Changes
+
+- f694604: Fix the Geist font falling back to the browser default in scaffolded apps. The shadcn `--font-sans` token was self-referential (`var(--font-sans)`) and `font-sans` was applied to `html` while the font variable lives on `body`; the non-shadcn `globals.css` never set `font-family` at all.
+  - @newt-app/templates@0.20.2
+
 ## 0.20.1
 
 ### Patch Changes
