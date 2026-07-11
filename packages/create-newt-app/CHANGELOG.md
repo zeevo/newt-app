@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.21.1
+
+### Patch Changes
+
+- 528e2ee: Drop the redundant `pnpm db:migrate` step from the CLI "Next steps" outro. `pnpm dev` already runs migrations (via turbo's `^migrate`), and the SQLite default needs no database setup, so the happy path is just `cd <app>` then `pnpm dev`.
+  - @newt-app/templates@0.21.1
+
 ## 0.21.0
 
 ### Minor Changes
