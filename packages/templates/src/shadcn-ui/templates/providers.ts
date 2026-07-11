@@ -10,12 +10,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const [client] = useState(() => new QueryClient());
   return (
     <QueryClientProvider client={client}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem={false}
-        disableTransitionOnChange
-      >
+      <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
         {children}
       </ThemeProvider>
     </QueryClientProvider>
