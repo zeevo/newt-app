@@ -84,10 +84,10 @@ export async function doInit(options: Options) {
         p.select<Deployment>({
           message: "Deployment extras?",
           options: [
-            { value: "none", label: "None" },
-            { value: "standalone", label: "Standalone + Dockerfile" },
-            { value: "custom-server", label: "Custom Server" },
-            { value: "spa", label: "SPA Mode" },
+            { value: "none", label: "None", hint: "skip" },
+            { value: "standalone", label: "Standalone + Dockerfile", hint: "Dockerfiles + docker-compose.yml" },
+            { value: "custom-server", label: "Custom Server", hint: "single process, single port" },
+            { value: "spa", label: "SPA Mode", hint: "static export served by NestJS" },
           ],
           initialValue: "none",
         }),
