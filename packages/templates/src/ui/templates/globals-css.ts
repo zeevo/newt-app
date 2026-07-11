@@ -18,6 +18,8 @@ export default {
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 @layer base {
@@ -28,6 +30,7 @@ export default {
   body {
     background-color: var(--background);
     color: var(--foreground);
+    font-family: var(--font-geist-sans);
     -webkit-font-smoothing: antialiased;
   }
   * {
