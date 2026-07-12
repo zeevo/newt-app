@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.21.3
+
+### Patch Changes
+
+- 44b2daa: Add the Kysely logo to the docs homepage background animation, alongside the other stack logos now that Kysely ships as the persistence layer.
+  - @newt-app/templates@0.21.3
+
 ## 0.21.2
 
 ### Patch Changes
