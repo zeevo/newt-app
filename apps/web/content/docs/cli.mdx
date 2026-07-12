@@ -29,59 +29,20 @@ pnpm dlx create-newt-app my-app --no-git
 
 ## --ci
 
-Non-interactive mode. Skips all prompts and uses flag values or defaults.
+Non-interactive mode. The flags below apply in `--ci` mode; otherwise the CLI prompts for each.
 
 ```bash
 pnpm dlx create-newt-app my-app --ci
 ```
 
-## --shadcn
-
-Include shadcn/ui. Only applies in `--ci` mode. In interactive mode the CLI prompts for this.
-
-```bash
-pnpm dlx create-newt-app my-app --ci --shadcn
-```
-
-## --testing
-
-Choose a testing framework. Accepts `jest` (default) or `vitest`. Only applies in `--ci` mode.
-
-```bash
-pnpm dlx create-newt-app my-app --ci --testing vitest
-```
-
-## --database
-
-Choose the database: `sqlite` (default) or `postgres`. Only applies in `--ci` mode. In interactive mode the CLI prompts **Database?**
-
-```bash
-pnpm dlx create-newt-app my-app --ci --database postgres
-```
-
-## --nest-di-only
-
-Run NestJS in dependency-injection-only mode, for single-project [Vercel deployment](/docs/deployment-vercel). Only applies in `--ci` mode. In interactive mode the CLI prompts **Use NestJS for dependency injection only?**
-
-```bash
-pnpm dlx create-newt-app my-app --ci --nest-di-only
-```
-
-## --deployment
-
-Add deployment config: `none` (default), `standalone`, `custom-server`, or `spa`. Only applies in `--ci` mode. In interactive mode the CLI prompts **Deployment extras?**
-
-```bash
-pnpm dlx create-newt-app my-app --ci --deployment standalone
-```
-
-## --bare
-
-Skip the todo example. Only applies in `--ci` mode. In interactive mode the CLI prompts **Include the todo example?**
-
-```bash
-pnpm dlx create-newt-app my-app --ci --bare
-```
+| Flag | Effect |
+| --- | --- |
+| `--shadcn` | Include shadcn/ui. |
+| `--testing <jest\|vitest>` | Test framework. Default `jest`. |
+| `--database <sqlite\|postgres>` | Database. Default `sqlite`. |
+| `--nest-di-only` | NestJS in DI-only mode, for [Vercel](/docs/deployment-vercel). |
+| `--deployment <none\|standalone\|custom-server\|spa>` | Deployment config. Default `none`. |
+| `--bare` | Skip the todo example. |
 
 ## What happens after scaffolding
 
