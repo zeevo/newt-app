@@ -22,7 +22,6 @@ services:
     build:
       context: .
       target: migrate
-    command: ["/app/node_modules/.bin/auth", "migrate", "--config", "src/index.ts", "-y"]
     environment:
       <<: *app-env
     depends_on:

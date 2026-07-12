@@ -13,7 +13,6 @@ ARG API_HOST=localhost
 ENV API_HOST=$API_HOST
 RUN pnpm build --filter=web --filter=api --filter=@<%= projectName %>/auth
 RUN pnpm deploy --filter=api --prod /deploy/api
-RUN pnpm deploy --filter=@<%= projectName %>/auth --prod /deploy/auth
 
 # --- web ---
 FROM base AS web
@@ -34,8 +33,7 @@ EXPOSE 3001
 CMD ["node", "dist/main"]
 
 # --- migrate ---
-FROM base AS migrate
-COPY --from=build /deploy/auth /app
+FROM build AS migrate
 WORKDIR /app
-CMD ["/app/node_modules/.bin/auth", "migrate", "--config", "src/index.ts", "-y"]`,
+CMD ["pnpm", "db:migrate"]`,
 };
