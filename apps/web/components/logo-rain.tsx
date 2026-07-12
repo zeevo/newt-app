@@ -9,6 +9,7 @@ const logos = [
   '/logos/tailwind.svg',
   '/logos/shadcn.svg',
   '/logos/nestjs.svg',
+  '/logos/kysely.svg',
 ];
 
 const VIEW_W = 1440;
