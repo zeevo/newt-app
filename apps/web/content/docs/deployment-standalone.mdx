@@ -56,7 +56,7 @@ The `Dockerfile` uses a single multi-stage build shared across all services:
 1. **`build`**: installs all dependencies, compiles `web`, `api`, and `packages/auth` with `pnpm build`, then runs `pnpm deploy --filter=api --prod` to produce a self-contained api bundle
 2. **`web`**: copies only the Next.js standalone output from `build`
 3. **`api`**: copies only the `pnpm deploy` output from `build`
-4. **`migrate`**: copies the full monorepo source and runs `pnpm install`, then invokes the Better Auth CLI directly
+4. **`migrate`**: reuses the `build` image and runs `pnpm db:migrate`
 
 The `web` and `api` stages are lean production images with no dev dependencies. The `migrate` stage is heavier but only runs once on startup.
 
@@ -96,11 +96,9 @@ EXPOSE 3001
 CMD ["node", "dist/main"]
 
 # --- migrate ---
-FROM base AS migrate
+FROM build AS migrate
 WORKDIR /app
-COPY . .
-RUN pnpm install --frozen-lockfile
-CMD ["pnpm", "--filter=@my-app/auth", "exec", "auth", "migrate", "--config", "src/index.ts", "-y"]
+CMD ["pnpm", "db:migrate"]
 ```
 
 ## docker-compose.yml
@@ -169,7 +167,7 @@ volumes:
 
 ## Migrations
 
-The migrate container calls the Better Auth CLI directly with `-y` to run non-interactively, bypassing Turborepo, which requires a TTY for tasks marked as interactive. `DATABASE_URL` is injected from the docker-compose environment, so no `.env` file is needed inside the container.
+The migrate container runs `pnpm db:migrate`, applying both Better Auth's tables and your app's Kysely migrations. `DATABASE_URL` is injected from the docker-compose environment, so no `.env` file is needed inside the container.
 
 To run migrations locally:
 

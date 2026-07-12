@@ -23,8 +23,8 @@ export default {
       "persistent": true
     },
     "migrate": {
-      "cache": false,
-      "interactive": true
+      "dependsOn": ["^migrate"],
+      "cache": false
     },
     "generate": {
       "cache": false
