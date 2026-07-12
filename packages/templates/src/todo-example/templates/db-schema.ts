@@ -4,6 +4,7 @@ export default {
 
 export interface TodoTable {
   id: string;
+  userId: string;
   title: string;
   done: Generated<number>;
   createdAt: Generated<string>;

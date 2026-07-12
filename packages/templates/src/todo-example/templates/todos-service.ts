@@ -15,18 +15,19 @@ const columns = ['id', 'title', 'done', 'createdAt'] as const;
 
 @Injectable()
 export class TodosService {
-  async findAll(): Promise<Todo[]> {
+  async findAll(userId: string): Promise<Todo[]> {
     const rows = await db
       .selectFrom('todo')
       .select(columns)
+      .where('userId', '=', userId)
       .orderBy('createdAt desc')
       .execute();
     return rows.map((row) => ({ ...row, done: Boolean(row.done) }));
   }
 
-  async create(title: string): Promise<Todo> {
+  async create(userId: string, title: string): Promise<Todo> {
     const id = randomUUID();
-    await db.insertInto('todo').values({ id, title }).execute();
+    await db.insertInto('todo').values({ id, userId, title }).execute();
     const row = await db
       .selectFrom('todo')
       .select(columns)
@@ -35,17 +36,19 @@ export class TodosService {
     return { ...row, done: Boolean(row.done) };
   }
 
-  async toggle(id: string): Promise<Todo> {
+  async toggle(userId: string, id: string): Promise<Todo> {
     const current = await db
       .selectFrom('todo')
       .select('done')
       .where('id', '=', id)
+      .where('userId', '=', userId)
       .executeTakeFirst();
     if (!current) throw new NotFoundException('Todo ' + id + ' not found');
     await db
       .updateTable('todo')
       .set({ done: current.done ? 0 : 1 })
       .where('id', '=', id)
+      .where('userId', '=', userId)
       .execute();
     const row = await db
       .selectFrom('todo')
@@ -55,10 +58,11 @@ export class TodosService {
     return { ...row, done: Boolean(row.done) };
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(userId: string, id: string): Promise<void> {
     const result = await db
       .deleteFrom('todo')
       .where('id', '=', id)
+      .where('userId', '=', userId)
       .executeTakeFirst();
     if (!result.numDeletedRows) {
       throw new NotFoundException('Todo ' + id + ' not found');
