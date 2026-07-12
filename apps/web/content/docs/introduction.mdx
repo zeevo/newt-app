@@ -17,6 +17,7 @@ Every piece in the stack was chosen because it's good at exactly one thing:
 - **Next.js** handles the frontend. App Router, server components, file-based routing.
 - **NestJS** handles the backend. Structured, testable, scales when you need it to.
 - **Better Auth** handles authentication. Runs across both apps without duplication.
+- **Kysely** handles persistence. A typed query builder over SQLite or Postgres, shared by auth and your app.
 - **pnpm workspaces** hold it together. `apps/` for runnable apps, `packages/` for shared code.
 - **Turborepo** makes builds fast. Cached, parallel, monorepo-aware.
 
@@ -64,6 +65,7 @@ The output is a fully-formed monorepo:
   <FileTree.Folder name="packages">
     <FileTree.Folder name="ui" annotation="Shared component library" />
     <FileTree.Folder name="auth" annotation="Better Auth configuration" />
+    <FileTree.Folder name="db" annotation="Kysely client + migrations" />
     <FileTree.Folder name="eslint-config" annotation="Shared ESLint config" />
     <FileTree.Folder name="typescript-config" annotation="Shared TypeScript config" />
   </FileTree.Folder>

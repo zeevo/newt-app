@@ -64,7 +64,7 @@ NEXT_PUBLIC_APP_URL= # your Vercel deployment URL, e.g. https://my-app.vercel.ap
 
 ## Database
 
-Vercel doesn't include a database. Use any Postgres provider: [Neon](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app) all work well with the connection string format newt-app expects.
+Scaffold with `--database postgres` — SQLite writes to a local file, which doesn't persist on Vercel's serverless filesystem. Vercel doesn't include a database, so use any Postgres provider: [Neon](https://neon.tech), [Supabase](https://supabase.com), or [Railway](https://railway.app).
 
 Run migrations before or after your first deploy:
 
