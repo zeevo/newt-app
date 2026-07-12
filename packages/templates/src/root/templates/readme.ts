@@ -2,14 +2,13 @@ export default {
   filename: "README.md",
   template: `# <%= projectName %>
 
-Full-stack monorepo: Next.js 16 + NestJS 11 + better-auth + PostgreSQL.
+Full-stack monorepo: Next.js 16 + NestJS 11 + better-auth + <%= database === 'postgres' ? 'Postgres' : 'SQLite' %>.
 
 ## Quick start
 
 \`\`\`sh
-# optional: set DATABASE_URL in .env for Postgres (defaults to local SQLite)
-pnpm install
-pnpm db:migrate
+<% if (database === 'postgres') { %># set DATABASE_URL in .env to your Postgres database
+<% } %>pnpm install
 pnpm dev
 \`\`\`
 

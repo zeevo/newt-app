@@ -182,8 +182,15 @@ export class UserController {
 
 ## Database
 
-Better Auth stores its data in a local SQLite file (`dev.db` at the repo root) by default, so a fresh scaffold works with zero configuration. To use PostgreSQL instead, set `DATABASE_URL` in your `.env` file. Either way, create the tables with:
+You pick the database when you scaffold — SQLite or Postgres — and only that driver is installed. Better Auth and your app share one connection: a [Kysely](https://kysely.dev) instance in `packages/db`.
+
+- **SQLite** (default): a local `dev.db` file at the repo root, so a fresh scaffold runs with zero configuration.
+- **Postgres**: set `DATABASE_URL` in your `.env` file (it ships with a local default).
+
+Run migrations with:
 
 ```bash
 pnpm db:migrate
 ```
+
+This applies both Better Auth's tables and your app's Kysely migrations. `pnpm dev` runs it for you, so day to day you just need `pnpm dev`. Add a new migration with `pnpm db:make <name>`.
