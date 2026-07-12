@@ -51,6 +51,30 @@ Choose a testing framework. Accepts `jest` (default) or `vitest`. Only applies i
 pnpm dlx create-newt-app my-app --ci --testing vitest
 ```
 
+## --database
+
+Choose the database. Accepts `sqlite` (default) or `postgres` — only the selected driver is installed. SQLite runs with zero configuration from a local `dev.db`; Postgres reads `DATABASE_URL` from `.env`. Either way, Better Auth and your app share one [Kysely](https://kysely.dev) connection in `packages/db`. Only applies in `--ci` mode. In interactive mode the CLI prompts **Database?**
+
+```bash
+pnpm dlx create-newt-app my-app --ci --database postgres
+```
+
+## --nest-di-only
+
+Run NestJS as an in-process application context instead of a standalone HTTP server. Next.js route handlers call NestJS services directly with the `inject` helper — see [Vercel deployment](/docs/deployment-vercel). Only applies in `--ci` mode. In interactive mode the CLI prompts **Use NestJS for dependency injection only?**
+
+```bash
+pnpm dlx create-newt-app my-app --ci --nest-di-only
+```
+
+## --deployment
+
+Include deployment extras. Accepts `none` (default), `standalone` (Dockerfiles + `docker-compose.yml` with Postgres), `custom-server` (single process, single port), or `spa` (static export served by NestJS). Only applies in `--ci` mode. In interactive mode the CLI prompts **Deployment extras?**
+
+```bash
+pnpm dlx create-newt-app my-app --ci --deployment standalone
+```
+
 ## --bare
 
 Skip the todo example. By default every scaffold includes a small todos feature (a `TodosService` in the api and a `TodoList` on the web homepage) as a working reference for how the pieces connect. Pass `--bare` to leave it out; the signed-in homepage shows a session greeting and sign-out button instead. Only applies in `--ci` mode. In interactive mode the CLI prompts **Include the todo example?**

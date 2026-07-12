@@ -29,9 +29,9 @@ You can use a data fetching library to query your NestJS backend from client com
 import { useQuery } from '@tanstack/react-query';
 
 interface Todo {
-  id: number;
+  id: string;
   title: string;
-  completed: boolean;
+  done: boolean;
 }
 
 async function fetchTodos(): Promise<Todo[]> {
