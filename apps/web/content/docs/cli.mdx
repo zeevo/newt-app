@@ -43,10 +43,3 @@ pnpm dlx create-newt-app my-app --ci
 | `--nest-di-only` | NestJS in DI-only mode. |
 | `--deployment <none\|standalone\|custom-server\|spa>` | Deployment config. Default `none`. |
 | `--bare` | Skip the todo example. |
-
-## What happens after scaffolding
-
-1. Templates are written to disk
-2. `pnpm install` runs (unless `--no-install`)
-3. `pnpm format` runs (unless `--no-install`)
-4. `git init` + initial commit (unless `--no-git`)
