@@ -12,7 +12,7 @@
 npm create newt-app
 ```
 
-This scaffolds a Next.js and NestJS monorepo with Better Auth, a typed Kysely database, and shadcn/ui — all wired together with Turborepo and pnpm, so you start on features instead of plumbing.
+Next.js and NestJS in one production-grade monorepo: a real backend, auth, and a database, curated so you're not deleting half of it on day one.
 
 ## Documentation
 
