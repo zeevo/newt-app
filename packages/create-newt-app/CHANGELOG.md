@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.3
+
+### Patch Changes
+
+- 2cf08f5: Swap the Tailwind logo for the oxc logo in the docs homepage hero, and add the oxc logo to the background logo rain (alongside Tailwind).
+  - @newt-app/templates@0.22.3
+
 ## 0.22.2
 
 ### Patch Changes
