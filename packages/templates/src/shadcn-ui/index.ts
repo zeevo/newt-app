@@ -6,7 +6,6 @@ import useMobile from "./templates/use-mobile";
 import globalsCss from "./templates/globals-css";
 import postcssConfig from "./templates/postcss-config";
 import tsconfig from "./templates/tsconfig";
-import eslintConfig from "./templates/eslint-config";
 import link from "./templates/link";
 import logo from "./templates/logo";
 import layout from "./templates/layout";
@@ -78,7 +77,6 @@ const shadcnUi: Module = {
     globalsCss,
     postcssConfig,
     tsconfig,
-    eslintConfig,
     link,
     logo,
     layout,

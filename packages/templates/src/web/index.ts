@@ -2,7 +2,6 @@ import type { Module } from "../types";
 import packageJson from "./templates/package-json";
 import gitignore from "./templates/gitignore";
 import readme from "./templates/readme";
-import eslintConfig from "./templates/eslint-config";
 import nextConfig from "./templates/next-config";
 import postcssConfig from "./templates/postcss-config";
 import tsconfig from "./templates/tsconfig";
@@ -18,7 +17,6 @@ const web: Module = {
     packageJson,
     gitignore,
     readme,
-    eslintConfig,
     nextConfig,
     postcssConfig,
     tsconfig,

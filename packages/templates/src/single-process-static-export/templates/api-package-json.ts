@@ -13,9 +13,7 @@ export default {
     "dev": "nest start --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
-    "lint": "eslint \\"{src,apps,libs,test}/**/*.ts\\" --fix",
-    "lint:check": "eslint \\"{src,apps,libs,test}/**/*.ts\\""
+    "start:prod": "node dist/main"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -29,22 +27,16 @@ export default {
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "globals": "^16.0.0",
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "6.0.2",
-    "typescript-eslint": "^8.20.0"
+    "typescript": "6.0.2"
   }
-}`,
+}`
 };
