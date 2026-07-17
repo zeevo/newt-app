@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.22.1
+
+### Patch Changes
+
+- d245097: Generate a strong random `BETTER_AUTH_SECRET` (32 bytes, base64url) per scaffold instead of the `your-secret-here` placeholder, so a fresh app no longer logs Better Auth's "secret should be at least 32 characters" / low-entropy warnings.
+- 2c0b4ea: Add the `db` package to the docs homepage project-structure file tree.
+  - @newt-app/templates@0.22.1
+
 ## 0.22.0
 
 ### Minor Changes
