@@ -1,0 +1,9 @@
+export default {
+  filename: ".oxlintrc.json",
+  template: `{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error"
+  }
+}`,
+};

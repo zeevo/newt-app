@@ -13,10 +13,7 @@ export default {
     "./hooks/*": "./src/hooks/*.ts",
     "./*": "./src/components/*.tsx"
   },
-  "scripts": {
-    "lint": "eslint . --fix",
-    "lint:check": "eslint . --max-warnings 0"
-  },
+  "scripts": {},
   "dependencies": {
     "@base-ui/react": "^1.5.0",
     "shadcn": "^4.7.0",
@@ -42,13 +39,11 @@ export default {
     "react-dom": ">=19.0.0"
   },
   "devDependencies": {
-    "@<%= projectName %>/eslint-config": "workspace:*",
     "@<%= projectName %>/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4.0.8",
     "@types/node": "^22.0.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "eslint": "^9.39.1",
     "tailwindcss": "^4.0.8",
     "typescript": "6.0.2"
   }

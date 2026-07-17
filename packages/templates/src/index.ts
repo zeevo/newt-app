@@ -7,6 +7,7 @@ import { dbSqlite, dbPostgres } from "./db/index";
 import ui from "./ui/index";
 import shadcnUi from "./shadcn-ui/index";
 import eslintConfig from "./eslint-config/index";
+import oxc from "./oxc/index";
 import typescriptConfig from "./typescript-config/index";
 import testingJest from "./testing-jest/index";
 import testingVitest from "./testing-vitest/index";
@@ -43,6 +44,7 @@ export const templates = {
   ui,
   shadcnUi,
   eslintConfig,
+  oxc,
   typescriptConfig,
   testingJest,
   testingVitest,

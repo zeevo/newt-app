@@ -9,8 +9,6 @@ export default {
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --fix && next typegen && tsc --noEmit",
-    "lint:check": "eslint --max-warnings 0 && next typegen && tsc --noEmit",
     "db:migrate": "better-auth migrate"
   },
   "dependencies": {
@@ -27,12 +25,10 @@ export default {
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
-    "@<%= projectName %>/eslint-config": "workspace:*",
     "@<%= projectName %>/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "eslint": "^9.39.1",
     "typescript": "6.0.2"
   }
 }`,
