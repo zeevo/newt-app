@@ -3,6 +3,7 @@ import { execa } from "execa";
 import type { Module, TemplateData } from "@newt-app/templates";
 import {
   renderTemplatesToDisk,
+  sortPackageJsons,
   updatePackageJson,
   updateScripts,
   validateProjectName,
@@ -41,6 +42,8 @@ export async function scaffold(modules: Module[], options: { name: string; testi
   if (scripts.length > 0) {
     await updateScripts(options.name, scripts, templateData);
   }
+
+  await sortPackageJsons(options.name);
 }
 
 export async function pnpmInstall(cwd: string) {
