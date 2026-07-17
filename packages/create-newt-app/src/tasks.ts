@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import { execa } from "execa";
 import type { Module, TemplateData } from "@newt-app/templates";
 import {
@@ -18,6 +19,7 @@ export async function scaffold(modules: Module[], options: { name: string; testi
     projectName: options.name,
     testing: options.testing,
     database: options.database,
+    authSecret: randomBytes(32).toString("base64url"),
   };
 
   await renderTemplatesToDisk(modules, options.name, templateData);

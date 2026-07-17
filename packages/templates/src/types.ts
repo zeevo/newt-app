@@ -2,6 +2,7 @@ export type TemplateData = {
   projectName: string;
   testing: 'jest' | 'vitest';
   database: 'sqlite' | 'postgres';
+  authSecret: string;
 };
 export type Template = { filename: string; template: string };
 export type File = { src: string; filename: string };
