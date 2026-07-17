@@ -166,6 +166,10 @@ export default function Home() {
                     annotation="Better Auth configuration"
                   />
                   <FileTree.Folder
+                    name="db"
+                    annotation="Kysely client + migrations"
+                  />
+                  <FileTree.Folder
                     name="eslint-config"
                     annotation="Shared ESLint config"
                   />
