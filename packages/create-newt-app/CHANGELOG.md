@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.4
+
+### Patch Changes
+
+- f8e7da6: Replace the default Turborepo starter README with a concise newt-app README (Getting Started, Documentation, What's inside). The root `README.md` is a symlink to `packages/create-newt-app/README.md`, so the repo and the npm package share one source, mirroring how Next.js is set up.
+  - @newt-app/templates@0.22.4
+
 ## 0.22.3
 
 ### Patch Changes
