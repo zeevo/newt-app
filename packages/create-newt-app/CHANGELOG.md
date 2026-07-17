@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.22.0
+
+### Minor Changes
+
+- f72dab3: Add a `--linter` option to choose between ESLint + Prettier (default) and oxc (oxlint + oxfmt). Linting is now owned by the selected linter module — deps, scripts, and config files are injected rather than baked into each app — so picking `oxc` ships no ESLint or Prettier at all, and vice versa.
+
+### Patch Changes
+
+- @newt-app/templates@0.22.0
+
 ## 0.21.5
 
 ### Patch Changes
