@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.1
+
+### Patch Changes
+
+- 2c0b4ea: Add the `db` package to the docs homepage project-structure file tree.
+  - @newt-app/templates@0.22.1
+
 ## 0.22.0
 
 ### Minor Changes
