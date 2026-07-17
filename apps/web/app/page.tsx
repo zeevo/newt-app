@@ -92,18 +92,10 @@ export default function Home() {
                 </svg>
               </span>
               <span
-                title="Tailwind CSS"
+                title="oxc"
                 className="z-[4] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  role="img"
-                  aria-label="Tailwind CSS"
-                  className="size-3/5 text-[#38bdf8]"
-                >
-                  <path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C10.337,13.382,8.976,12,6.001,12z" />
-                </svg>
+                <Image src="/logos/oxc.svg" alt="oxc" width={32} height={32} className="size-3/5" />
               </span>
             </span>
           </h1>

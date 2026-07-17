@@ -10,6 +10,7 @@ const logos = [
   '/logos/shadcn.svg',
   '/logos/nestjs.svg',
   '/logos/kysely.svg',
+  '/logos/oxc.svg',
 ];
 
 const VIEW_W = 1440;
