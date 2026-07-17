@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.2
+
+### Patch Changes
+
+- f93d2a1: Point the scaffolded homepage "Learn more" links at newt-app's own resources: add a Documentation link (https://newt-app.vercel.app) and fix the placeholder GitHub link to the newt-app repo.
+  - @newt-app/templates@0.22.2
+
 ## 0.22.1
 
 ### Patch Changes
