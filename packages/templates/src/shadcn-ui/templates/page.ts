@@ -91,7 +91,10 @@ export default function Home() {
         <p className="mb-2 text-muted-foreground">Learn more</p>
         <ul className="list-disc list-inside space-y-2 mt-2">
           <li>
-            <Link href="https://github.com">GitHub</Link>
+            <Link href="https://newt-app.vercel.app">Documentation</Link>
+          </li>
+          <li>
+            <Link href="https://github.com/zeevo/newt-app">GitHub</Link>
           </li>
           <li>
             <Link href="https://nextjs.org">Next.js</Link>
