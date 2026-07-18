@@ -1,6 +1,7 @@
 {
   "name": "create-newt-app",
   "version": "0.22.7",
+  "license": "MIT",
   "private": false,
   "type": "module",
   "bin": {
