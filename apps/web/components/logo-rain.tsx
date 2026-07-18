@@ -36,11 +36,20 @@ const SPEED_LARGE = 0.6;
 const SWAY_AMP = 14;
 const SWAY_FREQ = 0.35;
 
+// elastic collisions between chips: mass scales with disk area, and after a
+// bounce the velocity eases back into the prescribed rain drift
+const RESTITUTION = 0.85;
+const DRIFT_RELAX = 0.5;
+
 const TEX_SIZE = 256;
 
 type Star = {
   x: number;
   y: number;
+  vx: number;
+  vy: number;
+  px: number;
+  py: number;
   size: number;
   speed: number;
   swayPhase: number;
@@ -261,13 +270,18 @@ export default function LogoRain({
       group.add(circle, ring, logo);
       scene.add(group);
 
+      // small chips drift fast, large ones slow, so the big shapes stay calm
+      const speed =
+        meanSize * speedFactor * (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t);
       stars.push({
         x,
         y,
+        vx: DIR_X * speed,
+        vy: DIR_Y * speed,
+        px: x,
+        py: y,
         size,
-        // small chips drift fast, large ones slow, so the big shapes stay calm
-        speed:
-          meanSize * speedFactor * (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t),
+        speed,
         swayPhase: Math.random() * Math.PI * 2,
         swayFreq: SWAY_FREQ * (0.75 + Math.random() * 0.5),
         group,
@@ -329,16 +343,62 @@ export default function LogoRain({
       renderer.setAnimationLoop((now) => {
         const dt = (now - last) / 1000;
         last = now;
+        const relax = 1 - Math.exp(-DRIFT_RELAX * dt);
         stars.forEach((s) => {
-          s.x += DIR_X * s.speed * dt;
-          s.y += DIR_Y * s.speed * dt;
+          // ease back toward the prescribed drift after any bounce
+          s.vx += (DIR_X * s.speed - s.vx) * relax;
+          s.vy += (DIR_Y * s.speed - s.vy) * relax;
+          s.x += s.vx * dt;
+          s.y += s.vy * dt;
           if (s.x < -MARGIN || s.y > VIEW_H + MARGIN) {
             respawn(s, stars);
+            s.vx = DIR_X * s.speed;
+            s.vy = DIR_Y * s.speed;
           }
           // sway perpendicular to the fall direction
           const sway =
             Math.sin((now / 1000) * s.swayFreq + s.swayPhase) * SWAY_AMP;
-          s.group.position.set(s.x + DIR_Y * sway, -(s.y - DIR_X * sway), 0);
+          s.px = s.x + DIR_Y * sway;
+          s.py = s.y - DIR_X * sway;
+        });
+
+        // elastic circle collisions on the rendered positions
+        stars.forEach((a, i) => {
+          stars.slice(i + 1).forEach((b) => {
+            const dx = b.px - a.px;
+            const dy = b.py - a.py;
+            const dist = Math.hypot(dx, dy) || 1;
+            const overlap = a.size + b.size - dist;
+            if (overlap <= 0) return;
+            const nx = dx / dist;
+            const ny = dy / dist;
+            const ma = a.size * a.size;
+            const mb = b.size * b.size;
+            const inv = 1 / ma + 1 / mb;
+            // separate in proportion to inverse mass
+            const wa = 1 / ma / inv;
+            const wb = 1 / mb / inv;
+            a.x -= nx * overlap * wa;
+            a.y -= ny * overlap * wa;
+            a.px -= nx * overlap * wa;
+            a.py -= ny * overlap * wa;
+            b.x += nx * overlap * wb;
+            b.y += ny * overlap * wb;
+            b.px += nx * overlap * wb;
+            b.py += ny * overlap * wb;
+            // impulse along the normal, only while approaching
+            const rel = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+            if (rel >= 0) return;
+            const j = (-(1 + RESTITUTION) * rel) / inv;
+            a.vx -= (j / ma) * nx;
+            a.vy -= (j / ma) * ny;
+            b.vx += (j / mb) * nx;
+            b.vy += (j / mb) * ny;
+          });
+        });
+
+        stars.forEach((s) => {
+          s.group.position.set(s.px, -s.py, 0);
         });
         renderer.render(scene, camera);
       });
