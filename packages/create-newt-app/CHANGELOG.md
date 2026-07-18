@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.10
+
+### Patch Changes
+
+- 6f40802: Add a gentle per-chip lateral sway to the homepage logo rain, so chips drift through the fall instead of moving in straight lines.
+  - @newt-app/templates@0.22.10
+
 ## 0.22.9
 
 ### Patch Changes
