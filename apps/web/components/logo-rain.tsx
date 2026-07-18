@@ -32,6 +32,10 @@ const SPACING = 40;
 const SPEED_SMALL = 1.4;
 const SPEED_LARGE = 0.6;
 
+// gentle lateral sway across the fall path, like drifting through air
+const SWAY_AMP = 14;
+const SWAY_FREQ = 0.35;
+
 const TEX_SIZE = 256;
 
 type Star = {
@@ -39,6 +43,8 @@ type Star = {
   y: number;
   size: number;
   speed: number;
+  swayPhase: number;
+  swayFreq: number;
   group: THREE.Group;
 };
 
@@ -262,6 +268,8 @@ export default function LogoRain({
         // small chips drift fast, large ones slow, so the big shapes stay calm
         speed:
           meanSize * speedFactor * (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t),
+        swayPhase: Math.random() * Math.PI * 2,
+        swayFreq: SWAY_FREQ * (0.75 + Math.random() * 0.5),
         group,
       });
     });
@@ -327,7 +335,10 @@ export default function LogoRain({
           if (s.x < -MARGIN || s.y > VIEW_H + MARGIN) {
             respawn(s, stars);
           }
-          s.group.position.set(s.x, -s.y, 0);
+          // sway perpendicular to the fall direction
+          const sway =
+            Math.sin((now / 1000) * s.swayFreq + s.swayPhase) * SWAY_AMP;
+          s.group.position.set(s.x + DIR_Y * sway, -(s.y - DIR_X * sway), 0);
         });
         renderer.render(scene, camera);
       });
