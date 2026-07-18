@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.5
+
+### Patch Changes
+
+- 0bbda52: Alphabetize the `scripts` and dependency fields in every scaffolded `package.json`. Module injection appended deps and scripts to the end, leaving generated `package.json` files out of order; a small post-scaffold pass sorts them (no new dependency).
+  - @newt-app/templates@0.22.5
+
 ## 0.22.4
 
 ### Patch Changes
