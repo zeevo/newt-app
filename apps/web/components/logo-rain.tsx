@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import * as d3 from 'd3';
+import * as THREE from 'three';
 
 const logos = [
   '/logos/better-auth.svg',
@@ -28,11 +28,18 @@ const MAX_SIZE = 140;
 // clearance kept between chips when picking spawn points
 const SPACING = 40;
 
+// speed multipliers by size: the smallest chips move fastest, the largest slowest
+const SPEED_SMALL = 1.4;
+const SPEED_LARGE = 0.6;
+
+const TEX_SIZE = 256;
+
 type Star = {
   x: number;
   y: number;
   size: number;
   speed: number;
+  group: THREE.Group;
 };
 
 function tooClose(x: number, y: number, size: number, others: Star[], self?: Star) {
@@ -72,6 +79,66 @@ function respawn(star: Star, others: Star[]) {
   star.y = y - DIR_Y * MARGIN * 3;
 }
 
+// normalize any CSS color (oklch, var-resolved, named) to a THREE.Color
+function cssColor(css: string): THREE.Color {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 1;
+  const ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = css;
+  ctx.fillRect(0, 0, 1, 1);
+  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+  return new THREE.Color().setRGB(r! / 255, g! / 255, b! / 255, THREE.SRGBColorSpace);
+}
+
+// theme colors matching the SVG version: fill-background circles,
+// stroke-primary/15 rings, and black (light) / white (dark) silhouettes
+function readTheme() {
+  const probe = document.createElement('div');
+  probe.className = 'bg-background text-primary';
+  probe.style.display = 'none';
+  document.body.appendChild(probe);
+  const styles = getComputedStyle(probe);
+  const background = cssColor(styles.backgroundColor);
+  const primary = cssColor(styles.color);
+  probe.remove();
+  const dark = document.documentElement.classList.contains('dark');
+  return {
+    background,
+    primary,
+    silhouette: new THREE.Color(dark ? 0xffffff : 0x000000),
+    logoAlpha: dark ? 0.35 : 0.3,
+  };
+}
+
+// rasterize an svg into a white silhouette texture, tinted later via material color
+async function loadSilhouette(url: string): Promise<THREE.CanvasTexture> {
+  const text = await (await fetch(url)).text();
+  const viewBox = text.match(/viewBox="([^"]+)"/)?.[1]?.split(/[\s,]+/).map(Number);
+  const aspect =
+    viewBox && viewBox.length === 4 && viewBox[3]! > 0 ? viewBox[2]! / viewBox[3]! : 1;
+
+  const blobUrl = URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' }));
+  const img = new Image();
+  img.src = blobUrl;
+  await img.decode();
+
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = TEX_SIZE;
+  const ctx = canvas.getContext('2d')!;
+  // contain fit, centered, like the svg <image> default
+  const w = aspect >= 1 ? TEX_SIZE : TEX_SIZE * aspect;
+  const h = aspect >= 1 ? TEX_SIZE / aspect : TEX_SIZE;
+  ctx.drawImage(img, (TEX_SIZE - w) / 2, (TEX_SIZE - h) / 2, w, h);
+  ctx.globalCompositeOperation = 'source-in';
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, TEX_SIZE, TEX_SIZE);
+  URL.revokeObjectURL(blobUrl);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
 export default function LogoRain({
   density = 1,
   speedFactor = 0.09,
@@ -79,107 +146,216 @@ export default function LogoRain({
   density?: number;
   speedFactor?: number;
 }) {
-  const svgRef = useRef<SVGSVGElement | null>(null);
-  const timerRef = useRef<d3.Timer | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const svg = d3.select(svgRef.current!);
+    const canvas = canvasRef.current!;
+    const container = canvas.parentElement!;
+    let disposed = false;
 
-    svg.selectAll('*').remove();
-    svg
-      .attr('viewBox', `0 0 ${VIEW_W} ${VIEW_H}`)
-      .attr('preserveAspectRatio', 'xMidYMid slice')
-      .attr('role', 'img');
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    } catch {
+      return; // no WebGL: leave the background empty
+    }
+    renderer.setClearColor(0x000000, 0);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(0, VIEW_W, 0, -VIEW_H, -10, 10);
+
+    // cover the container like preserveAspectRatio="xMidYMid slice"
+    function fit() {
+      const cw = container.clientWidth || 1;
+      const ch = container.clientHeight || 1;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(cw, ch, false);
+      const scale = Math.max(cw / VIEW_W, ch / VIEW_H);
+      const visW = cw / scale;
+      const visH = ch / scale;
+      camera.left = VIEW_W / 2 - visW / 2;
+      camera.right = VIEW_W / 2 + visW / 2;
+      camera.top = -VIEW_H / 2 + visH / 2;
+      camera.bottom = -VIEW_H / 2 - visH / 2;
+      camera.updateProjectionMatrix();
+    }
+    fit();
+
+    const circleGeometry = new THREE.CircleGeometry(1, 64);
+    const ringGeometry = new THREE.RingGeometry(0.985, 1, 64);
+    const planeGeometry = new THREE.PlaneGeometry(1.2, 1.2);
+
+    let theme = readTheme();
+    const circleMaterials: THREE.MeshBasicMaterial[] = [];
+    const ringMaterials: THREE.MeshBasicMaterial[] = [];
+    const logoMaterials: THREE.MeshBasicMaterial[] = [];
+    const groupAlphas: number[] = [];
 
     const meanSize = (MIN_SIZE + MAX_SIZE) / 2;
     const stars: Star[] = [];
-    d3.range(logos.length * density).forEach(() => {
+    Array.from({ length: logos.length * density }).forEach(() => {
       const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
       // seed across the whole view so it starts populated; a few best-candidate
       // samples gently discourage clumping without looking gridded
       let x = 0;
       let y = 0;
       let bestDist = -Infinity;
-      for (let candidate = 0; candidate < 4; candidate++) {
+      Array.from({ length: 4 }).forEach(() => {
         const cx = -MARGIN + Math.random() * (VIEW_W + MARGIN * 2);
         const cy = -MARGIN + Math.random() * (VIEW_H + MARGIN * 2);
-        const dist =
-          d3.min(stars, (o) => Math.hypot(o.x - cx, o.y - cy) - o.size) ??
-          Infinity;
+        const dist = stars.length
+          ? Math.min(...stars.map((o) => Math.hypot(o.x - cx, o.y - cy) - o.size))
+          : Infinity;
         if (dist > bestDist) {
           bestDist = dist;
           x = cx;
           y = cy;
         }
-      }
+      });
+
+      const t = (size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE);
+      const alpha = 0.5 + 0.5 * t;
+      groupAlphas.push(alpha);
+
+      const group = new THREE.Group();
+      group.scale.setScalar(size);
+      group.position.set(x, -y, 0);
+
+      const circleMaterial = new THREE.MeshBasicMaterial({
+        color: theme.background,
+        transparent: true,
+        opacity: alpha,
+        depthWrite: false,
+      });
+      const ringMaterial = new THREE.MeshBasicMaterial({
+        color: theme.primary,
+        transparent: true,
+        opacity: 0.15 * alpha,
+        depthWrite: false,
+      });
+      const logoMaterial = new THREE.MeshBasicMaterial({
+        color: theme.silhouette,
+        transparent: true,
+        opacity: theme.logoAlpha * alpha,
+        depthWrite: false,
+      });
+      logoMaterial.visible = false; // until its texture loads
+      circleMaterials.push(circleMaterial);
+      ringMaterials.push(ringMaterial);
+      logoMaterials.push(logoMaterial);
+
+      // larger chips draw on top so the quick small ones pass behind them
+      const order = size * 10;
+      const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+      circle.renderOrder = order;
+      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+      ring.renderOrder = order + 1;
+      const logo = new THREE.Mesh(planeGeometry, logoMaterial);
+      logo.renderOrder = order + 2;
+      group.add(circle, ring, logo);
+      scene.add(group);
+
       stars.push({
         x,
         y,
         size,
-        // keep speeds close together so chips rarely overtake each other
-        speed: meanSize * speedFactor * (0.85 + 0.3 * ((size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE))),
+        // small chips drift fast, large ones slow, so the big shapes stay calm
+        speed:
+          meanSize * speedFactor * (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t),
+        group,
       });
     });
 
-    const starGroups = svg
-      .selectAll('g.star')
-      .data(stars)
-      .join('g')
-      .attr('class', 'star')
-      .attr('transform', (s) => `translate(${s.x},${s.y})`)
-      .attr('opacity', (s) => 0.5 + 0.5 * ((s.size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)));
+    const textures: THREE.CanvasTexture[] = [];
+    stars.forEach((_, i) => {
+      loadSilhouette(logos[i % logos.length]!).then((texture) => {
+        if (disposed) {
+          texture.dispose();
+          return;
+        }
+        textures.push(texture);
+        logoMaterials[i]!.map = texture;
+        logoMaterials[i]!.visible = true;
+        logoMaterials[i]!.needsUpdate = true;
+        renderer.render(scene, camera);
+      });
+    });
 
-    starGroups
-      .append('circle')
-      .attr('r', (s) => s.size)
-      .attr('class', 'fill-background stroke-primary/15');
+    function applyTheme() {
+      theme = readTheme();
+      circleMaterials.forEach((m, i) => {
+        m.color.copy(theme.background);
+        m.opacity = groupAlphas[i]!;
+      });
+      ringMaterials.forEach((m, i) => {
+        m.color.copy(theme.primary);
+        m.opacity = 0.15 * groupAlphas[i]!;
+      });
+      logoMaterials.forEach((m, i) => {
+        m.color.copy(theme.silhouette);
+        m.opacity = theme.logoAlpha * groupAlphas[i]!;
+      });
+      renderer.render(scene, camera);
+    }
 
-    starGroups
-      .append('image')
-      .attr('href', (s, i) => logos[i % logos.length]!)
-      .attr('x', (s) => -s.size * 0.6)
-      .attr('y', (s) => -s.size * 0.6)
-      .attr('width', (s) => s.size * 1.2)
-      .attr('height', (s) => s.size * 1.2)
-      .attr('class', 'logo-rain-logo');
+    const themeObserver = new MutationObserver(applyTheme);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    const resizeObserver = new ResizeObserver(() => {
+      fit();
+      renderer.render(scene, camera);
+    });
+    resizeObserver.observe(container);
 
     const reduceMotion =
-      typeof window !== 'undefined' &&
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (!reduceMotion) {
-      let last = 0;
-      timerRef.current?.stop();
-      timerRef.current = d3.timer((elapsed) => {
-        const dt = (elapsed - last) / 1000;
-        last = elapsed;
-
-        starGroups.attr('transform', (s) => {
+    if (reduceMotion) {
+      renderer.render(scene, camera);
+    } else {
+      let last = performance.now();
+      renderer.setAnimationLoop((now) => {
+        const dt = (now - last) / 1000;
+        last = now;
+        stars.forEach((s) => {
           s.x += DIR_X * s.speed * dt;
           s.y += DIR_Y * s.speed * dt;
           if (s.x < -MARGIN || s.y > VIEW_H + MARGIN) {
             respawn(s, stars);
           }
-          return `translate(${s.x},${s.y})`;
+          s.group.position.set(s.x, -s.y, 0);
         });
+        renderer.render(scene, camera);
       });
     }
 
     return () => {
-      timerRef.current?.stop();
-      timerRef.current = null;
+      disposed = true;
+      renderer.setAnimationLoop(null);
+      themeObserver.disconnect();
+      resizeObserver.disconnect();
+      circleGeometry.dispose();
+      ringGeometry.dispose();
+      planeGeometry.dispose();
+      [...circleMaterials, ...ringMaterials, ...logoMaterials].forEach((m) =>
+        m.dispose(),
+      );
+      textures.forEach((t) => t.dispose());
+      renderer.dispose();
     };
   }, [density, speedFactor]);
 
   return (
     <div className="h-full w-full text-foreground">
-      <svg
-        ref={svgRef}
-        width="100%"
-        height="100%"
+      <canvas
+        ref={canvasRef}
         aria-label="Falling logos visualization"
-        className="text-foreground"
+        role="img"
+        className="block h-full w-full"
       />
     </div>
   );
