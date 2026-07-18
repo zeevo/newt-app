@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.9
+
+### Patch Changes
+
+- 87e961f: Port the docs homepage logo rain from SVG + d3 to a three.js WebGL scene, keeping the same look and behavior: theme-aware silhouettes, background circles, size-based opacity, and size-based speed (small chips fast, large slow).
+  - @newt-app/templates@0.22.9
+
 ## 0.22.8
 
 ### Patch Changes
