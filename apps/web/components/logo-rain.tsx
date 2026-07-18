@@ -36,6 +36,9 @@ const SPEED_LARGE = 0.6;
 const SWAY_AMP = 14;
 const SWAY_FREQ = 0.35;
 
+// slow per-chip roll, random direction, radians per second
+const ROLL_MAX = 0.06;
+
 const TEX_SIZE = 256;
 
 type Star = {
@@ -45,6 +48,7 @@ type Star = {
   speed: number;
   swayPhase: number;
   swayFreq: number;
+  rollSpeed: number;
   group: THREE.Group;
 };
 
@@ -270,6 +274,7 @@ export default function LogoRain({
           meanSize * speedFactor * (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t),
         swayPhase: Math.random() * Math.PI * 2,
         swayFreq: SWAY_FREQ * (0.75 + Math.random() * 0.5),
+        rollSpeed: (Math.random() * 2 - 1) * ROLL_MAX,
         group,
       });
     });
@@ -339,6 +344,7 @@ export default function LogoRain({
           const sway =
             Math.sin((now / 1000) * s.swayFreq + s.swayPhase) * SWAY_AMP;
           s.group.position.set(s.x + DIR_Y * sway, -(s.y - DIR_X * sway), 0);
+          s.group.rotation.z += s.rollSpeed * dt;
         });
         renderer.render(scene, camera);
       });
