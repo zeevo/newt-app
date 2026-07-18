@@ -37,7 +37,7 @@ export default function Home() {
             className="flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
           >
             <span className="size-2 rounded-full bg-green-500" />
-            Latest update — v{cliVersion} released
+            Latest update · v{cliVersion} released
             <span aria-hidden>→</span>
           </a>
           <h1 className="max-w-4xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
@@ -100,9 +100,9 @@ export default function Home() {
             </span>
           </h1>
           <p className="max-w-lg text-center text-lg text-balance text-muted-foreground lg:max-w-xl lg:text-xl">
-            newt-app scaffolds everything you want and nothing you don&apos;t —
-            Next.js, NestJS, Better Auth, and shadcn/ui, wired together in one
-            TypeScript monorepo.
+            newt-app gives you a Next.js frontend and a real NestJS backend,
+            with auth and a database, curated so you&apos;re not deleting half
+            of it on day one.
           </p>
           <div className="flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
             <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
