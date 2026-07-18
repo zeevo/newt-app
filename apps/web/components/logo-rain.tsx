@@ -32,9 +32,24 @@ const SPACING = 40;
 const SPEED_SMALL = 1.4;
 const SPEED_LARGE = 0.6;
 
-// gentle lateral sway across the fall path, like drifting through air
+// falling-card flutter (Belmonte et al., PRL 81 345): chips swing side to side
+// like a pendulum, banking into the swing (tilt in phase with lateral
+// velocity), and descend fastest mid-swing (speed pulses at half the period)
 const SWAY_AMP = 14;
-const SWAY_FREQ = 0.35;
+const FLUTTER_FREQ = 0.5;
+const BANK_AMP = 0.35;
+const SPEED_PULSE = 0.15;
+
+// slow per-chip roll, random direction, radians per second
+const ROLL_MAX = 0.06;
+
+// past a critical froude number cards stop rocking and tumble end over end;
+// the smallest chips get that regime, as a slow pitch about the cross axis
+const TUMBLE_SIZE_CUTOFF = 0.25;
+const TUMBLE_RATE = 0.22;
+
+// perspective camera, so banked and tumbling chips foreshorten for real
+const FOV = 40;
 
 const TEX_SIZE = 256;
 
@@ -43,8 +58,10 @@ type Star = {
   y: number;
   size: number;
   speed: number;
-  swayPhase: number;
-  swayFreq: number;
+  phase: number;
+  omega: number;
+  rollSpeed: number;
+  tumbleRate: number;
   group: THREE.Group;
 };
 
@@ -168,21 +185,24 @@ export default function LogoRain({
     renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(0, VIEW_W, 0, -VIEW_H, -10, 10);
+    const camera = new THREE.PerspectiveCamera(FOV, 1, 1, 4000);
 
-    // cover the container like preserveAspectRatio="xMidYMid slice"
+    // cover the container like preserveAspectRatio="xMidYMid slice": place the
+    // camera so the z=0 plane shows exactly the covered view rect
+    // (distance = height/2 / tan(fov/2))
     function fit() {
       const cw = container.clientWidth || 1;
       const ch = container.clientHeight || 1;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(cw, ch, false);
       const scale = Math.max(cw / VIEW_W, ch / VIEW_H);
-      const visW = cw / scale;
       const visH = ch / scale;
-      camera.left = VIEW_W / 2 - visW / 2;
-      camera.right = VIEW_W / 2 + visW / 2;
-      camera.top = -VIEW_H / 2 + visH / 2;
-      camera.bottom = -VIEW_H / 2 - visH / 2;
+      camera.aspect = cw / ch;
+      camera.position.set(
+        VIEW_W / 2,
+        -VIEW_H / 2,
+        (visH * 0.5) / Math.tan(THREE.MathUtils.degToRad(FOV) * 0.5),
+      );
       camera.updateProjectionMatrix();
     }
     fit();
@@ -268,8 +288,11 @@ export default function LogoRain({
         // small chips drift fast, large ones slow, so the big shapes stay calm
         speed:
           meanSize * speedFactor * (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t),
-        swayPhase: Math.random() * Math.PI * 2,
-        swayFreq: SWAY_FREQ * (0.75 + Math.random() * 0.5),
+        phase: Math.random() * Math.PI * 2,
+        // pendular frequency scales inversely with size: small chips flutter fast
+        omega: FLUTTER_FREQ * (meanSize / size) * (0.85 + Math.random() * 0.3),
+        rollSpeed: (Math.random() * 2 - 1) * ROLL_MAX,
+        tumbleRate: t < TUMBLE_SIZE_CUTOFF ? TUMBLE_RATE * (meanSize / size) : 0,
         group,
       });
     });
@@ -325,20 +348,38 @@ export default function LogoRain({
     if (reduceMotion) {
       renderer.render(scene, camera);
     } else {
+      // world-space fall direction and its in-plane perpendicular (world y is
+      // flipped from view coords), the axes the flutter model rotates around
+      const fallAxis = new THREE.Vector3(DIR_X, -DIR_Y, 0);
+      const crossAxis = new THREE.Vector3(DIR_Y, DIR_X, 0);
+      const zAxis = new THREE.Vector3(0, 0, 1);
+      const qBank = new THREE.Quaternion();
+      const qPitch = new THREE.Quaternion();
+      const qRoll = new THREE.Quaternion();
       let last = performance.now();
       renderer.setAnimationLoop((now) => {
         const dt = (now - last) / 1000;
         last = now;
+        const seconds = now / 1000;
         stars.forEach((s) => {
-          s.x += DIR_X * s.speed * dt;
-          s.y += DIR_Y * s.speed * dt;
+          const swing = seconds * s.omega + s.phase;
+          // descend fastest mid-swing: speed pulses at half the tilt period
+          const fall = s.speed * (1 + SPEED_PULSE * Math.cos(2 * swing));
+          s.x += DIR_X * fall * dt;
+          s.y += DIR_Y * fall * dt;
           if (s.x < -MARGIN || s.y > VIEW_H + MARGIN) {
             respawn(s, stars);
           }
-          // sway perpendicular to the fall direction
-          const sway =
-            Math.sin((now / 1000) * s.swayFreq + s.swayPhase) * SWAY_AMP;
+          // pendular sway, banking into the swing: tilt tracks lateral velocity
+          const sway = Math.sin(swing) * SWAY_AMP;
           s.group.position.set(s.x + DIR_Y * sway, -(s.y - DIR_X * sway), 0);
+          qBank.setFromAxisAngle(fallAxis, Math.cos(swing) * BANK_AMP);
+          qPitch.setFromAxisAngle(
+            crossAxis,
+            s.tumbleRate ? seconds * s.tumbleRate + s.phase : 0,
+          );
+          qRoll.setFromAxisAngle(zAxis, seconds * s.rollSpeed);
+          s.group.quaternion.copy(qBank).multiply(qPitch).multiply(qRoll);
         });
         renderer.render(scene, camera);
       });
