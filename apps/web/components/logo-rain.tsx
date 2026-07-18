@@ -39,8 +39,9 @@ const SWAY_FREQ = 0.35;
 // slow per-chip roll, random direction, radians per second
 const ROLL_MAX = 0.06;
 
-// gentle 3d tumble: max tilt around x/y, radians, oscillating per chip
-const TUMBLE_AMP = 0.14;
+// 3d tumble: max tilt around x/y, radians, oscillating per chip. the camera is
+// orthographic, so a tilt reads as a cos(angle) squash: 0.45 rad ≈ 10%
+const TUMBLE_AMP = 0.45;
 const TUMBLE_FREQ = 0.25;
 
 const TEX_SIZE = 256;
