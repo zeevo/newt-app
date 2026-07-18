@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.7
+
+### Patch Changes
+
+- dc54874: Switch the README npm badge to the `flat-square` style.
+  - @newt-app/templates@0.22.7
+
 ## 0.22.6
 
 ### Patch Changes
