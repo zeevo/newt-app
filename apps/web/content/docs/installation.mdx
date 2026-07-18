@@ -1,23 +1,18 @@
 ---
 title: "Installation"
-description: "Create your new create-newt-app project"
+description: "Scaffold a new project with create-newt-app"
 prev: "introduction"
 next: "nextjs"
 ---
 
-`create-newt-app` is a zero-friction CLI tool for bootstrapping full-stack TypeScript projects.
-It spins up a modern `pnpm`-powered monorepo with a thoughtfully curated tech stack:
+`create-newt-app` scaffolds a full-stack TypeScript monorepo, wired together with `pnpm` and Turborepo:
 
-- [Next.js](https://nextjs.org): The React framework. The ecosystem to be in.
-- [Nest.js](https://nestjs.com): Industry standard backend HTTP APIs.
-- [better-auth](https://www.better-auth.com): Secure, flexible authentication and authorization baked in.
-- [Kysely](https://kysely.dev): Type-safe SQL for SQLite or Postgres, shared by auth and your app.
-- [pnpm](https://pnpm.io/): Go full monorepo with `pnpm` to organize your project into `apps` and `packages`.
-- [turbo](https://turborepo.dev/): Go turbo with `turborepo`. Faster, cachable, monorepo workflows.
+- [Next.js](https://nextjs.org) frontend
+- [NestJS](https://nestjs.com) backend
+- [Better Auth](https://www.better-auth.com) shared across both apps
+- [Kysely](https://kysely.dev) for typed SQL on SQLite or Postgres
 
-It's curated and extendable, without the opinions and dependencies you'd spend your first week ripping out.
-From clean folder structure to sane defaults, you can start small and grow to enterprise demands.
-
+Create a project:
 
 ```bash
 pnpm dlx create-newt-app
