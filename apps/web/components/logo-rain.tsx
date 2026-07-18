@@ -28,6 +28,10 @@ const MAX_SIZE = 140;
 // clearance kept between chips when picking spawn points
 const SPACING = 40;
 
+// speed multipliers by size: the smallest chips move fastest, the largest slowest
+const SPEED_SMALL = 1.4;
+const SPEED_LARGE = 0.6;
+
 type Star = {
   x: number;
   y: number;
@@ -116,10 +120,20 @@ export default function LogoRain({
         x,
         y,
         size,
-        // keep speeds close together so chips rarely overtake each other
-        speed: meanSize * speedFactor * (0.85 + 0.3 * ((size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE))),
+        // small chips drift fast, large ones slow, so the big shapes stay calm
+        // behind the hero text
+        speed:
+          meanSize *
+          speedFactor *
+          (SPEED_SMALL -
+            (SPEED_SMALL - SPEED_LARGE) *
+              ((size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE))),
       });
     });
+
+    // draw smallest first so the large, slow chips sit on top and the quick
+    // small ones pass behind them
+    stars.sort((a, b) => a.size - b.size);
 
     const starGroups = svg
       .selectAll('g.star')
