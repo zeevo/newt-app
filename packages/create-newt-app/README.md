@@ -2,7 +2,7 @@
   <h1>newt-app</h1>
   <p><strong>Scaffold a production-ready, full-stack TypeScript monorepo in one command.</strong></p>
 
-<a href="https://www.npmjs.com/package/create-newt-app"><img alt="npm version" src="https://img.shields.io/npm/v/create-newt-app.svg?style=for-the-badge&labelColor=000000"></a>
+<a href="https://www.npmjs.com/package/create-newt-app"><img alt="npm version" src="https://img.shields.io/npm/v/create-newt-app?style=flat-square"></a>
 
 </div>
 
