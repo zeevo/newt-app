@@ -39,6 +39,10 @@ const SWAY_FREQ = 0.35;
 // slow per-chip roll, random direction, radians per second
 const ROLL_MAX = 0.06;
 
+// gentle 3d tumble: max tilt around x/y, radians, oscillating per chip
+const TUMBLE_AMP = 0.14;
+const TUMBLE_FREQ = 0.25;
+
 const TEX_SIZE = 256;
 
 type Star = {
@@ -49,6 +53,9 @@ type Star = {
   swayPhase: number;
   swayFreq: number;
   rollSpeed: number;
+  tumblePhaseX: number;
+  tumblePhaseY: number;
+  tumbleFreq: number;
   group: THREE.Group;
 };
 
@@ -275,6 +282,9 @@ export default function LogoRain({
         swayPhase: Math.random() * Math.PI * 2,
         swayFreq: SWAY_FREQ * (0.75 + Math.random() * 0.5),
         rollSpeed: (Math.random() * 2 - 1) * ROLL_MAX,
+        tumblePhaseX: Math.random() * Math.PI * 2,
+        tumblePhaseY: Math.random() * Math.PI * 2,
+        tumbleFreq: TUMBLE_FREQ * (0.75 + Math.random() * 0.5),
         group,
       });
     });
@@ -345,6 +355,12 @@ export default function LogoRain({
             Math.sin((now / 1000) * s.swayFreq + s.swayPhase) * SWAY_AMP;
           s.group.position.set(s.x + DIR_Y * sway, -(s.y - DIR_X * sway), 0);
           s.group.rotation.z += s.rollSpeed * dt;
+          // card-like flutter around both axes
+          const seconds = now / 1000;
+          s.group.rotation.x =
+            Math.sin(seconds * s.tumbleFreq + s.tumblePhaseX) * TUMBLE_AMP;
+          s.group.rotation.y =
+            Math.sin(seconds * s.tumbleFreq * 1.3 + s.tumblePhaseY) * TUMBLE_AMP;
         });
         renderer.render(scene, camera);
       });
