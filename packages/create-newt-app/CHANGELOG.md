@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.11
+
+### Patch Changes
+
+- 3464ab6: Chips in the homepage logo rain now bounce off each other: elastic circle collisions with area-proportional mass, then each chip eases back into the rain drift.
+  - @newt-app/templates@0.22.11
+
 ## 0.22.10
 
 ### Patch Changes
