@@ -1,0 +1,29 @@
+---
+title: "Linter"
+description: "ESLint + Prettier, or oxlint + oxfmt"
+prev: "better-auth"
+next: "cli"
+---
+
+Pick the linter at scaffold time: ESLint + Prettier (default) or oxc (`--linter oxc`). Only the chosen toolchain is installed. Type-checking is `tsc` either way.
+
+## ESLint + Prettier (default)
+
+Flat configs per app, sharing a `@my-app/eslint-config` package.
+
+```bash
+pnpm lint          # eslint --fix per app
+pnpm lint:check    # no fixes, fails on warnings (CI)
+pnpm format        # prettier --write from the root
+pnpm format:check
+```
+
+## oxlint + oxfmt
+
+`--linter oxc` swaps in the Rust toolchain from [oxc](https://oxc.rs): [oxlint](https://oxc.rs/docs/guide/usage/linter) for linting and oxfmt for formatting, with no ESLint or Prettier installed at all. Same script names, dramatically faster.
+
+Configuration lives in `.oxlintrc.json` and `.oxfmtrc.json` at the repo root.
+
+```bash
+pnpm dlx create-newt-app my-app --ci --linter oxc
+```

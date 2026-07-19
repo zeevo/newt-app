@@ -36,6 +36,10 @@ export const modules: Item[] = [
     title: 'Better Auth',
     url: '/docs/better-auth',
   },
+  {
+    title: 'Linter',
+    url: '/docs/linter',
+  },
 ];
 
 export const cli: Item[] = [
