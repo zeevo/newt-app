@@ -15,36 +15,32 @@ const logos = [
 
 const VIEW_W = 1440;
 const VIEW_H = 775;
-const MARGIN = 120;
 
-// unit direction of fall: top right → bottom left
-const ANGLE = (32 * Math.PI) / 180;
-const DIR_X = -Math.cos(ANGLE);
-const DIR_Y = Math.sin(ANGLE);
+const MIN_SIZE = 60;
+const MAX_SIZE = 110;
 
-const MIN_SIZE = 78;
-const MAX_SIZE = 140;
-
-// clearance kept between chips when picking spawn points
-const SPACING = 40;
-
-// speed multipliers by size: the smallest chips move fastest, the largest slowest
+// cruise-speed multipliers by size: small chips move fast, the largest slowest
 const SPEED_SMALL = 1.4;
 const SPEED_LARGE = 0.6;
 
-// gentle lateral sway across the fall path, like drifting through air
-const SWAY_AMP = 14;
-const SWAY_FREQ = 0.35;
-
-// elastic collisions between chips: mass scales with disk area, and after a
-// bounce the velocity eases back into the prescribed rain drift
+// elastic collisions between chips: mass scales with disk area
 const RESTITUTION = 0.85;
-const DRIFT_RELAX = 0.5;
 
-// clicking a chip shoots it off in a random direction; the kick decays via
-// DRIFT_RELAX so it rejoins the rain
+// speed slowly renormalizes toward each chip's cruise speed (direction kept),
+// so the tank neither stalls out after bounces nor stays frantic after kicks
+const CRUISE_RELAX = 0.4;
+
+// clicking a chip shoots it off in a random direction; CRUISE_RELAX brings it
+// back to cruise while it keeps ricocheting
 const KICK_MIN = 600;
 const KICK_MAX = 1200;
+const KICK_SPIN = 4;
+
+// spin: tangential slip at contacts (chip-chip and chip-wall) rubs chips into
+// rotation, with disk inertia (I = m r^2 / 2), slow decay, and a sanity cap
+const SPIN_GRIP = 0.4;
+const SPIN_DAMP = 0.15;
+const MAX_SPIN = 2.5;
 
 const TEX_SIZE = 256;
 
@@ -53,51 +49,12 @@ type Star = {
   y: number;
   vx: number;
   vy: number;
-  px: number;
-  py: number;
+  angle: number;
+  angVel: number;
   size: number;
   speed: number;
-  swayPhase: number;
-  swayFreq: number;
   group: THREE.Group;
 };
-
-function tooClose(x: number, y: number, size: number, others: Star[], self?: Star) {
-  return others.some(
-    (o) =>
-      o !== self && Math.hypot(o.x - x, o.y - y) < o.size + size + SPACING,
-  );
-}
-
-function entryPoint() {
-  if (Math.random() < 0.6) {
-    // enter along the top edge, biased to the right
-    return {
-      x: VIEW_W * 0.15 + Math.random() * (VIEW_W * 0.85 + MARGIN),
-      y: -MARGIN * (0.2 + Math.random() * 0.8),
-    };
-  }
-  // enter along the right edge
-  return {
-    x: VIEW_W + MARGIN * (0.2 + Math.random() * 0.8),
-    y: -MARGIN + Math.random() * (VIEW_H * 0.7 + MARGIN),
-  };
-}
-
-function respawn(star: Star, others: Star[]) {
-  for (let attempt = 0; attempt < 24; attempt++) {
-    const { x, y } = entryPoint();
-    if (!tooClose(x, y, star.size, others, star)) {
-      star.x = x;
-      star.y = y;
-      return;
-    }
-  }
-  // no clear spot: back further up the path so it enters later
-  const { x, y } = entryPoint();
-  star.x = x - DIR_X * MARGIN * 3;
-  star.y = y - DIR_Y * MARGIN * 3;
-}
 
 // normalize any CSS color (oklch, var-resolved, named) to a THREE.Color
 function cssColor(css: string): THREE.Color {
@@ -221,8 +178,8 @@ export default function LogoRain({
       let y = 0;
       let bestDist = -Infinity;
       Array.from({ length: 4 }).forEach(() => {
-        const cx = -MARGIN + Math.random() * (VIEW_W + MARGIN * 2);
-        const cy = -MARGIN + Math.random() * (VIEW_H + MARGIN * 2);
+        const cx = Math.random() * VIEW_W;
+        const cy = Math.random() * VIEW_H;
         const dist = stars.length
           ? Math.min(...stars.map((o) => Math.hypot(o.x - cx, o.y - cy) - o.size))
           : Infinity;
@@ -275,20 +232,19 @@ export default function LogoRain({
       group.add(circle, ring, logo);
       scene.add(group);
 
-      // small chips drift fast, large ones slow, so the big shapes stay calm
+      // small chips cruise fast, large ones slow, so the big shapes stay calm
       const speed =
         meanSize * speedFactor * (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t);
+      const heading = Math.random() * Math.PI * 2;
       stars.push({
         x,
         y,
-        vx: DIR_X * speed,
-        vy: DIR_Y * speed,
-        px: x,
-        py: y,
+        vx: Math.cos(heading) * speed,
+        vy: Math.sin(heading) * speed,
+        angle: 0,
+        angVel: (Math.random() * 2 - 1) * 0.3,
         size,
         speed,
-        swayPhase: Math.random() * Math.PI * 2,
-        swayFreq: SWAY_FREQ * (0.75 + Math.random() * 0.5),
         group,
       });
     });
@@ -349,7 +305,7 @@ export default function LogoRain({
       const v = (e.clientY - rect.top) / (rect.height || 1);
       const x = camera.left + u * (camera.right - camera.left);
       const y = -(camera.top + v * (camera.bottom - camera.top));
-      return stars.find((s) => Math.hypot(x - s.px, y - s.py) < s.size);
+      return stars.find((s) => Math.hypot(x - s.x, y - s.y) < s.size);
     };
     const onPointerMove = (e: PointerEvent) => {
       canvas.style.cursor = chipAt(e) ? 'pointer' : '';
@@ -361,6 +317,7 @@ export default function LogoRain({
       const kick = KICK_MIN + Math.random() * (KICK_MAX - KICK_MIN);
       s.vx = Math.cos(angle) * kick;
       s.vy = Math.sin(angle) * kick;
+      s.angVel += (Math.random() * 2 - 1) * KICK_SPIN;
     };
 
     if (reduceMotion) {
@@ -372,36 +329,59 @@ export default function LogoRain({
       renderer.setAnimationLoop((now) => {
         const dt = (now - last) / 1000;
         last = now;
-        const relax = 1 - Math.exp(-DRIFT_RELAX * dt);
+        const relax = 1 - Math.exp(-CRUISE_RELAX * dt);
         stars.forEach((s) => {
-          // ease back toward the prescribed drift after any bounce
-          s.vx += (DIR_X * s.speed - s.vx) * relax;
-          s.vy += (DIR_Y * s.speed - s.vy) * relax;
+          // renormalize speed toward cruise, keeping direction
+          const spd = Math.hypot(s.vx, s.vy) || 1;
+          const scale = 1 + ((s.speed - spd) / spd) * relax;
+          s.vx *= scale;
+          s.vy *= scale;
           s.x += s.vx * dt;
           s.y += s.vy * dt;
-          // normal exit at the bottom left, or kicked far out any other edge
-          if (
-            s.x < -MARGIN ||
-            s.y > VIEW_H + MARGIN ||
-            s.x > VIEW_W + MARGIN * 4 ||
-            s.y < -MARGIN * 4
-          ) {
-            respawn(s, stars);
-            s.vx = DIR_X * s.speed;
-            s.vy = DIR_Y * s.speed;
+          s.angVel = Math.max(
+            -MAX_SPIN,
+            Math.min(MAX_SPIN, s.angVel * Math.exp(-SPIN_DAMP * dt)),
+          );
+          s.angle += s.angVel * dt;
+          // bounce off the visible walls (camera bounds track the container);
+          // sliding along a wall rubs the chip into rotation
+          const minX = camera.left + s.size;
+          const maxX = camera.right - s.size;
+          const minY = -camera.top + s.size;
+          const maxY = -camera.bottom - s.size;
+          if (s.x < minX) {
+            s.x = minX;
+            s.vx = Math.abs(s.vx);
+            const slip = s.vy - s.angVel * s.size;
+            s.vy -= SPIN_GRIP * slip;
+            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
+          } else if (s.x > maxX) {
+            s.x = maxX;
+            s.vx = -Math.abs(s.vx);
+            const slip = -s.vy - s.angVel * s.size;
+            s.vy += SPIN_GRIP * slip;
+            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
           }
-          // sway perpendicular to the fall direction
-          const sway =
-            Math.sin((now / 1000) * s.swayFreq + s.swayPhase) * SWAY_AMP;
-          s.px = s.x + DIR_Y * sway;
-          s.py = s.y - DIR_X * sway;
+          if (s.y < minY) {
+            s.y = minY;
+            s.vy = Math.abs(s.vy);
+            const slip = -s.vx - s.angVel * s.size;
+            s.vx += SPIN_GRIP * slip;
+            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
+          } else if (s.y > maxY) {
+            s.y = maxY;
+            s.vy = -Math.abs(s.vy);
+            const slip = s.vx - s.angVel * s.size;
+            s.vx -= SPIN_GRIP * slip;
+            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
+          }
         });
 
-        // elastic circle collisions on the rendered positions
+        // elastic circle collisions
         stars.forEach((a, i) => {
           stars.slice(i + 1).forEach((b) => {
-            const dx = b.px - a.px;
-            const dy = b.py - a.py;
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
             const dist = Math.hypot(dx, dy) || 1;
             const overlap = a.size + b.size - dist;
             if (overlap <= 0) return;
@@ -415,12 +395,8 @@ export default function LogoRain({
             const wb = 1 / mb / inv;
             a.x -= nx * overlap * wa;
             a.y -= ny * overlap * wa;
-            a.px -= nx * overlap * wa;
-            a.py -= ny * overlap * wa;
             b.x += nx * overlap * wb;
             b.y += ny * overlap * wb;
-            b.px += nx * overlap * wb;
-            b.py += ny * overlap * wb;
             // impulse along the normal, only while approaching
             const rel = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
             if (rel >= 0) return;
@@ -429,11 +405,26 @@ export default function LogoRain({
             a.vy -= (j / ma) * ny;
             b.vx += (j / mb) * nx;
             b.vy += (j / mb) * ny;
+            // tangential slip at the contact rubs both chips into rotation
+            const tx = -ny;
+            const ty = nx;
+            const slip =
+              (b.vx - a.vx) * tx +
+              (b.vy - a.vy) * ty -
+              (a.angVel * a.size + b.angVel * b.size);
+            const jt = (SPIN_GRIP * slip) / inv;
+            a.vx += (jt / ma) * tx;
+            a.vy += (jt / ma) * ty;
+            b.vx -= (jt / mb) * tx;
+            b.vy -= (jt / mb) * ty;
+            a.angVel += (2 * jt) / (ma * a.size);
+            b.angVel += (2 * jt) / (mb * b.size);
           });
         });
 
         stars.forEach((s) => {
-          s.group.position.set(s.px, -s.py, 0);
+          s.group.position.set(s.x, -s.y, 0);
+          s.group.rotation.z = -s.angle;
         });
         renderer.render(scene, camera);
       });
@@ -461,7 +452,7 @@ export default function LogoRain({
     <div className="h-full w-full text-foreground">
       <canvas
         ref={canvasRef}
-        aria-label="Falling logos visualization"
+        aria-label="Floating logos visualization"
         role="img"
         className="pointer-events-auto block h-full w-full"
       />
