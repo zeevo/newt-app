@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.22.12
+
+### Patch Changes
+
+- 5612982: Pivot the homepage logo animation from falling rain to a tank: chips drift in random directions, bounce off the viewport walls and each other, and clicking still sends them ricocheting.
+- 5612982: Homepage logo rain chips are now clickable: clicking one shoots it off in a random direction, it bounces off whatever it hits, and then drifts back into the rain.
+  - @newt-app/templates@0.22.12
+
 ## 0.22.11
 
 ### Patch Changes
