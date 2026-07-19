@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.13
+
+### Patch Changes
+
+- c035972: Remove the Vercel logo from the homepage tank animation.
+  - @newt-app/templates@0.22.13
+
 ## 0.22.12
 
 ### Patch Changes
