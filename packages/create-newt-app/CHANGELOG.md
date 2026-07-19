@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.14
+
+### Patch Changes
+
+- 594ecb5: Point documentation links at the new newt-app.com domain (was newt-app.vercel.app): the package README and the scaffolded homepage "Learn more" link.
+  - @newt-app/templates@0.22.14
+
 ## 0.22.13
 
 ### Patch Changes
