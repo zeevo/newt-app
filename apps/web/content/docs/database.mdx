@@ -1,0 +1,56 @@
+---
+title: "Database"
+description: "Typed SQL with Kysely on SQLite or Postgres"
+prev: "better-auth"
+next: "cli"
+---
+
+Pick the database at scaffold time: SQLite (default) or Postgres (`--database postgres`). Only the chosen driver is installed. One connection lives in `packages/db`, shared by Better Auth and your app, exposed as a typed [Kysely](https://kysely.dev) instance.
+
+- **SQLite**: a local `dev.db` at the repo root, zero configuration.
+- **Postgres**: set `DATABASE_URL` in `.env`.
+
+## Schema
+
+Tables are declared as a typed `DB` interface. The todo example ships one:
+
+```ts title="packages/db/src/schema.ts"
+import type { Generated } from "kysely";
+
+export interface TodoTable {
+  id: string;
+  userId: string;
+  title: string;
+  done: Generated<number>;
+  createdAt: Generated<string>;
+}
+
+export interface DB {
+  todo: TodoTable;
+}
+```
+
+## Queries
+
+Import `db` from any app or package:
+
+```ts
+import { db } from '@my-app/db';
+
+const todos = await db
+  .selectFrom('todo')
+  .select(['id', 'title', 'done'])
+  .where('userId', '=', userId)
+  .execute();
+```
+
+## Migrations
+
+```bash
+pnpm db:make add_widgets   # scaffold a timestamped up/down migration
+pnpm db:migrate            # apply pending migrations
+```
+
+Migrations use Kysely's schema builder, so one file runs on both SQLite and Postgres. `pnpm dev` runs `db:migrate` for you.
+
+Better Auth owns its own tables: run `pnpm db:generate` after changing auth config, and `pnpm db:migrate` applies both sets.

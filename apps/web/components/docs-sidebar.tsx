@@ -36,6 +36,10 @@ export const modules: Item[] = [
     title: 'Better Auth',
     url: '/docs/better-auth',
   },
+  {
+    title: 'Database',
+    url: '/docs/database',
+  },
 ];
 
 export const cli: Item[] = [
