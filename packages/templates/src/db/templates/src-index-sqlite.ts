@@ -1,0 +1,17 @@
+export default {
+  filename: "packages/db/src/index.ts",
+  template: `import BetterSqlite3 from "better-sqlite3";
+import { Kysely, SqliteDialect } from "kysely";
+import path from "node:path";
+import type { DB } from "./schema.js";
+
+export const driver = new BetterSqlite3(
+  path.resolve(process.cwd(), "../../dev.db"),
+);
+
+export const db = new Kysely<DB>({
+  dialect: new SqliteDialect({ database: driver }),
+});
+
+export type Database = Kysely<DB>;`,
+};

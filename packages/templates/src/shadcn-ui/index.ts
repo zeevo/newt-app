@@ -1,18 +1,17 @@
 import type { Module } from "../types";
+import componentsJson from "./templates/components-json";
 import packageJson from "./templates/package-json";
 import utils from "./templates/utils";
 import useMobile from "./templates/use-mobile";
 import globalsCss from "./templates/globals-css";
 import postcssConfig from "./templates/postcss-config";
 import tsconfig from "./templates/tsconfig";
-import eslintConfig from "./templates/eslint-config";
 import link from "./templates/link";
 import logo from "./templates/logo";
 import layout from "./templates/layout";
 import page from "./templates/page";
 import providers from "./templates/providers";
 import authForm from "./templates/auth-form";
-import todoList from "./templates/todo-list";
 import accordion from "./templates/accordion";
 import alertDialog from "./templates/alert-dialog";
 import alert from "./templates/alert";
@@ -78,14 +77,12 @@ const shadcnUi: Module = {
     globalsCss,
     postcssConfig,
     tsconfig,
-    eslintConfig,
     link,
     logo,
     layout,
     page,
     providers,
     authForm,
-    todoList,
     accordion,
     alertDialog,
     alert,
@@ -142,9 +139,11 @@ const shadcnUi: Module = {
     toggle,
     tooltip,
     modeToggle,
+    componentsJson,
   ],
   packages: [
     { package: "next-themes", module: "apps/web", version: "^0.4.6" },
+    { package: "sonner", module: "apps/web", version: "^2.0.7" },
   ],
 };
 

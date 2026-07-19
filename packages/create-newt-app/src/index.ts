@@ -8,6 +8,8 @@ import { templates } from "@newt-app/templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 
 type Testing = 'jest' | 'vitest';
+type Database = 'sqlite' | 'postgres';
+type Linter = 'eslint' | 'oxc';
 type Deployment = 'none' | 'standalone' | 'custom-server' | 'spa';
 
 type Options = {
@@ -17,8 +19,11 @@ type Options = {
   ci: boolean;
   shadcn: boolean;
   testing: Testing;
+  database: Database;
+  linter: Linter;
   deployment: Deployment;
   nestDiOnly: boolean;
+  bare: boolean;
 };
 
 class TaskBuilder {
@@ -58,10 +63,33 @@ export async function doInit(options: Options) {
           ],
           initialValue: "jest",
         }),
+      database: () =>
+        p.select<Database>({
+          message: "Database?",
+          options: [
+            { value: "sqlite", label: "SQLite" },
+            { value: "postgres", label: "Postgres" },
+          ],
+          initialValue: "sqlite",
+        }),
+      linter: () =>
+        p.select<Linter>({
+          message: "Linter and formatter?",
+          options: [
+            { value: "eslint", label: "ESLint + Prettier" },
+            { value: "oxc", label: "oxlint + oxfmt" },
+          ],
+          initialValue: "eslint",
+        }),
       nestDiOnly: () =>
         p.confirm({
           message: "Use NestJS for dependency injection only?",
           initialValue: false,
+        }),
+      todoExample: () =>
+        p.confirm({
+          message: "Include the todo example?",
+          initialValue: true,
         }),
       deployment: () =>
         p.select<Deployment>({
@@ -87,8 +115,11 @@ export async function doInit(options: Options) {
 
     const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
     const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
+    const database: Database = options.ci ? options.database : (group as { database?: Database }).database ?? 'sqlite';
+    const linter: Linter = options.ci ? options.linter : (group as { linter?: Linter }).linter ?? 'eslint';
     const deployment: Deployment = options.ci ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'none';
     const nestDiOnly = options.ci ? options.nestDiOnly : (group as { nestDiOnly?: boolean }).nestDiOnly ?? false;
+    const todoExample = options.ci ? !options.bare : (group as { todoExample?: boolean }).todoExample ?? true;
 
     const deploymentModule =
       deployment === 'standalone' ? templates.deploymentStandalone :
@@ -100,13 +131,21 @@ export async function doInit(options: Options) {
       templates.root,
       templates.web,
       templates.api,
+      database === 'postgres' ? templates.dbPostgres : templates.dbSqlite,
       templates.auth,
       useShadcn ? templates.shadcnUi : templates.ui,
-      templates.eslintConfig,
+      linter === 'oxc' ? templates.oxc : templates.eslintConfig,
       templates.typescriptConfig,
       testing === 'vitest' ? templates.testingVitest : templates.testingJest,
       ...(deploymentModule ? [deploymentModule] : []),
       ...(nestDiOnly ? [templates.nestDiOnly] : [templates.apiControllers]),
+      ...(todoExample
+        ? [
+            templates.todoExampleApi,
+            ...(nestDiOnly ? [templates.todoExampleDi] : [templates.todoExampleControllers]),
+            useShadcn ? templates.todoExampleShadcn : templates.todoExampleWeb,
+          ]
+        : []),
     ];
 
     const name = (group as { name?: string }).name ?? options.name ?? "";
@@ -117,7 +156,7 @@ export async function doInit(options: Options) {
       title: "Scaffolding project",
       task: async () => {
         try {
-          await scaffold(allModules, { name, testing });
+          await scaffold(allModules, { name, testing, database });
         } catch (e) {
           console.log(e);
         }
@@ -164,8 +203,6 @@ export async function doInit(options: Options) {
     console.log("Next steps:");
     console.log();
     console.log(chalk.blue(`  cd ${name}`));
-    console.log(chalk.blue(`  # fill in DATABASE_URL in .env`));
-    console.log(chalk.blue(`  pnpm db:migrate`));
     console.log(chalk.blue(`  pnpm dev`));
     console.log();
   } catch (error) {
@@ -188,8 +225,11 @@ program
   .option("--ci", "Non-interactive mode", false)
   .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
   .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
+  .option("--database <database>", "Database: sqlite or postgres (used with --ci)", "sqlite")
+  .option("--linter <linter>", "Linter: eslint or oxc (used with --ci)", "eslint")
   .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa (used with --ci)", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only (used with --ci)", false)
+  .option("--bare", "Skip the todo example (used with --ci)", false)
   .action(
     async (
       name: string,
@@ -199,8 +239,11 @@ program
         ci: boolean;
         shadcn: boolean;
         testing: string;
+        database: string;
+        linter: string;
         deployment: string;
         nestDiOnly: boolean;
+        bare: boolean;
       }
     ) => {
       intro(`Create a ${chalk.blue("newt")} app.`);
@@ -212,10 +255,13 @@ program
         ci: options.ci,
         shadcn: options.shadcn,
         testing: (options.testing === 'vitest' ? 'vitest' : 'jest') as Testing,
+        database: (options.database === 'postgres' ? 'postgres' : 'sqlite') as Database,
+        linter: (options.linter === 'oxc' ? 'oxc' : 'eslint') as Linter,
         deployment: (['standalone', 'custom-server', 'spa'].includes(options.deployment)
           ? options.deployment
           : 'none') as Deployment,
         nestDiOnly: options.nestDiOnly,
+        bare: options.bare,
       });
     }
   );

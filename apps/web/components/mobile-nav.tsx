@@ -10,6 +10,20 @@ import {
   PopoverContent,
 } from '@newt-app/ui/components/popover';
 import { cn } from '@newt-app/ui/lib/utils';
+import {
+  cli,
+  deployment,
+  gettingStarted,
+  modules,
+  type Item,
+} from '@/components/docs-sidebar';
+
+const docsSections: { title: string; items: Item[] }[] = [
+  { title: 'Getting Started', items: gettingStarted },
+  { title: 'Modules', items: modules },
+  { title: 'CLI', items: cli },
+  { title: 'Deployment', items: deployment },
+];
 
 export function MobileNav({
   items,
@@ -37,13 +51,13 @@ export function MobileNav({
             <div className="relative size-4">
               <span
                 className={cn(
-                  'bg-foreground absolute left-0 block h-0.5 w-4 transition-all duration-100',
+                  'absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100',
                   open ? 'top-[0.4rem] -rotate-45' : 'top-1',
                 )}
               />
               <span
                 className={cn(
-                  'bg-foreground absolute left-0 block h-0.5 w-4 transition-all duration-100',
+                  'absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100',
                   open ? 'top-[0.4rem] rotate-45' : 'top-2.5',
                 )}
               />
@@ -55,7 +69,7 @@ export function MobileNav({
           </span>
       </PopoverTrigger>
       <PopoverContent
-        className="bg-background/90 no-scrollbar h-(--available-height) w-(--available-width) overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100"
+        className="no-scrollbar h-(--available-height) w-(--available-width) overflow-y-auto rounded-none border-none bg-background/90 p-0 shadow-none backdrop-blur duration-100"
         align="start"
         side="bottom"
         alignOffset={-16}
@@ -63,7 +77,7 @@ export function MobileNav({
       >
         <div className="flex flex-col gap-12 overflow-auto px-6 py-6">
           <div className="flex flex-col gap-4">
-            <div className="text-muted-foreground text-sm font-medium">
+            <div className="text-sm font-medium text-muted-foreground">
               Menu
             </div>
             <div className="flex flex-col gap-3">
@@ -76,6 +90,26 @@ export function MobileNav({
                 </MobileLink>
               ))}
             </div>
+          </div>
+          <div className="flex flex-col gap-8">
+            {docsSections.map((section) => (
+              <div key={section.title} className="flex flex-col gap-4">
+                <div className="text-sm font-medium text-muted-foreground">
+                  {section.title}
+                </div>
+                <div className="flex flex-col gap-3">
+                  {section.items.map((item) => (
+                    <MobileLink
+                      key={item.url}
+                      href={item.url}
+                      onOpenChange={setOpen}
+                    >
+                      {item.title}
+                    </MobileLink>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </PopoverContent>

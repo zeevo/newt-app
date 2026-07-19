@@ -106,9 +106,9 @@ export function HeadingWithAnchor({
       <button
         onClick={copyToClipboard}
         className={cn(
-          'absolute -left-6 top-1/2 -translate-y-3/4 opacity-0 group-hover:opacity-100 transition-opacity duration-200',
-          'p-1 rounded-md hover:bg-accent hover:text-accent-foreground',
-          'focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+          'absolute top-1/2 -left-6 -translate-y-3/4 opacity-0 transition-opacity duration-200 group-hover:opacity-100',
+          'rounded-md p-1 hover:bg-accent hover:text-accent-foreground',
+          'focus:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none',
         )}
         aria-label={`Copy link to ${children}`}
         title={`Copy link to ${children}`}

@@ -3,6 +3,7 @@ export default {
   template: `import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Providers from "@/app/providers";
+import { Toaster } from "@<%= projectName %>/ui/sonner";
 import "@<%= projectName %>/ui/globals.css";
 
 const geistSans = localFont({
@@ -34,7 +35,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={\`\${geistSans.variable} \${geistMono.variable} h-full\`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

@@ -15,11 +15,11 @@ export function DocsPager({ prev, next }: DocsPagerProps) {
   if (!prev && !next) return null;
 
   return (
-    <div className="flex items-center justify-between mt-12 pt-6 border-t border-border">
+    <div className="mt-12 flex items-center justify-between border-t border-border pt-6">
       {prev ? (
         <Link
           href={`/docs/${prev.slug}`}
-          className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="group flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ChevronLeft className="size-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />
           <div className="flex flex-col">
@@ -33,7 +33,7 @@ export function DocsPager({ prev, next }: DocsPagerProps) {
       {next ? (
         <Link
           href={`/docs/${next.slug}`}
-          className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-right"
+          className="group flex items-center gap-2 text-right text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground/60">Next</span>

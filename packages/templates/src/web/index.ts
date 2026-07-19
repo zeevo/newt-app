@@ -2,7 +2,6 @@ import type { Module } from "../types";
 import packageJson from "./templates/package-json";
 import gitignore from "./templates/gitignore";
 import readme from "./templates/readme";
-import eslintConfig from "./templates/eslint-config";
 import nextConfig from "./templates/next-config";
 import postcssConfig from "./templates/postcss-config";
 import tsconfig from "./templates/tsconfig";
@@ -10,7 +9,6 @@ import layout from "./templates/layout";
 import page from "./templates/page";
 import providers from "./templates/providers";
 import authForm from "./templates/auth-form";
-import todoList from "./templates/todo-list";
 import authRoute from "./templates/auth-route";
 import authClient from "./templates/auth-client";
 import manifest from "./templates/manifest";
@@ -19,7 +17,6 @@ const web: Module = {
     packageJson,
     gitignore,
     readme,
-    eslintConfig,
     nextConfig,
     postcssConfig,
     tsconfig,
@@ -27,7 +24,6 @@ const web: Module = {
     page,
     providers,
     authForm,
-    todoList,
     authRoute,
     authClient,
     manifest,

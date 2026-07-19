@@ -58,13 +58,13 @@ export default async function DocsPostPage({ params }: DocsPostPageProps) {
   const nextPost = post.next ? getDocsPostBySlug(post.next) : null;
 
   return (
-    <div className="h-full flex">
+    <div className="flex h-full">
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-4xl mx-auto p-6 lg:p-8">
+        <div className="mx-auto max-w-4xl p-6 lg:p-8">
           <article>
             <div className="mb-6">
               <div className="mb-8">
-                <h1 className="text-4xl font-bold tracking-tight mb-4 flex items-center gap-3">
+                <h1 className="mb-4 flex items-center gap-3 text-4xl font-bold tracking-tight">
                   {(() => {
                     const logo = slugLogos[param.slug];
                     return logo ? (
@@ -79,7 +79,7 @@ export default async function DocsPostPage({ params }: DocsPostPageProps) {
                   })()}
                   {post.title}
                 </h1>
-                <p className="text-xl text-muted-foreground mb-4">
+                <p className="mb-4 text-xl text-muted-foreground">
                   {post.description}
                 </p>
               </div>

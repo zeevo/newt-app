@@ -131,6 +131,55 @@ export async function renderTemplatesToDisk(
   }, Promise.resolve());
 }
 
+const DEP_FIELDS = [
+  "dependencies",
+  "devDependencies",
+  "peerDependencies",
+  "optionalDependencies",
+];
+
+function sortByKey(
+  obj: Record<string, unknown>,
+): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.keys(obj)
+      .sort()
+      .map((key) => [key, obj[key]]),
+  );
+}
+
+// Alphabetize scripts and dependency fields in every scaffolded package.json.
+// Module injection appends deps/scripts to the end, so without this they land
+// out of order.
+export async function sortPackageJsons(destDir: string) {
+  const nested = await Promise.all(
+    ["apps", "packages"].map(async (base) => {
+      const dir = path.join(destDir, base);
+      try {
+        const entries = await promises.readdir(dir, { withFileTypes: true });
+        return entries
+          .filter((entry) => entry.isDirectory())
+          .map((entry) => path.join(dir, entry.name, "package.json"));
+      } catch {
+        return [];
+      }
+    }),
+  );
+  const files = [path.join(destDir, "package.json")].concat(...nested);
+
+  await Promise.all(
+    files.map(async (file) => {
+      if (!existsSync(file)) return;
+      const pkg = JSON.parse(await promises.readFile(file, "utf8"));
+      if (pkg.scripts) pkg.scripts = sortByKey(pkg.scripts);
+      DEP_FIELDS.forEach((field) => {
+        if (pkg[field]) pkg[field] = sortByKey(pkg[field]);
+      });
+      await promises.writeFile(file, JSON.stringify(pkg, null, 2) + "\n");
+    }),
+  );
+}
+
 export function validateProjectName(projectName: string): ValidationResult {
   if (!projectName) {
     return { valid: false, error: "Project name is required" };

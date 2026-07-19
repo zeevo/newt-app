@@ -29,31 +29,17 @@ pnpm dlx create-newt-app my-app --no-git
 
 ## --ci
 
-Non-interactive mode. Skips all prompts and uses flag values or defaults.
+Non-interactive mode. The flags below apply in `--ci` mode; otherwise the CLI prompts for each.
 
 ```bash
 pnpm dlx create-newt-app my-app --ci
 ```
 
-## --shadcn
-
-Include shadcn/ui. Only applies in `--ci` mode — in interactive mode the CLI prompts for this.
-
-```bash
-pnpm dlx create-newt-app my-app --ci --shadcn
-```
-
-## --testing
-
-Choose a testing framework. Accepts `jest` (default) or `vitest`. Only applies in `--ci` mode.
-
-```bash
-pnpm dlx create-newt-app my-app --ci --testing vitest
-```
-
-## What happens after scaffolding
-
-1. Templates are written to disk
-2. `pnpm install` runs (unless `--no-install`)
-3. `pnpm format` runs (unless `--no-install`)
-4. `git init` + initial commit (unless `--no-git`)
+| Flag | Effect |
+| --- | --- |
+| `--shadcn` | Include shadcn/ui. |
+| `--testing <jest\|vitest>` | Test framework. Default `jest`. |
+| `--database <sqlite\|postgres>` | Database. Default `sqlite`. |
+| `--nest-di-only` | NestJS in DI-only mode. |
+| `--deployment <none\|standalone\|custom-server\|spa>` | Deployment config. Default `none`. |
+| `--bare` | Skip the todo example. |

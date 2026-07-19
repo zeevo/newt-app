@@ -1,5 +1,6 @@
 {
   "name": "newt-app",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "build": "turbo run build",

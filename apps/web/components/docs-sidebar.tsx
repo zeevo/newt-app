@@ -12,7 +12,7 @@ export type Item = {
   icon?: React.ReactNode;
 };
 
-const gettingStarted: Item[] = [
+export const gettingStarted: Item[] = [
   {
     title: 'Introduction',
     url: '/docs/introduction',
@@ -23,7 +23,7 @@ const gettingStarted: Item[] = [
   },
 ];
 
-const modules: Item[] = [
+export const modules: Item[] = [
   {
     title: 'Next.js',
     url: '/docs/nextjs',
@@ -42,14 +42,14 @@ const modules: Item[] = [
   },
 ];
 
-const cli: Item[] = [
+export const cli: Item[] = [
   {
     title: 'create-newt-app',
     url: '/docs/cli',
   },
 ];
 
-const deployment: Item[] = [
+export const deployment: Item[] = [
   {
     title: 'Standalone + Dockerfile',
     url: '/docs/deployment-standalone',

@@ -39,10 +39,10 @@ function Folder({
   return (
     <div data-slot="file-tree-folder" className={cn('relative pl-5', className)} {...props}>
       {/* Vertical line — full height for non-last, half for last */}
-      <div className={cn('absolute left-0 top-0 w-px bg-border', _isLast ? 'h-3.5' : 'h-full')} />
+      <div className={cn('absolute top-0 left-0 w-px bg-border', _isLast ? 'h-3.5' : 'h-full')} />
       {/* Horizontal connector */}
-      <div className="absolute left-0 top-3.5 h-px w-4 bg-border" />
-      <div className="flex h-7 items-center gap-2 font-mono text-sm">
+      <div className="absolute top-3.5 left-0 h-px w-4 bg-border" />
+      <div className="flex h-7 items-center gap-2 font-mono text-sm whitespace-nowrap">
         <FolderIcon className="size-3.5 shrink-0 text-muted-foreground" />
         <span className="text-foreground">{name}</span>
         {annotation && (
@@ -57,9 +57,9 @@ function Folder({
 function File({ name, annotation, _isLast = true, className, ...props }: FileTreeFileProps) {
   return (
     <div data-slot="file-tree-file" className={cn('relative pl-5', className)} {...props}>
-      <div className={cn('absolute left-0 top-0 w-px bg-border', _isLast ? 'h-3.5' : 'h-full')} />
-      <div className="absolute left-0 top-3.5 h-px w-4 bg-border" />
-      <div className="flex h-7 items-center gap-2 font-mono text-sm">
+      <div className={cn('absolute top-0 left-0 w-px bg-border', _isLast ? 'h-3.5' : 'h-full')} />
+      <div className="absolute top-3.5 left-0 h-px w-4 bg-border" />
+      <div className="flex h-7 items-center gap-2 font-mono text-sm whitespace-nowrap">
         <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />
         <span className="text-foreground">{name}</span>
         {annotation && (

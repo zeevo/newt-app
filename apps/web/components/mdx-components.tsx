@@ -5,10 +5,22 @@ import { InlineCode } from './inline-code';
 import Pre from './pre';
 import { FileTree } from './file-tree';
 import RequestFlow from './request-flow';
+import {
+  StandaloneDiagram,
+  SingleImageDiagram,
+  VercelDiagram,
+  CustomServerDiagram,
+  SpaDiagram,
+} from './deployment-diagram';
 
 export const mdxComponents = {
   FileTree,
   RequestFlow,
+  StandaloneDiagram,
+  SingleImageDiagram,
+  VercelDiagram,
+  CustomServerDiagram,
+  SpaDiagram,
   h1: ({ className, ...props }: React.ComponentProps<'h1'>) => (
     <h1
       className={cn(
@@ -152,7 +164,7 @@ export const mdxComponents = {
     return (
       <figcaption
         className={cn(
-          'text-muted-foreground border-b border-border flex items-center gap-2 px-4 py-2 font-mono text-xs [&_svg]:size-4 [&_svg]:opacity-70',
+          'flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted-foreground [&_svg]:size-4 [&_svg]:opacity-70',
           className,
         )}
         {...props}

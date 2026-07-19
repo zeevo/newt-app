@@ -1,13 +1,15 @@
+import { randomBytes } from "node:crypto";
 import { execa } from "execa";
 import type { Module, TemplateData } from "@newt-app/templates";
 import {
   renderTemplatesToDisk,
+  sortPackageJsons,
   updatePackageJson,
   updateScripts,
   validateProjectName,
 } from "./utils.js";
 
-export async function scaffold(modules: Module[], options: { name: string; testing: 'jest' | 'vitest' }) {
+export async function scaffold(modules: Module[], options: { name: string; testing: 'jest' | 'vitest'; database: 'sqlite' | 'postgres' }) {
   const validation = validateProjectName(options.name);
   if (!validation.valid) {
     console.error(`Error: ${validation.error}`);
@@ -17,6 +19,8 @@ export async function scaffold(modules: Module[], options: { name: string; testi
   const templateData: TemplateData = {
     projectName: options.name,
     testing: options.testing,
+    database: options.database,
+    authSecret: randomBytes(32).toString("base64url"),
   };
 
   await renderTemplatesToDisk(modules, options.name, templateData);
@@ -38,6 +42,8 @@ export async function scaffold(modules: Module[], options: { name: string; testi
   if (scripts.length > 0) {
     await updateScripts(options.name, scripts, templateData);
   }
+
+  await sortPackageJsons(options.name);
 }
 
 export async function pnpmInstall(cwd: string) {

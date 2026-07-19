@@ -1,5 +1,299 @@
 # create-newt-app
 
+## 0.22.13
+
+### Patch Changes
+
+- c035972: Remove the Vercel logo from the homepage tank animation.
+  - @newt-app/templates@0.22.13
+
+## 0.22.12
+
+### Patch Changes
+
+- 5612982: Pivot the homepage logo animation from falling rain to a tank: chips drift in random directions, bounce off the viewport walls and each other, and clicking still sends them ricocheting.
+- 5612982: Homepage logo rain chips are now clickable: clicking one shoots it off in a random direction, it bounces off whatever it hits, and then drifts back into the rain.
+  - @newt-app/templates@0.22.12
+
+## 0.22.11
+
+### Patch Changes
+
+- 3464ab6: Chips in the homepage logo rain now bounce off each other: elastic circle collisions with area-proportional mass, then each chip eases back into the rain drift.
+  - @newt-app/templates@0.22.11
+
+## 0.22.10
+
+### Patch Changes
+
+- 6f40802: Add a gentle per-chip lateral sway to the homepage logo rain, so chips drift through the fall instead of moving in straight lines.
+  - @newt-app/templates@0.22.10
+
+## 0.22.9
+
+### Patch Changes
+
+- 87e961f: Port the docs homepage logo rain from SVG + d3 to a three.js WebGL scene, keeping the same look and behavior: theme-aware silhouettes, background circles, size-based opacity, and size-based speed (small chips fast, large slow).
+  - @newt-app/templates@0.22.9
+
+## 0.22.8
+
+### Patch Changes
+
+- fcea539: Add an MIT license. The repo gets a root `LICENSE`, and `create-newt-app` declares `"license": "MIT"` and ships the license text in its published tarball.
+  - @newt-app/templates@0.22.8
+
+## 0.22.7
+
+### Patch Changes
+
+- dc54874: Switch the README npm badge to the `flat-square` style.
+  - @newt-app/templates@0.22.7
+
+## 0.22.6
+
+### Patch Changes
+
+- 2306c2e: Align the docs homepage tagline with the README's real-backend positioning, and audit the docs for the same style: drop the "everything you want and nothing you don't" cliché from the installation page, remove em dashes (homepage badge and deployment pages), and stop calling the output "Next.js projects" when it's a full-stack Next + Nest app.
+  - @newt-app/templates@0.22.6
+
+## 0.22.5
+
+### Patch Changes
+
+- 0bbda52: Alphabetize the `scripts` and dependency fields in every scaffolded `package.json`. Module injection appended deps and scripts to the end, leaving generated `package.json` files out of order; a small post-scaffold pass sorts them (no new dependency).
+  - @newt-app/templates@0.22.5
+
+## 0.22.4
+
+### Patch Changes
+
+- f8e7da6: Replace the default Turborepo starter README with a concise newt-app README (Getting Started, Documentation, What's inside). The root `README.md` is a symlink to `packages/create-newt-app/README.md`, so the repo and the npm package share one source, mirroring how Next.js is set up.
+  - @newt-app/templates@0.22.4
+
+## 0.22.3
+
+### Patch Changes
+
+- 2cf08f5: Swap the Tailwind logo for the oxc logo in the docs homepage hero, and add the oxc logo to the background logo rain (alongside Tailwind).
+  - @newt-app/templates@0.22.3
+
+## 0.22.2
+
+### Patch Changes
+
+- f93d2a1: Point the scaffolded homepage "Learn more" links at newt-app's own resources: add a Documentation link (https://newt-app.vercel.app) and fix the placeholder GitHub link to the newt-app repo.
+  - @newt-app/templates@0.22.2
+
+## 0.22.1
+
+### Patch Changes
+
+- d245097: Generate a strong random `BETTER_AUTH_SECRET` (32 bytes, base64url) per scaffold instead of the `your-secret-here` placeholder, so a fresh app no longer logs Better Auth's "secret should be at least 32 characters" / low-entropy warnings.
+- 2c0b4ea: Add the `db` package to the docs homepage project-structure file tree.
+  - @newt-app/templates@0.22.1
+
+## 0.22.0
+
+### Minor Changes
+
+- f72dab3: Add a `--linter` option to choose between ESLint + Prettier (default) and oxc (oxlint + oxfmt). Linting is now owned by the selected linter module — deps, scripts, and config files are injected rather than baked into each app — so picking `oxc` ships no ESLint or Prettier at all, and vice versa.
+
+### Patch Changes
+
+- @newt-app/templates@0.22.0
+
+## 0.21.5
+
+### Patch Changes
+
+- c46b6f7: Fix the standalone Docker deployment to run app migrations. The `migrate` container ran only `auth migrate`, so Kysely app migrations (e.g. the `todo` table) were never applied in production. It now reuses the `build` image and runs `pnpm db:migrate` (Better Auth + Kysely), and the standalone `turbo.json` migrate task is no longer marked interactive.
+  - @newt-app/templates@0.21.5
+
+## 0.21.4
+
+### Patch Changes
+
+- 5adf2af: Audit the docs against the current CLI and persistence layer. The Database section and generated README now describe the scaffold-time database choice (SQLite or Postgres, one driver installed) and the shared Kysely connection; the CLI reference documents `--database`, `--nest-di-only`, and `--deployment`; the intro/installation stack and file tree include Kysely and `packages/db`; and the Vercel deployment pages note that Postgres is required (SQLite doesn't persist on serverless).
+  - @newt-app/templates@0.21.4
+
+## 0.21.3
+
+### Patch Changes
+
+- 44b2daa: Add the Kysely logo to the docs homepage background animation, alongside the other stack logos now that Kysely ships as the persistence layer.
+  - @newt-app/templates@0.21.3
+
+## 0.21.2
+
+### Patch Changes
+
+- b7730b7: Make the todos example user-scoped. The `todo` table gains a `userId` column, every query is scoped to `session.user.id`, and the controller reads the session with `@Session()` (using a type-only `import type { UserSession }` to sidestep the `isolatedModules` + decorator-metadata TS1272 error). In `--nest-di-only` mode the route handlers resolve the session with `auth.api.getSession` and return 401 when there is none. The default example now demonstrates authenticated, per-user data instead of a global list.
+  - @newt-app/templates@0.21.2
+
+## 0.21.1
+
+### Patch Changes
+
+- 528e2ee: Drop the redundant `pnpm db:migrate` step from the CLI "Next steps" outro. `pnpm dev` already runs migrations (via turbo's `^migrate`), and the SQLite default needs no database setup, so the happy path is just `cd <app>` then `pnpm dev`.
+  - @newt-app/templates@0.21.1
+
+## 0.21.0
+
+### Minor Changes
+
+- 6a6ce8a: Add a Kysely-based persistence layer. A new `packages/db` owns one database connection — SQLite or Postgres, chosen at scaffold time via the interactive prompt or the `--database` flag — that Better Auth and the app share, so only the selected driver is installed (no mixed `pg` + native `better-sqlite3` deps). Migrations are written with Kysely; scaffold and apply them with `pnpm db:make <name>` and `pnpm db:migrate`. The todo example now persists through this layer instead of in-memory state.
+
+### Patch Changes
+
+- @newt-app/templates@0.21.0
+
+## 0.20.2
+
+### Patch Changes
+
+- f694604: Fix the Geist font falling back to the browser default in scaffolded apps. The shadcn `--font-sans` token was self-referential (`var(--font-sans)`) and `font-sans` was applied to `html` while the font variable lives on `body`; the non-shadcn `globals.css` never set `font-family` at all.
+  - @newt-app/templates@0.20.2
+
+## 0.20.1
+
+### Patch Changes
+
+- c6270aa: wire up sonner in the shadcn scaffold: mount the Toaster and re-export toast so toasts work out of the box
+  - @newt-app/templates@0.20.1
+
+## 0.20.0
+
+### Minor Changes
+
+- b160cdc: zero-config first run: auth defaults to a local sqlite database when DATABASE_URL is unset
+
+### Patch Changes
+
+- @newt-app/templates@0.20.0
+
+## 0.19.3
+
+### Patch Changes
+
+- ca55955: remove em dashes from documentation and the scaffolded README
+  - @newt-app/templates@0.19.3
+
+## 0.19.2
+
+### Patch Changes
+
+- e3ad1b8: remove the Considerations section from the Vercel deployment docs
+  - @newt-app/templates@0.19.2
+
+## 0.19.1
+
+### Patch Changes
+
+- 135703e: redesign the deployment docs diagrams with a consistent, crisp SVG system
+  - @newt-app/templates@0.19.1
+
+## 0.19.0
+
+### Minor Changes
+
+- 60ccbe6: run db migrations automatically before dev via a turbo dependsOn, so `pnpm dev` is a single command to get going
+
+### Patch Changes
+
+- @newt-app/templates@0.19.0
+
+## 0.18.9
+
+### Patch Changes
+
+- 0501de8: add tailwind eslint rules to the docs site and fix a conflicting border class
+- 0501de8: rework the homepage hero: release pill, descriptive headline with inline logo chips
+  - @newt-app/templates@0.18.9
+
+## 0.18.8
+
+### Patch Changes
+
+- 23a89d0: add vitest/globals to the scaffolded api tsconfig so typed lint resolves test globals
+  - @newt-app/templates@0.18.8
+
+## 0.18.7
+
+### Patch Changes
+
+- 129a8eb: fix scaffolded app.controller.spec: provide AppService in the testing module
+  - @newt-app/templates@0.18.7
+
+## 0.18.6
+
+### Patch Changes
+
+- 0ee50e7: fix --bare with --nest-di-only: api index no longer exports the removed todos service
+  - @newt-app/templates@0.18.6
+
+## 0.18.5
+
+### Patch Changes
+
+- 23e6b04: drop the kysely logo from the homepage animation
+  - @newt-app/templates@0.18.5
+
+## 0.18.4
+
+### Patch Changes
+
+- 87d8d6c: remove unused video showcase component and demo stub from the docs site
+  - @newt-app/templates@0.18.4
+
+## 0.18.3
+
+### Patch Changes
+
+- 714353c: fix homepage layout on mobile: auto-sizing overlap card, shorter hero, no-wrap file tree rows
+  - @newt-app/templates@0.18.3
+
+## 0.18.2
+
+### Patch Changes
+
+- 4f34c3e: add docs sections to the mobile nav menu
+  - @newt-app/templates@0.18.2
+
+## 0.18.1
+
+### Patch Changes
+
+- d36be35: fix react/prop-types lint warnings in the scaffolded shadcn calendar
+  - @newt-app/templates@0.18.1
+
+## 0.18.0
+
+### Minor Changes
+
+- 72472a3: scaffold a preconfigured components.json so shadcn add works from day one
+
+### Patch Changes
+
+- @newt-app/templates@0.18.0
+
+## 0.17.1
+
+### Patch Changes
+
+- 1f9f576: replace hardcoded grays with theme tokens in the base web templates
+  - @newt-app/templates@0.17.1
+
+## 0.17.0
+
+### Minor Changes
+
+- 896e211: add --bare option and interactive prompt to scaffold without the todo example
+
+### Patch Changes
+
+- @newt-app/templates@0.17.0
+
 ## 0.16.0
 
 ### Minor Changes

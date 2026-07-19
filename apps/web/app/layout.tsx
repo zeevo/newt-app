@@ -29,10 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} text-foreground text-base overscroll-none font-sans antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]`}
+        className={`${geistSans.variable} ${geistMono.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="bg-background relative z-10 flex min-h-svh flex-col">
+          <div className="relative z-10 flex min-h-svh flex-col bg-background">
             <div className="dot-fade-bg absolute inset-0 z-[-1]"></div>
             <SiteHeader />
             <main className="flex flex-1 flex-col">{children}</main>

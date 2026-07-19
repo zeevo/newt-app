@@ -10,6 +10,7 @@ dotenv.config({ path: resolve(process.cwd(), '.env') });
 const nextConfig = {
   serverExternalPackages: [
     '@<%= projectName %>/api',
+    '@<%= projectName %>/db',
     '@nestjs/core',
     '@nestjs/common',
     '@nestjs/microservices',
