@@ -34,6 +34,13 @@ const CRUISE_RELAX = 0.4;
 // back to cruise while it keeps ricocheting
 const KICK_MIN = 600;
 const KICK_MAX = 1200;
+const KICK_SPIN = 4;
+
+// spin: tangential slip at contacts (chip-chip and chip-wall) rubs chips into
+// rotation, with disk inertia (I = m r^2 / 2), slow decay, and a sanity cap
+const SPIN_GRIP = 0.4;
+const SPIN_DAMP = 0.15;
+const MAX_SPIN = 2.5;
 
 const TEX_SIZE = 256;
 
@@ -42,6 +49,8 @@ type Star = {
   y: number;
   vx: number;
   vy: number;
+  angle: number;
+  angVel: number;
   size: number;
   speed: number;
   group: THREE.Group;
@@ -232,6 +241,8 @@ export default function LogoRain({
         y,
         vx: Math.cos(heading) * speed,
         vy: Math.sin(heading) * speed,
+        angle: 0,
+        angVel: (Math.random() * 2 - 1) * 0.3,
         size,
         speed,
         group,
@@ -306,6 +317,7 @@ export default function LogoRain({
       const kick = KICK_MIN + Math.random() * (KICK_MAX - KICK_MIN);
       s.vx = Math.cos(angle) * kick;
       s.vy = Math.sin(angle) * kick;
+      s.angVel += (Math.random() * 2 - 1) * KICK_SPIN;
     };
 
     if (reduceMotion) {
@@ -326,7 +338,13 @@ export default function LogoRain({
           s.vy *= scale;
           s.x += s.vx * dt;
           s.y += s.vy * dt;
-          // bounce off the visible walls (camera bounds track the container)
+          s.angVel = Math.max(
+            -MAX_SPIN,
+            Math.min(MAX_SPIN, s.angVel * Math.exp(-SPIN_DAMP * dt)),
+          );
+          s.angle += s.angVel * dt;
+          // bounce off the visible walls (camera bounds track the container);
+          // sliding along a wall rubs the chip into rotation
           const minX = camera.left + s.size;
           const maxX = camera.right - s.size;
           const minY = -camera.top + s.size;
@@ -334,16 +352,28 @@ export default function LogoRain({
           if (s.x < minX) {
             s.x = minX;
             s.vx = Math.abs(s.vx);
+            const slip = s.vy - s.angVel * s.size;
+            s.vy -= SPIN_GRIP * slip;
+            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
           } else if (s.x > maxX) {
             s.x = maxX;
             s.vx = -Math.abs(s.vx);
+            const slip = -s.vy - s.angVel * s.size;
+            s.vy += SPIN_GRIP * slip;
+            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
           }
           if (s.y < minY) {
             s.y = minY;
             s.vy = Math.abs(s.vy);
+            const slip = -s.vx - s.angVel * s.size;
+            s.vx += SPIN_GRIP * slip;
+            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
           } else if (s.y > maxY) {
             s.y = maxY;
             s.vy = -Math.abs(s.vy);
+            const slip = s.vx - s.angVel * s.size;
+            s.vx -= SPIN_GRIP * slip;
+            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
           }
         });
 
@@ -375,11 +405,26 @@ export default function LogoRain({
             a.vy -= (j / ma) * ny;
             b.vx += (j / mb) * nx;
             b.vy += (j / mb) * ny;
+            // tangential slip at the contact rubs both chips into rotation
+            const tx = -ny;
+            const ty = nx;
+            const slip =
+              (b.vx - a.vx) * tx +
+              (b.vy - a.vy) * ty -
+              (a.angVel * a.size + b.angVel * b.size);
+            const jt = (SPIN_GRIP * slip) / inv;
+            a.vx += (jt / ma) * tx;
+            a.vy += (jt / ma) * ty;
+            b.vx -= (jt / mb) * tx;
+            b.vy -= (jt / mb) * ty;
+            a.angVel += (2 * jt) / (ma * a.size);
+            b.angVel += (2 * jt) / (mb * b.size);
           });
         });
 
         stars.forEach((s) => {
           s.group.position.set(s.x, -s.y, 0);
+          s.group.rotation.z = -s.angle;
         });
         renderer.render(scene, camera);
       });
