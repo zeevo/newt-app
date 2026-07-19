@@ -29,12 +29,12 @@ export default function Home() {
         >
           <LogoRain />
         </div>
-        <div className="relative z-10 flex flex-col items-center gap-5 px-4">
+        <div className="pointer-events-none relative z-10 flex flex-col items-center gap-5 px-4">
           <a
             href="https://www.npmjs.com/package/create-newt-app"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
+            className="pointer-events-auto flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
           >
             <span className="size-2 rounded-full bg-green-500" />
             Latest update · v{cliVersion} released
@@ -104,7 +104,7 @@ export default function Home() {
             with auth and a database, curated so you&apos;re not deleting half
             of it on day one.
           </p>
-          <div className="flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
+          <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
             <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
               $
             </span>
