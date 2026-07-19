@@ -16,7 +16,7 @@ Next.js and NestJS in one production-grade monorepo: a real backend, auth, and a
 
 ## Documentation
 
-Visit [newt-app.vercel.app](https://newt-app.vercel.app) to view the full documentation.
+Visit [newt-app.com](https://newt-app.com) to view the full documentation.
 
 ## What's inside
 
