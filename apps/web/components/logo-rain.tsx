@@ -5,7 +5,6 @@ import * as THREE from 'three';
 const logos = [
   '/logos/better-auth.svg',
   '/logos/nextjs.svg',
-  '/vercel.svg',
   '/logos/tailwind.svg',
   '/logos/shadcn.svg',
   '/logos/nestjs.svg',
