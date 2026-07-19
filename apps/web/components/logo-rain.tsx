@@ -16,8 +16,8 @@ const logos = [
 const VIEW_W = 1440;
 const VIEW_H = 775;
 
-const MIN_SIZE = 78;
-const MAX_SIZE = 140;
+const MIN_SIZE = 60;
+const MAX_SIZE = 110;
 
 // cruise-speed multipliers by size: small chips move fast, the largest slowest
 const SPEED_SMALL = 1.4;
