@@ -75,10 +75,20 @@ All components read their colors, radii, and typography from CSS variables defin
 
 ## Dark mode
 
-The web app is scaffolded with [next-themes](https://github.com/pacocoursey/next-themes) wired into `app/providers.tsx`, and the ui package includes a ready-made `ModeToggle` component:
+The web app is scaffolded with [next-themes](https://github.com/pacocoursey/next-themes) wired into `app/providers.tsx` — dark by default — and the ui package includes a ready-made `ModeToggle` component:
 
 ```tsx
 import { ModeToggle } from '@my-app/ui/components/mode-toggle';
+```
+
+## Toasts
+
+Sonner works out of the box: the `Toaster` is mounted in the root layout, so any client component can fire one.
+
+```tsx
+import { toast } from 'sonner';
+
+toast.success('Saved');
 ```
 
 ## Adding more components
