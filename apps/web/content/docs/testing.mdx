@@ -1,0 +1,23 @@
+---
+title: "Testing"
+description: "Jest or Vitest for the NestJS API"
+prev: "better-auth"
+next: "cli"
+---
+
+Pick the test framework at scaffold time: Jest (default) or Vitest (`--testing vitest`). Tests live in the NestJS api, colocated as `*.spec.ts` next to the code, with an e2e suite under `test/`.
+
+```bash
+pnpm test          # run from the root via turbo, or inside apps/api:
+pnpm test:watch
+pnpm test:cov      # coverage
+pnpm test:e2e      # supertest against the running Nest app
+```
+
+The todo example ships a service spec, so a fresh scaffold has passing tests out of the box.
+
+```bash
+pnpm dlx create-newt-app my-app --ci --testing vitest
+```
+
+Vitest runs with globals enabled, so specs written for Jest (`describe`/`it`/`expect`) work unchanged.
