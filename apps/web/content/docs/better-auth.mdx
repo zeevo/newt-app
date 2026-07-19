@@ -2,7 +2,7 @@
 title: "Better Auth"
 description: "Delightful authentication and authorization"
 prev: "nestjs"
-next: "database"
+next: "kysely"
 ---
 
 `newt-app` uses [Better Auth](https://www.better-auth.com) for authentication, configured across both the Next.js frontend and NestJS backend.
@@ -182,4 +182,4 @@ export class UserController {
 
 ## Database
 
-Better Auth shares one [Kysely](https://kysely.dev) connection with your app and owns its own tables. Run `pnpm db:generate` after changing auth config; `pnpm db:migrate` applies both auth and app migrations. See [Database](/docs/database).
+Better Auth shares one [Kysely](https://kysely.dev) connection with your app and owns its own tables. Run `pnpm db:generate` after changing auth config; `pnpm db:migrate` applies both auth and app migrations. See [Kysely](/docs/kysely).

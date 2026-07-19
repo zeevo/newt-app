@@ -12,6 +12,18 @@ export type Item = {
   icon?: React.ReactNode;
 };
 
+function KyselyIcon() {
+  return (
+    <svg viewBox="0 0 132 132" fill="currentColor" aria-hidden="true">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M18 2h96a16 16 0 0 1 16 16v96a16 16 0 0 1-16 16H18a16 16 0 0 1-16-16V18A16 16 0 0 1 18 2ZM41.2983 109V23.9091H46.4918V73.31H47.0735L91.9457 23.9091H98.8427L61.9062 64.1694L98.5103 109H92.0288L58.5824 67.9087L46.4918 81.2873V109H41.2983Z"
+      />
+    </svg>
+  );
+}
+
 export const gettingStarted: Item[] = [
   {
     title: 'Introduction',
@@ -37,8 +49,8 @@ export const modules: Item[] = [
     url: '/docs/better-auth',
   },
   {
-    title: 'Database',
-    url: '/docs/database',
+    title: 'Kysely',
+    url: '/docs/kysely',
   },
 ];
 
@@ -78,6 +90,7 @@ const urlToIconMap: Record<string, ReactElement> = {
   '/docs/nextjs': <Triangle />,
   '/docs/nestjs': <Server />,
   '/docs/better-auth': <Shield />,
+  '/docs/kysely': <KyselyIcon />,
   '/docs/cli': <Terminal />,
 };
 
