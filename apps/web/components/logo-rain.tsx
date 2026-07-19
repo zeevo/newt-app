@@ -41,6 +41,11 @@ const SWAY_FREQ = 0.35;
 const RESTITUTION = 0.85;
 const DRIFT_RELAX = 0.5;
 
+// clicking a chip shoots it off in a random direction; the kick decays via
+// DRIFT_RELAX so it rejoins the rain
+const KICK_MIN = 600;
+const KICK_MAX = 1200;
+
 const TEX_SIZE = 256;
 
 type Star = {
@@ -336,9 +341,33 @@ export default function LogoRain({
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // map a pointer event through the camera bounds into view (svg) coords and
+    // find the chip under it, if any
+    const chipAt = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const u = (e.clientX - rect.left) / (rect.width || 1);
+      const v = (e.clientY - rect.top) / (rect.height || 1);
+      const x = camera.left + u * (camera.right - camera.left);
+      const y = -(camera.top + v * (camera.bottom - camera.top));
+      return stars.find((s) => Math.hypot(x - s.px, y - s.py) < s.size);
+    };
+    const onPointerMove = (e: PointerEvent) => {
+      canvas.style.cursor = chipAt(e) ? 'pointer' : '';
+    };
+    const onClick = (e: PointerEvent) => {
+      const s = chipAt(e);
+      if (!s) return;
+      const angle = Math.random() * Math.PI * 2;
+      const kick = KICK_MIN + Math.random() * (KICK_MAX - KICK_MIN);
+      s.vx = Math.cos(angle) * kick;
+      s.vy = Math.sin(angle) * kick;
+    };
+
     if (reduceMotion) {
       renderer.render(scene, camera);
     } else {
+      canvas.addEventListener('pointermove', onPointerMove);
+      canvas.addEventListener('click', onClick as EventListener);
       let last = performance.now();
       renderer.setAnimationLoop((now) => {
         const dt = (now - last) / 1000;
@@ -350,7 +379,13 @@ export default function LogoRain({
           s.vy += (DIR_Y * s.speed - s.vy) * relax;
           s.x += s.vx * dt;
           s.y += s.vy * dt;
-          if (s.x < -MARGIN || s.y > VIEW_H + MARGIN) {
+          // normal exit at the bottom left, or kicked far out any other edge
+          if (
+            s.x < -MARGIN ||
+            s.y > VIEW_H + MARGIN ||
+            s.x > VIEW_W + MARGIN * 4 ||
+            s.y < -MARGIN * 4
+          ) {
             respawn(s, stars);
             s.vx = DIR_X * s.speed;
             s.vy = DIR_Y * s.speed;
@@ -407,6 +442,8 @@ export default function LogoRain({
     return () => {
       disposed = true;
       renderer.setAnimationLoop(null);
+      canvas.removeEventListener('pointermove', onPointerMove);
+      canvas.removeEventListener('click', onClick as EventListener);
       themeObserver.disconnect();
       resizeObserver.disconnect();
       circleGeometry.dispose();
@@ -426,7 +463,7 @@ export default function LogoRain({
         ref={canvasRef}
         aria-label="Falling logos visualization"
         role="img"
-        className="block h-full w-full"
+        className="pointer-events-auto block h-full w-full"
       />
     </div>
   );
