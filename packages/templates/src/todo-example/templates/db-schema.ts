@@ -15,7 +15,6 @@ export interface TodoTable {
   createdAt: Generated<string>;
 }
 
-// Better Auth owns these tables; the types let app queries join against them
 export interface UserTable {
   id: string;
   name: string;
