@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.18
+
+### Patch Changes
+
+- 45bcdf6: Release workflow now creates GitHub Releases on publish. Switches releasing to the official `changesets/action` (version-PR + publish, `createGithubReleases`), which also fixes the empty-commit push failure.
+  - @newt-app/templates@0.22.18
+
 ## 0.22.17
 
 ### Patch Changes
