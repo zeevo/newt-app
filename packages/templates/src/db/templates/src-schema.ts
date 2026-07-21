@@ -1,26 +1,22 @@
 export default {
   filename: "packages/db/src/schema.ts",
-  template: `<% if (database === 'postgres') { %>type AuthDate = Date;
-type AuthBool = boolean;
-<% } else { %>type AuthDate = string;
-type AuthBool = number;
-<% } %>
+  template: `<% const date = database === 'postgres' ? 'Date' : 'string'; const bool = database === 'postgres' ? 'boolean' : 'number'; -%>
 export interface UserTable {
   id: string;
   name: string;
   email: string;
-  emailVerified: AuthBool;
+  emailVerified: <%= bool %>;
   image: string | null;
-  createdAt: AuthDate;
-  updatedAt: AuthDate;
+  createdAt: <%= date %>;
+  updatedAt: <%= date %>;
 }
 
 export interface SessionTable {
   id: string;
-  expiresAt: AuthDate;
+  expiresAt: <%= date %>;
   token: string;
-  createdAt: AuthDate;
-  updatedAt: AuthDate;
+  createdAt: <%= date %>;
+  updatedAt: <%= date %>;
   ipAddress: string | null;
   userAgent: string | null;
   userId: string;
@@ -34,21 +30,21 @@ export interface AccountTable {
   accessToken: string | null;
   refreshToken: string | null;
   idToken: string | null;
-  accessTokenExpiresAt: AuthDate | null;
-  refreshTokenExpiresAt: AuthDate | null;
+  accessTokenExpiresAt: <%= date %> | null;
+  refreshTokenExpiresAt: <%= date %> | null;
   scope: string | null;
   password: string | null;
-  createdAt: AuthDate;
-  updatedAt: AuthDate;
+  createdAt: <%= date %>;
+  updatedAt: <%= date %>;
 }
 
 export interface VerificationTable {
   id: string;
   identifier: string;
   value: string;
-  expiresAt: AuthDate;
-  createdAt: AuthDate;
-  updatedAt: AuthDate;
+  expiresAt: <%= date %>;
+  createdAt: <%= date %>;
+  updatedAt: <%= date %>;
 }
 
 export interface DB {
