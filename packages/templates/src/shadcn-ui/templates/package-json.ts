@@ -15,7 +15,7 @@ export default {
   },
   "scripts": {},
   "dependencies": {
-    "@base-ui/react": "^1.5.0",
+    "@base-ui/react": "^1.6.0",
     "shadcn": "^4.7.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -30,8 +30,7 @@ export default {
     "recharts": "^3.8.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
-    "tw-animate-css": "^1.4.0",
-    "vaul": "^1.1.2"
+    "tw-animate-css": "^1.4.0"
   },
   "peerDependencies": {
     "next": ">=15.0.0",
