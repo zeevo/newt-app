@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.15
+
+### Patch Changes
+
+- 724094d: Declare Better Auth's core tables (`user`, `session`, `account`, `verification`) in the scaffolded Kysely `DB` interface, with per-dialect column types (ISO strings and 0/1 on SQLite, `Date` and `boolean` on Postgres), so app queries can join against them type-safely.
+  - @newt-app/templates@0.22.15
+
 ## 0.22.14
 
 ### Patch Changes
