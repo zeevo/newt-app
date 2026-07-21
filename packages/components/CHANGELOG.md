@@ -1,5 +1,11 @@
 # @newt-app/components
 
+## 0.22.16
+
+### Patch Changes
+
+- @newt-app/ui@0.22.16
+
 ## 0.22.15
 
 ### Patch Changes
