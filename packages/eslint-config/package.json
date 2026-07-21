@@ -1,6 +1,6 @@
 {
   "name": "@newt-app/eslint-config",
-  "version": "0.22.17",
+  "version": "0.22.18",
   "type": "module",
   "private": true,
   "exports": {
