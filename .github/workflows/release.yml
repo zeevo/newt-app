@@ -9,6 +9,7 @@ on:
 permissions:
   id-token: write
   contents: write
+  pull-requests: write
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -34,20 +35,40 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Version and publish
-        run: |
-          if ! ls .changeset/*.md 2>/dev/null | grep -qv README; then
-            echo "No pending changesets, skipping."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          pnpm changeset version
-          pnpm install --lockfile-only
-          git add -A
-          git commit -m "version packages"
-          pnpm release
-          git push --follow-tags
+      # Opens a "version packages" PR that accumulates changesets. When that PR
+      # is merged, the same step publishes to npm and pushes the git tags.
+      - name: Create Release PR or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm version-packages
+          publish: pnpm release
+          commit: "version packages"
+          title: "version packages"
+          # Handled by the step below so we get one release per version instead
+          # of one per lockstep package.
+          createGithubReleases: false
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Single GitHub Release per version, named after the CLI tag, with notes
+      # taken from the create-newt-app changelog section that was just written.
+      - name: Create GitHub Release
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(echo '${{ steps.changesets.outputs.publishedPackages }}' \
+            | jq -r '.[] | select(.name == "create-newt-app") | .version')
+          NOTES=$(awk -v ver="## $VERSION" '
+            $0 == ver { flag = 1; next }
+            /^## / && flag { exit }
+            flag { print }
+          ' packages/create-newt-app/CHANGELOG.md)
+          if [ -z "$NOTES" ]; then
+            gh release create "create-newt-app@$VERSION" --title "v$VERSION" --latest --generate-notes
+          else
+            gh release create "create-newt-app@$VERSION" --title "v$VERSION" --latest --notes "$NOTES"
+          fi
