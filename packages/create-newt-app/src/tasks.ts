@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { execa } from "execa";
-import type { Module, TemplateData } from "@newt-app/templates";
+import type { Module, TemplateData } from "./templates";
 import {
   renderTemplatesToDisk,
   sortPackageJsons,
