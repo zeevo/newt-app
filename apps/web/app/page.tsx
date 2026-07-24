@@ -1,8 +1,8 @@
 import { CodeShowcase } from '@/components/code-showcase';
 import { CopyButton } from '@/components/copy-button';
 import { FeatureSection } from '@/components/feature-section';
-import { FileTree } from '@/components/file-tree';
 import { InlineCode } from '@/components/inline-code';
+import { ScaffoldCast } from '@/components/scaffold-cast';
 import Image from 'next/image';
 import LogoRain from '@/components/logo-rain';
 import { SiteFooter } from '@/components/site-footer';
@@ -120,57 +120,7 @@ export default function Home() {
         <div className="relative mx-4 -mt-20 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg xl:mx-auto">
           <div className="flex flex-col justify-between p-4 sm:flex-row">
             <div className="flex-1">
-              <FileTree
-                name="my-app"
-                className="my-0 bg-transparent p-0 dark:bg-transparent"
-              >
-                <FileTree.Folder name="apps">
-                  <FileTree.Folder name="web" annotation="Next.js frontend">
-                    <FileTree.Folder name="app">
-                      <FileTree.Folder name="dashboard">
-                        <FileTree.File
-                          name="page.tsx"
-                          annotation="dashboard route"
-                        />
-                      </FileTree.Folder>
-                      <FileTree.File name="layout.tsx" />
-                      <FileTree.File name="page.tsx" annotation="home route" />
-                    </FileTree.Folder>
-                  </FileTree.Folder>
-                  <FileTree.Folder name="api" annotation="NestJS backend">
-                    <FileTree.Folder name="src">
-                      <FileTree.Folder name="hello">
-                        <FileTree.File name="hello.controller.ts" />
-                        <FileTree.File name="hello.module.ts" />
-                      </FileTree.Folder>
-                      <FileTree.File name="app.module.ts" />
-                      <FileTree.File name="main.ts" />
-                    </FileTree.Folder>
-                  </FileTree.Folder>
-                </FileTree.Folder>
-                <FileTree.Folder name="packages">
-                  <FileTree.Folder
-                    name="ui"
-                    annotation="Shared component library"
-                  />
-                  <FileTree.Folder
-                    name="auth"
-                    annotation="Better Auth configuration"
-                  />
-                  <FileTree.Folder
-                    name="db"
-                    annotation="Kysely client + migrations"
-                  />
-                  <FileTree.Folder
-                    name="eslint-config"
-                    annotation="Shared ESLint config"
-                  />
-                  <FileTree.Folder
-                    name="typescript-config"
-                    annotation="Shared TypeScript config"
-                  />
-                </FileTree.Folder>
-              </FileTree>
+              <ScaffoldCast />
             </div>
             <div className="flex flex-1 flex-col gap-8 p-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
