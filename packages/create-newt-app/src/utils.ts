@@ -2,7 +2,7 @@ import ejs from "ejs";
 import { existsSync, promises } from "fs";
 import path from "path";
 import type { Module, Package, Script, TemplateData } from "./types.js";
-import { getStaticFilePath } from "@newt-app/templates";
+import { getStaticFilePath } from "./templates";
 
 export interface ValidationResult {
   valid: boolean;

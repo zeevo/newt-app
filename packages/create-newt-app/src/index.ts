@@ -4,7 +4,7 @@ import chalk from "chalk";
 import pkg from "../package.json" with { type: "json" };
 import { Command } from "commander";
 import * as p from "@clack/prompts";
-import { templates } from "@newt-app/templates";
+import { templates } from "./templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 
 type Testing = 'jest' | 'vitest';
