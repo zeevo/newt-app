@@ -93,9 +93,6 @@ jobs:
         run: pnpm build
         working-directory: ${{ runner.temp }}/test-app
 
-      # Boot the built app and prove it actually serves. Only on the default
-      # combo: the API's /api/hello is @AllowAnonymous, so no database needed
-      # (default is SQLite). Web homepage doesn't server-fetch the API.
       - name: Smoke test (boot + HTTP probe)
         if: matrix.flags == '--ci'
         working-directory: ${{ runner.temp }}/test-app
