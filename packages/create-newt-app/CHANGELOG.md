@@ -1,5 +1,16 @@
 # create-newt-app
 
+## 0.22.19
+
+### Patch Changes
+
+- 1d0d5cd: CI now builds each scaffolded app (`pnpm build`) across the flag matrix and, on the default combo, boots it and probes both servers over HTTP — the API at `GET /api/hello` (anonymous, DB-free) and the web homepage — asserting they actually serve. Catches production-build and runtime-boot regressions that lint/test miss.
+- 7723de5: expand the CI scaffold matrix to cover the standalone deployment strategy and the shadcn + nest-di-only intersection, which previously went untested
+- 748c035: fix invalid `bg-muted/50/50` double opacity modifier on input backgrounds in the auth form and todo list templates
+- e6c6f0c: Fold the `@newt-app/templates` package into `create-newt-app` (now `src/templates/`) and bundle it at build time. The CLI no longer depends on a separately published templates package, so there is one published package and one release per version. No change to scaffolded output.
+- 681f565: surface scaffold failures instead of swallowing them — a template render or static-file copy error now aborts with a non-zero exit and the real error, rather than printing "Done!" over a half-written project
+- ccb783f: add vitest unit tests for the scaffolder's utils (package.json/script injection, ENOENT skipping, package.json sorting, project-name validation) and drop the unused `zod` dependency
+
 ## 0.22.18
 
 ### Patch Changes
