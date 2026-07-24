@@ -86,3 +86,46 @@ jobs:
       - name: Test scaffolded app
         run: pnpm test
         working-directory: ${{ runner.temp }}/test-app
+
+      - name: Build scaffolded app
+        run: pnpm build
+        working-directory: ${{ runner.temp }}/test-app
+
+      # Boot the built app and prove it actually serves. Only on the default
+      # combo: the API's /api/hello is @AllowAnonymous, so no database needed
+      # (default is SQLite). Web homepage doesn't server-fetch the API.
+      - name: Smoke test (boot + HTTP probe)
+        if: matrix.flags == '--ci'
+        working-directory: ${{ runner.temp }}/test-app
+        run: |
+          set -euo pipefail
+
+          pnpm --filter api start:prod > "$RUNNER_TEMP/api.log" 2>&1 &
+          api_pid=$!
+          pnpm --filter web start > "$RUNNER_TEMP/web.log" 2>&1 &
+          web_pid=$!
+          trap 'kill "$api_pid" "$web_pid" 2>/dev/null || true' EXIT
+
+          wait_for() {
+            local url=$1 name=$2 log=$3
+            for _ in $(seq 1 60); do
+              if curl -sf -o /dev/null "$url"; then
+                echo "$name is serving $url"
+                return 0
+              fi
+              sleep 1
+            done
+            echo "::error::$name did not serve $url within 60s"
+            cat "$log"
+            return 1
+          }
+
+          wait_for http://localhost:3001/api/hello api "$RUNNER_TEMP/api.log"
+          wait_for http://localhost:3000 web "$RUNNER_TEMP/web.log"
+
+          body=$(curl -sf http://localhost:3001/api/hello)
+          echo "api response: $body"
+          echo "$body" | grep -q "Hello from Nest" || {
+            echo "::error::unexpected /api/hello body: $body"
+            exit 1
+          }
