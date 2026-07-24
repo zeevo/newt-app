@@ -4,7 +4,7 @@
 
 ## How it works
 
-When someone runs `create-newt-app my-thing`, the CLI reads templates from `packages/templates/src/` and writes them out as a new project.
+When someone runs `create-newt-app my-thing`, the CLI reads templates from `packages/create-newt-app/src/templates/` and writes them out as a new project.
 
 ## Terminology
 
@@ -13,16 +13,16 @@ When someone runs `create-newt-app my-thing`, the CLI reads templates from `pack
 
 ## Key distinction
 
-- **`packages/templates/src/`** — source of truth for what gets scaffolded. Edit these when changing the default app.
+- **`packages/create-newt-app/src/templates/`** — source of truth for what gets scaffolded. Edit these when changing the default app.
 - **`apps/web`**, **`apps/api`**, **`packages/ui`**, etc. — the dev/demo app inside this monorepo. These are NOT template outputs.
 
 ## When making changes
 
 If asked to change the default app (styling, components, structure), edit the templates only:
 
-- Web app templates: `packages/templates/src/web/templates/`
-- UI package templates: `packages/templates/src/ui/templates/`
-- API templates: `packages/templates/src/api/templates/`
+- Web app templates: `packages/create-newt-app/src/templates/web/templates/`
+- UI package templates: `packages/create-newt-app/src/templates/ui/templates/`
+- API templates: `packages/create-newt-app/src/templates/api/templates/`
 
 Do not edit `apps/web` or other live packages unless explicitly asked.
 
@@ -32,7 +32,7 @@ After editing any template source file, rebuild with the fast filter command (no
 
 ```bash
 # 1. Rebuild only what's needed
-pnpm build --filter=@newt-app/templates --filter=create-newt-app
+pnpm build --filter=create-newt-app
 
 # 2. Scaffold a test app (--no-install skips pnpm install, faster for iteration)
 cd /tmp && node /path/to/newt-app/packages/create-newt-app/dist/index.js test-app --no-install --no-git
@@ -70,19 +70,19 @@ Check it's up: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`
 
 Three places to update when adding a template (e.g. a new UI component):
 
-1. **Create the template** in `packages/templates/src/ui/templates/my-component.ts` (or `web/templates/`)
-2. **Register it** in the module index (`packages/templates/src/ui/index.ts`):
+1. **Create the template** in `packages/create-newt-app/src/templates/ui/templates/my-component.ts` (or `web/templates/`)
+2. **Register it** in the module index (`packages/create-newt-app/src/templates/ui/index.ts`):
    - Add the import
    - Add to the `templates: []` array
-3. **Export it** (UI components only) — add an entry to `exports` in `packages/templates/src/ui/templates/package-json.ts`
+3. **Export it** (UI components only) — add an entry to `exports` in `packages/create-newt-app/src/templates/ui/templates/package-json.ts`
 
 ## Adding a static file (fonts, favicons, images)
 
-Static files (binaries, fonts, SVGs) live in `packages/templates/src/web/static/` and are mapped to output paths via `staticFiles` in `packages/templates/src/web/index.ts`.
+Static files (binaries, fonts, SVGs) live in `packages/create-newt-app/src/templates/web/static/` and are mapped to output paths via `staticFiles` in `packages/create-newt-app/src/templates/web/index.ts`.
 
 To add a new static file:
-1. Copy the file into `packages/templates/src/web/static/` (or a subdirectory)
-2. Add a `{ src: "web/static/...", filename: "apps/web/..." }` entry to `staticFiles` in `packages/templates/src/web/index.ts`
+1. Copy the file into `packages/create-newt-app/src/templates/web/static/` (or a subdirectory)
+2. Add a `{ src: "web/static/...", filename: "apps/web/..." }` entry to `staticFiles` in `packages/create-newt-app/src/templates/web/index.ts`
 
 Public files (served at `/`) go to `apps/web/public/`. Next.js special files (favicon, icons, manifest) go to `apps/web/app/`.
 
