@@ -51,6 +51,7 @@ jobs:
           - "--ci --shadcn --linter oxc"
           - "--ci --shadcn --nest-di-only"
           - "--ci --deployment standalone"
+          - "--ci --deployment spa"
     name: scaffold (${{ matrix.flags }})
     steps:
       - name: Checkout code
