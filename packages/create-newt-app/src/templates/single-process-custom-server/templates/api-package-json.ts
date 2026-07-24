@@ -23,6 +23,7 @@ export default {
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@<%= projectName %>/auth": "workspace:*",
+    "@<%= projectName %>/db": "workspace:*",
     "@thallesp/nestjs-better-auth": "^2.5.1",
     "dotenv": "^17.3.1",
     "reflect-metadata": "^0.2.2",
