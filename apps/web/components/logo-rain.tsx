@@ -309,7 +309,7 @@ export default function LogoRain({
     const onPointerMove = (e: PointerEvent) => {
       canvas.style.cursor = chipAt(e) ? 'pointer' : '';
     };
-    const onClick = (e: PointerEvent) => {
+    const onPointerDown = (e: PointerEvent) => {
       const s = chipAt(e);
       if (!s) return;
       const angle = Math.random() * Math.PI * 2;
@@ -323,7 +323,7 @@ export default function LogoRain({
       renderer.render(scene, camera);
     } else {
       canvas.addEventListener('pointermove', onPointerMove);
-      canvas.addEventListener('click', onClick as EventListener);
+      canvas.addEventListener('pointerdown', onPointerDown as EventListener);
       let last = performance.now();
       renderer.setAnimationLoop((now) => {
         const dt = (now - last) / 1000;
@@ -433,7 +433,7 @@ export default function LogoRain({
       disposed = true;
       renderer.setAnimationLoop(null);
       canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('click', onClick as EventListener);
+      canvas.removeEventListener('pointerdown', onPointerDown as EventListener);
       themeObserver.disconnect();
       resizeObserver.disconnect();
       circleGeometry.dispose();
