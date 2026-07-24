@@ -127,9 +127,21 @@ export async function doInit(options: Options) {
       deployment === 'spa' ? templates.deploymentSpa :
       null;
 
+    // In SPA mode NestJS serves Better Auth (AuthModule.forRoot); the Next.js
+    // auth handler is redundant and can't be statically exported, so drop it.
+    const webModule =
+      deployment === 'spa'
+        ? {
+            ...templates.web,
+            templates: templates.web.templates.filter(
+              (t) => t.filename !== "apps/web/app/api/auth/[...all]/route.ts",
+            ),
+          }
+        : templates.web;
+
     const allModules = [
       templates.root,
-      templates.web,
+      webModule,
       templates.api,
       database === 'postgres' ? templates.dbPostgres : templates.dbSqlite,
       templates.auth,
