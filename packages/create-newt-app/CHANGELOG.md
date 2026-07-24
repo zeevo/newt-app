@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.22.20
+
+### Patch Changes
+
+- 5672caf: add the missing `@projectName/db` workspace dependency to the custom-server and spa api templates — the todo service imports it, so scaffolds in those deployment modes failed to resolve the module (`TS2307`)
+- 01ad269: fix spa (static export) build: exclude the redundant Next.js Better Auth route handler, which cannot be statically exported. In spa mode NestJS serves auth via `AuthModule.forRoot`, so the Next.js handler was both unnecessary and broke `next build` with `output: export`
+
 ## 0.22.19
 
 ### Patch Changes
