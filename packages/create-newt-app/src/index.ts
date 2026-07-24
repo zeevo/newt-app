@@ -155,11 +155,7 @@ export async function doInit(options: Options) {
     taskBuilder.add({
       title: "Scaffolding project",
       task: async () => {
-        try {
-          await scaffold(allModules, { name, testing, database });
-        } catch (e) {
-          console.log(e);
-        }
+        await scaffold(allModules, { name, testing, database });
         return "Scaffolded.";
       },
     });

@@ -99,33 +99,25 @@ export async function renderTemplatesToDisk(
   await basePackages.reduce(async (prev, pkg) => {
     await prev;
     for (const template of pkg.templates) {
-      try {
-        const destPath = path.join(destDir, template.filename);
+      const destPath = path.join(destDir, template.filename);
+      const destDirPath = path.dirname(destPath);
+
+      await promises.mkdir(destDirPath, { recursive: true });
+
+      const output = await ejs.render(template.template, templateData);
+
+      await promises.writeFile(destPath, output, "utf8");
+    }
+    if (pkg.staticFiles) {
+      await pkg.staticFiles.reduce(async (prev, staticFile) => {
+        await prev;
+
+        const destPath = path.join(destDir, staticFile.filename);
         const destDirPath = path.dirname(destPath);
 
         await promises.mkdir(destDirPath, { recursive: true });
 
-        const output = await ejs.render(template.template, templateData);
-
-        await promises.writeFile(destPath, output, "utf8");
-      } catch (error) {
-        console.error(`Failed to create ${template.filename}: ${error}`);
-      }
-    }
-    if (pkg.staticFiles) {
-      pkg.staticFiles.reduce(async (prev, staticFile) => {
-        try {
-          await prev;
-
-          const destPath = path.join(destDir, staticFile.filename);
-          const destDirPath = path.dirname(destPath);
-
-          await promises.mkdir(destDirPath, { recursive: true });
-
-          await promises.copyFile(getStaticFilePath(staticFile.src), destPath);
-        } catch (e) {
-          console.log(e);
-        }
+        await promises.copyFile(getStaticFilePath(staticFile.src), destPath);
       }, Promise.resolve());
     }
   }, Promise.resolve());
