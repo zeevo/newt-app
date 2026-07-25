@@ -16,7 +16,7 @@ type Options = {
   name?: string;
   install: boolean;
   git: boolean;
-  ci: boolean;
+  nonInteractive: boolean;
   shadcn: boolean;
   testing: Testing;
   database: Database;
@@ -48,7 +48,7 @@ export async function doInit(options: Options) {
           },
         }),
     }),
-    ...(!options.ci && {
+    ...(!options.nonInteractive && {
       shadcn: () =>
         p.confirm({
           message: "Use shadcn/ui?",
@@ -113,13 +113,13 @@ export async function doInit(options: Options) {
       },
     });
 
-    const useShadcn = options.ci ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
-    const testing: Testing = options.ci ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
-    const database: Database = options.ci ? options.database : (group as { database?: Database }).database ?? 'sqlite';
-    const linter: Linter = options.ci ? options.linter : (group as { linter?: Linter }).linter ?? 'eslint';
-    const deployment: Deployment = options.ci ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'none';
-    const nestDiOnly = options.ci ? options.nestDiOnly : (group as { nestDiOnly?: boolean }).nestDiOnly ?? false;
-    const todoExample = options.ci ? !options.bare : (group as { todoExample?: boolean }).todoExample ?? true;
+    const useShadcn = options.nonInteractive ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
+    const testing: Testing = options.nonInteractive ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
+    const database: Database = options.nonInteractive ? options.database : (group as { database?: Database }).database ?? 'sqlite';
+    const linter: Linter = options.nonInteractive ? options.linter : (group as { linter?: Linter }).linter ?? 'eslint';
+    const deployment: Deployment = options.nonInteractive ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'none';
+    const nestDiOnly = options.nonInteractive ? options.nestDiOnly : (group as { nestDiOnly?: boolean }).nestDiOnly ?? false;
+    const todoExample = options.nonInteractive ? !options.bare : (group as { todoExample?: boolean }).todoExample ?? true;
 
     const deploymentModule =
       deployment === 'standalone' ? templates.deploymentStandalone :
@@ -230,21 +230,19 @@ program
   .argument("[name]")
   .option("-ni, --no-install", "Skip pnpm install", true)
   .option("-ng, --no-git", "Skip git initialization", true)
-  .option("--ci", "Non-interactive mode", false)
-  .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
-  .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
-  .option("--database <database>", "Database: sqlite or postgres (used with --ci)", "sqlite")
-  .option("--linter <linter>", "Linter: eslint or oxc (used with --ci)", "eslint")
-  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa (used with --ci)", "none")
-  .option("--nest-di-only", "Use NestJS for dependency injection only (used with --ci)", false)
-  .option("--bare", "Skip the todo example (used with --ci)", false)
+  .option("--shadcn", "Include shadcn/ui", false)
+  .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
+  .option("--database <database>", "Database: sqlite or postgres", "sqlite")
+  .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
+  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa", "none")
+  .option("--nest-di-only", "Use NestJS for dependency injection only", false)
+  .option("--bare", "Skip the todo example", false)
   .action(
     async (
       name: string,
       options: {
         install: boolean;
         git: boolean;
-        ci: boolean;
         shadcn: boolean;
         testing: string;
         database: string;
@@ -252,15 +250,30 @@ program
         deployment: string;
         nestDiOnly: boolean;
         bare: boolean;
-      }
+      },
+      command: Command
     ) => {
       intro(`Create a ${chalk.blue("newt")} app.`);
+
+      // Any explicitly passed config flag skips the prompts.
+      const configFlags = [
+        "shadcn",
+        "testing",
+        "database",
+        "linter",
+        "deployment",
+        "nestDiOnly",
+        "bare",
+      ];
+      const nonInteractive = configFlags.some(
+        (flag) => command.getOptionValueSource(flag) === "cli"
+      );
 
       await doInit({
         name,
         install: options.install,
         git: options.git,
-        ci: options.ci,
+        nonInteractive,
         shadcn: options.shadcn,
         testing: (options.testing === 'vitest' ? 'vitest' : 'jest') as Testing,
         database: (options.database === 'postgres' ? 'postgres' : 'sqlite') as Database,
