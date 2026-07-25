@@ -3,6 +3,11 @@
 import { useMemo, useState } from 'react';
 import { FileTree } from '@/components/file-tree';
 import { CopyButton } from '@/components/copy-button';
+import { Toggle } from '@newt-app/ui/components/toggle';
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from '@newt-app/ui/components/toggle-group';
 import { cn } from '@newt-app/ui/lib/utils';
 
 type Config = {
@@ -28,32 +33,6 @@ const DEFAULT: Config = {
 // newly-mounted conditional subtrees slide in when a flag is toggled on
 const grow = 'animate-in fade-in slide-in-from-left-1 duration-300';
 
-function Toggle({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn(
-        'rounded-full border px-3 py-1 font-mono text-xs transition-colors',
-        active
-          ? 'border-foreground bg-foreground text-background'
-          : 'border-border text-muted-foreground hover:text-foreground',
-      )}
-    >
-      {children}
-    </button>
-  );
-}
-
 function Segmented<T extends string>({
   label,
   value,
@@ -70,24 +49,20 @@ function Segmented<T extends string>({
       <span className="w-20 shrink-0 font-mono text-xs text-muted-foreground">
         {label}
       </span>
-      <div className="flex flex-wrap gap-1 rounded-full border p-0.5">
+      <ToggleGroup
+        variant="outline"
+        size="sm"
+        value={[value]}
+        onValueChange={(v) => {
+          if (v[0]) onChange(v[0] as T);
+        }}
+      >
         {options.map((opt) => (
-          <button
-            key={opt}
-            type="button"
-            onClick={() => onChange(opt)}
-            aria-pressed={value === opt}
-            className={cn(
-              'rounded-full px-2.5 py-0.5 font-mono text-xs transition-colors',
-              value === opt
-                ? 'bg-foreground text-background'
-                : 'text-muted-foreground hover:text-foreground',
-            )}
-          >
+          <ToggleGroupItem key={opt} value={opt} className="font-mono text-xs">
             {opt}
-          </button>
+          </ToggleGroupItem>
         ))}
-      </div>
+      </ToggleGroup>
     </div>
   );
 }
@@ -118,17 +93,32 @@ export function InteractiveFileTree({ className }: { className?: string }) {
     <div className={cn('flex flex-col gap-5', className)}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap gap-2">
-          <Toggle active={c.shadcn} onClick={() => set('shadcn', !c.shadcn)}>
-            {c.shadcn ? '✓ shadcn/ui' : 'shadcn/ui'}
+          <Toggle
+            variant="outline"
+            size="sm"
+            className="font-mono text-xs"
+            pressed={c.shadcn}
+            onPressedChange={(p) => set('shadcn', p)}
+          >
+            shadcn/ui
           </Toggle>
           <Toggle
-            active={c.nestDiOnly}
-            onClick={() => set('nestDiOnly', !c.nestDiOnly)}
+            variant="outline"
+            size="sm"
+            className="font-mono text-xs"
+            pressed={c.nestDiOnly}
+            onPressedChange={(p) => set('nestDiOnly', p)}
           >
-            {c.nestDiOnly ? '✓ Nest DI-only' : 'Nest DI-only'}
+            Nest DI-only
           </Toggle>
-          <Toggle active={c.bare} onClick={() => set('bare', !c.bare)}>
-            {c.bare ? '✓ bare' : 'bare'}
+          <Toggle
+            variant="outline"
+            size="sm"
+            className="font-mono text-xs"
+            pressed={c.bare}
+            onPressedChange={(p) => set('bare', p)}
+          >
+            bare
           </Toggle>
         </div>
         <Segmented
