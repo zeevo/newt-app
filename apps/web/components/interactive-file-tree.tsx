@@ -106,20 +106,6 @@ function buildCommand(c: Config): string {
     : 'npm create newt-app my-app';
 }
 
-function summary(c: Config): string {
-  const parts = [
-    'Next.js + NestJS',
-    c.database === 'postgres' ? 'Postgres' : 'SQLite',
-    c.testing === 'vitest' ? 'Vitest' : 'Jest',
-    c.shadcn ? 'shadcn/ui' : 'minimal UI',
-    c.linter === 'oxc' ? 'oxlint' : 'ESLint',
-  ];
-  if (c.nestDiOnly) parts.push('DI-only');
-  if (c.deployment !== 'none') parts.push(c.deployment);
-  if (c.bare) parts.push('no example');
-  return parts.join(' · ');
-}
-
 export function InteractiveFileTree({ className }: { className?: string }) {
   const [c, setC] = useState<Config>(DEFAULT);
   const set = <K extends keyof Config>(key: K, value: Config[K]) =>
@@ -164,7 +150,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
           onChange={(v) => set('linter', v)}
         />
         <Segmented
-          label="deploy"
+          label="extras"
           value={c.deployment}
           options={['none', 'standalone', 'custom-server', 'spa'] as const}
           onChange={(v) => set('deployment', v)}
@@ -252,15 +238,12 @@ export function InteractiveFileTree({ className }: { className?: string }) {
         </FileTree.Folder>
       </FileTree>
 
-      <div className="flex flex-col gap-2">
-        <p className="font-mono text-xs text-muted-foreground">{summary(c)}</p>
-        <div className="relative rounded-md border bg-code p-3 pr-10">
-          <code className="block font-mono text-xs break-all text-foreground">
-            <span className="text-muted-foreground select-none">$ </span>
-            {command}
-          </code>
-          <CopyButton value={command} className="top-2" />
-        </div>
+      <div className="relative rounded-md border bg-code p-3 pr-10">
+        <code className="block font-mono text-xs break-all text-foreground">
+          <span className="text-muted-foreground select-none">$ </span>
+          {command}
+        </code>
+        <CopyButton value={command} className="top-2" />
       </div>
     </div>
   );
