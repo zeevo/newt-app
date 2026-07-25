@@ -65,15 +65,15 @@ jobs:
       fail-fast: true
       matrix:
         flags:
-          - "--ci"
-          - "--ci --bare"
-          - "--ci --shadcn --testing vitest"
-          - "--ci --bare --nest-di-only"
-          - "--ci --database postgres"
-          - "--ci --shadcn --linter oxc"
-          - "--ci --shadcn --nest-di-only"
-          - "--ci --deployment standalone"
-          - "--ci --deployment spa"
+          - "--testing jest"
+          - "--bare"
+          - "--shadcn --testing vitest"
+          - "--bare --nest-di-only"
+          - "--database postgres"
+          - "--shadcn --linter oxc"
+          - "--shadcn --nest-di-only"
+          - "--deployment standalone"
+          - "--deployment spa"
     name: scaffold (${{ matrix.flags }})
     steps:
       - name: Checkout code
@@ -118,7 +118,7 @@ jobs:
         working-directory: ${{ runner.temp }}/test-app
 
       - name: Smoke test (boot + HTTP probe)
-        if: matrix.flags == '--ci'
+        if: matrix.flags == '--testing jest'
         working-directory: ${{ runner.temp }}/test-app
         run: |
           set -euo pipefail
