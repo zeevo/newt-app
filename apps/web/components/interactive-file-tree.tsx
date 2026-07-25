@@ -93,7 +93,7 @@ function Segmented<T extends string>({
 }
 
 function buildCommand(c: Config): string {
-  const flags = ['--ci'];
+  const flags: string[] = [];
   if (c.shadcn) flags.push('--shadcn');
   if (c.testing !== 'jest') flags.push('--testing vitest');
   if (c.database !== 'sqlite') flags.push('--database postgres');
@@ -101,7 +101,9 @@ function buildCommand(c: Config): string {
   if (c.deployment !== 'none') flags.push(`--deployment ${c.deployment}`);
   if (c.nestDiOnly) flags.push('--nest-di-only');
   if (c.bare) flags.push('--bare');
-  return `npm create newt-app my-app -- ${flags.join(' ')}`;
+  return flags.length
+    ? `npm create newt-app my-app -- ${flags.join(' ')}`
+    : 'npm create newt-app my-app';
 }
 
 function summary(c: Config): string {
