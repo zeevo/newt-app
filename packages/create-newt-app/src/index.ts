@@ -230,14 +230,14 @@ program
   .argument("[name]")
   .option("-ni, --no-install", "Skip pnpm install", true)
   .option("-ng, --no-git", "Skip git initialization", true)
-  .option("--ci", "Non-interactive mode", false)
-  .option("--shadcn", "Include shadcn/ui (used with --ci)", false)
-  .option("--testing <framework>", "Testing framework: vitest or jest (used with --ci)", "jest")
-  .option("--database <database>", "Database: sqlite or postgres (used with --ci)", "sqlite")
-  .option("--linter <linter>", "Linter: eslint or oxc (used with --ci)", "eslint")
-  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa (used with --ci)", "none")
-  .option("--nest-di-only", "Use NestJS for dependency injection only (used with --ci)", false)
-  .option("--bare", "Skip the todo example (used with --ci)", false)
+  .option("--ci", "Non-interactive mode: use defaults, skip all prompts", false)
+  .option("--shadcn", "Include shadcn/ui", false)
+  .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
+  .option("--database <database>", "Database: sqlite or postgres", "sqlite")
+  .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
+  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa", "none")
+  .option("--nest-di-only", "Use NestJS for dependency injection only", false)
+  .option("--bare", "Skip the todo example", false)
   .action(
     async (
       name: string,
@@ -252,15 +252,32 @@ program
         deployment: string;
         nestDiOnly: boolean;
         bare: boolean;
-      }
+      },
+      command: Command
     ) => {
       intro(`Create a ${chalk.blue("newt")} app.`);
+
+      // Passing any config flag implies non-interactive: use the flags (and
+      // defaults for the rest) instead of prompting. --ci stays as an explicit
+      // opt-in for when you want defaults without passing any flag.
+      const configFlags = [
+        "shadcn",
+        "testing",
+        "database",
+        "linter",
+        "deployment",
+        "nestDiOnly",
+        "bare",
+      ];
+      const anyConfigFlag = configFlags.some(
+        (flag) => command.getOptionValueSource(flag) === "cli"
+      );
 
       await doInit({
         name,
         install: options.install,
         git: options.git,
-        ci: options.ci,
+        ci: options.ci || anyConfigFlag,
         shadcn: options.shadcn,
         testing: (options.testing === 'vitest' ? 'vitest' : 'jest') as Testing,
         database: (options.database === 'postgres' ? 'postgres' : 'sqlite') as Database,
