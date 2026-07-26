@@ -263,7 +263,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             </Row>
           </div>
 
-          <div className="flex-1 rounded-lg border bg-code p-5">
+          <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-5">
             <FileTree
               name="my-app"
               className="my-0 bg-transparent p-0 dark:bg-transparent"
@@ -354,7 +354,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
         </div>
 
         <div className="relative rounded-lg border bg-code p-4 pr-12">
-          <code className="block font-mono text-sm break-all text-foreground">
+          <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
             <span className="text-muted-foreground select-none">$ </span>
             {command}
           </code>
