@@ -32,6 +32,21 @@ const DEFAULT: Config = {
 
 const grow = 'animate-in fade-in slide-in-from-left-1 duration-300';
 
+function Row({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="font-mono text-sm text-muted-foreground">{label}</span>
+      {children}
+    </div>
+  );
+}
+
 function Segmented<T extends string>({
   label,
   value,
@@ -44,10 +59,7 @@ function Segmented<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="w-16 shrink-0 font-mono text-xs text-muted-foreground">
-        {label}
-      </span>
+    <Row label={label}>
       <ToggleGroup
         variant="outline"
         size="sm"
@@ -62,7 +74,31 @@ function Segmented<T extends string>({
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
-    </div>
+    </Row>
+  );
+}
+
+function BoolToggle({
+  label,
+  pressed,
+  onChange,
+}: {
+  label: string;
+  pressed: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <Row label={label}>
+      <Toggle
+        variant="outline"
+        size="sm"
+        className="min-w-14 font-mono text-xs"
+        pressed={pressed}
+        onPressedChange={onChange}
+      >
+        {pressed ? 'on' : 'off'}
+      </Toggle>
+    </Row>
   );
 }
 
@@ -89,52 +125,23 @@ export function InteractiveFileTree({ className }: { className?: string }) {
   const showExample = !c.bare;
 
   return (
-    <div className={cn('flex flex-col gap-5', className)}>
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap gap-2">
-          <Toggle
-            variant="outline"
-            size="sm"
-            className="font-mono text-xs"
-            pressed={c.shadcn}
-            onPressedChange={(p) => set('shadcn', p)}
-          >
-            shadcn/ui
-          </Toggle>
-          <Toggle
-            variant="outline"
-            size="sm"
-            className="font-mono text-xs"
-            pressed={c.nestDiOnly}
-            onPressedChange={(p) => set('nestDiOnly', p)}
-          >
-            Nest DI-only
-          </Toggle>
-          <Toggle
-            variant="outline"
-            size="sm"
-            className="font-mono text-xs"
-            pressed={c.bare}
-            onPressedChange={(p) => set('bare', p)}
-          >
-            bare
-          </Toggle>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2">
+    <div className={cn('flex flex-col gap-4', className)}>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
+        <div className="flex flex-col justify-center gap-3 rounded-lg border p-5 lg:w-[42%] lg:shrink-0">
           <Segmented
-            label="db"
+            label="database"
             value={c.database}
             options={['sqlite', 'postgres'] as const}
             onChange={(v) => set('database', v)}
           />
           <Segmented
-            label="test"
+            label="testing"
             value={c.testing}
             options={['jest', 'vitest'] as const}
             onChange={(v) => set('testing', v)}
           />
           <Segmented
-            label="lint"
+            label="linter"
             value={c.linter}
             options={['eslint', 'oxc'] as const}
             onChange={(v) => set('linter', v)}
@@ -145,103 +152,122 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             options={['none', 'standalone', 'custom-server', 'spa'] as const}
             onChange={(v) => set('deployment', v)}
           />
+          <div className="my-1 h-px bg-border" />
+          <BoolToggle
+            label="shadcn/ui"
+            pressed={c.shadcn}
+            onChange={(v) => set('shadcn', v)}
+          />
+          <BoolToggle
+            label="Nest DI-only"
+            pressed={c.nestDiOnly}
+            onChange={(v) => set('nestDiOnly', v)}
+          />
+          <BoolToggle
+            label="todo example"
+            pressed={!c.bare}
+            onChange={(v) => set('bare', !v)}
+          />
+        </div>
+
+        <div className="flex-1 rounded-lg border bg-code p-5">
+          <FileTree
+            name="my-app"
+            className="my-0 bg-transparent p-0 dark:bg-transparent"
+          >
+            <FileTree.Folder name="apps">
+              <FileTree.Folder name="web" annotation="Next.js frontend">
+                <FileTree.Folder name="app">
+                  {showExample && (
+                    <FileTree.Folder name="dashboard" className={grow}>
+                      <FileTree.File
+                        name="page.tsx"
+                        annotation="todo example"
+                      />
+                    </FileTree.Folder>
+                  )}
+                  <FileTree.File name="layout.tsx" />
+                  <FileTree.File name="page.tsx" annotation="home route" />
+                </FileTree.Folder>
+                {c.deployment === 'custom-server' && (
+                  <FileTree.File
+                    name="server.ts"
+                    annotation="Next + Nest, one process"
+                    className={grow}
+                  />
+                )}
+                <FileTree.File
+                  name="next.config.ts"
+                  annotation={
+                    c.deployment === 'spa'
+                      ? 'static export'
+                      : c.deployment === 'standalone'
+                        ? 'standalone output'
+                        : undefined
+                  }
+                />
+              </FileTree.Folder>
+              <FileTree.Folder name="api" annotation="NestJS backend">
+                <FileTree.Folder name="src">
+                  {showExample && (
+                    <FileTree.Folder name="todos" className={grow}>
+                      <FileTree.File name="todos.service.ts" />
+                      {!c.nestDiOnly && (
+                        <FileTree.File
+                          name="todos.controller.ts"
+                          className={grow}
+                        />
+                      )}
+                    </FileTree.Folder>
+                  )}
+                  <FileTree.File name="app.module.ts" />
+                  <FileTree.File
+                    name="main.ts"
+                    annotation={c.nestDiOnly ? 'DI context only' : undefined}
+                  />
+                </FileTree.Folder>
+              </FileTree.Folder>
+            </FileTree.Folder>
+            <FileTree.Folder name="packages">
+              <FileTree.Folder
+                name="ui"
+                annotation={
+                  c.shadcn ? 'shadcn/ui + 40 components' : 'minimal UI package'
+                }
+              />
+              <FileTree.Folder
+                name="auth"
+                annotation="Better Auth configuration"
+              />
+              <FileTree.Folder
+                name="db"
+                annotation={
+                  c.database === 'postgres'
+                    ? 'Kysely + Postgres'
+                    : 'Kysely + SQLite'
+                }
+              />
+              <FileTree.Folder
+                name={c.linter === 'oxc' ? 'oxlint-config' : 'eslint-config'}
+                annotation={
+                  c.linter === 'oxc' ? 'oxlint + oxfmt' : 'ESLint + Prettier'
+                }
+              />
+              <FileTree.Folder
+                name="typescript-config"
+                annotation="Shared TypeScript config"
+              />
+            </FileTree.Folder>
+          </FileTree>
         </div>
       </div>
 
-      <div className="rounded-lg border bg-code p-4">
-        <FileTree
-          name="my-app"
-          className="my-0 bg-transparent p-0 dark:bg-transparent"
-        >
-          <FileTree.Folder name="apps">
-            <FileTree.Folder name="web" annotation="Next.js frontend">
-              <FileTree.Folder name="app">
-                {showExample && (
-                  <FileTree.Folder name="dashboard" className={grow}>
-                    <FileTree.File name="page.tsx" annotation="todo example" />
-                  </FileTree.Folder>
-                )}
-                <FileTree.File name="layout.tsx" />
-                <FileTree.File name="page.tsx" annotation="home route" />
-              </FileTree.Folder>
-              {c.deployment === 'custom-server' && (
-                <FileTree.File
-                  name="server.ts"
-                  annotation="Next + Nest, one process"
-                  className={grow}
-                />
-              )}
-              <FileTree.File
-                name="next.config.ts"
-                annotation={
-                  c.deployment === 'spa'
-                    ? 'static export'
-                    : c.deployment === 'standalone'
-                      ? 'standalone output'
-                      : undefined
-                }
-              />
-            </FileTree.Folder>
-            <FileTree.Folder name="api" annotation="NestJS backend">
-              <FileTree.Folder name="src">
-                {showExample && (
-                  <FileTree.Folder name="todos" className={grow}>
-                    <FileTree.File name="todos.service.ts" />
-                    {!c.nestDiOnly && (
-                      <FileTree.File
-                        name="todos.controller.ts"
-                        className={grow}
-                      />
-                    )}
-                  </FileTree.Folder>
-                )}
-                <FileTree.File name="app.module.ts" />
-                <FileTree.File
-                  name="main.ts"
-                  annotation={c.nestDiOnly ? 'DI context only' : undefined}
-                />
-              </FileTree.Folder>
-            </FileTree.Folder>
-          </FileTree.Folder>
-          <FileTree.Folder name="packages">
-            <FileTree.Folder
-              name="ui"
-              annotation={
-                c.shadcn ? 'shadcn/ui + 40 components' : 'minimal UI package'
-              }
-            />
-            <FileTree.Folder
-              name="auth"
-              annotation="Better Auth configuration"
-            />
-            <FileTree.Folder
-              name="db"
-              annotation={
-                c.database === 'postgres'
-                  ? 'Kysely + Postgres'
-                  : 'Kysely + SQLite'
-              }
-            />
-            <FileTree.Folder
-              name={c.linter === 'oxc' ? 'oxlint-config' : 'eslint-config'}
-              annotation={
-                c.linter === 'oxc' ? 'oxlint + oxfmt' : 'ESLint + Prettier'
-              }
-            />
-            <FileTree.Folder
-              name="typescript-config"
-              annotation="Shared TypeScript config"
-            />
-          </FileTree.Folder>
-        </FileTree>
-      </div>
-
-      <div className="relative rounded-lg border bg-code p-3 pr-10">
-        <code className="block font-mono text-xs break-all text-foreground">
+      <div className="relative rounded-lg border bg-code p-4 pr-12">
+        <code className="block font-mono text-sm break-all text-foreground">
           <span className="text-muted-foreground select-none">$ </span>
           {command}
         </code>
-        <CopyButton value={command} className="top-2.5" />
+        <CopyButton value={command} className="top-3" />
       </div>
     </div>
   );
