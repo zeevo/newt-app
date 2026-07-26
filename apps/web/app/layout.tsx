@@ -15,6 +15,13 @@ const geistMono = localFont({
   src: './fonts/GeistMonoVF.woff',
   variable: '--font-geist-mono',
 });
+const instrumentSerif = localFont({
+  src: [
+    { path: './fonts/InstrumentSerif-Regular.woff2', style: 'normal' },
+    { path: './fonts/InstrumentSerif-Italic.woff2', style: 'italic' },
+  ],
+  variable: '--font-instrument-serif',
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -29,11 +36,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]`}
+        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="relative z-10 flex min-h-svh flex-col bg-background">
-            <div className="dot-fade-bg absolute inset-0 z-[-1]"></div>
+          <div className="grain relative z-10 flex min-h-svh flex-col bg-background">
             <SiteHeader />
             <main className="flex flex-1 flex-col">{children}</main>
           </div>

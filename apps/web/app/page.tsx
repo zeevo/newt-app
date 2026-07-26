@@ -34,18 +34,18 @@ export default function Home() {
             href="https://www.npmjs.com/package/create-newt-app"
             target="_blank"
             rel="noreferrer"
-            className="pointer-events-auto flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
+            className="eyebrow rule pointer-events-auto flex items-center gap-2.5 border bg-background/80 px-4 py-2 backdrop-blur transition-colors hover:text-foreground"
           >
-            <span className="size-2 rounded-full bg-green-500" />
-            Latest update · v{cliVersion} released
+            <span className="size-1.5 rounded-full bg-signal" />
+            v{cliVersion} released
             <span aria-hidden>→</span>
           </a>
-          <h1 className="max-w-4xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
+          <h1 className="max-w-4xl text-center font-heading text-5xl leading-[1.05] font-normal tracking-tight text-balance text-foreground sm:text-6xl xl:text-8xl">
             A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter for{' '}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
               <span
                 title="Next.js"
-                className="z-[0] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[0] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-20"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -59,13 +59,13 @@ export default function Home() {
               </span>
               <span
                 title="NestJS"
-                className="z-[1] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[1] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-20"
               >
                 <Image src="/logos/nestjs.svg" alt="NestJS" width={32} height={32} className="size-3/5" />
               </span>
               <span
                 title="Better Auth"
-                className="z-[2] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[2] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-20"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -79,7 +79,7 @@ export default function Home() {
               </span>
               <span
                 title="shadcn/ui"
-                className="z-[3] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[3] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-20"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -93,7 +93,7 @@ export default function Home() {
               </span>
               <span
                 title="oxc"
-                className="z-[4] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                className="z-[4] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-20"
               >
                 <Image src="/logos/oxc.svg" alt="oxc" width={32} height={32} className="size-3/5" />
               </span>
@@ -104,7 +104,7 @@ export default function Home() {
             with auth and a database, curated so you&apos;re not deleting half
             of it on day one.
           </p>
-          <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
+          <div className="rule pointer-events-auto flex h-11 items-center gap-2 border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground">
             <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
               $
             </span>
@@ -117,15 +117,15 @@ export default function Home() {
         </div>
       </section >
       <section className="bg-code pb-16">
-        <div className="relative mx-4 -mt-20 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg xl:mx-auto">
+        <div className="rule relative mx-4 -mt-20 max-w-[1200px] border bg-background p-4 xl:mx-auto">
           <div className="p-4">
             <InteractiveFileTree />
           </div>
         </div>
       </section>
-      <section className="border-t bg-background py-24">
+      <section className="rule border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4">
-          <FeatureSection>
+          <FeatureSection eyebrow="01 · Workspaces">
             <CodeShowcase
               filename="apps/web/app/dashboard/page.tsx"
               language="tsx"
@@ -148,7 +148,7 @@ export default async function Dashboard() {
 }`}
             />
             <div className="flex flex-col justify-center gap-4">
-              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+              <h2 className="font-heading text-4xl leading-[1.05] font-normal tracking-tight text-balance sm:text-5xl">
                 Share code between apps, not copy it.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
@@ -165,11 +165,11 @@ export default async function Dashboard() {
           </FeatureSection>
         </div>
       </section>
-      <section className="border-t bg-background py-24">
+      <section className="rule border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4">
-          <FeatureSection>
+          <FeatureSection eyebrow="02 · Architecture">
             <div className="flex flex-col justify-center gap-4">
-              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+              <h2 className="font-heading text-4xl leading-[1.05] font-normal tracking-tight text-balance sm:text-5xl">
                 A structure that can scale.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
