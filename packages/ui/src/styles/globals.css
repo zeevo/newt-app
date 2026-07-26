@@ -7,85 +7,95 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Moebius palette — "paper" (light) and "void" (dark).
+ * Light is the warm bone of a printed album page; dark is Incal deep indigo.
+ * Hue 84 carries the warm paper, 266 the indigo ink, 92 the acid gold signal.
+ * Swap these two blocks to retheme the whole site.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(94.912% 0.00011 271.152);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.822 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
+  --background: oklch(0.968 0.014 84);
+  --foreground: oklch(0.235 0.048 268);
+  --card: oklch(0.985 0.01 84);
+  --card-foreground: oklch(0.235 0.048 268);
+  --popover: oklch(0.985 0.01 84);
+  --popover-foreground: oklch(0.235 0.048 268);
+  --primary: oklch(0.435 0.185 264);
+  --primary-foreground: oklch(0.98 0.012 84);
+  --secondary: oklch(0.925 0.02 84);
+  --secondary-foreground: oklch(0.3 0.05 268);
+  --muted: oklch(0.935 0.016 84);
+  --muted-foreground: oklch(0.505 0.038 268);
+  --accent: oklch(0.9 0.055 92);
+  --accent-foreground: oklch(0.28 0.05 268);
+  --destructive: oklch(0.545 0.185 30);
+  --destructive-foreground: oklch(0.545 0.185 30);
+  --border: oklch(0.855 0.022 84);
+  --input: oklch(0.9 0.02 84);
+  --ring: oklch(0.6 0.13 264);
+  --chart-1: oklch(0.435 0.185 264);
+  --chart-2: oklch(0.62 0.11 205);
+  --chart-3: oklch(0.72 0.14 92);
+  --chart-4: oklch(0.58 0.17 32);
+  --chart-5: oklch(0.5 0.14 305);
+  --radius: 0.25rem;
   --sidebar: --background;
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-foreground: oklch(0.235 0.048 268);
+  --sidebar-primary: oklch(0.435 0.185 264);
+  --sidebar-primary-foreground: oklch(0.98 0.012 84);
+  --sidebar-accent: oklch(0.93 0.03 88);
+  --sidebar-accent-foreground: oklch(0.28 0.05 268);
+  --sidebar-border: oklch(0.885 0.02 84);
+  --sidebar-ring: oklch(0.6 0.13 264);
   /* other */
-  --code: oklch(0.98 0 0);
+  --code: oklch(0.945 0.016 84);
   --code-foreground: var(--foreground);
-  --code-highlight: oklch(0.94 0 0);
-  --code-number: oklch(0.56 0 0);
+  --code-highlight: oklch(0.915 0.03 92);
+  --code-number: oklch(0.62 0.03 268);
+  /* acid gold, reserved for signal accents — never body text */
+  --signal: oklch(0.72 0.15 92);
+  --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.469 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --background: oklch(0.205 0.052 266);
+  --foreground: oklch(0.945 0.014 84);
+  --card: oklch(0.235 0.05 266);
+  --card-foreground: oklch(0.945 0.014 84);
+  --popover: oklch(0.235 0.05 266);
+  --popover-foreground: oklch(0.945 0.014 84);
+  --primary: oklch(0.74 0.135 250);
+  --primary-foreground: oklch(0.18 0.05 266);
+  --secondary: oklch(0.285 0.048 266);
+  --secondary-foreground: oklch(0.945 0.014 84);
+  --muted: oklch(0.285 0.048 266);
+  --muted-foreground: oklch(0.715 0.032 268);
+  --accent: oklch(0.32 0.055 266);
+  --accent-foreground: oklch(0.945 0.014 84);
+  --destructive: oklch(0.5 0.16 32);
+  --destructive-foreground: oklch(0.7 0.17 32);
+  --border: oklch(0.375 0.048 266);
+  --input: oklch(0.285 0.048 266);
+  --ring: oklch(0.58 0.1 258);
+  --chart-1: oklch(0.74 0.135 250);
+  --chart-2: oklch(0.72 0.11 200);
+  --chart-3: oklch(0.82 0.15 92);
+  --chart-4: oklch(0.66 0.17 32);
+  --chart-5: oklch(0.64 0.15 305);
   --sidebar: --background;
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar-foreground: oklch(0.945 0.014 84);
+  --sidebar-primary: oklch(0.74 0.135 250);
+  --sidebar-primary-foreground: oklch(0.18 0.05 266);
+  --sidebar-accent: oklch(0.285 0.048 266);
+  --sidebar-accent-foreground: oklch(0.945 0.014 84);
+  --sidebar-border: oklch(0.3 0.048 266);
+  --sidebar-ring: oklch(0.58 0.1 258);
   /* other */
-  --code: oklch(20% 0 0);
-  --code-foreground: oklch(0.708 0 0);
-  --code-highlight: oklch(0.22 0 0);
-  --code-number: oklch(0.5 0 0);
+  --code: oklch(0.245 0.05 266);
+  --code-foreground: oklch(0.78 0.025 268);
+  --code-highlight: oklch(0.285 0.055 266);
+  --code-number: oklch(0.55 0.035 266);
+  --signal: oklch(0.86 0.165 95);
 }
 
 [data-line] span {
@@ -140,6 +150,13 @@
   --color-code-foreground: var(--code-foreground);
   --color-code-highlight: var(--code-highlight);
   --color-code-number: var(--code-number);
+  --color-signal: var(--signal);
+
+  /*
+   * `font-heading` is referenced throughout apps/web and packages/ui but was
+   * never defined here, so it silently fell back to the sans stack.
+   */
+  --font-heading: var(--font-instrument-serif), ui-serif, Georgia, serif;
 }
 
 @layer base {
@@ -244,55 +261,55 @@ html {
   .container {
     @apply 2xl:max-w-screen-2xl mx-auto max-w-[1400px] px-4 lg:px-8;
   }
-  .dark .dot-fade-bg::before {
+  /*
+   * Paper tooth. Multiply on light reads as ink on stock; soft-light on dark
+   * keeps the indigo from going muddy.
+   */
+  .grain::after {
     content: "";
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(hsl(0, 0%, 10%) 1px, transparent 0);
+    background-image: var(--grain-image);
+    background-size: 180px 180px;
     background-repeat: repeat;
-    background-position: center center;
-    background-size: 24px 24px;
-    background-attachment: local;
-    background-origin: padding-box;
-    background-clip: border-box;
-    mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--dot-mask-color, var(--background)) 100%
-    );
-    -webkit-mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--dot-mask-color, black) 100%
-    );
-    background-blend-mode: multiply;
+    mix-blend-mode: multiply;
+    opacity: 0.055;
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
   }
 
-  .light .dot-fade-bg::before {
+  .dark .grain::after {
+    mix-blend-mode: soft-light;
+    opacity: 0.14;
+  }
+
+  /* Radial falloff toward the page edges, Moebius horizon-style. */
+  .vignette::before {
     content: "";
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(hsl(0, 0%, 87%) 1px, transparent 0);
-    background-repeat: repeat;
-    background-position: center center;
-    background-size: 24px 24px;
-    background-attachment: local;
-    background-origin: padding-box;
-    background-clip: border-box;
-    mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--dot-mask-color, var(--background)) 100%
+    background: radial-gradient(
+      120% 90% at 50% 38%,
+      transparent 45%,
+      var(--background) 100%
     );
-    -webkit-mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--dot-mask-color, black) 100%
-    );
-    background-blend-mode: multiply;
+    opacity: 0.55;
     pointer-events: none;
-    z-index: -1;
+    z-index: 1;
+  }
+
+  /* Tracked mono label. The technical-caption voice both references share. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  /* Hairline rule — thinner and cooler than a default border. */
+  .rule {
+    border-color: color-mix(in oklab, var(--border) 70%, transparent);
   }
 }
