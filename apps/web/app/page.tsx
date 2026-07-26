@@ -11,7 +11,9 @@ import { version as cliVersion } from '../../../packages/create-newt-app/package
 export default function Home() {
   return (
     <div>
-      <section className="relative flex h-[775px] items-start justify-center overflow-hidden border-b bg-background pt-12 sm:pt-24">
+      {/* `isolate` keeps the grain/vignette/frame layers from painting over the
+          file-tree card that the next section pulls up into this one. */}
+      <section className="field grain vignette relative isolate flex h-[775px] items-start justify-center overflow-hidden pt-12 sm:pt-24">
         <div
           className="pointer-events-none absolute inset-0 z-0"
           style={{
@@ -29,6 +31,8 @@ export default function Home() {
         >
           <LogoRain />
         </div>
+        {/* Matted panel edge — the framed look both references use. */}
+        <div className="pointer-events-none absolute inset-5 z-10 border border-[color-mix(in_oklab,var(--field-fg)_22%,transparent)]" />
         <div className="pointer-events-none relative z-10 flex flex-col items-center gap-5 px-4">
           <a
             href="https://www.npmjs.com/package/create-newt-app"
