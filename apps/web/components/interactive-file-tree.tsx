@@ -8,6 +8,10 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from '@newt-app/ui/components/toggle-group';
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from '@newt-app/ui/components/native-select';
 import { cn } from '@newt-app/ui/lib/utils';
 
 type Config = {
@@ -17,7 +21,6 @@ type Config = {
   linter: 'eslint' | 'oxc';
   deployment: 'none' | 'standalone' | 'custom-server' | 'spa';
   nestDiOnly: boolean;
-  bare: boolean;
 };
 
 const DEFAULT: Config = {
@@ -27,7 +30,6 @@ const DEFAULT: Config = {
   linter: 'oxc',
   deployment: 'none',
   nestDiOnly: false,
-  bare: false,
 };
 
 const grow = 'animate-in fade-in slide-in-from-left-1 duration-300';
@@ -110,7 +112,6 @@ function buildCommand(c: Config): string {
   if (c.linter !== 'eslint') flags.push('--linter oxc');
   if (c.deployment !== 'none') flags.push(`--deployment ${c.deployment}`);
   if (c.nestDiOnly) flags.push('--nest-di-only');
-  if (c.bare) flags.push('--bare');
   return flags.length
     ? `npm create newt-app my-app -- ${flags.join(' ')}`
     : 'npm create newt-app my-app';
@@ -122,12 +123,11 @@ export function InteractiveFileTree({ className }: { className?: string }) {
     setC((prev) => ({ ...prev, [key]: value }));
 
   const command = useMemo(() => buildCommand(c), [c]);
-  const showExample = !c.bare;
 
   return (
     <div className={cn('flex flex-col gap-4', className)}>
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
-        <div className="flex flex-col justify-center gap-3 rounded-lg border p-5 lg:w-[42%] lg:shrink-0">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+        <div className="flex flex-col gap-3 rounded-lg border p-5 lg:w-[42%] lg:shrink-0">
           <Segmented
             label="database"
             value={c.database}
@@ -146,13 +146,25 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             options={['eslint', 'oxc'] as const}
             onChange={(v) => set('linter', v)}
           />
-          <Segmented
-            label="extras"
-            value={c.deployment}
-            options={['none', 'standalone', 'custom-server', 'spa'] as const}
-            onChange={(v) => set('deployment', v)}
-          />
-          <div className="my-1 h-px bg-border" />
+          <Row label="extras">
+            <NativeSelect
+              size="sm"
+              value={c.deployment}
+              onChange={(e) =>
+                set('deployment', e.target.value as Config['deployment'])
+              }
+              className="font-mono text-xs"
+            >
+              <NativeSelectOption value="none">none</NativeSelectOption>
+              <NativeSelectOption value="standalone">
+                standalone
+              </NativeSelectOption>
+              <NativeSelectOption value="custom-server">
+                custom-server
+              </NativeSelectOption>
+              <NativeSelectOption value="spa">spa</NativeSelectOption>
+            </NativeSelect>
+          </Row>
           <BoolToggle
             label="shadcn/ui"
             pressed={c.shadcn}
@@ -162,11 +174,6 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             label="Nest DI-only"
             pressed={c.nestDiOnly}
             onChange={(v) => set('nestDiOnly', v)}
-          />
-          <BoolToggle
-            label="todo example"
-            pressed={!c.bare}
-            onChange={(v) => set('bare', !v)}
           />
         </div>
 
@@ -178,14 +185,9 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             <FileTree.Folder name="apps">
               <FileTree.Folder name="web" annotation="Next.js frontend">
                 <FileTree.Folder name="app">
-                  {showExample && (
-                    <FileTree.Folder name="dashboard" className={grow}>
-                      <FileTree.File
-                        name="page.tsx"
-                        annotation="todo example"
-                      />
-                    </FileTree.Folder>
-                  )}
+                  <FileTree.Folder name="dashboard">
+                    <FileTree.File name="page.tsx" annotation="todo example" />
+                  </FileTree.Folder>
                   <FileTree.File name="layout.tsx" />
                   <FileTree.File name="page.tsx" annotation="home route" />
                 </FileTree.Folder>
@@ -209,17 +211,15 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               </FileTree.Folder>
               <FileTree.Folder name="api" annotation="NestJS backend">
                 <FileTree.Folder name="src">
-                  {showExample && (
-                    <FileTree.Folder name="todos" className={grow}>
-                      <FileTree.File name="todos.service.ts" />
-                      {!c.nestDiOnly && (
-                        <FileTree.File
-                          name="todos.controller.ts"
-                          className={grow}
-                        />
-                      )}
-                    </FileTree.Folder>
-                  )}
+                  <FileTree.Folder name="todos">
+                    <FileTree.File name="todos.service.ts" />
+                    {!c.nestDiOnly && (
+                      <FileTree.File
+                        name="todos.controller.ts"
+                        className={grow}
+                      />
+                    )}
+                  </FileTree.Folder>
                   <FileTree.File name="app.module.ts" />
                   <FileTree.File
                     name="main.ts"
