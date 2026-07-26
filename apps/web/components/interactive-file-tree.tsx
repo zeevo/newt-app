@@ -41,18 +41,40 @@ const DEFAULT: Config = {
 
 const grow = 'animate-in fade-in slide-in-from-left-1 duration-300';
 
+function Logo({ src }: { src: string }) {
+  return (
+    <span
+      aria-hidden
+      className="size-4 shrink-0 bg-foreground"
+      style={{
+        maskImage: `url(${src})`,
+        WebkitMaskImage: `url(${src})`,
+        maskSize: 'contain',
+        WebkitMaskSize: 'contain',
+        maskRepeat: 'no-repeat',
+        WebkitMaskRepeat: 'no-repeat',
+        maskPosition: 'center',
+        WebkitMaskPosition: 'center',
+      }}
+    />
+  );
+}
+
 function Row({
   label,
   hint,
+  logo,
   children,
 }: {
   label: string;
   hint?: string;
+  logo?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="flex items-center gap-1.5 font-mono text-sm text-muted-foreground">
+      <span className="flex items-center gap-2 font-mono text-sm text-muted-foreground">
+        {logo && <Logo src={logo} />}
         {label}
         {hint && (
           <Tooltip>
@@ -106,18 +128,20 @@ function Segmented<T extends string>({
 function BoolToggle({
   label,
   hint,
+  logo,
   pressed,
   onChange,
   disabled,
 }: {
   label: string;
   hint?: string;
+  logo?: string;
   pressed: boolean;
   onChange?: (v: boolean) => void;
   disabled?: boolean;
 }) {
   return (
-    <Row label={label} hint={hint}>
+    <Row label={label} hint={hint} logo={logo}>
       <Toggle
         variant="outline"
         size="sm"
@@ -157,9 +181,24 @@ export function InteractiveFileTree({ className }: { className?: string }) {
       <div className={cn('flex flex-col gap-4', className)}>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
           <div className="flex flex-col gap-3 rounded-lg border p-5 lg:w-[42%] lg:shrink-0">
-            <BoolToggle label="Next.js" pressed disabled />
-            <BoolToggle label="NestJS" pressed disabled />
-            <BoolToggle label="Better Auth" pressed disabled />
+            <BoolToggle
+              label="Next.js"
+              logo="/logos/nextjs.svg"
+              pressed
+              disabled
+            />
+            <BoolToggle
+              label="NestJS"
+              logo="/logos/nestjs.svg"
+              pressed
+              disabled
+            />
+            <BoolToggle
+              label="Better Auth"
+              logo="/logos/better-auth.svg"
+              pressed
+              disabled
+            />
             <Segmented
               label="database"
               value={c.database}
@@ -180,6 +219,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             />
             <BoolToggle
               label="shadcn/ui"
+              logo="/logos/shadcn.svg"
               pressed={c.shadcn}
               onChange={(v) => set('shadcn', v)}
             />
