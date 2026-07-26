@@ -221,6 +221,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               value={c.testing}
               options={['jest', 'vitest'] as const}
               onChange={(v) => set('testing', v)}
+              logos={{ jest: '/logos/jest.svg', vitest: '/logos/vitest.svg' }}
             />
             <Segmented
               label="linter"
