@@ -54,6 +54,12 @@
   --code-number: oklch(0.62 0.03 268);
   /* acid gold, reserved for signal accents — never body text */
   --signal: oklch(0.72 0.15 92);
+  /* saturated field — deliberately identical in light and dark */
+  --field-bg: oklch(0.35 0.17 265);
+  --field-fg: oklch(0.955 0.016 84);
+  --field-muted: oklch(0.78 0.055 262);
+  --field-border: oklch(0.5 0.1 264);
+  --field-signal: oklch(0.87 0.17 96);
   --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
@@ -311,5 +317,31 @@ html {
   /* Hairline rule — thinner and cooler than a default border. */
   .rule {
     border-color: color-mix(in oklab, var(--border) 70%, transparent);
+  }
+
+  /*
+   * A saturated Incal-blue color field, identical in light and dark.
+   * Rebinding the semantic tokens locally means any descendant using
+   * bg-background / text-foreground / border inverts onto the field on its
+   * own — no per-element overrides needed.
+   */
+  .field {
+    --background: var(--field-bg);
+    --foreground: var(--field-fg);
+    --card: var(--field-bg);
+    --card-foreground: var(--field-fg);
+    --muted-foreground: var(--field-muted);
+    --border: var(--field-border);
+    --signal: var(--field-signal);
+    /* Ghost buttons hover against these; without them they flash paper-cream. */
+    --accent: color-mix(in oklab, var(--field-fg) 14%, transparent);
+    --accent-foreground: var(--field-fg);
+    --secondary: color-mix(in oklab, var(--field-fg) 10%, transparent);
+    --secondary-foreground: var(--field-fg);
+    /* CopyButton hardcodes bg-code; without these it stays paper-cream. */
+    --code: color-mix(in oklab, var(--field-bg) 82%, black);
+    --code-foreground: var(--field-fg);
+    background-color: var(--field-bg);
+    color: var(--field-fg);
   }
 }
