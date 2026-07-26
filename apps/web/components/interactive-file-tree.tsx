@@ -30,7 +30,6 @@ const DEFAULT: Config = {
   bare: false,
 };
 
-// newly-mounted conditional subtrees slide in when a flag is toggled on
 const grow = 'animate-in fade-in slide-in-from-left-1 duration-300';
 
 function Segmented<T extends string>({
@@ -46,7 +45,7 @@ function Segmented<T extends string>({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="w-20 shrink-0 font-mono text-xs text-muted-foreground">
+      <span className="w-16 shrink-0 font-mono text-xs text-muted-foreground">
         {label}
       </span>
       <ToggleGroup
@@ -81,13 +80,7 @@ function buildCommand(c: Config): string {
     : 'npm create newt-app my-app';
 }
 
-export function InteractiveFileTree({
-  className,
-  children,
-}: {
-  className?: string;
-  children?: React.ReactNode;
-}) {
+export function InteractiveFileTree({ className }: { className?: string }) {
   const [c, setC] = useState<Config>(DEFAULT);
   const set = <K extends keyof Config>(key: K, value: Config[K]) =>
     setC((prev) => ({ ...prev, [key]: value }));
@@ -96,57 +89,52 @@ export function InteractiveFileTree({
   const showExample = !c.bare;
 
   return (
-    <div
-      className={cn(
-        'flex flex-col gap-8 sm:flex-row sm:justify-between',
-        className,
-      )}
-    >
-      <div className="flex flex-1 flex-col gap-5">
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap gap-2">
-            <Toggle
-              variant="outline"
-              size="sm"
-              className="font-mono text-xs"
-              pressed={c.shadcn}
-              onPressedChange={(p) => set('shadcn', p)}
-            >
-              shadcn/ui
-            </Toggle>
-            <Toggle
-              variant="outline"
-              size="sm"
-              className="font-mono text-xs"
-              pressed={c.nestDiOnly}
-              onPressedChange={(p) => set('nestDiOnly', p)}
-            >
-              Nest DI-only
-            </Toggle>
-            <Toggle
-              variant="outline"
-              size="sm"
-              className="font-mono text-xs"
-              pressed={c.bare}
-              onPressedChange={(p) => set('bare', p)}
-            >
-              bare
-            </Toggle>
-          </div>
+    <div className={cn('flex flex-col gap-5', className)}>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap gap-2">
+          <Toggle
+            variant="outline"
+            size="sm"
+            className="font-mono text-xs"
+            pressed={c.shadcn}
+            onPressedChange={(p) => set('shadcn', p)}
+          >
+            shadcn/ui
+          </Toggle>
+          <Toggle
+            variant="outline"
+            size="sm"
+            className="font-mono text-xs"
+            pressed={c.nestDiOnly}
+            onPressedChange={(p) => set('nestDiOnly', p)}
+          >
+            Nest DI-only
+          </Toggle>
+          <Toggle
+            variant="outline"
+            size="sm"
+            className="font-mono text-xs"
+            pressed={c.bare}
+            onPressedChange={(p) => set('bare', p)}
+          >
+            bare
+          </Toggle>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
           <Segmented
-            label="database"
+            label="db"
             value={c.database}
             options={['sqlite', 'postgres'] as const}
             onChange={(v) => set('database', v)}
           />
           <Segmented
-            label="testing"
+            label="test"
             value={c.testing}
             options={['jest', 'vitest'] as const}
             onChange={(v) => set('testing', v)}
           />
           <Segmented
-            label="linter"
+            label="lint"
             value={c.linter}
             options={['eslint', 'oxc'] as const}
             onChange={(v) => set('linter', v)}
@@ -158,7 +146,9 @@ export function InteractiveFileTree({
             onChange={(v) => set('deployment', v)}
           />
         </div>
+      </div>
 
+      <div className="rounded-lg border bg-code p-4">
         <FileTree
           name="my-app"
           className="my-0 bg-transparent p-0 dark:bg-transparent"
@@ -246,15 +236,12 @@ export function InteractiveFileTree({
         </FileTree>
       </div>
 
-      <div className="flex flex-1 flex-col gap-6">
-        {children}
-        <div className="relative rounded-md border bg-code p-3 pr-10">
-          <code className="block font-mono text-xs break-all text-foreground">
-            <span className="text-muted-foreground select-none">$ </span>
-            {command}
-          </code>
-          <CopyButton value={command} className="top-2" />
-        </div>
+      <div className="relative rounded-lg border bg-code p-3 pr-10">
+        <code className="block font-mono text-xs break-all text-foreground">
+          <span className="text-muted-foreground select-none">$ </span>
+          {command}
+        </code>
+        <CopyButton value={command} className="top-2.5" />
       </div>
     </div>
   );

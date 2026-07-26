@@ -119,15 +119,7 @@ export default function Home() {
       <section className="bg-code pb-16">
         <div className="relative mx-4 -mt-20 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg xl:mx-auto">
           <div className="p-4">
-            <InteractiveFileTree>
-              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                A Project Structure for modern TypeScript
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                Pick your options — the file tree and the install command update
-                as you go. No manual tsconfig paths, no copy-pasted configs.
-              </p>
-            </InteractiveFileTree>
+            <InteractiveFileTree />
           </div>
         </div>
       </section>
