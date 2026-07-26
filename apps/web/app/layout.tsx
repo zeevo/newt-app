@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} overscroll-none font-sans text-base text-foreground antialiased [--header-height:calc(var(--spacing)*14)]`}
+        className={`${geistSans.variable} ${geistMono.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*18)] [--header-height:calc(var(--spacing)*14)]`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative z-10 flex min-h-svh flex-col bg-background">

@@ -8,8 +8,6 @@ export const siteConfig = {
     twitter: 'https://twitter.com/zeevoexe',
     github: 'https://github.com/zeevo/newt-app',
     npm: 'https://www.npmjs.com/package/create-newt-app',
-    releases: 'https://github.com/zeevo/newt-app/releases',
-    issues: 'https://github.com/zeevo/newt-app/issues',
     license: 'https://github.com/zeevo/newt-app/blob/main/LICENSE',
   },
   navItems: [
