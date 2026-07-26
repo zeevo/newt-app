@@ -64,7 +64,7 @@ export default async function DocsPostPage({ params }: DocsPostPageProps) {
           <article>
             <div className="rule mb-8 border-b pb-8">
               <span className="eyebrow">Docs / {param.slug.replace(/-/g, ' ')}</span>
-              <h1 className="mt-4 mb-4 flex items-center gap-3 font-heading text-5xl font-normal tracking-tight">
+              <h1 className="mt-4 mb-4 flex items-center gap-3 font-heading text-5xl font-normal tracking-[0.01em]">
                 {(() => {
                   const logo = slugLogos[param.slug];
                   return logo ? (

@@ -40,7 +40,7 @@ export default function Home() {
             v{cliVersion} released
             <span aria-hidden>→</span>
           </a>
-          <h1 className="max-w-4xl text-center font-heading text-5xl leading-[1.05] font-normal tracking-tight text-balance text-foreground sm:text-6xl xl:text-8xl">
+          <h1 className="max-w-4xl text-center font-heading text-5xl leading-[1.14] font-normal tracking-[0.01em] text-balance text-foreground sm:text-6xl xl:text-8xl">
             A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter for{' '}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
               <span
@@ -148,7 +148,7 @@ export default async function Dashboard() {
 }`}
             />
             <div className="flex flex-col justify-center gap-4">
-              <h2 className="font-heading text-4xl leading-[1.05] font-normal tracking-tight text-balance sm:text-5xl">
+              <h2 className="font-heading text-4xl leading-[1.12] font-normal tracking-[0.01em] text-balance sm:text-5xl">
                 Share code between apps, not copy it.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
@@ -169,7 +169,7 @@ export default async function Dashboard() {
         <div className="mx-auto max-w-[1200px] px-4">
           <FeatureSection eyebrow="02 · Architecture">
             <div className="flex flex-col justify-center gap-4">
-              <h2 className="font-heading text-4xl leading-[1.05] font-normal tracking-tight text-balance sm:text-5xl">
+              <h2 className="font-heading text-4xl leading-[1.12] font-normal tracking-[0.01em] text-balance sm:text-5xl">
                 A structure that can scale.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
