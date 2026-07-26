@@ -80,7 +80,7 @@ const urlToIconMap: Record<string, ReactElement> = {
 export function DocsSidebar() {
   return (
     <Sidebar
-      className="sticky top-[calc(var(--header-height)+1px)] z-30 hidden h-[calc(100svh-var(--header-height)-var(--footer-height))] bg-transparent lg:flex"
+      className="sticky top-[calc(var(--header-height)+1px)] z-30 hidden h-[calc(100svh-var(--header-height))] bg-transparent lg:flex"
       collapsible="none"
     >
       <SidebarContent className="no-scrollbar">
