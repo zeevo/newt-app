@@ -41,11 +41,11 @@ const DEFAULT: Config = {
 
 const grow = 'animate-in fade-in slide-in-from-left-1 duration-300';
 
-function Logo({ src }: { src: string }) {
+function Logo({ src, className }: { src: string; className?: string }) {
   return (
     <span
       aria-hidden
-      className="size-4 shrink-0 bg-foreground"
+      className={cn('size-4 shrink-0 bg-foreground', className)}
       style={{
         maskImage: `url(${src})`,
         WebkitMaskImage: `url(${src})`,
@@ -99,11 +99,13 @@ function Segmented<T extends string>({
   value,
   options,
   onChange,
+  logos,
 }: {
   label: string;
   value: T;
   options: readonly T[];
   onChange: (v: T) => void;
+  logos?: Partial<Record<T, string>>;
 }) {
   return (
     <Row label={label}>
@@ -116,7 +118,12 @@ function Segmented<T extends string>({
         }}
       >
         {options.map((opt) => (
-          <ToggleGroupItem key={opt} value={opt} className="font-mono text-xs">
+          <ToggleGroupItem
+            key={opt}
+            value={opt}
+            className="gap-1.5 font-mono text-xs"
+          >
+            {logos?.[opt] && <Logo src={logos[opt]!} className="size-3.5" />}
             {opt}
           </ToggleGroupItem>
         ))}
@@ -204,6 +211,10 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               value={c.database}
               options={['sqlite', 'postgres'] as const}
               onChange={(v) => set('database', v)}
+              logos={{
+                sqlite: '/logos/sqlite.svg',
+                postgres: '/logos/postgres.svg',
+              }}
             />
             <Segmented
               label="testing"
@@ -216,6 +227,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               value={c.linter}
               options={['eslint', 'oxc'] as const}
               onChange={(v) => set('linter', v)}
+              logos={{ eslint: '/logos/eslint.svg', oxc: '/logos/oxc.svg' }}
             />
             <BoolToggle
               label="shadcn/ui"
