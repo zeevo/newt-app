@@ -62,27 +62,26 @@ export default async function DocsPostPage({ params }: DocsPostPageProps) {
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-4xl p-6 lg:p-8">
           <article>
-            <div className="mb-6">
-              <div className="mb-8">
-                <h1 className="mb-4 flex items-center gap-3 text-4xl font-bold tracking-tight">
-                  {(() => {
-                    const logo = slugLogos[param.slug];
-                    return logo ? (
-                      <Image
-                        src={logo.src}
-                        alt={logo.alt}
-                        width={36}
-                        height={36}
-                        className={logo.invert ? 'shrink-0 dark:invert' : 'shrink-0'}
-                      />
-                    ) : null;
-                  })()}
-                  {post.title}
-                </h1>
-                <p className="mb-4 text-xl text-muted-foreground">
-                  {post.description}
-                </p>
-              </div>
+            <div className="rule mb-8 border-b pb-8">
+              <span className="eyebrow">Docs / {param.slug.replace(/-/g, ' ')}</span>
+              <h1 className="mt-4 mb-4 flex items-center gap-3 font-heading text-5xl font-normal tracking-tight">
+                {(() => {
+                  const logo = slugLogos[param.slug];
+                  return logo ? (
+                    <Image
+                      src={logo.src}
+                      alt={logo.alt}
+                      width={36}
+                      height={36}
+                      className={logo.invert ? 'shrink-0 dark:invert' : 'shrink-0'}
+                    />
+                  ) : null;
+                })()}
+                {post.title}
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                {post.description}
+              </p>
             </div>
 
             <div className="max-w-none">{mdxContent}</div>
