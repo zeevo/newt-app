@@ -74,6 +74,7 @@ jobs:
           - "--shadcn --nest-di-only"
           - "--deployment standalone"
           - "--deployment spa"
+          - "--deployment custom-server"
     name: scaffold (${{ matrix.flags }})
     steps:
       - name: Checkout code
