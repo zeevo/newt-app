@@ -118,26 +118,8 @@ export default function Home() {
       </section >
       <section className="bg-code pb-16">
         <div className="relative mx-4 -mt-20 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg xl:mx-auto">
-          <div className="flex flex-col justify-between p-4 sm:flex-row">
-            <div className="flex-1">
-              <InteractiveFileTree />
-            </div>
-            <div className="flex flex-1 flex-col gap-8 p-4">
-              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                A Project Structure for modern TypeScript
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                newt-app scaffolds a monorepo with a Next.js frontend, a NestJS
-                API, and a shared UI package, all wired together from day one.
-                No manual tsconfig paths, no copy-pasted ESLint configs, no
-                guessing how packages reference each other.
-              </p>
-              <p className="leading-relaxed text-muted-foreground">
-                Shared components live in <InlineCode>packages/ui</InlineCode>,
-                auth config in <InlineCode>packages/auth</InlineCode>, and each
-                app imports them by package name.
-              </p>
-            </div>
+          <div className="p-4">
+            <InteractiveFileTree />
           </div>
         </div>
       </section>
