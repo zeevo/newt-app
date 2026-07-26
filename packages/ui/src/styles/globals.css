@@ -102,13 +102,23 @@
   --code-highlight: oklch(0.285 0.055 266);
   --code-number: oklch(0.55 0.035 266);
   --signal: oklch(0.86 0.165 95);
+  /*
+   * The field carries the whole site, so it has to stay theme-responsive —
+   * otherwise the mode toggle would have nothing left to change.
+   */
+  --field-bg: oklch(0.26 0.13 266);
+  --field-muted: oklch(0.74 0.06 262);
+  --field-border: oklch(0.42 0.09 264);
 }
 
 [data-line] span {
   color: var(--shiki-light);
 }
 
-.dark [data-line] span {
+.dark [data-line] span,
+/* The field is dark in both themes, so light-theme syntax colors would be
+   dark-on-dark inside it. */
+.field [data-line] span {
   color: var(--shiki-dark) !important;
 }
 
@@ -326,21 +336,53 @@ html {
    * own — no per-element overrides needed.
    */
   .field {
+    --field-ink: color-mix(in oklab, var(--field-bg) 82%, black);
+    --field-wash: color-mix(in oklab, var(--field-fg) 14%, transparent);
+
     --background: var(--field-bg);
     --foreground: var(--field-fg);
+    /* The root cerulean --primary is near-invisible against the field, so
+       active nav and solid buttons take the acid gold instead. */
+    --primary: var(--field-signal);
+    --primary-foreground: var(--field-ink);
     --card: var(--field-bg);
     --card-foreground: var(--field-fg);
+    --popover: var(--field-ink);
+    --popover-foreground: var(--field-fg);
+    --muted: var(--field-wash);
     --muted-foreground: var(--field-muted);
     --border: var(--field-border);
+    --input: var(--field-wash);
+    --ring: var(--field-border);
     --signal: var(--field-signal);
     /* Ghost buttons hover against these; without them they flash paper-cream. */
-    --accent: color-mix(in oklab, var(--field-fg) 14%, transparent);
+    --accent: var(--field-wash);
     --accent-foreground: var(--field-fg);
     --secondary: color-mix(in oklab, var(--field-fg) 10%, transparent);
     --secondary-foreground: var(--field-fg);
-    /* CopyButton hardcodes bg-code; without these it stays paper-cream. */
-    --code: color-mix(in oklab, var(--field-bg) 82%, black);
+    --code: var(--field-ink);
     --code-foreground: var(--field-fg);
+    --code-highlight: color-mix(in oklab, var(--field-fg) 12%, transparent);
+    --code-number: var(--field-muted);
+    --sidebar: var(--field-bg);
+    --sidebar-foreground: var(--field-fg);
+    --sidebar-accent: var(--field-wash);
+    --sidebar-accent-foreground: var(--field-fg);
+    --sidebar-border: var(--field-border);
+    --sidebar-ring: var(--field-border);
+
+    /*
+     * `@theme inline` emits the --color-* aliases as resolved literals on
+     * :root, so they do NOT track the raw tokens above. Any hand-written rule
+     * using var(--color-code) — the shiki code blocks below — reads the frozen
+     * root value unless we re-point the alias here too.
+     */
+    --color-code: var(--field-ink);
+    --color-code-foreground: var(--field-fg);
+    --color-code-highlight: color-mix(in oklab, var(--field-fg) 12%, transparent);
+    --color-code-number: var(--field-muted);
+    --color-signal: var(--field-signal);
+
     background-color: var(--field-bg);
     color: var(--field-fg);
   }

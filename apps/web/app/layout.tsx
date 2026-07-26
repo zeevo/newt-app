@@ -39,7 +39,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="grain relative z-10 flex min-h-svh flex-col bg-background">
+          <div className="field grain relative z-10 flex min-h-svh flex-col">
             <SiteHeader />
             <main className="flex flex-1 flex-col">{children}</main>
           </div>

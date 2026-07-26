@@ -13,7 +13,8 @@ export default function Home() {
     <div>
       {/* `isolate` keeps the grain/vignette/frame layers from painting over the
           file-tree card that the next section pulls up into this one. */}
-      <section className="field grain vignette relative isolate flex h-[775px] items-start justify-center overflow-hidden pt-12 sm:pt-24">
+      {/* No `grain` here — the root layout already lays it over the whole page. */}
+      <section className="field vignette relative isolate flex h-[775px] items-start justify-center overflow-hidden pt-12 sm:pt-24">
         <div
           className="pointer-events-none absolute inset-0 z-0"
           style={{
