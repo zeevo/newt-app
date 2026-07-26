@@ -238,7 +238,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             />
             <BoolToggle
               label="Nest DI-only"
-              hint="Use NestJS only for dependency injection — Next.js route handlers call into Nest services instead of running a separate REST API."
+              hint="Use NestJS only for dependency injection. Next.js route handlers call into Nest services instead of running a separate REST API."
               pressed={c.nestDiOnly}
               onChange={(v) => set('nestDiOnly', v)}
             />
