@@ -7,6 +7,8 @@ export const siteConfig = {
   links: {
     twitter: 'https://twitter.com/zeevoexe',
     github: 'https://github.com/zeevo/newt-app',
+    npm: 'https://www.npmjs.com/package/create-newt-app',
+    license: 'https://github.com/zeevo/newt-app/blob/main/LICENSE',
   },
   navItems: [
     {
