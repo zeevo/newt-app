@@ -5,7 +5,6 @@ import { InlineCode } from '@/components/inline-code';
 import { InteractiveFileTree } from '@/components/interactive-file-tree';
 import Image from 'next/image';
 import LogoRain from '@/components/logo-rain';
-import { SiteFooter } from '@/components/site-footer';
 import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
 
 export default function Home() {
@@ -207,9 +206,6 @@ export async function POST(req: Request) {
           </FeatureSection>
         </div>
       </section>
-      <div className="bg-background">
-        <SiteFooter />
-      </div>
     </div >
   );
 }
