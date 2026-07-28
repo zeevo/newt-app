@@ -96,7 +96,7 @@ Public files (served at `/`) go to `apps/web/public/`. Next.js special files (fa
 4. Add a changeset with `/changeset` skill — required before merging
 5. Push and open PR with `gh pr create`
 
-**PR body:** summary bullets + test plan only. No "Generated with Claude Code" attribution.
+**PR body:** summary bullets only — no test plan section. No "Generated with Claude Code" attribution.
 
 **Changesets:** all packages version together via the `fixed` group in `.changeset/config.json` — one changeset bumps all in lockstep.
 
