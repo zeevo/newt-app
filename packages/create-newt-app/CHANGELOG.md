@@ -1,5 +1,17 @@
 # create-newt-app
 
+## 0.23.0
+
+### Minor Changes
+
+- c8db2f4: Passing any config flag (`--shadcn`, `--database`, `--testing`, `--linter`, `--deployment`, `--nest-di-only`, `--bare`) now runs the CLI non-interactively — using the flags and defaults for the rest. Running with no config flags launches the interactive prompts.
+
+  **Breaking:** the `--ci` flag is removed. For a non-interactive default scaffold, pass any explicit flag (e.g. `--testing jest`).
+
+### Patch Changes
+
+- 5ddffdb: fix the custom-server deployment build: the Next.js build type-checked `apps/web/server.ts`, which imports the Nest `AppModule` and its decorator-laden controllers, using a tsconfig without decorator support. The custom-server module now excludes `server.ts` from the web tsconfig (it is built separately via `tsconfig.server.json`), so `pnpm build` succeeds. Added `--deployment custom-server` to the scaffold matrix.
+
 ## 0.22.20
 
 ### Patch Changes
