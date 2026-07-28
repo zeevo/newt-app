@@ -165,7 +165,6 @@ export default function LogoRain({
     const circleMaterials: THREE.MeshBasicMaterial[] = [];
     const ringMaterials: THREE.MeshBasicMaterial[] = [];
     const logoMaterials: THREE.MeshBasicMaterial[] = [];
-    const groupAlphas: number[] = [];
 
     const meanSize = (MIN_SIZE + MAX_SIZE) / 2;
     const stars: Star[] = [];
@@ -189,9 +188,8 @@ export default function LogoRain({
         }
       });
 
+      // size drives cruise speed only; opacity is uniform across chips
       const t = (size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE);
-      const alpha = 0.5 + 0.5 * t;
-      groupAlphas.push(alpha);
 
       const group = new THREE.Group();
       group.scale.setScalar(size);
@@ -200,19 +198,19 @@ export default function LogoRain({
       const circleMaterial = new THREE.MeshBasicMaterial({
         color: theme.background,
         transparent: true,
-        opacity: alpha,
+        opacity: 1,
         depthWrite: false,
       });
       const ringMaterial = new THREE.MeshBasicMaterial({
         color: theme.primary,
         transparent: true,
-        opacity: 0.15 * alpha,
+        opacity: 0.15,
         depthWrite: false,
       });
       const logoMaterial = new THREE.MeshBasicMaterial({
         color: theme.silhouette,
         transparent: true,
-        opacity: theme.logoAlpha * alpha,
+        opacity: theme.logoAlpha,
         depthWrite: false,
       });
       logoMaterial.visible = false; // until its texture loads
@@ -265,17 +263,17 @@ export default function LogoRain({
 
     function applyTheme() {
       theme = readTheme();
-      circleMaterials.forEach((m, i) => {
+      circleMaterials.forEach((m) => {
         m.color.copy(theme.background);
-        m.opacity = groupAlphas[i]!;
+        m.opacity = 1;
       });
-      ringMaterials.forEach((m, i) => {
+      ringMaterials.forEach((m) => {
         m.color.copy(theme.primary);
-        m.opacity = 0.15 * groupAlphas[i]!;
+        m.opacity = 0.15;
       });
-      logoMaterials.forEach((m, i) => {
+      logoMaterials.forEach((m) => {
         m.color.copy(theme.silhouette);
-        m.opacity = theme.logoAlpha * groupAlphas[i]!;
+        m.opacity = theme.logoAlpha;
       });
       renderer.render(scene, camera);
     }
