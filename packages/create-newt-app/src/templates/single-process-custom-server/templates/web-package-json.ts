@@ -7,14 +7,15 @@ export default {
   "private": true,
   "scripts": {
     "dev": "tsx watch --tsconfig tsconfig.server.json server.ts",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && tsc -p tsconfig.server.json",
+    "start": "node dist/server.js",
     "db:migrate": "better-auth migrate"
   },
   "dependencies": {
     "@<%= projectName %>/api": "workspace:*",
     "@<%= projectName %>/auth": "workspace:*",
     "@<%= projectName %>/ui": "workspace:*",
+    "@nestjs/core": "^11.0.1",
     "@tailwindcss/postcss": "^4.2.1",
     "dotenv": "^17.3.1",
     "@tanstack/react-form": "^1.28.5",
@@ -23,6 +24,7 @@ export default {
     "next": "16.2.10",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "reflect-metadata": "^0.2.2",
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {

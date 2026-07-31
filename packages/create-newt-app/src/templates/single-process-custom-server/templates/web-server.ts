@@ -23,6 +23,8 @@ async function main() {
   await nextApp.prepare();
 
   const nestApp = await NestFactory.create(AppModule);
+  // apps/api/src/main.ts never runs here, so its prefix is set again
+  nestApp.setGlobalPrefix('api');
   await nestApp.init();
 
   const nestListener = nestApp

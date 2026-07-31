@@ -8,12 +8,11 @@ export default {
   "private": true,
   "license": "UNLICENSED",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./dist/index.js"
   },
   "scripts": {
     "build": "nest build",
     "start": "nest start",
-    "dev": "nest start --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main"
