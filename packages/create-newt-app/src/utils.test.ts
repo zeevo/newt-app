@@ -14,6 +14,7 @@ const templateData: TemplateData = {
   projectName: "my-app",
   testing: "jest",
   database: "sqlite",
+  deployment: "none",
   authSecret: "secret",
 };
 
