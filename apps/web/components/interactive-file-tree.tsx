@@ -204,7 +204,21 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               hint="di-only uses NestJS purely for dependency injection. Next.js route handlers call into Nest services instead of running a separate REST API."
               value={c.nestDiOnly ? 'di-only' : 'on'}
               options={['on', 'di-only'] as const}
-              onChange={(v) => set('nestDiOnly', v === 'di-only')}
+              onChange={(v) =>
+                setC((prev) => {
+                  const nestDiOnly = v === 'di-only';
+                  return {
+                    ...prev,
+                    nestDiOnly,
+                    // spa statically exports Next.js, which can't hold the
+                    // route handlers di-only runs on; the CLI rejects the pair
+                    deployment:
+                      nestDiOnly && prev.deployment === 'spa'
+                        ? 'none'
+                        : prev.deployment,
+                  };
+                })
+              }
             />
             <BoolToggle
               label="Better Auth"
@@ -258,7 +272,9 @@ export function InteractiveFileTree({ className }: { className?: string }) {
                 <NativeSelectOption value="custom-server">
                   custom-server
                 </NativeSelectOption>
-                <NativeSelectOption value="spa">spa</NativeSelectOption>
+                {!c.nestDiOnly && (
+                  <NativeSelectOption value="spa">spa</NativeSelectOption>
+                )}
               </NativeSelect>
             </Row>
           </div>
