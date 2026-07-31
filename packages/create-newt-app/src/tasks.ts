@@ -9,7 +9,7 @@ import {
   validateProjectName,
 } from "./utils.js";
 
-export async function scaffold(modules: Module[], options: { name: string; testing: 'jest' | 'vitest'; database: 'sqlite' | 'postgres' }) {
+export async function scaffold(modules: Module[], options: { name: string; testing: 'jest' | 'vitest'; database: 'sqlite' | 'postgres'; deployment: TemplateData['deployment'] }) {
   const validation = validateProjectName(options.name);
   if (!validation.valid) {
     console.error(`Error: ${validation.error}`);
@@ -20,6 +20,7 @@ export async function scaffold(modules: Module[], options: { name: string; testi
     projectName: options.name,
     testing: options.testing,
     database: options.database,
+    deployment: options.deployment,
     authSecret: randomBytes(32).toString("base64url"),
   };
 
