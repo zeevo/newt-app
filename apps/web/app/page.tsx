@@ -11,21 +11,9 @@ export default function Home() {
   return (
     <div>
       <section className="relative flex h-[775px] items-start justify-center overflow-hidden border-b bg-background pt-12 sm:pt-24">
-        <div
-          className="pointer-events-none absolute inset-0 z-0"
-          style={{
-            maskImage: [
-              'linear-gradient(to bottom, transparent 0%, black 12%)',
-              'linear-gradient(to left, transparent 0%, black 10%)',
-              'linear-gradient(to top, transparent 0%, black 10%)',
-            ].join(', '),
-            WebkitMaskImage: [
-              'linear-gradient(to bottom, transparent 0%, black 12%)',
-              'linear-gradient(to left, transparent 0%, black 10%)',
-              'linear-gradient(to top, transparent 0%, black 10%)',
-            ].join(', '),
-          }}
-        >
+        {/* the chips bounce off this frame: LogoRain sizes its camera to the
+            container, so insetting the box moves the tank walls with it */}
+        <div className="pointer-events-none absolute inset-5 z-0 overflow-hidden border">
           <LogoRain />
         </div>
         <div className="pointer-events-none relative z-10 flex flex-col items-center gap-5 px-4">
