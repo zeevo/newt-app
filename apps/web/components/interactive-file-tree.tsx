@@ -96,19 +96,23 @@ function Row({
 
 function Segmented<T extends string>({
   label,
+  hint,
+  logo,
   value,
   options,
   onChange,
   logos,
 }: {
   label: string;
+  hint?: string;
+  logo?: string;
   value: T;
   options: readonly T[];
   onChange: (v: T) => void;
   logos?: Partial<Record<T, string>>;
 }) {
   return (
-    <Row label={label}>
+    <Row label={label} hint={hint} logo={logo}>
       <ToggleGroup
         variant="outline"
         size="sm"
@@ -194,11 +198,13 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               pressed
               disabled
             />
-            <BoolToggle
+            <Segmented
               label="NestJS"
               logo="/logos/nestjs.svg"
-              pressed
-              disabled
+              hint="di-only uses NestJS purely for dependency injection. Next.js route handlers call into Nest services instead of running a separate REST API."
+              value={c.nestDiOnly ? 'di-only' : 'on'}
+              options={['on', 'di-only'] as const}
+              onChange={(v) => set('nestDiOnly', v === 'di-only')}
             />
             <BoolToggle
               label="Better Auth"
@@ -235,12 +241,6 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               logo="/logos/shadcn.svg"
               pressed={c.shadcn}
               onChange={(v) => set('shadcn', v)}
-            />
-            <BoolToggle
-              label="Nest DI-only"
-              hint="Use NestJS only for dependency injection. Next.js route handlers call into Nest services instead of running a separate REST API."
-              pressed={c.nestDiOnly}
-              onChange={(v) => set('nestDiOnly', v)}
             />
             <Row label="extras">
               <NativeSelect
