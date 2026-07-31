@@ -7,10 +7,10 @@ import { resolve } from 'path';
 dotenv.config({ path: resolve(process.cwd(), '../../.env') });
 dotenv.config({ path: resolve(process.cwd(), '.env') });
 
+// No output setting: server.ts is the server, so Next runs in-process rather
+// than through its own standalone entrypoint.
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: "standalone",
-};
+const nextConfig = {};
 
 export default nextConfig;`,
 };

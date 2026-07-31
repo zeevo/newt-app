@@ -2,8 +2,9 @@ export default {
   filename: "apps/web/tsconfig.server.json",
   template: `{
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "outDir": "dist",
     "target": "ES2023",
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
