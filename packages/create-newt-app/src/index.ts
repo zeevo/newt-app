@@ -91,14 +91,18 @@ export async function doInit(options: Options) {
           message: "Include the todo example?",
           initialValue: true,
         }),
-      deployment: () =>
+      deployment: ({ results }) =>
         p.select<Deployment>({
           message: "Deployment extras?",
           options: [
             { value: "none", label: "None", hint: "skip" },
             { value: "standalone", label: "Standalone + Dockerfile", hint: "Dockerfiles + docker-compose.yml" },
             { value: "custom-server", label: "Custom Server", hint: "single process, single port" },
-            { value: "spa", label: "SPA Mode", hint: "static export served by NestJS" },
+            // SPA statically exports Next.js, which can't hold the route
+            // handlers DI-only mode runs on
+            ...(results.nestDiOnly
+              ? []
+              : [{ value: "spa" as const, label: "SPA Mode", hint: "static export served by NestJS" }]),
           ],
           initialValue: "none",
         }),
@@ -120,6 +124,15 @@ export async function doInit(options: Options) {
     const deployment: Deployment = options.nonInteractive ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'none';
     const nestDiOnly = options.nonInteractive ? options.nestDiOnly : (group as { nestDiOnly?: boolean }).nestDiOnly ?? false;
     const todoExample = options.nonInteractive ? !options.bare : (group as { todoExample?: boolean }).todoExample ?? true;
+
+    if (deployment === 'spa' && nestDiOnly) {
+      throw new Error(
+        "--deployment spa cannot be combined with --nest-di-only.\n" +
+        "SPA mode statically exports Next.js (output: 'export'), which cannot include the\n" +
+        "API route handlers that DI-only mode depends on. Pick one: drop --nest-di-only to\n" +
+        "get SPA mode with NestJS controllers, or drop --deployment spa."
+      );
+    }
 
     const deploymentModule =
       deployment === 'standalone' ? templates.deploymentStandalone :
