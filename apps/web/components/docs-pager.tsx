@@ -15,7 +15,7 @@ export function DocsPager({ prev, next }: DocsPagerProps) {
   if (!prev && !next) return null;
 
   return (
-    <div className="mt-12 flex items-center justify-between border-t border-border pt-6">
+    <div className="mt-12 flex items-center justify-between gap-6 border-t border-border pt-6">
       {prev ? (
         <Link
           href={`/docs/${prev.slug}`}
