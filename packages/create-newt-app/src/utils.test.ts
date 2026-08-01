@@ -75,9 +75,11 @@ describe("validateDeploymentCombo", () => {
   });
 
   it("accepts nest-di-only with every other deployment", () => {
-    for (const deployment of ["none", "standalone", "custom-server"]) {
-      expect(validateDeploymentCombo(deployment, true).valid).toBe(true);
-    }
+    expect(
+      ["none", "standalone", "custom-server"].every(
+        (deployment) => validateDeploymentCombo(deployment, true).valid,
+      ),
+    ).toBe(true);
   });
 });
 
