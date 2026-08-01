@@ -172,6 +172,24 @@ export async function sortPackageJsons(destDir: string) {
   );
 }
 
+export function validateDeploymentCombo(
+  deployment: string,
+  nestDiOnly: boolean,
+): ValidationResult {
+  if (deployment === "spa" && nestDiOnly) {
+    return {
+      valid: false,
+      error:
+        "--deployment spa cannot be combined with --nest-di-only.\n" +
+        "SPA mode statically exports Next.js (output: 'export'), which cannot include the\n" +
+        "API route handlers that DI-only mode depends on. Pick one: drop --nest-di-only to\n" +
+        "get SPA mode with NestJS controllers, or drop --deployment spa.",
+    };
+  }
+
+  return { valid: true };
+}
+
 export function validateProjectName(projectName: string): ValidationResult {
   if (!projectName) {
     return { valid: false, error: "Project name is required" };
