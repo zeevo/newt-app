@@ -6,6 +6,7 @@ import {
   sortPackageJsons,
   updatePackageJson,
   updateScripts,
+  validateDeploymentCombo,
   validateProjectName,
 } from "./utils";
 import type { TemplateData } from "./types";
@@ -57,6 +58,26 @@ describe("validateProjectName", () => {
 
   it("accepts a normal name that does not already exist", () => {
     expect(validateProjectName("some-fresh-app-xyz").valid).toBe(true);
+  });
+});
+
+describe("validateDeploymentCombo", () => {
+  it("rejects spa combined with nest-di-only", () => {
+    const result = validateDeploymentCombo("spa", true);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain(
+      "--deployment spa cannot be combined with --nest-di-only.",
+    );
+  });
+
+  it("accepts spa without nest-di-only", () => {
+    expect(validateDeploymentCombo("spa", false).valid).toBe(true);
+  });
+
+  it("accepts nest-di-only with every other deployment", () => {
+    for (const deployment of ["none", "standalone", "custom-server"]) {
+      expect(validateDeploymentCombo(deployment, true).valid).toBe(true);
+    }
   });
 });
 

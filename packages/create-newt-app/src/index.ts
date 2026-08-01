@@ -6,6 +6,7 @@ import { Command } from "commander";
 import * as p from "@clack/prompts";
 import { templates } from "./templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
+import { validateDeploymentCombo } from "./utils.js";
 
 type Testing = 'jest' | 'vitest';
 type Database = 'sqlite' | 'postgres';
@@ -125,13 +126,9 @@ export async function doInit(options: Options) {
     const nestDiOnly = options.nonInteractive ? options.nestDiOnly : (group as { nestDiOnly?: boolean }).nestDiOnly ?? false;
     const todoExample = options.nonInteractive ? !options.bare : (group as { todoExample?: boolean }).todoExample ?? true;
 
-    if (deployment === 'spa' && nestDiOnly) {
-      throw new Error(
-        "--deployment spa cannot be combined with --nest-di-only.\n" +
-        "SPA mode statically exports Next.js (output: 'export'), which cannot include the\n" +
-        "API route handlers that DI-only mode depends on. Pick one: drop --nest-di-only to\n" +
-        "get SPA mode with NestJS controllers, or drop --deployment spa."
-      );
+    const deploymentCombo = validateDeploymentCombo(deployment, nestDiOnly);
+    if (!deploymentCombo.valid) {
+      throw new Error(deploymentCombo.error);
     }
 
     const deploymentModule =
