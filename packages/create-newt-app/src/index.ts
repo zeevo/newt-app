@@ -164,6 +164,11 @@ export async function doInit(options: Options) {
       testing === 'vitest' ? templates.testingVitest : templates.testingJest,
       ...(deploymentModule ? [deploymentModule] : []),
       ...(nestDiOnly ? [templates.nestDiOnly] : [templates.apiControllers]),
+      // nest-di-only overwrites the standalone next.config.js and leaves the
+      // Dockerfile pointing at an api entrypoint DI-only never emits
+      ...(nestDiOnly && deployment === 'standalone'
+        ? [templates.deploymentStandaloneDi]
+        : []),
       ...(todoExample
         ? [
             templates.todoExampleApi,
