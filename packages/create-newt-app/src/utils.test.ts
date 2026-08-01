@@ -84,11 +84,11 @@ describe("validateDeploymentCombo", () => {
 
 describe("validateFlagValue", () => {
   it("accepts every allowed value", () => {
-    for (const value of ["jest", "vitest"]) {
-      expect(validateFlagValue("--testing", value, ["jest", "vitest"]).valid).toBe(
-        true,
-      );
-    }
+    expect(
+      ["jest", "vitest"].every(
+        (value) => validateFlagValue("--testing", value, ["jest", "vitest"]).valid,
+      ),
+    ).toBe(true);
   });
 
   it("rejects an unrecognised value and names the valid choices", () => {

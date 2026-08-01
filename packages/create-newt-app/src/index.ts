@@ -297,12 +297,13 @@ program
         { flag: "--deployment", value: options.deployment, allowed: DEPLOYMENT_CHOICES },
       ];
 
-      for (const { flag, value, allowed } of choices) {
-        const result = validateFlagValue(flag, value, allowed);
-        if (!result.valid) {
-          console.error(`Error: ${result.error}`);
-          process.exit(1);
-        }
+      const invalid = choices
+        .map(({ flag, value, allowed }) => validateFlagValue(flag, value, allowed))
+        .find((result) => !result.valid);
+
+      if (invalid) {
+        console.error(`Error: ${invalid.error}`);
+        process.exit(1);
       }
 
       await doInit({
