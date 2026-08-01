@@ -71,8 +71,10 @@ function Row({
   logo?: string;
   children: React.ReactNode;
 }) {
+  // the controls are nowrap and won't shrink, so on a narrow screen they drop
+  // to their own line rather than pushing past the panel
   return (
-    <div className="flex items-center justify-between gap-3">
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
       <span className="flex items-center gap-2 font-mono text-sm text-muted-foreground">
         {logo && <Logo src={logo} />}
         {label}
