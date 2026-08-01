@@ -69,13 +69,15 @@ export function MobileNav({
           </span>
       </PopoverTrigger>
       <PopoverContent
-        className="no-scrollbar h-(--available-height) w-(--available-width) overflow-y-auto rounded-none border-none bg-background/90 p-0 shadow-none backdrop-blur duration-100"
+        className="no-scrollbar flex h-(--available-height) w-(--available-width) flex-col overflow-hidden rounded-none border-none bg-background/90 p-0 shadow-none backdrop-blur duration-100"
         align="start"
         side="bottom"
         alignOffset={-16}
         sideOffset={14}
       >
-        <div className="flex flex-col gap-12 overflow-auto px-6 py-6">
+        {/* min-h-0 lets this shrink below its content so it can actually
+            scroll; without it the links overflow the popover unreachably */}
+        <div className="flex min-h-0 flex-1 flex-col gap-12 overflow-y-auto px-6 py-6">
           <div className="flex flex-col gap-4">
             <div className="text-sm font-medium text-muted-foreground">
               Menu
