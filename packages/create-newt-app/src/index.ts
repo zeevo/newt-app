@@ -6,12 +6,17 @@ import { Command } from "commander";
 import * as p from "@clack/prompts";
 import { templates } from "./templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
-import { validateDeploymentCombo } from "./utils.js";
+import { validateDeploymentCombo, validateFlagValue } from "./utils.js";
 
-type Testing = 'jest' | 'vitest';
-type Database = 'sqlite' | 'postgres';
-type Linter = 'eslint' | 'oxc';
-type Deployment = 'none' | 'standalone' | 'custom-server' | 'spa';
+const TESTING_CHOICES = ['jest', 'vitest'] as const;
+const DATABASE_CHOICES = ['sqlite', 'postgres'] as const;
+const LINTER_CHOICES = ['eslint', 'oxc'] as const;
+const DEPLOYMENT_CHOICES = ['none', 'standalone', 'custom-server', 'spa'] as const;
+
+type Testing = (typeof TESTING_CHOICES)[number];
+type Database = (typeof DATABASE_CHOICES)[number];
+type Linter = (typeof LINTER_CHOICES)[number];
+type Deployment = (typeof DEPLOYMENT_CHOICES)[number];
 
 type Options = {
   name?: string;
@@ -284,18 +289,32 @@ program
         (flag) => command.getOptionValueSource(flag) === "cli"
       );
 
+      // Reject typos instead of silently falling back to a default.
+      const choices = [
+        { flag: "--testing", value: options.testing, allowed: TESTING_CHOICES },
+        { flag: "--database", value: options.database, allowed: DATABASE_CHOICES },
+        { flag: "--linter", value: options.linter, allowed: LINTER_CHOICES },
+        { flag: "--deployment", value: options.deployment, allowed: DEPLOYMENT_CHOICES },
+      ];
+
+      for (const { flag, value, allowed } of choices) {
+        const result = validateFlagValue(flag, value, allowed);
+        if (!result.valid) {
+          console.error(`Error: ${result.error}`);
+          process.exit(1);
+        }
+      }
+
       await doInit({
         name,
         install: options.install,
         git: options.git,
         nonInteractive,
         shadcn: options.shadcn,
-        testing: (options.testing === 'vitest' ? 'vitest' : 'jest') as Testing,
-        database: (options.database === 'postgres' ? 'postgres' : 'sqlite') as Database,
-        linter: (options.linter === 'oxc' ? 'oxc' : 'eslint') as Linter,
-        deployment: (['standalone', 'custom-server', 'spa'].includes(options.deployment)
-          ? options.deployment
-          : 'none') as Deployment,
+        testing: options.testing as Testing,
+        database: options.database as Database,
+        linter: options.linter as Linter,
+        deployment: options.deployment as Deployment,
         nestDiOnly: options.nestDiOnly,
         bare: options.bare,
       });
