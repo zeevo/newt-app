@@ -52,12 +52,15 @@ fail() { # message, log-to-dump
   exit 1
 }
 
+# Readiness only: any HTTP response means the process is listening. Whether the
+# response is *correct* is what probe() decides, so a bad status fails fast
+# instead of spinning out this timeout.
 wait_for() { # url, log-name
   for _ in $(seq 1 90); do
-    curl -sf -o /dev/null "$1" && return 0
+    curl -s -o /dev/null "$1" && return 0
     sleep 1
   done
-  fail "nothing served $1 within 90s" "$2"
+  fail "nothing listening at $1 after 90s" "$2"
 }
 
 probe() { # description, url, expected-status
@@ -97,8 +100,14 @@ else
   fi
 fi
 
-wait_for "$BASE/api/hello" "$([ "$BASE" = "$WEB" ] && echo web || echo api)"
-wait_for "$WEB/" web
+# Wait once per process that has to come up; everything else is probed below,
+# so a wrong response fails immediately instead of spinning out the timeout.
+if [ "$BASE" = "$WEB" ]; then
+  wait_for "$WEB/" web
+else
+  wait_for "$BASE/api/hello" api
+  wait_for "$WEB/" web
+fi
 
 probe "web serves the app"        "$WEB/"                       200
 probe "api route"                 "$BASE/api/hello"             200
