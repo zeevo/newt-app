@@ -20,7 +20,7 @@ export default function Pre({
     <pre
       ref={preRef}
       className={cn(
-        'no-scrollbar relative min-w-0 overflow-x-auto px-4 py-3.5 outline-none has-[[data-highlighted-line]]:px-0 has-[[data-line-numbers]]:px-0 has-[[data-slot=tabs]]:p-0',
+        'no-scrollbar relative min-w-0 overflow-x-auto px-4 pt-11 pb-3.5 outline-none has-[[data-highlighted-line]]:px-0 has-[[data-line-numbers]]:px-0 has-[[data-slot=tabs]]:p-0 sm:pt-3.5',
         className,
       )}
       {...props}
