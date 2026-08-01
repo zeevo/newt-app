@@ -1,5 +1,14 @@
 # create-newt-app
 
+## 0.23.1
+
+### Patch Changes
+
+- 88fa7cb: Make `--deployment custom-server` actually run. The single-process server never booted in dev (missing deps) or production (`next start` ran instead of `server.ts`), so `/api/*` was unreachable in both.
+- af628f3: Fix `--deployment standalone --nest-di-only`. DI-only overwrote the standalone `next.config.js` and dropped `output: "standalone"`, so the Docker build failed copying `.next/standalone`, and the api image stage ran an entrypoint DI-only never emits. DI-only standalone now builds a single web image with Nest wired in.
+- b6784aa: Reject `--deployment spa --nest-di-only`. The combination silently produced an app with no static export and no working auth; SPA mode statically exports Next.js, which cannot contain the route handlers DI-only mode runs on.
+- 95104f7: Serve the static export in `--deployment spa`. The `ServeStaticModule` template was overwritten by the api-controllers and todo-example app modules, so scaffolded SPA apps 404'd on `/`.
+
 ## 0.23.0
 
 ### Minor Changes
