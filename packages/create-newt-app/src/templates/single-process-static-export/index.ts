@@ -7,6 +7,10 @@ import webNextConfig from "./templates/web-next-config";
 // overwritten. Those templates add ServeStaticModule when deployment is 'spa'.
 const singleProcessStaticExport: Module = {
   templates: [apiPackageJson, webNextConfig],
+  overrides: [
+    { file: "apps/api/package.json", from: "api" },
+    { file: "apps/web/next.config.js", from: "web" },
+  ],
 };
 
 export default singleProcessStaticExport;
