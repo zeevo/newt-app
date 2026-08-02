@@ -172,21 +172,23 @@ export default function LogoRain({
       const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
       // seed across the whole view so it starts populated; a few best-candidate
       // samples gently discourage clumping without looking gridded
-      let x = 0;
-      let y = 0;
-      let bestDist = -Infinity;
-      Array.from({ length: 4 }).forEach(() => {
-        const cx = Math.random() * VIEW_W;
-        const cy = Math.random() * VIEW_H;
-        const dist = stars.length
-          ? Math.min(...stars.map((o) => Math.hypot(o.x - cx, o.y - cy) - o.size))
-          : Infinity;
-        if (dist > bestDist) {
-          bestDist = dist;
-          x = cx;
-          y = cy;
-        }
-      });
+      const { x, y } = Array.from({ length: 4 }, () => ({
+        x: Math.random() * VIEW_W,
+        y: Math.random() * VIEW_H,
+      })).reduce<{ x: number; y: number; dist: number }>(
+        (best, candidate) => {
+          const dist = stars.length
+            ? Math.min(
+                ...stars.map(
+                  (o) =>
+                    Math.hypot(o.x - candidate.x, o.y - candidate.y) - o.size,
+                ),
+              )
+            : Infinity;
+          return dist > best.dist ? { ...candidate, dist } : best;
+        },
+        { x: 0, y: 0, dist: -Infinity },
+      );
 
       // size drives cruise speed only; opacity is uniform across chips
       const t = (size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE);
