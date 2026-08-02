@@ -129,6 +129,30 @@ if [ "$MODE" = standalone ] && [ -f Dockerfile ]; then
     [ -e "${src#/app/}" ] || fail "Dockerfile copies ${src}, which the build did not produce"
     echo "  ok  Dockerfile artifact exists: ${src#/app/}"
   done
+
+  # A --filter naming a package that doesn't exist fails the image build before
+  # anything is copied, so the artifact check above can't see it. Package names
+  # differ by mode: DI-only scopes the api as @<project>/api, plain api is "api".
+  node -e '
+    const { readFileSync, readdirSync, existsSync } = require("fs");
+    const names = ["apps", "packages"]
+      .filter(existsSync)
+      .flatMap((dir) => readdirSync(dir).map((entry) => `${dir}/${entry}/package.json`))
+      .filter(existsSync)
+      .map((file) => JSON.parse(readFileSync(file, "utf8")).name);
+
+    const filters = [
+      ...readFileSync("Dockerfile", "utf8").matchAll(/--filter=(\S+)/g),
+    ].map((match) => match[1]);
+
+    const missing = filters.filter((filter) => !names.includes(filter));
+    if (missing.length) {
+      console.error(`::error::Dockerfile filters no package in this workspace: ${missing.join(", ")}`);
+      console.error(`workspace packages: ${names.join(", ")}`);
+      process.exit(1);
+    }
+    console.log(`  ok  Dockerfile filters resolve: ${filters.join(", ")}`);
+  ' || exit 1
 fi
 
 echo "smoke: $MODE ok"

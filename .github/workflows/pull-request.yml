@@ -73,6 +73,7 @@ jobs:
           - "--shadcn --linter oxc"
           - "--shadcn --nest-di-only"
           - "--deployment standalone"
+          - "--deployment standalone --nest-di-only"
           - "--deployment spa"
           - "--deployment custom-server"
     name: scaffold (${{ matrix.flags }})
