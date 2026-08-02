@@ -7,6 +7,7 @@ import {
   updatePackageJson,
   updateScripts,
   validateDeploymentCombo,
+  validateFlagValue,
   validateProjectName,
 } from "./utils";
 import type { TemplateData } from "./types";
@@ -78,6 +79,41 @@ describe("validateDeploymentCombo", () => {
     for (const deployment of ["none", "standalone", "custom-server"]) {
       expect(validateDeploymentCombo(deployment, true).valid).toBe(true);
     }
+  });
+});
+
+describe("validateFlagValue", () => {
+  it("accepts every allowed value", () => {
+    expect(
+      ["jest", "vitest"].every(
+        (value) => validateFlagValue("--testing", value, ["jest", "vitest"]).valid,
+      ),
+    ).toBe(true);
+  });
+
+  it("rejects an unrecognised value and names the valid choices", () => {
+    const result = validateFlagValue("--deployment", "spaa", [
+      "none",
+      "standalone",
+      "custom-server",
+      "spa",
+    ]);
+    expect(result.valid).toBe(false);
+    expect(result.error).toBe(
+      'Invalid value "spaa" for --deployment. Valid choices: none, standalone, custom-server, spa.',
+    );
+  });
+
+  it("rejects a value that only differs by case", () => {
+    expect(validateFlagValue("--linter", "ESLint", ["eslint", "oxc"]).valid).toBe(
+      false,
+    );
+  });
+
+  it("rejects an empty value", () => {
+    expect(validateFlagValue("--database", "", ["sqlite", "postgres"]).valid).toBe(
+      false,
+    );
   });
 });
 

@@ -172,6 +172,21 @@ export async function sortPackageJsons(destDir: string) {
   );
 }
 
+export function validateFlagValue(
+  flag: string,
+  value: string,
+  allowed: readonly string[],
+): ValidationResult {
+  if (allowed.includes(value)) {
+    return { valid: true };
+  }
+
+  return {
+    valid: false,
+    error: `Invalid value "${value}" for ${flag}. Valid choices: ${allowed.join(", ")}.`,
+  };
+}
+
 export function validateDeploymentCombo(
   deployment: string,
   nestDiOnly: boolean,
