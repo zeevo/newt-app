@@ -77,12 +77,24 @@ describe("validateDeploymentCombo", () => {
     expect(validateDeploymentCombo("spa", false).valid).toBe(true);
   });
 
-  it("accepts nest-di-only with every other deployment", () => {
+  it("rejects custom-server combined with nest-di-only", () => {
+    const result = validateDeploymentCombo("custom-server", true);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain(
+      "--deployment custom-server cannot be combined with --nest-di-only.",
+    );
+  });
+
+  it("accepts custom-server without nest-di-only", () => {
+    expect(validateDeploymentCombo("custom-server", false).valid).toBe(true);
+  });
+
+  it("accepts nest-di-only with the deployments that support it", () => {
     expect(
-      ["none", "standalone", "custom-server"].map(
+      ["none", "standalone"].map(
         (deployment) => validateDeploymentCombo(deployment, true).valid,
       ),
-    ).toEqual([true, true, true]);
+    ).toEqual([true, true]);
   });
 });
 

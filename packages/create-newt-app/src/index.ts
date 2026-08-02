@@ -103,12 +103,14 @@ export async function doInit(options: Options) {
           options: [
             { value: "none", label: "None", hint: "skip" },
             { value: "standalone", label: "Standalone + Dockerfile", hint: "Dockerfiles + docker-compose.yml" },
-            { value: "custom-server", label: "Custom Server", hint: "single process, single port" },
-            // SPA statically exports Next.js, which can't hold the route
-            // handlers DI-only mode runs on
+            // DI-only already runs Nest inside the Next process, and SPA's static
+            // export can't hold the route handlers DI-only depends on
             ...(results.nestDiOnly
               ? []
-              : [{ value: "spa" as const, label: "SPA Mode", hint: "static export served by NestJS" }]),
+              : [
+                  { value: "custom-server" as const, label: "Custom Server", hint: "single process, single port" },
+                  { value: "spa" as const, label: "SPA Mode", hint: "static export served by NestJS" },
+                ]),
           ],
           initialValue: "none",
         }),
