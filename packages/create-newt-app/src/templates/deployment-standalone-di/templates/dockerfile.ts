@@ -9,7 +9,7 @@ FROM base AS build
 WORKDIR /app
 COPY . .
 RUN pnpm install --frozen-lockfile
-RUN pnpm build --filter=web --filter=api --filter=@<%= projectName %>/auth
+RUN pnpm build --filter=web --filter=@<%= projectName %>/api --filter=@<%= projectName %>/auth
 
 # --- web ---
 # DI-only has no api entrypoint: Nest is wired into this image through the
