@@ -52,9 +52,11 @@ describe("validateProjectName", () => {
   });
 
   it("rejects names with invalid path characters", () => {
-    for (const name of ["foo/bar", "a:b", "we*rd", "no?"]) {
-      expect(validateProjectName(name).valid).toBe(false);
-    }
+    expect(
+      ["foo/bar", "a:b", "we*rd", "no?"].map(
+        (name) => validateProjectName(name).valid,
+      ),
+    ).toEqual([false, false, false, false]);
   });
 
   it("accepts a normal name that does not already exist", () => {
@@ -76,9 +78,11 @@ describe("validateDeploymentCombo", () => {
   });
 
   it("accepts nest-di-only with every other deployment", () => {
-    for (const deployment of ["none", "standalone", "custom-server"]) {
-      expect(validateDeploymentCombo(deployment, true).valid).toBe(true);
-    }
+    expect(
+      ["none", "standalone", "custom-server"].map(
+        (deployment) => validateDeploymentCombo(deployment, true).valid,
+      ),
+    ).toEqual([true, true, true]);
   });
 });
 
