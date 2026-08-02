@@ -7,6 +7,7 @@ import * as p from "@clack/prompts";
 import { templates } from "./templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 import { validateDeploymentCombo, validateFlagValue } from "./utils.js";
+import { renderAppModule } from "./render-app-module.js";
 
 const TESTING_CHOICES = ['jest', 'vitest'] as const;
 const DATABASE_CHOICES = ['sqlite', 'postgres'] as const;
@@ -180,6 +181,20 @@ export async function doInit(options: Options) {
         : []),
     ];
 
+    // assembled from every module's contribution, so no module owns the file
+    const composed = [
+      ...allModules,
+      {
+        name: "appModuleRenderer",
+        templates: [
+          {
+            filename: "apps/api/src/app.module.ts",
+            template: renderAppModule(allModules),
+          },
+        ],
+      },
+    ];
+
     const name = (group as { name?: string }).name ?? options.name ?? "";
 
     const taskBuilder = new TaskBuilder();
@@ -187,7 +202,7 @@ export async function doInit(options: Options) {
     taskBuilder.add({
       title: "Scaffolding project",
       task: async () => {
-        await scaffold(allModules, { name, testing, database, deployment });
+        await scaffold(composed, { name, testing, database, deployment });
         return "Scaffolded.";
       },
     });

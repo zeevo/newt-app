@@ -6,8 +6,6 @@ import dbSchema from "./templates/db-schema";
 import dbMigrationTodos from "./templates/db-migration-todos";
 import todosController from "./templates/todos-controller";
 import todosModuleControllers from "./templates/todos-module-controllers";
-import appModuleControllers from "./templates/app-module-controllers";
-import appModuleDi from "./templates/app-module-di";
 import apiIndex from "./templates/api-index";
 import webTodosRoute from "./templates/web-todos-route";
 import webTodosIdRoute from "./templates/web-todos-id-route";
@@ -20,6 +18,10 @@ import shadcnPage from "./templates/shadcn-page";
 // Shared by every mode: the Kysely-backed todos service, its Nest module, and
 // the db schema + migration for the todo table.
 export const todoExampleApi: Module = {
+  appModule: {
+    importStatements: ["import { TodosModule } from './todos/todos.module';"],
+    imports: ["TodosModule"],
+  },
   templates: [
     todosModule,
     todosService,
@@ -31,12 +33,12 @@ export const todoExampleApi: Module = {
 
 // api-controllers mode: REST controller plus app.module wired with TodosModule.
 export const todoExampleControllers: Module = {
-  templates: [todosController, todosModuleControllers, appModuleControllers],
+  templates: [todosController, todosModuleControllers],
 };
 
 // nest-di-only mode: Next.js route handlers plus app.module wired with TodosModule.
 export const todoExampleDi: Module = {
-  templates: [webTodosRoute, webTodosIdRoute, webTodosToggleRoute, appModuleDi, apiIndex],
+  templates: [webTodosRoute, webTodosIdRoute, webTodosToggleRoute, apiIndex],
 };
 
 // Web UI: TodoList component and the homepage that renders it.
