@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.23.2
+
+### Patch Changes
+
+- 1ac195b: Use array methods instead of loops in the scaffolder's unit tests.
+- 5413783: Extract the spa + nest-di-only rejection into a pure `validateDeploymentCombo` helper with unit tests. CLI behaviour and the error message are unchanged.
+- dd103c7: Reject unrecognised values for `--testing`, `--database`, `--linter`, and `--deployment` instead of silently falling back to a default. A typo like `--deployment spaa` now exits with an error naming the valid choices rather than scaffolding with no deployment extras.
+
 ## 0.23.1
 
 ### Patch Changes
