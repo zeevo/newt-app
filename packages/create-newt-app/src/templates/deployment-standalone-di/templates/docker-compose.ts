@@ -2,6 +2,9 @@ export default {
   filename: "docker-compose.yml",
   template: `x-app-env: &app-env
   BETTER_AUTH_SECRET: \${BETTER_AUTH_SECRET}
+  # Better Auth trusts this origin; without it every deployment falls back to
+  # localhost:3000 and rejects requests from the real one.
+  BETTER_AUTH_URL: \${BETTER_AUTH_URL:-http://localhost:3000}
   DATABASE_URL: postgresql://postgres:\${POSTGRES_PASSWORD:-postgres}@db:5432/postgres
 
 services:
