@@ -202,6 +202,17 @@ export function validateDeploymentCombo(
     };
   }
 
+  if (deployment === "custom-server" && nestDiOnly) {
+    return {
+      valid: false,
+      error:
+        "--deployment custom-server cannot be combined with --nest-di-only.\n" +
+        "DI-only keeps Next.js as the server and calls Nest in-process, so it overwrites the\n" +
+        "scripts that would run the custom server — apps/web/server.ts would be generated but\n" +
+        "never invoked. Both already run Nest inside the Next.js process; pick one.",
+    };
+  }
+
   return { valid: true };
 }
 
