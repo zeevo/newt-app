@@ -35,7 +35,7 @@ export function getStaticFilePath(name: string): string {
   return fileURLToPath(new URL(`./static/${name}`, import.meta.url));
 }
 
-export const templates = {
+const registry = {
   root,
   web,
   api,
@@ -61,3 +61,10 @@ export const templates = {
   todoExampleWeb,
   todoExampleShadcn,
 };
+
+export const templates = registry;
+
+// Reverse lookup for diagnostics; keeps Module free of a name field.
+export const moduleNames = new Map(
+  Object.entries(registry).map(([name, mod]) => [mod, name] as const),
+);

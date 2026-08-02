@@ -1,4 +1,6 @@
+import type { Selection } from "../../types";
 export default {
+  when: (s) => !s.nestDiOnly && s.deployment !== 'custom-server',
   filename: "apps/web/package.json",
   template: `{
   "name": "web",

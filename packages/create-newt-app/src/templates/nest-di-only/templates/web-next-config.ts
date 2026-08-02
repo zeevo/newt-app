@@ -1,4 +1,6 @@
+import type { Selection } from "../../types";
 export default {
+  when: (s) => s.deployment !== 'standalone',
   filename: "apps/web/next.config.js",
   template: `import dotenv from 'dotenv';
 import { resolve } from 'path';

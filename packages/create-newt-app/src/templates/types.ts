@@ -5,7 +5,23 @@ export type TemplateData = {
   deployment: 'none' | 'standalone' | 'custom-server' | 'spa';
   authSecret: string;
 };
-export type Template = { filename: string; template: string };
+// Every option a template can select on. Kept separate from TemplateData
+// because these steer *which* template is used, not what it renders.
+export type Selection = {
+  deployment: 'none' | 'standalone' | 'custom-server' | 'spa';
+  nestDiOnly: boolean;
+  todoExample: boolean;
+  shadcn: boolean;
+  database: 'sqlite' | 'postgres';
+};
+
+// `when` makes precedence explicit: exactly one template may claim a filename
+// for a given selection, so no template can silently overwrite another.
+export type Template = {
+  filename: string;
+  template: string;
+  when?: (selection: Selection) => boolean;
+};
 export type File = { src: string; filename: string };
 export type Package = { package: string; module: string; version: string; dev?: boolean };
 export type Script = { module: string; name: string; script: string };

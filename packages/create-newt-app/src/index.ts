@@ -187,7 +187,13 @@ export async function doInit(options: Options) {
     taskBuilder.add({
       title: "Scaffolding project",
       task: async () => {
-        await scaffold(allModules, { name, testing, database, deployment });
+        await scaffold(allModules, {
+          name,
+          testing,
+          database,
+          deployment,
+          selection: { deployment, nestDiOnly, todoExample, shadcn: useShadcn, database },
+        });
         return "Scaffolded.";
       },
     });
