@@ -15,26 +15,20 @@ function useActiveItem(ids: string[]) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        }
+        entries
+          .filter((entry) => entry.isIntersecting)
+          .forEach((entry) => setActiveId(entry.target.id));
       },
       { rootMargin: '0% 0% -80% 0%' },
     );
 
-    for (const id of ids) {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    }
+    const els = ids
+      .map((id) => document.getElementById(id))
+      .filter((el) => el !== null);
 
-    return () => {
-      for (const id of ids) {
-        const el = document.getElementById(id);
-        if (el) observer.unobserve(el);
-      }
-    };
+    els.forEach((el) => observer.observe(el));
+
+    return () => els.forEach((el) => observer.unobserve(el));
   }, [ids]);
 
   return activeId;
