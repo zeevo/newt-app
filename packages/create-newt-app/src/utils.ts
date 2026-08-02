@@ -172,6 +172,42 @@ export async function sortPackageJsons(destDir: string) {
   );
 }
 
+// Templates are whole-file, so when two modules in one scaffold write the same
+// path the later one wins and the earlier one's work vanishes. That silence has
+// produced real bugs (spa losing ServeStaticModule, standalone losing
+// output: "standalone"), so a discard has to be declared or it is an error.
+export function validateTemplateOwnership(modules: Module[]): ValidationResult {
+  const owner = new Map<string, string>();
+
+  const problems = modules.flatMap((mod) => {
+    const name = mod.name ?? "an unnamed module";
+    return mod.templates.flatMap((template) => {
+      const previous = owner.get(template.filename);
+      owner.set(template.filename, name);
+
+      if (previous === undefined || previous === name) return [];
+
+      const declared = (mod.overrides ?? []).some(
+        (override) =>
+          override.file === template.filename && override.from === previous,
+      );
+      if (declared) return [];
+
+      return [
+        `${name} writes ${template.filename}, discarding the version from ${previous}. ` +
+          `If that is intended, add { file: "${template.filename}", from: "${previous}" } ` +
+          `to ${name}'s overrides.`,
+      ];
+    });
+  });
+
+  if (problems.length) {
+    return { valid: false, error: problems.join("\n") };
+  }
+
+  return { valid: true };
+}
+
 export function validateFlagValue(
   flag: string,
   value: string,

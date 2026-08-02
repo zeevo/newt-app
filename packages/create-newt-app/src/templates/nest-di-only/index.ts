@@ -18,6 +18,16 @@ const nestDiOnly: Module = {
     webNextConfig,
     webTsconfig,
   ],
+  overrides: [
+    { file: "apps/api/package.json", from: "api" },
+    { file: "apps/api/tsconfig.json", from: "api" },
+    { file: "apps/web/next.config.js", from: "web" },
+    // standalone composes first, so DI-only replaces its config and the
+    // deploymentStandaloneDi module puts output: "standalone" back
+    { file: "apps/web/next.config.js", from: "deploymentStandalone" },
+    { file: "apps/web/package.json", from: "web" },
+    { file: "apps/web/tsconfig.json", from: "web" },
+  ],
 };
 
 export default nestDiOnly;

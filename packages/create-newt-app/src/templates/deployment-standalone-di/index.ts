@@ -8,6 +8,11 @@ import nextConfig from "./templates/next-config";
 // apps/api/src/main.ts, so the api image stage and service can't run.
 const deploymentStandaloneDi: Module = {
   templates: [dockerfile, dockerCompose, nextConfig],
+  overrides: [
+    { file: "Dockerfile", from: "deploymentStandalone" },
+    { file: "docker-compose.yml", from: "deploymentStandalone" },
+    { file: "apps/web/next.config.js", from: "nestDiOnly" },
+  ],
 };
 
 export default deploymentStandaloneDi;

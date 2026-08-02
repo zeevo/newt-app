@@ -6,6 +6,10 @@ import turboJson from "./templates/turbo-json";
 
 const deploymentStandalone: Module = {
   templates: [dockerfile, dockerCompose, nextConfig, turboJson],
+  overrides: [
+    { file: "apps/web/next.config.js", from: "web" },
+    { file: "turbo.json", from: "root" },
+  ],
 };
 
 export default deploymentStandalone;

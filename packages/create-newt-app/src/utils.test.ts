@@ -9,6 +9,7 @@ import {
   validateDeploymentCombo,
   validateFlagValue,
   validateProjectName,
+  validateTemplateOwnership,
 } from "./utils";
 import type { TemplateData } from "./types";
 
@@ -83,6 +84,58 @@ describe("validateDeploymentCombo", () => {
         (deployment) => validateDeploymentCombo(deployment, true).valid,
       ),
     ).toEqual([true, true, true]);
+  });
+});
+
+describe("validateTemplateOwnership", () => {
+  const mod = (name: string, files: string[], overrides?: { file: string; from: string }[]) => ({
+    name,
+    templates: files.map((filename) => ({ filename, template: "" })),
+    ...(overrides ? { overrides } : {}),
+  });
+
+  it("accepts modules that write distinct files", () => {
+    expect(
+      validateTemplateOwnership([mod("a", ["one.ts"]), mod("b", ["two.ts"])]).valid,
+    ).toBe(true);
+  });
+
+  it("rejects an undeclared overwrite and names both modules", () => {
+    const result = validateTemplateOwnership([
+      mod("api", ["app.module.ts"]),
+      mod("apiControllers", ["app.module.ts"]),
+    ]);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain(
+      "apiControllers writes app.module.ts, discarding the version from api",
+    );
+  });
+
+  it("accepts an overwrite the later module declared", () => {
+    expect(
+      validateTemplateOwnership([
+        mod("api", ["app.module.ts"]),
+        mod("apiControllers", ["app.module.ts"], [
+          { file: "app.module.ts", from: "api" },
+        ]),
+      ]).valid,
+    ).toBe(true);
+  });
+
+  // the shape of the spa bug: a declared override is still an error when a
+  // third module slipped in between and owns the file now
+  it("rejects an overwrite declared against the wrong module", () => {
+    const result = validateTemplateOwnership([
+      mod("api", ["app.module.ts"]),
+      mod("deploymentSpa", ["app.module.ts"], [
+        { file: "app.module.ts", from: "api" },
+      ]),
+      mod("apiControllers", ["app.module.ts"], [
+        { file: "app.module.ts", from: "api" },
+      ]),
+    ]);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("discarding the version from deploymentSpa");
   });
 });
 

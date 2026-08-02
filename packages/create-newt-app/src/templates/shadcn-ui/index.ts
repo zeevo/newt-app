@@ -147,6 +147,12 @@ const shadcnUi: Module = {
     { package: "next-themes", module: "apps/web", version: "^0.4.6" },
     { package: "sonner", module: "apps/web", version: "^2.0.7" },
   ],
+  overrides: [
+    { file: "apps/web/app/layout.tsx", from: "web" },
+    { file: "apps/web/app/page.tsx", from: "web" },
+    { file: "apps/web/app/providers.tsx", from: "web" },
+    { file: "apps/web/app/auth-form.tsx", from: "web" },
+  ],
 };
 
 export default shadcnUi;

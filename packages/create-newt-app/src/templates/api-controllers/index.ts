@@ -11,6 +11,7 @@ const apiControllers: Module = {
     appModule,
     main,
   ],
+  overrides: [{ file: "apps/api/src/app.module.ts", from: "api" }],
 };
 
 export default apiControllers;

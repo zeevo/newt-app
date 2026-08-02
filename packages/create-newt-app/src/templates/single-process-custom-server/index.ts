@@ -23,6 +23,13 @@ const singleProcessCustomServer: Module = {
     webTsconfigServer,
     turboJson,
   ],
+  overrides: [
+    { file: "apps/api/package.json", from: "api" },
+    { file: "apps/web/next.config.js", from: "web" },
+    { file: "apps/web/package.json", from: "web" },
+    { file: "apps/web/tsconfig.json", from: "web" },
+    { file: "turbo.json", from: "root" },
+  ],
 };
 
 export default singleProcessCustomServer;

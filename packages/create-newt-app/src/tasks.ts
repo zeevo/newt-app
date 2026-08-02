@@ -7,12 +7,21 @@ import {
   updatePackageJson,
   updateScripts,
   validateProjectName,
+  validateTemplateOwnership,
 } from "./utils.js";
 
 export async function scaffold(modules: Module[], options: { name: string; testing: 'jest' | 'vitest'; database: 'sqlite' | 'postgres'; deployment: TemplateData['deployment'] }) {
   const validation = validateProjectName(options.name);
   if (!validation.valid) {
     console.error(`Error: ${validation.error}`);
+    process.exit(1);
+  }
+
+  // Fail before writing anything, so a composition mistake never leaves a
+  // half-scaffolded directory behind.
+  const ownership = validateTemplateOwnership(modules);
+  if (!ownership.valid) {
+    console.error(`Error: ${ownership.error}`);
     process.exit(1);
   }
 

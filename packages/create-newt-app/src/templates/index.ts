@@ -35,7 +35,7 @@ export function getStaticFilePath(name: string): string {
   return fileURLToPath(new URL(`./static/${name}`, import.meta.url));
 }
 
-export const templates = {
+const registry = {
   root,
   web,
   api,
@@ -61,3 +61,8 @@ export const templates = {
   todoExampleWeb,
   todoExampleShadcn,
 };
+
+// Each module carries its registry key so overwrite errors can name the culprit.
+export const templates = Object.fromEntries(
+  Object.entries(registry).map(([name, mod]) => [name, { ...mod, name }]),
+) as typeof registry;
