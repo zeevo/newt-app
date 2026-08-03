@@ -1,8 +1,9 @@
 import ejs from "ejs";
 import { existsSync, promises } from "fs";
 import path from "path";
-import type { Module, Package, Script, TemplateData } from "./types.js";
-import { getStaticFilePath } from "./templates";
+import type { Module, Package, Script, Selection, TemplateData } from "./types.js";
+import { getStaticFilePath, moduleNames } from "./templates";
+import { selectTemplates } from "./select-templates.js";
 
 export interface ValidationResult {
   valid: boolean;
@@ -92,22 +93,35 @@ export async function updateScripts(
 export async function renderTemplatesToDisk(
   basePackages: Module[],
   destDir: string,
-  templateData: TemplateData
+  templateData: TemplateData,
+  selection: Selection
 ) {
+  // Resolve `when` for every file up front: a conflict has to be reported
+  // before the first write, or it leaves a half-scaffolded directory behind.
+  const { templates, result } = selectTemplates(
+    basePackages,
+    selection,
+    moduleNames
+  );
+  if (!result.valid) {
+    throw new Error(result.error);
+  }
+
   await promises.mkdir(destDir, { recursive: true });
+
+  await templates.reduce(async (prev, template) => {
+    await prev;
+
+    const destPath = path.join(destDir, template.filename);
+    await promises.mkdir(path.dirname(destPath), { recursive: true });
+
+    const output = await ejs.render(template.template, templateData);
+
+    await promises.writeFile(destPath, output, "utf8");
+  }, Promise.resolve());
 
   await basePackages.reduce(async (prev, pkg) => {
     await prev;
-    for (const template of pkg.templates) {
-      const destPath = path.join(destDir, template.filename);
-      const destDirPath = path.dirname(destPath);
-
-      await promises.mkdir(destDirPath, { recursive: true });
-
-      const output = await ejs.render(template.template, templateData);
-
-      await promises.writeFile(destPath, output, "utf8");
-    }
     if (pkg.staticFiles) {
       await pkg.staticFiles.reduce(async (prev, staticFile) => {
         await prev;
