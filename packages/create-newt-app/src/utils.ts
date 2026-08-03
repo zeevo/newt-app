@@ -1,7 +1,7 @@
 import ejs from "ejs";
 import { existsSync, promises } from "fs";
 import path from "path";
-import type { Module, Package, Script, TemplateData } from "./types.js";
+import type { Module, Package, Script, Selection, TemplateData } from "./types.js";
 import { getStaticFilePath } from "./templates";
 
 export interface ValidationResult {
@@ -92,22 +92,31 @@ export async function updateScripts(
 export async function renderTemplatesToDisk(
   basePackages: Module[],
   destDir: string,
-  templateData: TemplateData
+  templateData: TemplateData,
+  selection: Selection
 ) {
   await promises.mkdir(destDir, { recursive: true });
 
   await basePackages.reduce(async (prev, pkg) => {
     await prev;
-    for (const template of pkg.templates) {
-      const destPath = path.join(destDir, template.filename);
-      const destDirPath = path.dirname(destPath);
 
-      await promises.mkdir(destDirPath, { recursive: true });
+    // `when` decides which template owns a file for these options; templates
+    // that don't apply are skipped rather than overwritten by a later one.
+    const applicable = pkg.templates.filter(
+      (template) => template.when?.(selection) ?? true
+    );
+
+    await applicable.reduce(async (prev, template) => {
+      await prev;
+
+      const destPath = path.join(destDir, template.filename);
+      await promises.mkdir(path.dirname(destPath), { recursive: true });
 
       const output = await ejs.render(template.template, templateData);
 
       await promises.writeFile(destPath, output, "utf8");
-    }
+    }, Promise.resolve());
+
     if (pkg.staticFiles) {
       await pkg.staticFiles.reduce(async (prev, staticFile) => {
         await prev;

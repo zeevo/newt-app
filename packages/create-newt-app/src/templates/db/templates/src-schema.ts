@@ -1,4 +1,6 @@
+import type { Selection } from "../../types";
 export default {
+  when: (s) => !s.todoExample,
   filename: "packages/db/src/schema.ts",
   template: `<% const date = database === 'postgres' ? 'Date' : 'string'; const bool = database === 'postgres' ? 'boolean' : 'number'; -%>
 export interface UserTable {
