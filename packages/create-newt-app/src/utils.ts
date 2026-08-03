@@ -2,8 +2,7 @@ import ejs from "ejs";
 import { existsSync, promises } from "fs";
 import path from "path";
 import type { Module, Package, Script, Selection, TemplateData } from "./types.js";
-import { getStaticFilePath, moduleNames } from "./templates";
-import { selectTemplates } from "./select-templates.js";
+import { getStaticFilePath } from "./templates";
 
 export interface ValidationResult {
   valid: boolean;
@@ -96,32 +95,28 @@ export async function renderTemplatesToDisk(
   templateData: TemplateData,
   selection: Selection
 ) {
-  // Resolve `when` for every file up front: a conflict has to be reported
-  // before the first write, or it leaves a half-scaffolded directory behind.
-  const { templates, result } = selectTemplates(
-    basePackages,
-    selection,
-    moduleNames
-  );
-  if (!result.valid) {
-    throw new Error(result.error);
-  }
-
   await promises.mkdir(destDir, { recursive: true });
-
-  await templates.reduce(async (prev, template) => {
-    await prev;
-
-    const destPath = path.join(destDir, template.filename);
-    await promises.mkdir(path.dirname(destPath), { recursive: true });
-
-    const output = await ejs.render(template.template, templateData);
-
-    await promises.writeFile(destPath, output, "utf8");
-  }, Promise.resolve());
 
   await basePackages.reduce(async (prev, pkg) => {
     await prev;
+
+    // `when` decides which template owns a file for these options; templates
+    // that don't apply are skipped rather than overwritten by a later one.
+    const applicable = pkg.templates.filter(
+      (template) => template.when?.(selection) ?? true
+    );
+
+    await applicable.reduce(async (prev, template) => {
+      await prev;
+
+      const destPath = path.join(destDir, template.filename);
+      await promises.mkdir(path.dirname(destPath), { recursive: true });
+
+      const output = await ejs.render(template.template, templateData);
+
+      await promises.writeFile(destPath, output, "utf8");
+    }, Promise.resolve());
+
     if (pkg.staticFiles) {
       await pkg.staticFiles.reduce(async (prev, staticFile) => {
         await prev;
