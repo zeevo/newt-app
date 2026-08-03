@@ -20,15 +20,13 @@ import {
 } from '@newt-app/ui/components/tooltip';
 import { Info } from 'lucide-react';
 import { cn } from '@newt-app/ui/lib/utils';
-
-type Config = {
-  shadcn: boolean;
-  testing: 'jest' | 'vitest';
-  database: 'sqlite' | 'postgres';
-  linter: 'eslint' | 'oxc';
-  deployment: 'none' | 'standalone' | 'custom-server' | 'spa';
-  nestDiOnly: boolean;
-};
+import {
+  buildCommand,
+  deploymentOptions,
+  DI_ONLY_REJECTS,
+  DI_ONLY_REJECTS_HINT,
+  type Config,
+} from '@/lib/build-command';
 
 const DEFAULT: Config = {
   shadcn: true,
@@ -169,19 +167,6 @@ function BoolToggle({
   );
 }
 
-function buildCommand(c: Config): string {
-  const flags: string[] = [];
-  if (c.shadcn) flags.push('--shadcn');
-  if (c.testing !== 'jest') flags.push('--testing vitest');
-  if (c.database !== 'sqlite') flags.push('--database postgres');
-  if (c.linter !== 'eslint') flags.push('--linter oxc');
-  if (c.deployment !== 'none') flags.push(`--deployment ${c.deployment}`);
-  if (c.nestDiOnly) flags.push('--nest-di-only');
-  return flags.length
-    ? `npm create newt-app my-app -- ${flags.join(' ')}`
-    : 'npm create newt-app my-app';
-}
-
 export function InteractiveFileTree({ className }: { className?: string }) {
   const [c, setC] = useState<Config>(DEFAULT);
   const set = <K extends keyof Config>(key: K, value: Config[K]) =>
@@ -212,10 +197,8 @@ export function InteractiveFileTree({ className }: { className?: string }) {
                   return {
                     ...prev,
                     nestDiOnly,
-                    // spa statically exports Next.js, which can't hold the
-                    // route handlers di-only runs on; the CLI rejects the pair
                     deployment:
-                      nestDiOnly && prev.deployment === 'spa'
+                      nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment)
                         ? 'none'
                         : prev.deployment,
                   };
@@ -258,7 +241,10 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               pressed={c.shadcn}
               onChange={(v) => set('shadcn', v)}
             />
-            <Row label="extras">
+            <Row
+              label="extras"
+              hint={c.nestDiOnly ? DI_ONLY_REJECTS_HINT : undefined}
+            >
               <NativeSelect
                 size="sm"
                 value={c.deployment}
@@ -267,16 +253,11 @@ export function InteractiveFileTree({ className }: { className?: string }) {
                 }
                 className="font-mono text-xs"
               >
-                <NativeSelectOption value="none">none</NativeSelectOption>
-                <NativeSelectOption value="standalone">
-                  standalone
-                </NativeSelectOption>
-                <NativeSelectOption value="custom-server">
-                  custom-server
-                </NativeSelectOption>
-                {!c.nestDiOnly && (
-                  <NativeSelectOption value="spa">spa</NativeSelectOption>
-                )}
+                {deploymentOptions(c.nestDiOnly).map((option) => (
+                  <NativeSelectOption key={option} value={option}>
+                    {option}
+                  </NativeSelectOption>
+                ))}
               </NativeSelect>
             </Row>
           </div>
