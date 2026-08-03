@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.23.4
+
+### Patch Changes
+
+- c43c7d3: Pass `BETTER_AUTH_URL` to the standalone Docker services. Without it Better Auth fell back to trusting `http://localhost:3000`, so a deployed stack rejected requests from its real origin.
+- 504b318: Reject `--deployment custom-server --nest-di-only`. DI-only overwrites the scripts that would run the custom server, so `apps/web/server.ts` was generated but never invoked — the deployment mode was silently a no-op.
+- 2592c14: Select templates by predicate instead of resolving collisions by composition order. Each generated file is now claimed by exactly one template for a given set of options, so a module can no longer silently overwrite another's file.
+
 ## 0.23.3
 
 ### Patch Changes
