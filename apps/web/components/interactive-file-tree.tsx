@@ -22,7 +22,10 @@ import { Info } from 'lucide-react';
 import { cn } from '@newt-app/ui/lib/utils';
 import {
   buildCommand,
+  DATABASE_HINT,
+  DEPLOYMENT_HINTS,
   deploymentOptions,
+  DI_ONLY_HINT,
   DI_ONLY_REJECTS,
   DI_ONLY_REJECTS_HINT,
   type Config,
@@ -188,7 +191,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             <Segmented
               label="NestJS"
               logo="/logos/nestjs.svg"
-              hint="di-only uses NestJS purely for dependency injection. Next.js route handlers call into Nest services instead of running a separate REST API."
+              hint={DI_ONLY_HINT}
               value={c.nestDiOnly ? 'di-only' : 'on'}
               options={['on', 'di-only'] as const}
               onChange={(v) =>
@@ -213,6 +216,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             />
             <Segmented
               label="database"
+              hint={DATABASE_HINT}
               value={c.database}
               options={['sqlite', 'postgres'] as const}
               onChange={(v) => set('database', v)}
@@ -243,7 +247,11 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             />
             <Row
               label="extras"
-              hint={c.nestDiOnly ? DI_ONLY_REJECTS_HINT : undefined}
+              hint={
+                c.nestDiOnly
+                  ? `${DEPLOYMENT_HINTS[c.deployment]} ${DI_ONLY_REJECTS_HINT}`
+                  : DEPLOYMENT_HINTS[c.deployment]
+              }
             >
               <NativeSelect
                 size="sm"

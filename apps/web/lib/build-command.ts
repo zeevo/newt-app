@@ -17,6 +17,21 @@ export const DI_ONLY_REJECTS = new Set<Config['deployment']>([
 export const DI_ONLY_REJECTS_HINT =
   'spa and custom-server are unavailable with di-only: both already run Nest inside the Next.js process, and the CLI rejects the pair.';
 
+export const DEPLOYMENT_HINTS: Record<Config['deployment'], string> = {
+  none: 'Just the monorepo. Add your own deployment setup later.',
+  standalone:
+    'A multi-stage Dockerfile builds web, api, and migrate containers, orchestrated by docker-compose. Next.js builds with output: "standalone" and proxies /api/* to Nest. Runs on Railway, Fly.io, Render, or ECS.',
+  'custom-server':
+    'A custom Node entry point boots Next.js and Nest in the same process. /api/* is dispatched to Nest, everything else to Next.js. One process, one port, no proxy.',
+  spa: 'Next.js builds as a static export and Nest serves the files with ServeStaticModule. One process and one port, but no server-side rendering.',
+};
+
+export const DI_ONLY_HINT =
+  'Nest runs as an application context with no HTTP server, and Next.js route handlers call its services through inject(). The whole app stays a single Next.js project, which is what lets it deploy to Vercel with no extra infrastructure.';
+
+export const DATABASE_HINT =
+  'SQLite writes to a local file, which does not survive on serverless filesystems like Vercel’s. Better Auth and your app share one Kysely connection either way.';
+
 const DEPLOYMENTS = [
   'none',
   'standalone',
