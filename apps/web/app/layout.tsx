@@ -1,3 +1,4 @@
+import { siteConfig } from '@/lib/config';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
@@ -18,9 +19,22 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'newt-app',
-  description:
-    'A Next.js frontend and a NestJS backend in one pnpm workspace, with Better Auth and a typed database layer already wired together.',
+  metadataBase: new URL(siteConfig.url),
+  title: siteConfig.title,
+  description: siteConfig.description,
+  openGraph: {
+    type: 'website',
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: siteConfig.title,
+    description: siteConfig.description,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    creator: siteConfig.twitterHandle,
+  },
 };
 
 export default function RootLayout({
