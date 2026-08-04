@@ -10,20 +10,6 @@ import {
   PopoverContent,
 } from '@newt-app/ui/components/popover';
 import { cn } from '@newt-app/ui/lib/utils';
-import {
-  cli,
-  deployment,
-  gettingStarted,
-  modules,
-  type Item,
-} from '@/components/docs-sidebar';
-
-const docsSections: { title: string; items: Item[] }[] = [
-  { title: 'Getting Started', items: gettingStarted },
-  { title: 'Modules', items: modules },
-  { title: 'CLI', items: cli },
-  { title: 'Deployment', items: deployment },
-];
 
 export function MobileNav({
   items,
@@ -92,26 +78,6 @@ export function MobileNav({
                 </MobileLink>
               ))}
             </div>
-          </div>
-          <div className="flex flex-col gap-8">
-            {docsSections.map((section) => (
-              <div key={section.title} className="flex flex-col gap-4">
-                <div className="text-sm font-medium text-muted-foreground">
-                  {section.title}
-                </div>
-                <div className="flex flex-col gap-3">
-                  {section.items.map((item) => (
-                    <MobileLink
-                      key={item.url}
-                      href={item.url}
-                      onOpenChange={setOpen}
-                    >
-                      {item.title}
-                    </MobileLink>
-                  ))}
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </PopoverContent>

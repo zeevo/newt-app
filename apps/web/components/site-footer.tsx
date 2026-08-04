@@ -1,5 +1,4 @@
 import { siteConfig } from '@/lib/config';
-import Link from 'next/link';
 import { Icons } from './icons';
 import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
 
@@ -22,12 +21,6 @@ export function SiteFooter() {
           </span>
         </div>
         <nav className="flex items-center gap-5 text-sm text-muted-foreground">
-          <Link
-            href="/docs/introduction"
-            className="transition-colors hover:text-foreground"
-          >
-            Docs
-          </Link>
           <a
             href={siteConfig.links.github}
             target="_blank"

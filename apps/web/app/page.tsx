@@ -5,7 +5,32 @@ import { InlineCode } from '@/components/inline-code';
 import { InteractiveFileTree } from '@/components/interactive-file-tree';
 import Image from 'next/image';
 import LogoRain from '@/components/logo-rain';
+import RequestFlow from '@/components/request-flow';
 import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
+
+const STACK = [
+  {
+    name: 'Next.js',
+    role: 'handles the frontend. App Router, server components, file-based routing.',
+  },
+  {
+    name: 'NestJS',
+    role: 'handles the backend. Structured, testable, scales when you need it to.',
+  },
+  {
+    name: 'Better Auth',
+    role: 'handles authentication. Runs across both apps without duplication.',
+  },
+  {
+    name: 'Kysely',
+    role: 'handles persistence. A typed query builder over SQLite or Postgres, shared by auth and your app.',
+  },
+  {
+    name: 'pnpm workspaces',
+    role: 'hold it together. apps/ for runnable apps, packages/ for shared code.',
+  },
+  { name: 'Turborepo', role: 'makes builds fast. Cached, parallel, monorepo-aware.' },
+];
 
 export default function Home() {
   return (
@@ -113,6 +138,28 @@ export default function Home() {
       </section>
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4">
+          <h2 className="max-w-2xl text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+            Every piece is good at exactly one thing.
+          </h2>
+          <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
+            A minimal boilerplate leaves too much undone; a bloated template
+            ships opinions you spend the first week ripping out. This is
+            neither.
+          </p>
+          <dl className="mt-10 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+            {STACK.map((item) => (
+              <div key={item.name} className="flex flex-col gap-1.5">
+                <dt className="font-mono text-sm font-medium">{item.name}</dt>
+                <dd className="text-sm leading-relaxed text-muted-foreground">
+                  {item.role}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+      <section className="border-t bg-background py-24">
+        <div className="mx-auto max-w-[1200px] px-4">
           <FeatureSection>
             <CodeShowcase
               filename="apps/web/app/dashboard/page.tsx"
@@ -189,6 +236,61 @@ export async function POST(req: Request) {
 }`}
             />
           </FeatureSection>
+        </div>
+      </section>
+      <section className="border-t bg-background py-24">
+        <div className="mx-auto max-w-[1200px] px-4">
+          <FeatureSection>
+            <CodeShowcase
+              filename="apps/api/src/users/users.controller.ts"
+              language="ts"
+              code={`import { Session, UserSession, AllowAnonymous } from '@thallesp/nestjs-better-auth';
+
+@Controller('users')
+export class UserController {
+  @Get('me')
+  getProfile(@Session() session: UserSession) {
+    return { user: session.user };
+  }
+
+  @Get('public')
+  @AllowAnonymous()
+  getPublic() {
+    return { message: 'Public route' };
+  }
+}`}
+            />
+            <div className="flex flex-col justify-center gap-4">
+              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+                Auth that both apps already agree on.
+              </h2>
+              <p className="leading-relaxed text-muted-foreground">
+                Better Auth is configured once in{' '}
+                <InlineCode>packages/auth</InlineCode> and shared by the Next.js
+                app and the NestJS API. Routes are guarded by default — opt out
+                per route with <InlineCode>@AllowAnonymous</InlineCode>.
+              </p>
+              <p className="leading-relaxed text-muted-foreground">
+                Sessions, sign-up, and sign-in are wired up before you write a
+                line, over the same Kysely connection your own tables use.
+              </p>
+            </div>
+          </FeatureSection>
+        </div>
+      </section>
+      <section className="border-t bg-background py-24">
+        <div className="mx-auto max-w-[1200px] px-4 text-center">
+          <h2 className="mx-auto max-w-2xl text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+            One request, two frameworks.
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl leading-relaxed text-balance text-muted-foreground">
+            Next.js renders and routes. Anything under{' '}
+            <InlineCode>/api</InlineCode> goes to NestJS for business logic — no
+            CORS, no second origin to configure.
+          </p>
+          <div className="mx-auto mt-6 max-w-3xl">
+            <RequestFlow />
+          </div>
         </div>
       </section>
     </div >
