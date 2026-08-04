@@ -135,6 +135,13 @@ describe(`template rendering across ${combos.length} selections`, () => {
         );
       });
       expect(unresolved).toEqual([]);
+
+      // The root package.json is unconditional, so every scaffold gets the
+      // Node types its config files and scripts are written against.
+      const rootPkg = JSON.parse(files.get("package.json") ?? "{}");
+      expect(rootPkg.devDependencies?.["@types/node"]).toBe(
+        versions["@types/node"],
+      );
     },
   );
 });

@@ -13,6 +13,7 @@ export default {
     "db:generate": "turbo run generate"
   },
   "devDependencies": {
+    "@types/node": "<%= versions["@types/node"] %>",
     "turbo": "<%= versions.turbo %>",
     "typescript": "<%= versions.typescript %>"
   },
