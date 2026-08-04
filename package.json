@@ -10,6 +10,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
     "db:migrate": "turbo run migrate",
     "db:generate": "turbo run generate",
     "changeset": "changeset",
