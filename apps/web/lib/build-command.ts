@@ -27,10 +27,10 @@ export const DEPLOYMENT_HINTS: Record<Config['deployment'], string> = {
 };
 
 export const DI_ONLY_HINT =
-  'Nest runs as an application context with no HTTP server, and Next.js route handlers call its services through inject(). The whole app stays a single Next.js project, which is what lets it deploy to Vercel with no extra infrastructure.';
+  'Nest runs as an application context with no HTTP server, and Next.js route handlers resolve its services through inject(). The app stays a single Next.js project, so it deploys to Vercel with no extra infrastructure.';
 
 export const DATABASE_HINT =
-  'SQLite writes to a local file, which does not survive on serverless filesystems like Vercel’s. Better Auth and your app share one Kysely connection either way.';
+  'SQLite writes to a local file, which is not persisted on serverless filesystems like Vercel’s. Better Auth and your app share one Kysely connection either way.';
 
 const DEPLOYMENTS = [
   'none',

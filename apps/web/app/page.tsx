@@ -19,7 +19,7 @@ const STACK = [
   },
   {
     name: 'Better Auth',
-    role: 'handles authentication. Runs across both apps without duplication.',
+    role: 'handles authentication. One config in packages/auth, imported by both apps.',
   },
   {
     name: 'Kysely',
@@ -27,9 +27,12 @@ const STACK = [
   },
   {
     name: 'pnpm workspaces',
-    role: 'hold it together. apps/ for runnable apps, packages/ for shared code.',
+    role: 'link the packages. apps/ for runnable apps, packages/ for shared code.',
   },
-  { name: 'Turborepo', role: 'makes builds fast. Cached, parallel, monorepo-aware.' },
+  {
+    name: 'Turborepo',
+    role: 'caches and parallelizes builds across the workspace.',
+  },
 ];
 
 export default function Home() {
@@ -113,9 +116,8 @@ export default function Home() {
             </span>
           </h1>
           <p className="max-w-lg text-center text-lg text-balance text-muted-foreground lg:max-w-xl lg:text-xl">
-            newt-app gives you a Next.js frontend and a real NestJS backend,
-            with auth and a database, curated so you&apos;re not deleting half
-            of it on day one.
+            A Next.js frontend and a NestJS backend in one pnpm workspace, with
+            Better Auth and a typed database layer already wired together.
           </p>
           <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
             <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
@@ -139,12 +141,10 @@ export default function Home() {
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4">
           <h2 className="max-w-2xl text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-            Every piece is good at exactly one thing.
+            The stack
           </h2>
           <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
-            A minimal boilerplate leaves too much undone; a bloated template
-            ships opinions you spend the first week ripping out. This is
-            neither.
+            Six tools, each scoped to one job, wired together at scaffold time.
           </p>
           <dl className="mt-10 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
             {STACK.map((item) => (
@@ -184,12 +184,12 @@ export default async function Dashboard() {
             />
             <div className="flex flex-col justify-center gap-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                Share code between apps, not copy it.
+                Shared packages, imported by name.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
                 <InlineCode>@my-app/ui</InlineCode> and{' '}
-                <InlineCode>@my-app/auth</InlineCode> are importable by name
-                from day one, in both <InlineCode>apps/web</InlineCode> and{' '}
+                <InlineCode>@my-app/auth</InlineCode> resolve as workspace
+                packages in both <InlineCode>apps/web</InlineCode> and{' '}
                 <InlineCode>apps/api</InlineCode>.
               </p>
               <p className="leading-relaxed text-muted-foreground">
@@ -205,16 +205,16 @@ export default async function Dashboard() {
           <FeatureSection>
             <div className="flex flex-col justify-center gap-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                A structure that can scale.
+                NestJS services in route handlers.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
-                Inject NestJS services directly inside Next.js route handlers.
-                Keep your business logic separate from your frontend, organized
-                into modules and providers from day one.
+                In di-only mode, route handlers resolve providers through{' '}
+                <InlineCode>inject()</InlineCode>, so business logic stays in
+                NestJS modules and services instead of the route file.
               </p>
               <p className="leading-relaxed text-muted-foreground">
-                Add services, swap implementations, or move to a standalone API
-                when you&apos;re ready.
+                The same modules run behind a standalone HTTP server if you
+                scaffold without <InlineCode>--nest-di-only</InlineCode>.
               </p>
             </div>
             <CodeShowcase
@@ -262,17 +262,20 @@ export class UserController {
             />
             <div className="flex flex-col justify-center gap-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                Auth that both apps already agree on.
+                One auth config, both apps.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
                 Better Auth is configured once in{' '}
-                <InlineCode>packages/auth</InlineCode> and shared by the Next.js
-                app and the NestJS API. Routes are guarded by default — opt out
-                per route with <InlineCode>@AllowAnonymous</InlineCode>.
+                <InlineCode>packages/auth</InlineCode> and imported by{' '}
+                <InlineCode>apps/web</InlineCode> and{' '}
+                <InlineCode>apps/api</InlineCode>. NestJS routes are guarded by
+                default; opt out per route with{' '}
+                <InlineCode>@AllowAnonymous</InlineCode> or{' '}
+                <InlineCode>@OptionalAuth</InlineCode>.
               </p>
               <p className="leading-relaxed text-muted-foreground">
-                Sessions, sign-up, and sign-in are wired up before you write a
-                line, over the same Kysely connection your own tables use.
+                Sessions, sign-up, and sign-in run on the same Kysely connection
+                as your own tables, in <InlineCode>packages/db</InlineCode>.
               </p>
             </div>
           </FeatureSection>
@@ -281,12 +284,13 @@ export class UserController {
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4 text-center">
           <h2 className="mx-auto max-w-2xl text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-            One request, two frameworks.
+            Request flow
           </h2>
           <p className="mx-auto mt-4 max-w-xl leading-relaxed text-balance text-muted-foreground">
-            Next.js renders and routes. Anything under{' '}
-            <InlineCode>/api</InlineCode> goes to NestJS for business logic — no
-            CORS, no second origin to configure.
+            Next.js serves pages on <InlineCode>:3000</InlineCode>. Requests to{' '}
+            <InlineCode>/api</InlineCode> are rewritten to NestJS on{' '}
+            <InlineCode>:3001</InlineCode>, so the browser sees one origin and
+            no CORS preflight.
           </p>
           <div className="mx-auto mt-6 max-w-3xl">
             <RequestFlow />
