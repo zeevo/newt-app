@@ -11,6 +11,7 @@ import {
   validateProjectName,
 } from "./utils";
 import type { TemplateData } from "./types";
+import { versions } from "./templates/versions";
 
 const templateData: TemplateData = {
   projectName: "my-app",
@@ -18,6 +19,7 @@ const templateData: TemplateData = {
   database: "sqlite",
   deployment: "none",
   authSecret: "secret",
+  versions,
 };
 
 let destDir: string;

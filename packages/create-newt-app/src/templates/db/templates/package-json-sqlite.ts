@@ -12,15 +12,15 @@ export default {
     "make": "tsx scripts/new-migration.ts"
   },
   "dependencies": {
-    "better-sqlite3": "^12.11.1",
-    "kysely": "^0.28.2"
+    "better-sqlite3": "<%= versions["better-sqlite3"] %>",
+    "kysely": "<%= versions.kysely %>"
   },
   "devDependencies": {
     "@<%= projectName %>/typescript-config": "workspace:*",
-    "@types/better-sqlite3": "^7.6.13",
-    "dotenv-cli": "^11.0.0",
-    "tsx": "^4.19.2",
-    "typescript": "6.0.2"
+    "@types/better-sqlite3": "<%= versions["@types/better-sqlite3"] %>",
+    "dotenv-cli": "<%= versions["dotenv-cli"] %>",
+    "tsx": "<%= versions.tsx %>",
+    "typescript": "<%= versions.typescript %>"
   }
 }`,
 };

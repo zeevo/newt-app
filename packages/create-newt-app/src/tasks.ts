@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { execa } from "execa";
 import type { Module, Selection, TemplateData } from "./templates";
+import { versions } from "./templates/versions.js";
 import {
   renderTemplatesToDisk,
   sortPackageJsons,
@@ -23,6 +24,7 @@ export async function scaffold(modules: Module[], options: { name: string; testi
     database: options.database,
     deployment: options.deployment,
     authSecret: randomBytes(32).toString("base64url"),
+    versions,
   };
 
   await renderTemplatesToDisk(modules, options.name, templateData, options.selection);

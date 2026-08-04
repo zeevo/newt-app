@@ -1,4 +1,5 @@
 import type { Module } from "../types";
+import { versions } from "../versions";
 import oxlintrc from "./templates/oxlintrc";
 import oxfmtrc from "./templates/oxfmtrc";
 
@@ -10,10 +11,10 @@ const root = "";
 const oxc: Module = {
   templates: [oxlintrc, oxfmtrc],
   packages: [
-    { package: "oxlint", module: web, version: "^1.74.0", dev: true },
-    { package: "oxlint", module: api, version: "^1.74.0", dev: true },
-    { package: "oxlint", module: ui, version: "^1.74.0", dev: true },
-    { package: "oxfmt", module: root, version: "^0.59.0", dev: true },
+    { package: "oxlint", module: web, version: versions.oxlint, dev: true },
+    { package: "oxlint", module: api, version: versions.oxlint, dev: true },
+    { package: "oxlint", module: ui, version: versions.oxlint, dev: true },
+    { package: "oxfmt", module: root, version: versions.oxfmt, dev: true },
   ],
   scripts: [
     { module: web, name: "lint", script: "oxlint --fix && next typegen && tsc --noEmit" },

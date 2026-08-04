@@ -1,4 +1,5 @@
 import type { Module } from "../types";
+import { versions } from "../versions";
 import componentsJson from "./templates/components-json";
 import webComponentsJson from "./templates/web-components-json";
 import packageJson from "./templates/package-json";
@@ -154,8 +155,8 @@ const shadcnUi: Module = {
     webComponentsJson,
   ],
   packages: [
-    { package: "next-themes", module: "apps/web", version: "^0.4.6" },
-    { package: "sonner", module: "apps/web", version: "^2.0.7" },
+    { package: "next-themes", module: "apps/web", version: versions["next-themes"] },
+    { package: "sonner", module: "apps/web", version: versions.sonner },
   ],
 };
 

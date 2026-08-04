@@ -12,15 +12,15 @@ export default {
     "make": "tsx scripts/new-migration.ts"
   },
   "dependencies": {
-    "kysely": "^0.28.2",
-    "pg": "^8.14.1"
+    "kysely": "<%= versions.kysely %>",
+    "pg": "<%= versions.pg %>"
   },
   "devDependencies": {
     "@<%= projectName %>/typescript-config": "workspace:*",
-    "@types/pg": "^8.11.13",
-    "dotenv-cli": "^11.0.0",
-    "tsx": "^4.19.2",
-    "typescript": "6.0.2"
+    "@types/pg": "<%= versions["@types/pg"] %>",
+    "dotenv-cli": "<%= versions["dotenv-cli"] %>",
+    "tsx": "<%= versions.tsx %>",
+    "typescript": "<%= versions.typescript %>"
   }
 }`,
 };
