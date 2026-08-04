@@ -1,4 +1,5 @@
 import type { Module } from "../types";
+import { versions } from "../versions";
 import vitestConfig from "./templates/vitest-config";
 import vitestConfigE2e from "./templates/vitest-config-e2e";
 import e2eSpec from "./templates/e2e-spec";
@@ -6,10 +7,10 @@ import e2eSpec from "./templates/e2e-spec";
 const testingVitest: Module = {
   templates: [vitestConfig, vitestConfigE2e, e2eSpec],
   packages: [
-    { package: "vitest", module: "apps/api", version: "^3.0.0", dev: true },
-    { package: "@vitest/coverage-v8", module: "apps/api", version: "^3.0.0", dev: true },
-    { package: "unplugin-swc", module: "apps/api", version: "^1.5.9", dev: true },
-    { package: "@swc/core", module: "apps/api", version: "^1.10.0", dev: true },
+    { package: "vitest", module: "apps/api", version: versions.vitest, dev: true },
+    { package: "@vitest/coverage-v8", module: "apps/api", version: versions["@vitest/coverage-v8"], dev: true },
+    { package: "unplugin-swc", module: "apps/api", version: versions["unplugin-swc"], dev: true },
+    { package: "@swc/core", module: "apps/api", version: versions["@swc/core"], dev: true },
   ],
   scripts: [
     { module: "apps/api", name: "test", script: "vitest run" },

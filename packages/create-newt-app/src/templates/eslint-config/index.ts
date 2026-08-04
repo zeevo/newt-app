@@ -1,4 +1,5 @@
 import type { Module } from "../types";
+import { versions } from "../versions";
 import packageJson from "./templates/package-json";
 import base from "./templates/base";
 import next from "./templates/next";
@@ -15,17 +16,17 @@ const root = "";
 const eslintConfig: Module = {
   templates: [packageJson, base, next, reactInternal, webConfig, apiConfig, uiConfig],
   packages: [
-    { package: "eslint", module: web, version: "^9.39.1", dev: true },
+    { package: "eslint", module: web, version: versions.eslint, dev: true },
     { package: "@<%= projectName %>/eslint-config", module: web, version: "workspace:*", dev: true },
-    { package: "@eslint/eslintrc", module: api, version: "^3.2.0", dev: true },
-    { package: "@eslint/js", module: api, version: "^9.18.0", dev: true },
-    { package: "eslint", module: api, version: "^9.18.0", dev: true },
-    { package: "eslint-config-prettier", module: api, version: "^10.0.1", dev: true },
-    { package: "globals", module: api, version: "^16.0.0", dev: true },
-    { package: "typescript-eslint", module: api, version: "^8.20.0", dev: true },
-    { package: "eslint", module: ui, version: "^9.39.1", dev: true },
+    { package: "@eslint/eslintrc", module: api, version: versions["@eslint/eslintrc"], dev: true },
+    { package: "@eslint/js", module: api, version: versions["@eslint/js"], dev: true },
+    { package: "eslint", module: api, version: versions.eslint, dev: true },
+    { package: "eslint-config-prettier", module: api, version: versions["eslint-config-prettier"], dev: true },
+    { package: "globals", module: api, version: versions.globals, dev: true },
+    { package: "typescript-eslint", module: api, version: versions["typescript-eslint"], dev: true },
+    { package: "eslint", module: ui, version: versions.eslint, dev: true },
     { package: "@<%= projectName %>/eslint-config", module: ui, version: "workspace:*", dev: true },
-    { package: "prettier", module: root, version: "^3.7.4", dev: true },
+    { package: "prettier", module: root, version: versions.prettier, dev: true },
   ],
   scripts: [
     { module: web, name: "lint", script: "eslint --fix && next typegen && tsc --noEmit" },

@@ -15,12 +15,12 @@ export default {
   },
   "devDependencies": {
     "@<%= projectName %>/typescript-config": "workspace:*",
-    "@tailwindcss/postcss": "^4.0.0",
-    "tailwindcss": "^4.0.0",
-    "@types/node": "^22.15.3",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
-    "typescript": "6.0.2"
+    "@tailwindcss/postcss": "<%= versions["@tailwindcss/postcss"] %>",
+    "tailwindcss": "<%= versions.tailwindcss %>",
+    "@types/node": "<%= versions["@types/node"] %>",
+    "@types/react": "<%= versions["@types/react"] %>",
+    "@types/react-dom": "<%= versions["@types/react-dom"] %>",
+    "typescript": "<%= versions.typescript %>"
   },
   "peerDependencies": {
     "next": ">=15.0.0",
@@ -28,8 +28,8 @@ export default {
     "react-dom": ">=19.0.0"
   },
   "dependencies": {
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.3.0"
+    "clsx": "<%= versions.clsx %>",
+    "tailwind-merge": "<%= versions["tailwind-merge"] %>"
   }
 }`,
 };

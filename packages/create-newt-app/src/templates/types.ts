@@ -1,9 +1,12 @@
+import type { Versions } from "./versions";
+
 export type TemplateData = {
   projectName: string;
   testing: 'jest' | 'vitest';
   database: 'sqlite' | 'postgres';
   deployment: 'none' | 'standalone' | 'custom-server' | 'spa';
   authSecret: string;
+  versions: Versions;
 };
 // Every option a template can select on. Kept separate from TemplateData
 // because these steer *which* template is used, not what it renders.

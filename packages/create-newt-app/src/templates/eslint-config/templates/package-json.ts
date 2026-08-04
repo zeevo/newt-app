@@ -11,17 +11,17 @@ export default {
     "./react-internal": "./react-internal.js"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@next/eslint-plugin-next": "^16.2.10",
-    "eslint": "^9.39.1",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-only-warn": "^1.1.0",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-turbo": "^2.7.1",
-    "globals": "^16.5.0",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "^8.50.0"
+    "@eslint/js": "<%= versions["@eslint/js"] %>",
+    "@next/eslint-plugin-next": "<%= versions["@next/eslint-plugin-next"] %>",
+    "eslint": "<%= versions.eslint %>",
+    "eslint-config-prettier": "<%= versions["eslint-config-prettier"] %>",
+    "eslint-plugin-only-warn": "<%= versions["eslint-plugin-only-warn"] %>",
+    "eslint-plugin-react": "<%= versions["eslint-plugin-react"] %>",
+    "eslint-plugin-react-hooks": "<%= versions["eslint-plugin-react-hooks"] %>",
+    "eslint-plugin-turbo": "<%= versions["eslint-plugin-turbo"] %>",
+    "globals": "<%= versions.globals %>",
+    "typescript": "<%= versions.typescript %>",
+    "typescript-eslint": "<%= versions["typescript-eslint"] %>"
   }
 }`,
 };

@@ -14,23 +14,23 @@ export default {
     "build": "nest build"
   },
   "dependencies": {
-    "@nestjs/common": "^11.0.1",
-    "@nestjs/core": "^11.0.1",
+    "@nestjs/common": "<%= versions["@nestjs/common"] %>",
+    "@nestjs/core": "<%= versions["@nestjs/core"] %>",
     "@<%= projectName %>/auth": "workspace:*",
     "@<%= projectName %>/db": "workspace:*",
-    "@thallesp/nestjs-better-auth": "^2.5.1",
-    "dotenv": "^17.3.1",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "@thallesp/nestjs-better-auth": "<%= versions["@thallesp/nestjs-better-auth"] %>",
+    "dotenv": "<%= versions.dotenv %>",
+    "reflect-metadata": "<%= versions["reflect-metadata"] %>",
+    "rxjs": "<%= versions.rxjs %>"
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.0",
-    "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.1",
-    "@types/node": "^22.10.7",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "6.0.2"
+    "@nestjs/cli": "<%= versions["@nestjs/cli"] %>",
+    "@nestjs/schematics": "<%= versions["@nestjs/schematics"] %>",
+    "@nestjs/testing": "<%= versions["@nestjs/testing"] %>",
+    "@types/node": "<%= versions["@types/node"] %>",
+    "ts-node": "<%= versions["ts-node"] %>",
+    "tsconfig-paths": "<%= versions["tsconfig-paths"] %>",
+    "typescript": "<%= versions.typescript %>"
   }
 }`
 };

@@ -15,22 +15,22 @@ export default {
     "@<%= projectName %>/api": "workspace:*",
     "@<%= projectName %>/auth": "workspace:*",
     "@<%= projectName %>/ui": "workspace:*",
-    "@tailwindcss/postcss": "^4.2.1",
-    "dotenv": "^17.3.1",
-    "@tanstack/react-form": "^1.28.5",
-    "@tanstack/react-query": "^5.90.21",
-    "better-auth": "^1.2.8",
-    "next": "16.2.10",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "tailwindcss": "^4.2.1"
+    "@tailwindcss/postcss": "<%= versions["@tailwindcss/postcss"] %>",
+    "dotenv": "<%= versions.dotenv %>",
+    "@tanstack/react-form": "<%= versions["@tanstack/react-form"] %>",
+    "@tanstack/react-query": "<%= versions["@tanstack/react-query"] %>",
+    "better-auth": "<%= versions["better-auth"] %>",
+    "next": "<%= versions.next %>",
+    "react": "<%= versions.react %>",
+    "react-dom": "<%= versions["react-dom"] %>",
+    "tailwindcss": "<%= versions.tailwindcss %>"
   },
   "devDependencies": {
     "@<%= projectName %>/typescript-config": "workspace:*",
-    "@types/node": "^22.15.3",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
-    "typescript": "6.0.2"
+    "@types/node": "<%= versions["@types/node"] %>",
+    "@types/react": "<%= versions["@types/react"] %>",
+    "@types/react-dom": "<%= versions["@types/react-dom"] %>",
+    "typescript": "<%= versions.typescript %>"
   }
 }`
 };

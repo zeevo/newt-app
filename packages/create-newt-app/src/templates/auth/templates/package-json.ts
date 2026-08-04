@@ -13,13 +13,13 @@ export default {
   },
   "dependencies": {
     "@<%= projectName %>/db": "workspace:*",
-    "auth": "^1.5.5",
-    "better-auth": "^1.2.8"
+    "auth": "<%= versions.auth %>",
+    "better-auth": "<%= versions["better-auth"] %>"
   },
   "devDependencies": {
     "@<%= projectName %>/typescript-config": "workspace:*",
-    "dotenv-cli": "^11.0.0",
-    "typescript": "6.0.2"
+    "dotenv-cli": "<%= versions["dotenv-cli"] %>",
+    "typescript": "<%= versions.typescript %>"
   }
 }`,
 };

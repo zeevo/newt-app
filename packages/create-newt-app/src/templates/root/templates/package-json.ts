@@ -13,8 +13,8 @@ export default {
     "db:generate": "turbo run generate"
   },
   "devDependencies": {
-    "turbo": "^2.8.16",
-    "typescript": "6.0.2"
+    "turbo": "<%= versions.turbo %>",
+    "typescript": "<%= versions.typescript %>"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
