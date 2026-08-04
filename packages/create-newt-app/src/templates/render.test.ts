@@ -2,6 +2,7 @@ import ejs from "ejs";
 import { describe, expect, it } from "vitest";
 import { selectModules } from "./index";
 import type { ModuleSelection, TemplateData } from "./types";
+import { versions } from "./versions";
 import { validateDeploymentCombo } from "../utils";
 
 const DEPLOYMENTS = ['none', 'standalone', 'custom-server', 'spa'] as const;
@@ -51,6 +52,7 @@ function renderCombo(selection: ModuleSelection) {
     database: selection.database,
     deployment: selection.deployment,
     authSecret: "test-secret",
+    versions,
   };
 
   const modules = selectModules(selection);

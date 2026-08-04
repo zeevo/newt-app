@@ -1,1 +1,1 @@
-export type { TemplateData, Template, File, Package, Script, Module } from "./templates";
+export type { TemplateData, Template, File, Package, Script, Module, Selection } from "./templates";
