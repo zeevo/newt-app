@@ -1,9 +1,10 @@
 export const siteConfig = {
   name: 'Newt App',
+  title: 'newt-app',
   url: 'https://newt-app.com',
-  ogImage: 'https://newt-app.com/og.jpg',
   description:
-    "Everything you want. Nothing you don't need. The monorepo-first way to build Next.js apps.",
+    'A Next.js frontend and a NestJS backend in one pnpm workspace, with Better Auth and a typed database layer already wired together.',
+  twitterHandle: '@zeevoexe',
   links: {
     twitter: 'https://twitter.com/zeevoexe',
     github: 'https://github.com/zeevo/newt-app',
