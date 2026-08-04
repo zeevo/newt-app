@@ -30,6 +30,7 @@ import {
   DI_ONLY_REJECTS_HINT,
   type Config,
 } from '@/lib/build-command';
+import { scaffoldTree, type TreeNode } from '@/lib/scaffold-tree';
 
 const DEFAULT: Config = {
   shadcn: true,
@@ -41,6 +42,29 @@ const DEFAULT: Config = {
 };
 
 const grow = 'animate-in fade-in slide-in-from-left-1 duration-300';
+
+function renderNodes(nodes: TreeNode[]) {
+  return nodes.map((node) => {
+    const className = node.conditional ? grow : undefined;
+    return node.kind === 'dir' ? (
+      <FileTree.Folder
+        key={node.path}
+        name={node.name}
+        annotation={node.annotation}
+        className={className}
+      >
+        {node.children && renderNodes(node.children)}
+      </FileTree.Folder>
+    ) : (
+      <FileTree.File
+        key={node.path}
+        name={node.name}
+        annotation={node.annotation}
+        className={className}
+      />
+    );
+  });
+}
 
 function Logo({ src, className }: { src: string; className?: string }) {
   return (
@@ -275,87 +299,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               name="my-app"
               className="my-0 bg-transparent p-0 dark:bg-transparent"
             >
-              <FileTree.Folder name="apps">
-                <FileTree.Folder name="web" annotation="Next.js frontend">
-                  <FileTree.Folder name="app">
-                    <FileTree.Folder name="dashboard">
-                      <FileTree.File
-                        name="page.tsx"
-                        annotation="todo example"
-                      />
-                    </FileTree.Folder>
-                    <FileTree.File name="layout.tsx" />
-                    <FileTree.File name="page.tsx" annotation="home route" />
-                  </FileTree.Folder>
-                  {c.deployment === 'custom-server' && (
-                    <FileTree.File
-                      name="server.ts"
-                      annotation="Next + Nest, one process"
-                      className={grow}
-                    />
-                  )}
-                  <FileTree.File
-                    name="next.config.ts"
-                    annotation={
-                      c.deployment === 'spa'
-                        ? 'static export'
-                        : c.deployment === 'standalone'
-                          ? 'standalone output'
-                          : undefined
-                    }
-                  />
-                </FileTree.Folder>
-                <FileTree.Folder name="api" annotation="NestJS backend">
-                  <FileTree.Folder name="src">
-                    <FileTree.Folder name="todos">
-                      <FileTree.File name="todos.service.ts" />
-                      {!c.nestDiOnly && (
-                        <FileTree.File
-                          name="todos.controller.ts"
-                          className={grow}
-                        />
-                      )}
-                    </FileTree.Folder>
-                    <FileTree.File name="app.module.ts" />
-                    <FileTree.File
-                      name="main.ts"
-                      annotation={c.nestDiOnly ? 'DI context only' : undefined}
-                    />
-                  </FileTree.Folder>
-                </FileTree.Folder>
-              </FileTree.Folder>
-              <FileTree.Folder name="packages">
-                <FileTree.Folder
-                  name="ui"
-                  annotation={
-                    c.shadcn
-                      ? 'shadcn/ui + 40 components'
-                      : 'minimal UI package'
-                  }
-                />
-                <FileTree.Folder
-                  name="auth"
-                  annotation="Better Auth configuration"
-                />
-                <FileTree.Folder
-                  name="db"
-                  annotation={
-                    c.database === 'postgres'
-                      ? 'Kysely + Postgres'
-                      : 'Kysely + SQLite'
-                  }
-                />
-                <FileTree.Folder
-                  name={c.linter === 'oxc' ? 'oxlint-config' : 'eslint-config'}
-                  annotation={
-                    c.linter === 'oxc' ? 'oxlint + oxfmt' : 'ESLint + Prettier'
-                  }
-                />
-                <FileTree.Folder
-                  name="typescript-config"
-                  annotation="Shared TypeScript config"
-                />
-              </FileTree.Folder>
+              {renderNodes(scaffoldTree(c))}
             </FileTree>
           </div>
         </div>
