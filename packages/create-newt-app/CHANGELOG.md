@@ -1,5 +1,19 @@
 # create-newt-app
 
+## 0.24.0
+
+### Minor Changes
+
+- 10c84e6: Add the attachment, bubble, marker, message, and message-scroller components to the shadcn UI templates, pulled from the shadcn registry at the base-nova style. message-scroller brings in `@shadcn/react` as a new ui package dependency. Also syncs `packages/ui/components.json`, which still pointed at the retired `new-york` style.
+
+### Patch Changes
+
+- 07fd617: Extract module selection out of the CLI into `selectModules(selection)` in `src/templates`, and add a render test that runs it across all 192 valid flag combinations. Each combination asserts that no two selected templates claim the same output filename, that every template renders through EJS, that every rendered `.json` parses, and that every `workspace:*` dependency points at a package that combination actually scaffolds. No change to scaffolded output.
+- a8e4af9: Stop emitting a root `.prettierrc` when `--linter oxc` is selected. The file was registered in the `root` module, so it shipped with every scaffold, while every other prettier artifact (the eslint configs, the `prettier` devDependency, the `format` scripts) belongs to the `eslint-config` module that `oxc` replaces. It is now registered there too, so each linter emits only its own config. The render test asserts this across all 192 combinations.
+- be86236: Add `@types/node` to the root package.json of a scaffolded app. Every configuration gets it, pinned from the versions registry.
+- 0785104: Fix the render test, which broke when the versions registry and the combinatorial render test landed in separate PRs: `TemplateData` gained a required `versions` field that the test did not supply, so all 192 cases failed once both were on main. Also re-export `Selection` from `src/types.ts`, which `src/utils.ts` has always imported but never received, and add a `typecheck` script wired into CI. `tsc --noEmit` catches both of these; nothing ran it before because tsup does not typecheck. No change to scaffolded output.
+- b0962c2: move every scaffolded dependency pin into a single versions registry and unify the ones that had drifted
+
 ## 0.23.4
 
 ### Patch Changes
