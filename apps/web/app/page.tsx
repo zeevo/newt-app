@@ -19,7 +19,7 @@ const STACK = [
   },
   {
     name: 'Better Auth',
-    role: 'handles authentication. Runs across both apps without duplication.',
+    role: 'handles authentication. One config in packages/auth, imported by both apps.',
   },
   {
     name: 'Kysely',
@@ -27,9 +27,12 @@ const STACK = [
   },
   {
     name: 'pnpm workspaces',
-    role: 'hold it together. apps/ for runnable apps, packages/ for shared code.',
+    role: 'link the packages. apps/ for runnable apps, packages/ for shared code.',
   },
-  { name: 'Turborepo', role: 'makes builds fast. Cached, parallel, monorepo-aware.' },
+  {
+    name: 'Turborepo',
+    role: 'caches and parallelizes builds across the workspace.',
+  },
 ];
 
 export default function Home() {
@@ -139,12 +142,10 @@ export default function Home() {
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4">
           <h2 className="max-w-2xl text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-            Every piece is good at exactly one thing.
+            The stack
           </h2>
           <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
-            A minimal boilerplate leaves too much undone; a bloated template
-            ships opinions you spend the first week ripping out. This is
-            neither.
+            Six tools, each scoped to one job, wired together at scaffold time.
           </p>
           <dl className="mt-10 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
             {STACK.map((item) => (
@@ -262,17 +263,20 @@ export class UserController {
             />
             <div className="flex flex-col justify-center gap-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                Auth that both apps already agree on.
+                One auth config, both apps.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
                 Better Auth is configured once in{' '}
-                <InlineCode>packages/auth</InlineCode> and shared by the Next.js
-                app and the NestJS API. Routes are guarded by default — opt out
-                per route with <InlineCode>@AllowAnonymous</InlineCode>.
+                <InlineCode>packages/auth</InlineCode> and imported by{' '}
+                <InlineCode>apps/web</InlineCode> and{' '}
+                <InlineCode>apps/api</InlineCode>. NestJS routes are guarded by
+                default; opt out per route with{' '}
+                <InlineCode>@AllowAnonymous</InlineCode> or{' '}
+                <InlineCode>@OptionalAuth</InlineCode>.
               </p>
               <p className="leading-relaxed text-muted-foreground">
-                Sessions, sign-up, and sign-in are wired up before you write a
-                line, over the same Kysely connection your own tables use.
+                Sessions, sign-up, and sign-in run on the same Kysely connection
+                as your own tables, in <InlineCode>packages/db</InlineCode>.
               </p>
             </div>
           </FeatureSection>
@@ -281,12 +285,13 @@ export class UserController {
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4 text-center">
           <h2 className="mx-auto max-w-2xl text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-            One request, two frameworks.
+            Request flow
           </h2>
           <p className="mx-auto mt-4 max-w-xl leading-relaxed text-balance text-muted-foreground">
-            Next.js renders and routes. Anything under{' '}
-            <InlineCode>/api</InlineCode> goes to NestJS for business logic — no
-            CORS, no second origin to configure.
+            Next.js serves pages on <InlineCode>:3000</InlineCode>. Requests to{' '}
+            <InlineCode>/api</InlineCode> are rewritten to NestJS on{' '}
+            <InlineCode>:3001</InlineCode>, so the browser sees one origin and
+            no CORS preflight.
           </p>
           <div className="mx-auto mt-6 max-w-3xl">
             <RequestFlow />
