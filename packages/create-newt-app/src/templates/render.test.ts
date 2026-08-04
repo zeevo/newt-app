@@ -138,3 +138,22 @@ describe(`template rendering across ${combos.length} selections`, () => {
     },
   );
 });
+
+// The linter modules are alternatives, so a scaffold gets one toolchain's
+// config files and none of the other's.
+describe("linter config files follow the selected linter", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const emitted = [...renderCombo(selection).files.keys()];
+      const prettier = emitted.filter((f) => f === ".prettierrc");
+      const oxfmt = emitted.filter((f) => f === ".oxfmtrc.json");
+
+      expect({ prettier, oxfmt }).toEqual(
+        selection.linter === "oxc"
+          ? { prettier: [], oxfmt: [".oxfmtrc.json"] }
+          : { prettier: [".prettierrc"], oxfmt: [] },
+      );
+    },
+  );
+});
