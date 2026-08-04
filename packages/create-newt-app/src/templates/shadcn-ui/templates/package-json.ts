@@ -16,6 +16,7 @@ export default {
   "scripts": {},
   "dependencies": {
     "@base-ui/react": "^1.6.0",
+    "@shadcn/react": "^0.2.1",
     "shadcn": "^4.7.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

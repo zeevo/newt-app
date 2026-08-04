@@ -69,6 +69,11 @@ import toggleGroup from "./templates/toggle-group";
 import toggle from "./templates/toggle";
 import tooltip from "./templates/tooltip";
 import modeToggle from "./templates/mode-toggle";
+import attachment from "./templates/attachment";
+import bubble from "./templates/bubble";
+import marker from "./templates/marker";
+import message from "./templates/message";
+import messageScroller from "./templates/message-scroller";
 
 const shadcnUi: Module = {
   templates: [
@@ -140,6 +145,11 @@ const shadcnUi: Module = {
     toggle,
     tooltip,
     modeToggle,
+    attachment,
+    bubble,
+    marker,
+    message,
+    messageScroller,
     componentsJson,
     webComponentsJson,
   ],
