@@ -4,7 +4,7 @@ import chalk from "chalk";
 import pkg from "../package.json" with { type: "json" };
 import { Command } from "commander";
 import * as p from "@clack/prompts";
-import { templates } from "./templates";
+import { selectModules, type ModuleSelection } from "./templates";
 import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 import { validateDeploymentCombo, validateFlagValue } from "./utils.js";
 
@@ -138,49 +138,17 @@ export async function doInit(options: Options) {
       throw new Error(deploymentCombo.error);
     }
 
-    const deploymentModule =
-      deployment === 'standalone' ? templates.deploymentStandalone :
-      deployment === 'custom-server' ? templates.deploymentCustomServer :
-      deployment === 'spa' ? templates.deploymentSpa :
-      null;
+    const selection: ModuleSelection = {
+      deployment,
+      nestDiOnly,
+      todoExample,
+      shadcn: useShadcn,
+      database,
+      linter,
+      testing,
+    };
 
-    // In SPA mode NestJS serves Better Auth (AuthModule.forRoot); the Next.js
-    // auth handler is redundant and can't be statically exported, so drop it.
-    const webModule =
-      deployment === 'spa'
-        ? {
-            ...templates.web,
-            templates: templates.web.templates.filter(
-              (t) => t.filename !== "apps/web/app/api/auth/[...all]/route.ts",
-            ),
-          }
-        : templates.web;
-
-    const allModules = [
-      templates.root,
-      webModule,
-      templates.api,
-      database === 'postgres' ? templates.dbPostgres : templates.dbSqlite,
-      templates.auth,
-      useShadcn ? templates.shadcnUi : templates.ui,
-      linter === 'oxc' ? templates.oxc : templates.eslintConfig,
-      templates.typescriptConfig,
-      testing === 'vitest' ? templates.testingVitest : templates.testingJest,
-      ...(deploymentModule ? [deploymentModule] : []),
-      ...(nestDiOnly ? [templates.nestDiOnly] : [templates.apiControllers]),
-      // nest-di-only overwrites the standalone next.config.js and leaves the
-      // Dockerfile pointing at an api entrypoint DI-only never emits
-      ...(nestDiOnly && deployment === 'standalone'
-        ? [templates.deploymentStandaloneDi]
-        : []),
-      ...(todoExample
-        ? [
-            templates.todoExampleApi,
-            ...(nestDiOnly ? [templates.todoExampleDi] : [templates.todoExampleControllers]),
-            useShadcn ? templates.todoExampleShadcn : templates.todoExampleWeb,
-          ]
-        : []),
-    ];
+    const allModules = selectModules(selection);
 
     const name = (group as { name?: string }).name ?? options.name ?? "";
 
@@ -194,7 +162,7 @@ export async function doInit(options: Options) {
           testing,
           database,
           deployment,
-          selection: { deployment, nestDiOnly, todoExample, shadcn: useShadcn, database },
+          selection,
         });
         return "Scaffolded.";
       },
