@@ -15,6 +15,13 @@ export type Selection = {
   database: 'sqlite' | 'postgres';
 };
 
+// Everything `selectModules` reads: `Selection` plus the options that only ever
+// swap one whole module for another and never reach a `when` predicate.
+export type ModuleSelection = Selection & {
+  testing: TemplateData['testing'];
+  linter: 'eslint' | 'oxc';
+};
+
 // `when` makes precedence explicit: exactly one template may claim a filename
 // for a given selection, so no template can silently overwrite another.
 export type Template = {
