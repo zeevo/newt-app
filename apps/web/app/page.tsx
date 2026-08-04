@@ -116,9 +116,8 @@ export default function Home() {
             </span>
           </h1>
           <p className="max-w-lg text-center text-lg text-balance text-muted-foreground lg:max-w-xl lg:text-xl">
-            newt-app gives you a Next.js frontend and a real NestJS backend,
-            with auth and a database, curated so you&apos;re not deleting half
-            of it on day one.
+            A Next.js frontend and a NestJS backend in one pnpm workspace, with
+            Better Auth and a typed database layer already wired together.
           </p>
           <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
             <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
@@ -185,12 +184,12 @@ export default async function Dashboard() {
             />
             <div className="flex flex-col justify-center gap-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                Share code between apps, not copy it.
+                Shared packages, imported by name.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
                 <InlineCode>@my-app/ui</InlineCode> and{' '}
-                <InlineCode>@my-app/auth</InlineCode> are importable by name
-                from day one, in both <InlineCode>apps/web</InlineCode> and{' '}
+                <InlineCode>@my-app/auth</InlineCode> resolve as workspace
+                packages in both <InlineCode>apps/web</InlineCode> and{' '}
                 <InlineCode>apps/api</InlineCode>.
               </p>
               <p className="leading-relaxed text-muted-foreground">
@@ -206,16 +205,16 @@ export default async function Dashboard() {
           <FeatureSection>
             <div className="flex flex-col justify-center gap-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                A structure that can scale.
+                NestJS services in route handlers.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
-                Inject NestJS services directly inside Next.js route handlers.
-                Keep your business logic separate from your frontend, organized
-                into modules and providers from day one.
+                In di-only mode, route handlers resolve providers through{' '}
+                <InlineCode>inject()</InlineCode>, so business logic stays in
+                NestJS modules and services instead of the route file.
               </p>
               <p className="leading-relaxed text-muted-foreground">
-                Add services, swap implementations, or move to a standalone API
-                when you&apos;re ready.
+                The same modules run behind a standalone HTTP server if you
+                scaffold without <InlineCode>--nest-di-only</InlineCode>.
               </p>
             </div>
             <CodeShowcase
