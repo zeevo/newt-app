@@ -115,10 +115,6 @@ export default function Home() {
               </span>
             </span>
           </h1>
-          <p className="max-w-lg text-center text-lg text-balance text-muted-foreground lg:max-w-xl lg:text-xl">
-            A Next.js frontend and a NestJS backend in one pnpm workspace, with
-            Better Auth and a typed database layer already wired together.
-          </p>
           <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
             <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
               $
