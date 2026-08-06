@@ -38,7 +38,10 @@ const STACK = [
 export default function Home() {
   return (
     <div>
-      <section className="relative flex h-[775px] items-start justify-center overflow-hidden border-b bg-background pt-12 sm:pt-24">
+      {/* the tank fills the screen below the header; the floor keeps the
+          file-tree card's -mt-20 overlap clear of the install command on
+          short viewports, where the page scrolls instead */}
+      <section className="relative flex h-[calc(100svh_-_var(--header-height))] min-h-[560px] items-start justify-center overflow-hidden border-b bg-background pt-12 sm:pt-24">
         {/* the chips bounce off this frame: LogoRain sizes its camera to the
             container, so insetting the box moves the tank walls with it */}
         <div className="pointer-events-none absolute inset-5 z-0 overflow-hidden border">
