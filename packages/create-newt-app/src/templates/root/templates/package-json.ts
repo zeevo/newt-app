@@ -19,7 +19,7 @@ export default {
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20.9.0"
   }
 }`,
 };
