@@ -5,8 +5,13 @@ import pkg from "../package.json" with { type: "json" };
 import { Command } from "commander";
 import * as p from "@clack/prompts";
 import { selectModules, type ModuleSelection } from "./templates";
-import { initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
-import { validateDeploymentCombo, validateFlagValue } from "./utils.js";
+import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
+import {
+  checkRequiredTools,
+  validateDeploymentCombo,
+  validateFlagValue,
+  validateNodeVersion,
+} from "./utils.js";
 
 const TESTING_CHOICES = ['jest', 'vitest'] as const;
 const DATABASE_CHOICES = ['sqlite', 'postgres'] as const;
@@ -118,6 +123,21 @@ export async function doInit(options: Options) {
   };
 
   try {
+    // Before the prompts, and before anything is written: a missing tool used
+    // to surface as a spawn error partway through, leaving a half-scaffolded
+    // directory that the next run then refuses to overwrite.
+    const preflight = [
+      validateNodeVersion(process.version, pkg.engines.node),
+      await checkRequiredTools(
+        { install: options.install, git: options.git },
+        hasCommand,
+      ),
+    ].find((result) => !result.valid);
+
+    if (preflight) {
+      throw new Error(preflight.error);
+    }
+
     const group = await p.group(groupOpts, {
       onCancel: () => {
         console.log("Exiting.");
@@ -172,11 +192,7 @@ export async function doInit(options: Options) {
       taskBuilder.add({
         title: "Installing with pnpm",
         task: async () => {
-          try {
-            await pnpmInstall(name);
-          } catch (e) {
-            console.log(e);
-          }
+          await pnpmInstall(name);
           return "Installed.";
         },
       });

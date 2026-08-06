@@ -3,11 +3,13 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from "fs/promises";
 import { tmpdir } from "os";
 import path from "path";
 import {
+  checkRequiredTools,
   sortPackageJsons,
   updatePackageJson,
   updateScripts,
   validateDeploymentCombo,
   validateFlagValue,
+  validateNodeVersion,
   validateProjectName,
 } from "./utils";
 import type { TemplateData } from "./types";
@@ -97,6 +99,83 @@ describe("validateDeploymentCombo", () => {
         (deployment) => validateDeploymentCombo(deployment, true).valid,
       ),
     ).toEqual([true, true]);
+  });
+});
+
+describe("checkRequiredTools", () => {
+  const absent = async () => false;
+  const present = async () => true;
+
+  it("passes when every tool the run needs is present", async () => {
+    const result = await checkRequiredTools(
+      { install: true, git: true },
+      present,
+    );
+    expect(result.valid).toBe(true);
+  });
+
+  it("rejects a missing pnpm when installing, and says how to get it", async () => {
+    const result = await checkRequiredTools(
+      { install: true, git: false },
+      absent,
+    );
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("pnpm was not found on PATH");
+    expect(result.error).toContain("corepack enable");
+  });
+
+  it("does not require pnpm when install is skipped", async () => {
+    const result = await checkRequiredTools(
+      { install: false, git: false },
+      absent,
+    );
+    expect(result.valid).toBe(true);
+  });
+
+  it("does not require git when git is skipped", async () => {
+    const asked: string[] = [];
+    const result = await checkRequiredTools(
+      { install: true, git: false },
+      async (command) => {
+        asked.push(command);
+        return true;
+      },
+    );
+    expect(asked).toEqual(["pnpm"]);
+    expect(result.valid).toBe(true);
+  });
+
+  it("reports every missing tool at once", async () => {
+    const result = await checkRequiredTools(
+      { install: true, git: true },
+      absent,
+    );
+    expect(result.error).toContain("pnpm was not found on PATH");
+    expect(result.error).toContain("git was not found on PATH");
+  });
+});
+
+describe("validateNodeVersion", () => {
+  it("accepts a version above the requirement", () => {
+    expect(validateNodeVersion("v24.14.1", ">=20.9.0").valid).toBe(true);
+  });
+
+  it("accepts the exact minimum", () => {
+    expect(validateNodeVersion("v20.9.0", ">=20.9.0").valid).toBe(true);
+  });
+
+  it("compares each version part, not just the major", () => {
+    expect(
+      ["v18.20.0", "v20.8.9", "v20.9.1", "v21.0.0"].map(
+        (version) => validateNodeVersion(version, ">=20.9.0").valid,
+      ),
+    ).toEqual([false, false, true, true]);
+  });
+
+  it("names both the requirement and what is running", () => {
+    const result = validateNodeVersion("v18.20.0", ">=20.9.0");
+    expect(result.error).toContain(">=20.9.0");
+    expect(result.error).toContain("v18.20.0");
   });
 });
 

@@ -225,6 +225,63 @@ export function validateDeploymentCombo(
   return { valid: true };
 }
 
+const TOOL_HINTS: Record<string, string> = {
+  pnpm: "Install it with `npm install -g pnpm`, or run `corepack enable`.",
+  git: "Install it from https://git-scm.com/downloads, or pass --no-git.",
+};
+
+// Only the tools this run will actually shell out to: --no-install never
+// invokes pnpm and --no-git never invokes git, so requiring them there would
+// reject a scaffold that was going to succeed.
+export async function checkRequiredTools(
+  needs: { install: boolean; git: boolean },
+  hasCommand: (command: string) => Promise<boolean>,
+): Promise<ValidationResult> {
+  const required = [
+    ...(needs.install ? ["pnpm"] : []),
+    ...(needs.git ? ["git"] : []),
+  ];
+
+  const missing = (
+    await Promise.all(
+      required.map(async (tool) => ((await hasCommand(tool)) ? null : tool)),
+    )
+  ).filter((tool) => tool !== null);
+
+  if (missing.length === 0) return { valid: true };
+
+  return {
+    valid: false,
+    error: missing
+      .map((tool) => `${tool} was not found on PATH. ${TOOL_HINTS[tool]}`)
+      .join("\n"),
+  };
+}
+
+export function validateNodeVersion(
+  current: string,
+  requirement: string,
+): ValidationResult {
+  const parse = (value: string) =>
+    (value.match(/\d+/g) ?? []).slice(0, 3).map(Number);
+  const [major = 0, minor = 0, patch = 0] = parse(current);
+  const [minMajor = 0, minMinor = 0, minPatch = 0] = parse(requirement);
+
+  const satisfied =
+    major !== minMajor
+      ? major > minMajor
+      : minor !== minMinor
+        ? minor > minMinor
+        : patch >= minPatch;
+
+  if (satisfied) return { valid: true };
+
+  return {
+    valid: false,
+    error: `Node ${requirement} is required, but this is ${current}.\nUpgrade Node, or switch versions with a manager such as nvm or fnm.`,
+  };
+}
+
 export function validateProjectName(projectName: string): ValidationResult {
   if (!projectName) {
     return { valid: false, error: "Project name is required" };
