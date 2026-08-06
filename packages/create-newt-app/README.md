@@ -1,4 +1,9 @@
 <div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/zeevo/newt-app/main/.github/assets/logo-dark.svg">
+    <img src="https://raw.githubusercontent.com/zeevo/newt-app/main/.github/assets/logo-light.svg" alt="newt-app" width="120">
+  </picture>
+
   <h1>newt-app</h1>
   <p><strong>Scaffold a production-ready, full-stack TypeScript monorepo in one command.</strong></p>
 
