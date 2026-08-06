@@ -50,6 +50,17 @@ export async function scaffold(modules: Module[], options: { name: string; testi
   await sortPackageJsons(options.name);
 }
 
+// execa throws ENOENT when the binary is not on PATH. Every tool we shell out
+// to answers --version, so this doubles as a liveness check.
+export async function hasCommand(command: string) {
+  try {
+    await execa(command, ["--version"]);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function pnpmInstall(cwd: string) {
   return await execa("pnpm", ["install"], {
     cwd,
