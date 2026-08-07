@@ -42,13 +42,14 @@ export default function Home() {
           builder needs the room, so the card sits on the tank rather than being
           pulled onto it by a negative margin */}
       <section className="relative flex min-h-[calc(100svh_-_var(--header-height))] items-start justify-center overflow-hidden border-b bg-background pt-12 pb-16 sm:pt-24">
-        {/* the chips bounce off this frame: LogoRain sizes its camera to the
-            container, so insetting the box moves the tank walls with it. Its
-            height is pinned to the viewport rather than inset-5'd against the
-            section, which grows with the builder and would drag the tank's
-            floor below the fold with it. */}
-        <div className="pointer-events-none absolute inset-x-5 top-5 z-0 h-[calc(100svh_-_var(--header-height)_-_2.5rem)] overflow-hidden border">
-          <LogoRain />
+        {/* the frame wraps the whole hero, builder included, but the chips get
+            their own viewport-height box: LogoRain sizes its camera to its
+            container and the chips settle on its floor, so letting it grow with
+            the section would pile them up below the fold */}
+        <div className="pointer-events-none absolute inset-5 z-0 overflow-hidden border">
+          <div className="h-[calc(100svh_-_var(--header-height)_-_2.5rem)] w-full">
+            <LogoRain />
+          </div>
         </div>
         {/* px-6 clears the tank's inset-5 walls, so the card lands on the tank
             rather than poking out past it on narrow screens */}
