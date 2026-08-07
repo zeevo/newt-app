@@ -38,13 +38,20 @@ const STACK = [
 export default function Home() {
   return (
     <div>
-      <section className="relative flex h-[775px] items-start justify-center overflow-hidden border-b bg-background pt-12 sm:pt-24">
-        {/* the chips bounce off this frame: LogoRain sizes its camera to the
-            container, so insetting the box moves the tank walls with it */}
-        <div className="pointer-events-none absolute inset-5 z-0 overflow-hidden border">
+      {/* the tank fills the screen below the header and grows past it when the
+          builder needs the room, so the card sits on the tank rather than being
+          pulled onto it by a negative margin */}
+      <section className="relative flex min-h-[calc(100svh_-_var(--header-height))] items-start justify-center overflow-hidden border-b bg-background pt-12 pb-16 sm:pt-24">
+        {/* the tank is exactly the screen below the header, never the section:
+            the section grows to hold the builder, and letting the tank grow
+            with it would drag its floor, and the chips resting on it, below the
+            fold. The builder is meant to hang out of the tank's bottom edge. */}
+        <div className="pointer-events-none absolute inset-x-5 top-5 z-0 h-[calc(100svh_-_var(--header-height)_-_2.5rem)] overflow-hidden border">
           <LogoRain />
         </div>
-        <div className="pointer-events-none relative z-10 flex flex-col items-center gap-5 px-4">
+        {/* px-6 clears the tank's inset-5 walls, so the card lands on the tank
+            rather than poking out past it on narrow screens */}
+        <div className="pointer-events-none relative z-10 flex w-full max-w-[1200px] flex-col items-center gap-5 px-6">
           <a
             href="https://www.npmjs.com/package/create-newt-app"
             target="_blank"
@@ -125,15 +132,15 @@ export default function Home() {
               className="static shrink-0"
             />
           </div>
-        </div>
-      </section >
-      <section className="bg-code pb-16">
-        <div className="relative mx-4 -mt-20 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg xl:mx-auto">
-          <div className="p-4">
-            <InteractiveFileTree />
+          {/* the column is pointer-events-none so the chips stay clickable
+              through it; the builder has to opt back in */}
+          <div className="pointer-events-auto mt-16 w-full rounded-lg border bg-background p-4 shadow-lg">
+            <div className="p-4">
+              <InteractiveFileTree />
+            </div>
           </div>
         </div>
-      </section>
+      </section >
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4">
           <h2 className="max-w-2xl text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
