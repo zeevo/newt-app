@@ -1,5 +1,17 @@
 # create-newt-app
 
+## 0.26.0
+
+### Minor Changes
+
+- 1485dd0: Check for pnpm, git, and a supported Node version before scaffolding anything. A missing tool used to surface as a spawn error partway through, after the project directory had already been created, which the next attempt then refused to overwrite. Only the tools a run will actually use are required, so `--no-install` still works without pnpm and `--no-git` without git.
+
+  A failed `pnpm install` also reported "Installed." and let the run continue into formatting, which then failed with a second, more confusing error. It now fails on the install step.
+
+### Patch Changes
+
+- 4e20b6c: Add the newt-app logo to the README. The README is published to npm, so a release is needed for it to appear there.
+
 ## 0.25.0
 
 ### Minor Changes
