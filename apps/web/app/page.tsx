@@ -134,7 +134,7 @@ export default function Home() {
           </div>
           {/* the column is pointer-events-none so the chips stay clickable
               through it; the builder has to opt back in */}
-          <div className="pointer-events-auto mt-6 w-full rounded-lg border bg-background p-4 shadow-lg">
+          <div className="pointer-events-auto mt-16 w-full rounded-lg border bg-background p-4 shadow-lg">
             <div className="p-4">
               <InteractiveFileTree />
             </div>
