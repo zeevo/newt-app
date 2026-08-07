@@ -14,13 +14,17 @@ export function SiteHeader() {
           <MobileNav items={siteConfig.navItems} className="flex lg:hidden" />
           <Button
             variant="ghost"
-            size="icon"
-            className="hidden size-8 lg:flex"
+            size="sm"
+            className="hidden h-8 gap-2 px-2 lg:flex"
             nativeButton={false}
             render={<Link href="/" />}
           >
             <Icons.logo className="size-5" />
-            <span className="sr-only">{siteConfig.name}</span>
+            {/* the visible wordmark is the link's accessible name now, so the
+                sr-only label it replaced would just be read twice */}
+            <span className="text-lg leading-none font-medium">
+              {siteConfig.title}
+            </span>
           </Button>
           <MainNav items={siteConfig.navItems} className="hidden lg:flex" />
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
