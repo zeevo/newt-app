@@ -131,7 +131,10 @@ export default function Home() {
         </div>
       </section >
       <section className="bg-code pb-16">
-        <div className="relative mx-4 -mt-20 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg xl:mx-auto">
+        {/* the extra pull-up is gated on viewport height, not just width: the
+            slack it reclaims is the empty tank under the install command, and a
+            wide-but-short window has none of it */}
+        <div className="relative mx-4 -mt-20 max-w-[1200px] rounded-lg border bg-background p-4 shadow-lg lg:-mt-32 xl:mx-auto lg:[@media(min-height:880px)]:-mt-52">
           <div className="p-4">
             <InteractiveFileTree />
           </div>
