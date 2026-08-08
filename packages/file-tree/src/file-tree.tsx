@@ -15,7 +15,7 @@ interface EntryProps extends React.ComponentProps<'li'> {
   name: string;
   /** Muted text shown after the name. */
   annotation?: React.ReactNode;
-  /** Replaces the default glyph. Sized by the caller to 0.875rem. */
+  /** Replaces the default glyph. An svg child is sized to the 0.875rem slot. */
   icon?: React.ReactNode;
 }
 

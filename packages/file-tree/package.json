@@ -31,7 +31,7 @@
     "tailwind-merge": "^3.6.0"
   },
   "peerDependencies": {
-    "react": ">=18.0.0"
+    "react": ">=19.0.0"
   },
   "devDependencies": {
     "@newt-app/eslint-config": "workspace:*",
