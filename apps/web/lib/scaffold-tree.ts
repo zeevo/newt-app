@@ -193,7 +193,9 @@ export function scaffoldTree(c: Config): TreeNode[] {
       ],
     },
     // oxc has no config package at all: it configures oxlint and oxfmt from the
-    // repo root and packages/eslint-config is simply not scaffolded.
+    // repo root and packages/eslint-config is simply not scaffolded. eslint puts
+    // its rules in that package but still writes .prettierrc at the root, so the
+    // two branches are mutually exclusive.
     ...(c.linter === 'oxc'
       ? [
           {
@@ -211,6 +213,14 @@ export function scaffoldTree(c: Config): TreeNode[] {
             conditional: true,
           },
         ]
-      : []),
+      : [
+          {
+            name: '.prettierrc',
+            kind: 'file' as const,
+            path: '.prettierrc',
+            annotation: 'prettier',
+            conditional: true,
+          },
+        ]),
   ];
 }
