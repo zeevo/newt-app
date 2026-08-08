@@ -11,29 +11,56 @@ import { version as cliVersion } from '../../../packages/create-newt-app/package
 const STACK = [
   {
     name: 'Next.js',
+    logo: '/logos/nextjs.svg',
     role: 'handles the frontend. App Router, server components, file-based routing.',
   },
   {
     name: 'NestJS',
+    logo: '/logos/nestjs.svg',
     role: 'handles the backend. Structured, testable, scales when you need it to.',
   },
   {
     name: 'Better Auth',
+    logo: '/logos/better-auth.svg',
     role: 'handles authentication. One config in packages/auth, imported by both apps.',
   },
   {
     name: 'Kysely',
+    logo: '/logos/kysely.svg',
     role: 'handles persistence. A typed query builder over SQLite or Postgres, shared by auth and your app.',
   },
   {
     name: 'pnpm workspaces',
+    logo: '/logos/pnpm.svg',
     role: 'link the packages. apps/ for runnable apps, packages/ for shared code.',
   },
   {
     name: 'Turborepo',
+    logo: '/logos/turborepo.svg',
     role: 'caches and parallelizes builds across the workspace.',
   },
 ];
+
+// the marks are solid-black source files, so they are masked into the current
+// foreground colour rather than drawn, which keeps them legible in both themes
+function StackLogo({ src }: { src: string }) {
+  return (
+    <span
+      aria-hidden
+      className="size-4 shrink-0 bg-foreground"
+      style={{
+        maskImage: `url(${src})`,
+        WebkitMaskImage: `url(${src})`,
+        maskSize: 'contain',
+        WebkitMaskSize: 'contain',
+        maskRepeat: 'no-repeat',
+        WebkitMaskRepeat: 'no-repeat',
+        maskPosition: 'center',
+        WebkitMaskPosition: 'center',
+      }}
+    />
+  );
+}
 
 export default function Home() {
   return (
@@ -149,7 +176,10 @@ export default function Home() {
                 key={item.name}
                 className="flex flex-col gap-1.5 rounded-lg border p-5"
               >
-                <dt className="font-mono text-sm font-medium">{item.name}</dt>
+                <dt className="flex items-center gap-2 font-mono text-sm font-medium">
+                  <StackLogo src={item.logo} />
+                  {item.name}
+                </dt>
                 <dd className="text-sm leading-relaxed text-muted-foreground">
                   {item.role}
                 </dd>
