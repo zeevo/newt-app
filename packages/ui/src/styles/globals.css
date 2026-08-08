@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @source "../../../../apps/**/*.{ts,tsx}";
+/* sibling packages that ship Tailwind classes; a consumer of the published
+   file-tree package points this at its dist instead */
+@source "../../../file-tree/src/**/*.{ts,tsx}";
 @source "../../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
 

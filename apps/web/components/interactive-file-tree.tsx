@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { FileTree } from '@/components/file-tree';
+import { FileTree } from '@newt-app/file-tree';
 import { CopyButton } from '@/components/copy-button';
 import { Toggle } from '@newt-app/ui/components/toggle';
 import {
@@ -58,10 +58,11 @@ function renderNodes(nodes: TreeNode[]) {
     ) : (
       <FileTree.File
         key={node.path}
-        name={node.name}
         annotation={node.annotation}
         className={className}
-      />
+      >
+        {node.name}
+      </FileTree.File>
     );
   });
 }
