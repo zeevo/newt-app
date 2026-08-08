@@ -14,9 +14,9 @@
     "node": ">=20.9.0"
   },
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch",
-    "dev": "tsup --watch",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
+    "dev": "tsdown --watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
@@ -31,7 +31,7 @@
     "@types/ejs": "^3.1.5",
     "@types/node": "^22.0.0",
     "copyfiles": "^2.4.1",
-    "tsup": "^8.5.0",
+    "tsdown": "^0.22.14",
     "typescript": "^5.8.2",
     "vitest": "^4.1.2"
   }
