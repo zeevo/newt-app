@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@newt-app/components": "workspace:*",
+    "@newt-app/file-tree": "workspace:*",
     "@newt-app/ui": "workspace:*",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
