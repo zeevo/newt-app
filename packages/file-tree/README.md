@@ -12,10 +12,10 @@ import { FileTree } from '@newt-app/file-tree';
 <FileTree name="my-app">
   <FileTree.Folder name="apps">
     <FileTree.Folder name="web" annotation="Next.js frontend">
-      <FileTree.File name="page.tsx" annotation="home route" />
+      <FileTree.File annotation="home route">page.tsx</FileTree.File>
     </FileTree.Folder>
   </FileTree.Folder>
-  <FileTree.File name=".prettierrc" annotation="prettier" />
+  <FileTree.File annotation="prettier">.prettierrc</FileTree.File>
 </FileTree>;
 ```
 
@@ -36,11 +36,21 @@ by default, so point it at the package:
 
 ## API
 
-`FileTree` takes a `name` for the root label. `FileTree.Folder` and
-`FileTree.File` take a `name`, an optional `annotation` rendered in muted text
-after it, and an optional `icon` replacing the default glyph. All three forward
-the rest of their props to the underlying element and merge `className` over the
-defaults via `tailwind-merge`.
+`FileTree` takes a `name` for the root label.
+
+`FileTree.File` takes its label as children. A file is a leaf, so nothing else
+wants that slot, and putting the label there makes it required: a file with no
+name will not type-check. It also accepts rich labels, which is useful for
+highlighting a match or dimming an extension.
+
+`FileTree.Folder` keeps a `name` prop, because its children are the entries
+inside it. That asymmetry is deliberate and tracks a real one: branches nest,
+leaves do not.
+
+Both take an optional `annotation` rendered in muted text after the label, and
+an optional `icon` replacing the default glyph. All three forward the rest of
+their props to the underlying element and merge `className` over the defaults
+via `tailwind-merge`.
 
 Every part carries a `data-slot` (`file-tree`, `file-tree-folder`,
 `file-tree-file`) if you would rather style it from your own CSS.

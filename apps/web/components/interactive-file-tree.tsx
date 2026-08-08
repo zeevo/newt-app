@@ -58,10 +58,11 @@ function renderNodes(nodes: TreeNode[]) {
     ) : (
       <FileTree.File
         key={node.path}
-        name={node.name}
         annotation={node.annotation}
         className={className}
-      />
+      >
+        {node.name}
+      </FileTree.File>
     );
   });
 }

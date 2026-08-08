@@ -12,7 +12,7 @@ describe('FileTree', () => {
   it('renders the root name with a trailing slash', () => {
     render(
       <FileTree name="my-app">
-        <FileTree.File name="README.md" />
+        <FileTree.File>README.md</FileTree.File>
       </FileTree>,
     );
     expect(screen.getByText('my-app/')).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe('FileTree', () => {
     const { container } = render(
       <FileTree name="my-app">
         <FileTree.Folder name="apps">
-          <FileTree.File name="page.tsx" />
+          <FileTree.File>page.tsx</FileTree.File>
         </FileTree.Folder>
       </FileTree>,
     );
@@ -38,10 +38,10 @@ describe('FileTree', () => {
   it('scopes the short connector to the entry itself, not its descendants', () => {
     const { container } = render(
       <FileTree name="my-app">
-        <FileTree.File name="first.ts" />
+        <FileTree.File>first.ts</FileTree.File>
         <FileTree.Folder name="last-folder">
-          <FileTree.File name="not-last.ts" />
-          <FileTree.File name="also-last.ts" />
+          <FileTree.File>not-last.ts</FileTree.File>
+          <FileTree.File>also-last.ts</FileTree.File>
         </FileTree.Folder>
       </FileTree>,
     );
@@ -74,7 +74,7 @@ describe('FileTree', () => {
       <FileTree name="my-app">
         <FileTree.Folder name="apps">
           <FileTree.Folder name="web">
-            <FileTree.File name="page.tsx" />
+            <FileTree.File>page.tsx</FileTree.File>
           </FileTree.Folder>
         </FileTree.Folder>
       </FileTree>,
@@ -93,10 +93,10 @@ describe('FileTree', () => {
         {null}
         {false}
         <>
-          <FileTree.File name="in-a-fragment.ts" />
+          <FileTree.File>in-a-fragment.ts</FileTree.File>
         </>
         {['a.ts', 'b.ts'].map((n) => (
-          <FileTree.File key={n} name={n} />
+          <FileTree.File key={n}>{n}</FileTree.File>
         ))}
       </FileTree>,
     );
@@ -107,8 +107,8 @@ describe('FileTree', () => {
   it('shows an annotation only when given one', () => {
     const { container } = render(
       <FileTree name="my-app">
-        <FileTree.File name="next.config.js" annotation="standalone output" />
-        <FileTree.File name="plain.ts" />
+        <FileTree.File annotation="standalone output">next.config.js</FileTree.File>
+        <FileTree.File>plain.ts</FileTree.File>
       </FileTree>,
     );
     expect(screen.getByText('standalone output')).toBeInTheDocument();
@@ -119,8 +119,8 @@ describe('FileTree', () => {
   it('takes a replacement icon and keeps the default otherwise', () => {
     const { container } = render(
       <FileTree name="my-app">
-        <FileTree.File name="custom.ts" icon={<span data-testid="mine" />} />
-        <FileTree.File name="default.ts" />
+        <FileTree.File icon={<span data-testid="mine" />}>custom.ts</FileTree.File>
+        <FileTree.File>default.ts</FileTree.File>
       </FileTree>,
     );
     expect(screen.getByTestId('mine')).toBeInTheDocument();
@@ -134,6 +134,15 @@ describe('FileTree', () => {
     expect(root.className).not.toContain('my-4');
     expect(root.className).toContain('bg-transparent');
     expect(root.className).not.toContain('bg-accent');
+  });
+
+  // A file's label lives in its children, so the type has to insist on them.
+  // If `children` ever goes optional the expect-error below stops being used
+  // and tsc fails, which is the point of writing it this way.
+  it('will not type-check a file with no label', () => {
+    // @ts-expect-error children is the label and is required
+    const missingLabel = <FileTree.File />;
+    expect(missingLabel).toBeTruthy();
   });
 
   it('forwards arbitrary props to the underlying element', () => {

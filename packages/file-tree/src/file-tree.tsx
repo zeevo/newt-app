@@ -11,16 +11,23 @@ export interface FileTreeProps extends React.ComponentProps<'div'> {
   name: string;
 }
 
-interface EntryProps extends React.ComponentProps<'li'> {
-  name: string;
-  /** Muted text shown after the name. */
+interface EntryBase extends React.ComponentProps<'li'> {
+  /** Muted text shown after the label. */
   annotation?: React.ReactNode;
   /** Replaces the default glyph. An svg child is sized to the 0.875rem slot. */
   icon?: React.ReactNode;
 }
 
-export type FileTreeFolderProps = EntryProps;
-export type FileTreeFileProps = EntryProps;
+export interface FileTreeFolderProps extends EntryBase {
+  /** Folder label. A folder spends its children on the entries inside it. */
+  name: string;
+}
+
+// A file is a leaf, so nothing is competing for its children and the label goes
+// there. Required, which `name` could enforce and an optional slot could not.
+export interface FileTreeFileProps extends Omit<EntryBase, 'children'> {
+  children: React.ReactNode;
+}
 
 const FolderGlyph = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
@@ -67,11 +74,11 @@ function Connectors() {
 
 function Row({
   icon,
-  name,
+  label,
   annotation,
 }: {
   icon: React.ReactNode;
-  name: string;
+  label: React.ReactNode;
   annotation?: React.ReactNode;
 }) {
   return (
@@ -79,7 +86,7 @@ function Row({
       <span className="size-3.5 shrink-0 text-muted-foreground [&>svg]:size-full">
         {icon}
       </span>
-      <span className="text-foreground">{name}</span>
+      <span className="text-foreground">{label}</span>
       {annotation ? (
         <span className="font-mono text-xs text-muted-foreground">{annotation}</span>
       ) : null}
@@ -95,13 +102,13 @@ function Folder({ name, annotation, icon, children, className, ...props }: FileT
       {...props}
     >
       <Connectors />
-      <Row icon={icon ?? FolderGlyph} name={name} annotation={annotation} />
+      <Row icon={icon ?? FolderGlyph} label={name} annotation={annotation} />
       {children ? <ul className="list-none">{children}</ul> : null}
     </li>
   );
 }
 
-function File({ name, annotation, icon, className, ...props }: FileTreeFileProps) {
+function File({ children, annotation, icon, className, ...props }: FileTreeFileProps) {
   return (
     <li
       data-slot="file-tree-file"
@@ -109,7 +116,7 @@ function File({ name, annotation, icon, className, ...props }: FileTreeFileProps
       {...props}
     >
       <Connectors />
-      <Row icon={icon ?? FileGlyph} name={name} annotation={annotation} />
+      <Row icon={icon ?? FileGlyph} label={children} annotation={annotation} />
     </li>
   );
 }
