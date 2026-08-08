@@ -11,29 +11,56 @@ import { version as cliVersion } from '../../../packages/create-newt-app/package
 const STACK = [
   {
     name: 'Next.js',
+    logo: '/logos/nextjs.svg',
     role: 'handles the frontend. App Router, server components, file-based routing.',
   },
   {
     name: 'NestJS',
+    logo: '/logos/nestjs.svg',
     role: 'handles the backend. Structured, testable, scales when you need it to.',
   },
   {
     name: 'Better Auth',
+    logo: '/logos/better-auth.svg',
     role: 'handles authentication. One config in packages/auth, imported by both apps.',
   },
   {
     name: 'Kysely',
+    logo: '/logos/kysely.svg',
     role: 'handles persistence. A typed query builder over SQLite or Postgres, shared by auth and your app.',
   },
   {
     name: 'pnpm workspaces',
+    logo: '/logos/pnpm.svg',
     role: 'link the packages. apps/ for runnable apps, packages/ for shared code.',
   },
   {
     name: 'Turborepo',
+    logo: '/logos/turborepo.svg',
     role: 'caches and parallelizes builds across the workspace.',
   },
 ];
+
+// the marks are solid-black source files, so they are masked into the current
+// foreground colour rather than drawn, which keeps them legible in both themes
+function StackLogo({ src }: { src: string }) {
+  return (
+    <span
+      aria-hidden
+      className="size-4 shrink-0 bg-foreground"
+      style={{
+        maskImage: `url(${src})`,
+        WebkitMaskImage: `url(${src})`,
+        maskSize: 'contain',
+        WebkitMaskSize: 'contain',
+        maskRepeat: 'no-repeat',
+        WebkitMaskRepeat: 'no-repeat',
+        maskPosition: 'center',
+        WebkitMaskPosition: 'center',
+      }}
+    />
+  );
+}
 
 export default function Home() {
   return (
@@ -143,16 +170,16 @@ export default function Home() {
       </section >
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4">
-          <h2 className="max-w-2xl text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-            The stack
-          </h2>
-          <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
-            Six tools, each scoped to one job, wired together at scaffold time.
-          </p>
-          <dl className="mt-10 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {STACK.map((item) => (
-              <div key={item.name} className="flex flex-col gap-1.5">
-                <dt className="font-mono text-sm font-medium">{item.name}</dt>
+              <div
+                key={item.name}
+                className="flex flex-col gap-1.5 rounded-lg border p-5"
+              >
+                <dt className="flex items-center gap-2 font-mono text-sm font-medium">
+                  <StackLogo src={item.logo} />
+                  {item.name}
+                </dt>
                 <dd className="text-sm leading-relaxed text-muted-foreground">
                   {item.role}
                 </dd>
@@ -286,16 +313,7 @@ export class UserController {
       </section>
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4 text-center">
-          <h2 className="mx-auto max-w-2xl text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-            Request flow
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl leading-relaxed text-balance text-muted-foreground">
-            Next.js serves pages on <InlineCode>:3000</InlineCode>. Requests to{' '}
-            <InlineCode>/api</InlineCode> are rewritten to NestJS on{' '}
-            <InlineCode>:3001</InlineCode>, so the browser sees one origin and
-            no CORS preflight.
-          </p>
-          <div className="mx-auto mt-6 max-w-3xl">
+          <div className="mx-auto max-w-3xl">
             <RequestFlow />
           </div>
         </div>
