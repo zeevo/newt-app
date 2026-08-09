@@ -85,6 +85,9 @@ fi
 
 WEB=http://localhost:3000
 
+# Which process serves $BASE, so a failing assertion can dump the right log.
+SERVER_LOG=api
+
 if [ "$MODE" = spa ]; then
   # NestJS serves both the static export and the api
   start api pnpm --filter api start:prod
@@ -105,6 +108,7 @@ else
 
   if [ "$DI_ONLY" = yes ] || [ "$MODE" = custom-server ]; then
     BASE=$WEB
+    SERVER_LOG=web
   else
     start api pnpm --filter api start:prod
     BASE=http://localhost:3001
@@ -156,11 +160,12 @@ if [ "$DB" = sqlite ]; then
     RESP=${out%$'\n'*}
   }
 
+  # A 5xx here means the server threw, and the reason is only in its log.
   expect() { # description, expected-status, substring the body must contain
-    [ "$STATUS" = "$2" ] || fail "$1: expected $2, got $STATUS: $RESP"
+    [ "$STATUS" = "$2" ] || fail "$1: expected $2, got $STATUS: $RESP" "$SERVER_LOG"
     case "$RESP" in
       *"$3"*) ;;
-      *) fail "$1: body does not contain '$3': $RESP" ;;
+      *) fail "$1: body does not contain '$3': $RESP" "$SERVER_LOG" ;;
     esac
     echo "  ok  [$STATUS] $1"
   }
