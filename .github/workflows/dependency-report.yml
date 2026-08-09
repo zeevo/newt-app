@@ -1,0 +1,77 @@
+name: Dependency Report
+
+# Reports dependency staleness once a week and writes the findings into a
+# single long-lived issue. It opens no pull requests on purpose: the scaffolded
+# version set is curated to work together, so the useful output here is a
+# signal, not a stream of bump PRs.
+#
+# schedule and workflow_dispatch are the only triggers, so this never runs on a
+# push or a pull request and cannot start the scaffold matrix in
+# pull-request.yml. It is one job with no matrix, no scaffolding, and no app
+# boot: a checkout, a few registry lookups, and an issue edit.
+
+on:
+  schedule:
+    # Mondays at 09:00 UTC.
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: dependency-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    name: report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # No dependency install. The script reads the workspace manifests and
+      # templates/versions.ts straight off disk and talks to the registry over
+      # fetch, so there is nothing to resolve first.
+      - name: Build the report
+        run: node scripts/dependency-report.mjs > report.md
+
+      - name: Add the report to the run summary
+        run: cat report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open or update the tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: Dependency report
+          ISSUE_LABEL: dependency-report
+        run: |
+          gh label create "$ISSUE_LABEL" \
+            --color 0366d6 \
+            --description "Weekly dependency staleness report" \
+            --force
+
+          # Matching on both the label and the exact title keeps this from
+          # overwriting an issue somebody else happened to label.
+          number=$(gh issue list \
+            --state open \
+            --label "$ISSUE_LABEL" \
+            --limit 20 \
+            --json number,title \
+            --jq "[.[] | select(.title == \"$ISSUE_TITLE\")] | first | .number // empty")
+
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file report.md
+            echo "updated issue #$number"
+          else
+            gh issue create \
+              --title "$ISSUE_TITLE" \
+              --label "$ISSUE_LABEL" \
+              --body-file report.md
+          fi
