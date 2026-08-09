@@ -1,0 +1,68 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommitsDisabled"],
+  "schedule": ["before 6am on monday"],
+  "prConcurrentLimit": 2,
+  "prHourlyLimit": 1,
+  "branchConcurrentLimit": 2,
+  "minimumReleaseAge": "7 days",
+  "rebaseWhen": "conflicted",
+  "dependencyDashboard": true,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on the first day of the month"]
+  },
+  "vulnerabilityAlerts": {
+    "schedule": ["at any time"],
+    "minimumReleaseAge": null
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Versions handed to scaffolded apps, held in a plain TS object rather than a package.json",
+      "managerFilePatterns": [
+        "packages/create-newt-app/src/templates/versions.ts"
+      ],
+      "matchStrings": [
+        "\"(?<depName>@?[a-z0-9][^\"]*)\":\\s*\"(?<currentValue>[\\^~]?\\d[^\"]*)\""
+      ],
+      "datasourceTemplate": "npm",
+      "versioningTemplate": "npm"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Pin scaffolded app versions exactly so CI tests what users install",
+      "matchFileNames": ["packages/create-newt-app/src/templates/versions.ts"],
+      "rangeStrategy": "pin"
+    },
+    {
+      "description": "Bump this repo's own ranges rather than pinning; the lockfile already fixes resolution",
+      "matchManagers": ["npm"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "Scaffolded app versions: one grouped PR per week",
+      "matchFileNames": ["packages/create-newt-app/src/templates/versions.ts"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "scaffolded app dependencies"
+    },
+    {
+      "description": "This repo's own tooling: one grouped PR per week",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "repo dev dependencies"
+    },
+    {
+      "description": "Majors land one at a time so a break is bisectable, and queue behind the grouped PRs",
+      "matchUpdateTypes": ["major"],
+      "prPriority": -1
+    },
+    {
+      "description": "Workflow actions change rarely and touch pull-request.yml, which triggers the scaffold matrix",
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions",
+      "schedule": ["before 6am on the first day of the month"]
+    }
+  ]
+}
