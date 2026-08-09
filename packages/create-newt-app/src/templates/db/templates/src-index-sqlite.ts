@@ -6,13 +6,6 @@ import fs from "node:fs";
 import path from "node:path";
 import type { DB } from "./schema.js";
 
-// The database belongs to the project, not to whoever started the process.
-// cwd differs per caller: packages/db when migrating, apps/web under dev or
-// start, and the project root under a standalone build, so a fixed number of
-// ".." segments silently opens a different, empty database in some of them.
-// Walk up to the workspace root instead. import.meta.url would be the obvious
-// anchor, but this file is also compiled to CommonJS for the NestJS api, where
-// it is a TS1470 error.
 function projectRoot(from: string) {
   for (let dir = from; ; ) {
     if (fs.existsSync(path.join(dir, "pnpm-workspace.yaml"))) return dir;
@@ -22,9 +15,10 @@ function projectRoot(from: string) {
   }
 }
 
-export const driver = new BetterSqlite3(
-  path.join(projectRoot(process.cwd()), "dev.db"),
-);
+export const databaseFile =
+  process.env.DATABASE_URL ?? path.join(projectRoot(process.cwd()), "dev.db");
+
+export const driver = new BetterSqlite3(databaseFile);
 
 export const db = new Kysely<DB>({
   dialect: new SqliteDialect({ database: driver }),

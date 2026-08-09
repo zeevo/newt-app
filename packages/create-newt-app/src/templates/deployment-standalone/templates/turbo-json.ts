@@ -7,7 +7,7 @@ export default {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "env": ["API_HOST"],
+      "env": ["API_HOST", "DATABASE_URL"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
@@ -19,14 +19,17 @@ export default {
       "outputs": ["coverage/**"]
     },
     "dev": {
+      "env": ["DATABASE_URL"],
       "cache": false,
       "persistent": true
     },
     "migrate": {
+      "env": ["DATABASE_URL"],
       "dependsOn": ["^migrate"],
       "cache": false
     },
     "generate": {
+      "env": ["DATABASE_URL"],
       "cache": false
     }
   }

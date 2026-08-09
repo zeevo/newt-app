@@ -7,6 +7,7 @@ export default {
   "ui": "tui",
   "tasks": {
     "build": {
+      "env": ["DATABASE_URL"],
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"]
@@ -21,14 +22,17 @@ export default {
     },
     "dev": {
       "dependsOn": ["^migrate"],
+      "env": ["DATABASE_URL"],
       "cache": false,
       "persistent": true
     },
     "migrate": {
       "dependsOn": ["^migrate"],
+      "env": ["DATABASE_URL"],
       "cache": false
     },
     "generate": {
+      "env": ["DATABASE_URL"],
       "cache": false
     }
   }
