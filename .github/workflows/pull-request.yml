@@ -79,6 +79,12 @@ jobs:
           - "--deployment standalone --nest-di-only"
           - "--deployment spa"
           - "--deployment custom-server"
+        # Every entry above scaffolds with --no-install --no-git, so pnpmInstall,
+        # pnpmFormat and initGit never run. This include matches an existing
+        # combination, so it adds a flag to that job rather than adding a job.
+        include:
+          - flags: "--testing jest"
+            cli_tasks: true
     name: scaffold (${{ matrix.flags }})
     steps:
       - name: Checkout code
@@ -101,14 +107,58 @@ jobs:
       - name: Build CLI
         run: pnpm build --filter=create-newt-app
 
+      # initGit commits, and a runner has no git identity of its own.
+      - name: Configure git identity
+        if: matrix.cli_tasks
+        run: |
+          git config --global user.email "ci@example.com"
+          git config --global user.name "newt CI"
+
       - name: Scaffold app
+        env:
+          CLI_TASKS: ${{ matrix.cli_tasks }}
         run: |
           cd ${{ runner.temp }}
-          node $GITHUB_WORKSPACE/packages/create-newt-app/dist/index.js test-app ${{ matrix.flags }} --no-install --no-git
+          SKIP_FLAGS="--no-install --no-git"
+          if [ "$CLI_TASKS" = "true" ]; then SKIP_FLAGS=""; fi
+          node $GITHUB_WORKSPACE/packages/create-newt-app/dist/index.js test-app ${{ matrix.flags }} $SKIP_FLAGS
 
+      # The CLI already installed for the cli_tasks entry. A failed install there
+      # aborts the CLI with a non-zero exit, which fails this job at the step above.
       - name: Install scaffolded app
+        if: ${{ !matrix.cli_tasks }}
         run: pnpm install
         working-directory: ${{ runner.temp }}/test-app
+
+      - name: Verify the CLI installed, formatted, and committed
+        if: matrix.cli_tasks
+        working-directory: ${{ runner.temp }}/test-app
+        run: |
+          test -d node_modules || { echo "::error::no node_modules: pnpm install did not run"; exit 1; }
+          test -d apps/web/node_modules || { echo "::error::workspace deps missing under apps/web"; exit 1; }
+
+          commits=$(git rev-list --count HEAD)
+          test "$commits" = "1" || { echo "::error::expected exactly 1 commit, got $commits"; exit 1; }
+
+          # Captured once: piping git into an early-exiting reader like grep -q
+          # can SIGPIPE git, and pipefail would then turn a real hit into a miss.
+          committed=$(git show --name-only --format= HEAD)
+          test -n "$committed" || { echo "::error::the initial commit is empty"; exit 1; }
+          echo "initial commit: $(git log -1 --format=%s) ($(wc -l <<< "$committed") files)"
+          git log --stat -1
+
+          if grep -q '^node_modules/' <<< "$committed"; then
+            echo "::error::node_modules was committed"
+            exit 1
+          fi
+
+          # Formatting already ran, so a second pass has nothing left to change.
+          pnpm format
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::pnpm format did not run before the commit"
+            git status --porcelain
+            exit 1
+          fi
 
       - name: Lint scaffolded app
         run: pnpm lint
