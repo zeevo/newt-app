@@ -27,6 +27,9 @@ jobs:
               - 'packages/create-newt-app/**'
               - 'pnpm-lock.yaml'
               - '.github/workflows/pull-request.yml'
+              # the scaffold job runs scripts/smoke.sh, so a change to it is
+              # only exercised if this filter lets the job run
+              - 'scripts/**'
 
   build:
     runs-on: ubuntu-latest
