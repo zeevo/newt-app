@@ -21,11 +21,9 @@ export const DEPLOYMENT_HINTS: Record<
   Exclude<Config['deployment'], 'none'>,
   string
 > = {
-  standalone:
-    'Docker Compose runs web, api, and migrate as separate containers. Deploys to Railway, Fly.io, Render, or ECS.',
-  'custom-server':
-    'One Node process serves both: /api/* goes to Nest, everything else to Next.js.',
-  spa: 'Next.js exports static files that Nest serves. One process, but no server-side rendering.',
+  standalone: 'Next.js output: "standalone", in Docker alongside Nest.',
+  'custom-server': 'A custom Node server runs Next.js and Nest together.',
+  spa: 'Next.js static export, served by Nest. No SSR.',
 };
 
 // "none" adds no deployment files, so there is nothing to describe.
