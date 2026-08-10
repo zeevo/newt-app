@@ -23,11 +23,10 @@ import { cn } from '@newt-app/ui/lib/utils';
 import {
   buildCommand,
   DATABASE_HINT,
-  DEPLOYMENT_HINTS,
+  deploymentHint,
   deploymentOptions,
   DI_ONLY_HINT,
   DI_ONLY_REJECTS,
-  DI_ONLY_REJECTS_HINT,
   type Config,
 } from '@/lib/build-command';
 import { scaffoldTree, type TreeNode } from '@/lib/scaffold-tree';
@@ -270,14 +269,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               pressed={c.shadcn}
               onChange={(v) => set('shadcn', v)}
             />
-            <Row
-              label="extras"
-              hint={
-                c.nestDiOnly
-                  ? `${DEPLOYMENT_HINTS[c.deployment]} ${DI_ONLY_REJECTS_HINT}`
-                  : DEPLOYMENT_HINTS[c.deployment]
-              }
-            >
+            <Row label="extras">
               <NativeSelect
                 size="sm"
                 value={c.deployment}
@@ -293,6 +285,14 @@ export function InteractiveFileTree({ className }: { className?: string }) {
                 ))}
               </NativeSelect>
             </Row>
+            {/* the extras options are not self-describing, and a hover tooltip
+                cannot be read on a touch screen */}
+            <p
+              aria-live="polite"
+              className="text-xs leading-relaxed text-muted-foreground"
+            >
+              {deploymentHint(c)}
+            </p>
           </div>
 
           <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-5">
