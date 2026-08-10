@@ -308,12 +308,19 @@ export function InteractiveFileTree({ className }: { className?: string }) {
           </div>
         </div>
 
-        <div className="relative rounded-lg border bg-code p-4 pr-12">
-          <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
+        {/* the command scrolls in its own track so a long one never runs under
+            the button, which the old absolute overlay allowed */}
+        <div className="flex items-center gap-3 rounded-lg border bg-code p-3 pl-4">
+          <code className="min-w-0 flex-1 overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
             <span className="text-muted-foreground select-none">$ </span>
             {command}
           </code>
-          <CopyButton value={command} className="top-3" />
+          <CopyButton
+            value={command}
+            label="copy"
+            variant="outline"
+            className="static shrink-0"
+          />
         </div>
       </div>
     </TooltipProvider>
