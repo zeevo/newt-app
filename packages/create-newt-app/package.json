@@ -2,6 +2,16 @@
   "name": "create-newt-app",
   "version": "0.26.1",
   "license": "MIT",
+  "author": "Shane O'Neill",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeevo/newt-app.git",
+    "directory": "packages/create-newt-app"
+  },
+  "homepage": "https://newt-app.com",
+  "bugs": {
+    "url": "https://github.com/zeevo/newt-app/issues"
+  },
   "private": false,
   "type": "module",
   "bin": {

@@ -9,7 +9,7 @@ export function SiteFooter() {
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <Icons.logo className="size-4" />
           <span>
-            © {new Date().getFullYear()} zeevo ·{' '}
+            © {new Date().getFullYear()} Shane O&apos;Neill ·{' '}
             <a
               href={siteConfig.links.license}
               target="_blank"
