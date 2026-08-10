@@ -1,5 +1,16 @@
 # create-newt-app
 
+## 0.26.1
+
+### Patch Changes
+
+- 70c4c4d: Build the CLI with tsdown instead of tsup, which its own README now describes as no longer maintained and points at tsdown as the replacement. The published output is unchanged: the same `dist/index.js` entry the `bin` field names, the same shebang, and the same static template assets under `dist/static`. Sourcemaps are emitted now, which tsup was not doing here.
+- 6e1d914: Remove three template files no module imported, so they were never scaffolded: a `form.tsx` left over from before the base-nova migration (which imports Radix while the rest of the package uses Base UI, and which base-nova replaces with `field`), a duplicate `eslint-config`, and a duplicate `jest-e2e.json` already emitted by the testing module. Scaffolded output is unchanged. A test now fails if a template file is not imported by any module, which neither the render tests nor the ui drift check could see, since both walk the registered set.
+- 266beda: Drop the `font-heading` class from the six shadcn components that carried it, and the `--font-heading` token that backed it. Upstream tags those headings with `cn-font-heading`, which is an authoring marker the shadcn CLI strips on `add`, so a generated component ships no heading font at all. The six templates are now byte-identical to what `npx shadcn add` emits, which keeps future comparisons against upstream free of a permanent local difference.
+- b10ad58: Honor `DATABASE_URL` for SQLite, and resolve the default from the project root rather than a fixed offset from `process.cwd()`. The cwd differs per caller: `packages/db` when migrating, `apps/web` under dev or start, and the project root under a standalone build. Only the first two matched the old `../../dev.db`, so a standalone build opened a different, empty database two directories above the project and every write failed. Signing up returned a 500 under `--deployment standalone --nest-di-only` while every route still answered, because the tables were in the other file.
+
+  The turbo tasks that reach the database now declare `DATABASE_URL`, without which Turbo's strict environment mode dropped it before `migrate` and `build` could see it.
+
 ## 0.26.0
 
 ### Minor Changes
