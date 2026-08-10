@@ -15,16 +15,23 @@ export const DI_ONLY_REJECTS = new Set<Config['deployment']>([
 ]);
 
 export const DI_ONLY_REJECTS_HINT =
-  'spa and custom-server are unavailable with di-only: both already run Nest inside the Next.js process, and the CLI rejects the pair.';
+  'spa and custom-server already run Nest inside Next.js, so di-only rejects them.';
 
-export const DEPLOYMENT_HINTS: Record<Config['deployment'], string> = {
-  none: 'Just the monorepo. Add your own deployment setup later.',
-  standalone:
-    'A multi-stage Dockerfile builds web, api, and migrate containers, orchestrated by docker-compose. Next.js builds with output: "standalone" and proxies /api/* to Nest. Runs on Railway, Fly.io, Render, or ECS.',
-  'custom-server':
-    'A custom Node entry point boots Next.js and Nest in the same process. /api/* is dispatched to Nest, everything else to Next.js. One process, one port, no proxy.',
-  spa: 'Next.js builds as a static export and Nest serves the files with ServeStaticModule. One process and one port, but no server-side rendering.',
+export const DEPLOYMENT_HINTS: Record<
+  Exclude<Config['deployment'], 'none'>,
+  string
+> = {
+  standalone: 'Next.js output: "standalone", in Docker alongside Nest.',
+  'custom-server': 'A custom Node server runs Next.js and Nest together.',
+  spa: 'Next.js static export, served by Nest. No SSR.',
 };
+
+// "none" adds no deployment files, so there is nothing to describe.
+export function deploymentHint(c: Config): string | null {
+  const base = c.deployment === 'none' ? null : DEPLOYMENT_HINTS[c.deployment];
+  if (!c.nestDiOnly) return base;
+  return base ? `${base} ${DI_ONLY_REJECTS_HINT}` : DI_ONLY_REJECTS_HINT;
+}
 
 export const DI_ONLY_HINT =
   'Nest runs as an application context with no HTTP server, and Next.js route handlers resolve its services through inject(). The app stays a single Next.js project, so it deploys to Vercel with no extra infrastructure.';
