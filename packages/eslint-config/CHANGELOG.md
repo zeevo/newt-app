@@ -1,5 +1,7 @@
 # @newt-app/eslint-config
 
+## 0.26.1
+
 ## 0.26.0
 
 ## 0.25.0
