@@ -200,6 +200,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
     setC((prev) => ({ ...prev, [key]: value }));
 
   const command = useMemo(() => buildCommand(c), [c]);
+  const hint = deploymentHint(c);
 
   return (
     <TooltipProvider>
@@ -287,12 +288,14 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             </Row>
             {/* the extras options are not self-describing, and a hover tooltip
                 cannot be read on a touch screen */}
-            <p
-              aria-live="polite"
-              className="text-xs leading-relaxed text-muted-foreground"
-            >
-              {deploymentHint(c)}
-            </p>
+            {hint && (
+              <p
+                aria-live="polite"
+                className="text-xs leading-relaxed text-muted-foreground"
+              >
+                {hint}
+              </p>
+            )}
           </div>
 
           <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-5">

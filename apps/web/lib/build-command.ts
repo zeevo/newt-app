@@ -15,27 +15,24 @@ export const DI_ONLY_REJECTS = new Set<Config['deployment']>([
 ]);
 
 export const DI_ONLY_REJECTS_HINT =
-  'spa and custom-server are hidden here: each already runs Nest inside Next.js, and the CLI rejects that pair.';
+  'spa and custom-server already run Nest inside Next.js, so di-only rejects them.';
 
-export const DEPLOYMENT_HINTS: Record<Config['deployment'], string> = {
-  none: 'No deployment files. Next.js serves :3000 and Nest serves :3001, with a rewrite forwarding /api/* to Nest, so you deploy the two apps yourself.',
+export const DEPLOYMENT_HINTS: Record<
+  Exclude<Config['deployment'], 'none'>,
+  string
+> = {
   standalone:
-    'A multi-stage Dockerfile builds web, api, and migrate containers, orchestrated by docker-compose. Next.js builds with output: "standalone" and proxies /api/* to Nest. Runs on Railway, Fly.io, Render, or ECS.',
+    'Docker Compose runs web, api, and migrate as separate containers. Deploys to Railway, Fly.io, Render, or ECS.',
   'custom-server':
-    'A custom Node entry point boots Next.js and Nest in the same process. /api/* is dispatched to Nest, everything else to Next.js. One process, one port, no proxy.',
-  spa: 'Next.js builds as a static export and Nest serves the files with ServeStaticModule. One process and one port, but no server-side rendering.',
+    'One Node process serves both: /api/* goes to Nest, everything else to Next.js.',
+  spa: 'Next.js exports static files that Nest serves. One process, but no server-side rendering.',
 };
 
-// With di-only there is no second process, so the ":3001" story above is wrong.
-const NONE_DI_ONLY_HINT =
-  'No deployment files. Nest runs inside the Next.js process, so the app stays one Next.js project on :3000 that any Next.js host will run.';
-
-export function deploymentHint(c: Config): string {
-  const base =
-    c.deployment === 'none' && c.nestDiOnly
-      ? NONE_DI_ONLY_HINT
-      : DEPLOYMENT_HINTS[c.deployment];
-  return c.nestDiOnly ? `${base} ${DI_ONLY_REJECTS_HINT}` : base;
+// "none" adds no deployment files, so there is nothing to describe.
+export function deploymentHint(c: Config): string | null {
+  const base = c.deployment === 'none' ? null : DEPLOYMENT_HINTS[c.deployment];
+  if (!c.nestDiOnly) return base;
+  return base ? `${base} ${DI_ONLY_REJECTS_HINT}` : DI_ONLY_REJECTS_HINT;
 }
 
 export const DI_ONLY_HINT =
