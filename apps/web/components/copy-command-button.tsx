@@ -18,12 +18,34 @@ const GLOW = [
 
 export function CopyCommandButton({ value }: { value: string }) {
   const [hasCopied, setHasCopied] = React.useState(false);
+  // deterministic first value: randomising during render would not survive
+  // hydration. Remounting on `n` restarts the one-shot sweep.
+  const [sweep, setSweep] = React.useState({ n: 0, duration: 1.4 });
 
   React.useEffect(() => {
     if (!hasCopied) return;
     const timer = setTimeout(() => setHasCopied(false), 2000);
     return () => clearTimeout(timer);
   }, [hasCopied]);
+
+  React.useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      timer = setTimeout(
+        () => {
+          setSweep((prev) => ({
+            n: prev.n + 1,
+            duration: 1.1 + Math.random() * 0.8,
+          }));
+          schedule();
+        },
+        2500 + Math.random() * 5000,
+      );
+    };
+    schedule();
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Button
@@ -37,7 +59,16 @@ export function CopyCommandButton({ value }: { value: string }) {
         if (await copyToClipboardWithMeta(value)) setHasCopied(true);
       }}
     >
-      <span aria-hidden className="copy-sheen" />
+      <span
+        key={sweep.n}
+        aria-hidden
+        className="copy-sheen"
+        style={
+          {
+            '--sheen-duration': `${sweep.duration}s`,
+          } as React.CSSProperties
+        }
+      />
       <span className="relative" aria-live="polite">
         {hasCopied ? 'Copied' : 'Copy'}
       </span>

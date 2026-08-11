@@ -7,15 +7,17 @@
 }
 
 @keyframes copy-sheen {
-  0% {
+  from {
     transform: translateX(-180%) skewX(-20deg);
   }
-  100% {
+  to {
     transform: translateX(320%) skewX(-20deg);
   }
 }
 
-/* tinted rather than white so it reads against the light button face */
+/* tinted rather than white so it reads against the light button face. One shot
+   per sweep: the component reschedules at a random gap so it never reads as a
+   metronome. */
 .copy-sheen {
   position: absolute;
   top: 0;
@@ -25,11 +27,11 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(236, 72, 153, 0.22),
-    rgba(168, 85, 247, 0.18),
+    rgba(236, 72, 153, 0.16),
+    rgba(168, 85, 247, 0.13),
     transparent
   );
-  animation: copy-sheen 3.5s ease-in-out infinite;
+  animation: copy-sheen var(--sheen-duration, 1.4s) ease-in-out 1 both;
 }
 
 @media (prefers-reduced-motion: reduce) {
