@@ -46,12 +46,10 @@ export function CopyButton({
   value,
   className,
   variant = 'ghost',
-  label,
   ...props
 }: React.ComponentProps<typeof Button> & {
   value: string;
   src?: string;
-  label?: string;
 }) {
   const [hasCopied, setHasCopied] = React.useState(false);
 
@@ -66,10 +64,10 @@ export function CopyButton({
     <Button
       data-slot="copy-button"
       data-copied={hasCopied}
-      size={label ? 'sm' : 'icon-sm'}
+      size="icon"
       variant={variant}
       className={cn(
-        'absolute top-3 right-2 z-10 bg-code hover:opacity-100 focus-visible:opacity-100',
+        'absolute top-3 right-2 z-10 size-7 bg-code hover:opacity-100 focus-visible:opacity-100',
         className,
       )}
       onClick={async () => {
@@ -78,26 +76,8 @@ export function CopyButton({
       }}
       {...props}
     >
-      {/* both icons are stacked so the swap can cross-fade rather than pop */}
-      <span className="relative inline-block size-3.5 shrink-0">
-        <ClipboardIcon
-          className={cn(
-            'absolute inset-0 size-3.5 transition-all duration-200 motion-reduce:transition-none',
-            hasCopied && 'scale-50 opacity-0',
-          )}
-        />
-        <CheckIcon
-          className={cn(
-            'absolute inset-0 size-3.5 scale-50 text-emerald-500 opacity-0 transition-all duration-200 motion-reduce:transition-none',
-            hasCopied && 'scale-100 opacity-100',
-          )}
-        />
-      </span>
-      {label ? (
-        <span className="font-mono text-xs">{label}</span>
-      ) : (
-        <span className="sr-only">Copy</span>
-      )}
+      <span className="sr-only">Copy</span>
+      {hasCopied ? <CheckIcon /> : <ClipboardIcon />}
     </Button>
   );
 }

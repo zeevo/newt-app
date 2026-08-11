@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { FileTree } from '@newt-app/file-tree';
-import { CopyButton } from '@/components/copy-button';
+import { CopyCommandButton } from '@/components/copy-command-button';
 import { Toggle } from '@newt-app/ui/components/toggle';
 import {
   ToggleGroup,
@@ -317,12 +317,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               {command}
             </code>
           </div>
-          <CopyButton
-            value={command}
-            label="copy"
-            variant="default"
-            className="static h-auto shrink-0 gap-2 bg-linear-to-b from-primary to-primary/85 px-4 shadow-sm transition-all duration-200 hover:to-primary active:scale-[0.98] motion-reduce:transition-none"
-          />
+          <CopyCommandButton value={command} />
         </div>
       </div>
     </TooltipProvider>
