@@ -5,3 +5,35 @@
 .dark .logo-rain-logo {
   filter: brightness(0) invert(1) opacity(0.35);
 }
+
+@keyframes copy-sheen {
+  0% {
+    transform: translateX(-180%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(320%) skewX(-20deg);
+  }
+}
+
+/* tinted rather than white so it reads against the light button face */
+.copy-sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 35%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(236, 72, 153, 0.22),
+    rgba(168, 85, 247, 0.18),
+    transparent
+  );
+  animation: copy-sheen 3.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy-sheen {
+    display: none;
+  }
+}
