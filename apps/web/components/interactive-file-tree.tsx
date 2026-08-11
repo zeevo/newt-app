@@ -308,15 +308,13 @@ export function InteractiveFileTree({ className }: { className?: string }) {
           </div>
         </div>
 
-        <div className="flex items-stretch gap-3">
-          {/* min-w-0 lets the code scroll inside its own block instead of
-              growing the row and squeezing the button */}
-          <div className="min-w-0 flex-1 rounded-lg border bg-code p-4">
-            <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
-              <span className="text-muted-foreground select-none">$ </span>
-              {command}
-            </code>
-          </div>
+        {/* the command scrolls in its own track so a long one never runs under
+            the button, which the old absolute overlay allowed */}
+        <div className="flex items-center gap-3 rounded-lg border bg-code p-3 pl-4">
+          <code className="min-w-0 flex-1 overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
+            <span className="text-muted-foreground select-none">$ </span>
+            {command}
+          </code>
           <CopyCommandButton value={command} />
         </div>
       </div>
