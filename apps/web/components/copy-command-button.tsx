@@ -16,35 +16,37 @@ const GLOW = [
   'data-[copied=true]:shadow-[0_0_30px_0px_rgba(236,72,153,0.9),0_0_56px_-4px_rgba(168,85,247,0.75)]',
 ].join(' ');
 
-type Sweep = {
+type Glare = {
   n: number;
   duration: number;
+  x: number;
   glints: { left: number; top: number; size: number; delay: number }[];
 };
 
-function makeSweep(n: number): Sweep {
-  const duration = 2.6 + Math.random() * 1.6;
+function makeGlare(n: number): Glare {
+  const duration = 0.9 + Math.random() * 0.6;
+  const x = 30 + Math.random() * 40;
   const glints = Array.from(
     { length: 2 + Math.floor(Math.random() * 3) },
     () => {
       const left = 12 + Math.random() * 74;
       return {
         left,
-        top: 18 + Math.random() * 62,
-        size: 2 + Math.random() * 3,
-        // fire as the ray passes this x rather than on a fixed beat
-        delay: duration * (0.12 + (left / 100) * 0.62),
+        top: 20 + Math.random() * 58,
+        size: 4 + Math.random() * 4,
+        // fire as the bloom reaches this x rather than on a fixed beat
+        delay: duration * (0.2 + (left / 100) * 0.5),
       };
     },
   );
-  return { n, duration, glints };
+  return { n, duration, x, glints };
 }
 
 export function CopyCommandButton({ value }: { value: string }) {
   const [hasCopied, setHasCopied] = React.useState(false);
   // null until the client schedules one: randomising during render would not
   // survive hydration. Remounting on `n` restarts the one-shot animations.
-  const [sweep, setSweep] = React.useState<Sweep | null>(null);
+  const [glare, setGlare] = React.useState<Glare | null>(null);
 
   React.useEffect(() => {
     if (!hasCopied) return;
@@ -58,10 +60,10 @@ export function CopyCommandButton({ value }: { value: string }) {
     const schedule = (first = false) => {
       timer = setTimeout(
         () => {
-          setSweep((prev) => makeSweep((prev?.n ?? 0) + 1));
+          setGlare((prev) => makeGlare((prev?.n ?? 0) + 1));
           schedule();
         },
-        first ? 900 : 4000 + Math.random() * 7000,
+        first ? 900 : 5000 + Math.random() * 7000,
       );
     };
     schedule(true);
@@ -73,24 +75,25 @@ export function CopyCommandButton({ value }: { value: string }) {
       data-slot="copy-command-button"
       data-copied={hasCopied}
       className={cn(
-        'relative h-auto min-w-28 shrink-0 overflow-hidden px-5 transition-shadow duration-300 motion-reduce:transition-none',
+        'relative h-auto min-w-28 shrink-0 px-5 transition-shadow duration-300 motion-reduce:transition-none',
         GLOW,
       )}
       onClick={async () => {
         if (await copyToClipboardWithMeta(value)) setHasCopied(true);
       }}
     >
-      {sweep && (
-        <span key={sweep.n} aria-hidden>
+      {glare && (
+        <span key={glare.n} aria-hidden>
           <span
-            className="copy-sheen"
+            className="copy-glare"
             style={
               {
-                '--sheen-duration': `${sweep.duration}s`,
+                '--glare-duration': `${glare.duration}s`,
+                '--glare-x': `${glare.x}%`,
               } as React.CSSProperties
             }
           />
-          {sweep.glints.map((glint, i) => (
+          {glare.glints.map((glint, i) => (
             <span
               key={i}
               className="copy-glint"

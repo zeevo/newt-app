@@ -6,49 +6,58 @@
   filter: brightness(0) invert(1) opacity(0.35);
 }
 
-@keyframes copy-sheen {
-  from {
-    transform: translateX(-160%) skewX(-18deg);
+/* A ray catching the button: the glare blooms, spills past the edge onto the
+   dark background (which is the only place a light glare is actually visible
+   against a near-white face), and is gone. Brief on purpose. */
+@keyframes copy-glare {
+  0% {
+    opacity: 0;
+    transform: translateX(-22%) scale(0.82);
   }
-  to {
-    transform: translateX(300%) skewX(-18deg);
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(22%) scale(1.12);
   }
 }
 
-/* A ray: soft shoulders around a brighter core. Tinted rather than white, which
-   would be invisible against the light button face. One shot per sweep; the
-   component reschedules at a random gap so it never reads as a metronome. */
-.copy-sheen {
+.copy-glare {
   position: absolute;
-  top: -20%;
-  bottom: -20%;
-  width: 45%;
+  top: -70%;
+  right: -18%;
+  bottom: -70%;
+  left: -18%;
   pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(236, 72, 153, 0.05) 30%,
-    rgba(236, 72, 153, 0.18) 48%,
-    rgba(168, 85, 247, 0.13) 62%,
-    transparent 100%
+  background: radial-gradient(
+    ellipse 26% 46% at var(--glare-x, 50%) 50%,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(252, 231, 243, 0.55) 22%,
+    rgba(236, 72, 153, 0.34) 44%,
+    rgba(168, 85, 247, 0.16) 64%,
+    transparent 80%
   );
-  animation: copy-sheen var(--sheen-duration, 3.2s)
-    cubic-bezier(0.4, 0, 0.35, 1) 1 both;
+  filter: blur(7px);
+  animation: copy-glare var(--glare-duration, 1.2s)
+    cubic-bezier(0.33, 0, 0.3, 1) 1 both;
 }
 
-/* glints catch as the ray reaches them, so each one is delayed to its own x */
+/* sparks the glare strikes on its way past */
 @keyframes copy-glint {
   0%,
   100% {
     opacity: 0;
-    transform: scale(0.4);
+    transform: scale(0.3);
   }
-  45% {
+  50% {
     opacity: 1;
     transform: scale(1);
   }
 }
 
+/* blurred and large enough that the white core survives: at a few pixels a hard
+   radial gradient renders as a ring, which reads as a blemish rather than light */
 .copy-glint {
   position: absolute;
   border-radius: 9999px;
@@ -56,16 +65,18 @@
   opacity: 0;
   background: radial-gradient(
     circle,
-    rgba(236, 72, 153, 0.95) 0%,
-    rgba(168, 85, 247, 0.5) 45%,
-    transparent 70%
+    rgba(255, 255, 255, 1) 0%,
+    rgba(252, 231, 243, 0.9) 30%,
+    rgba(236, 72, 153, 0.45) 55%,
+    transparent 75%
   );
-  animation: copy-glint 520ms ease-in-out 1 both;
+  filter: blur(1.6px);
+  animation: copy-glint 420ms ease-in-out 1 both;
   animation-delay: var(--glint-delay, 0s);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .copy-sheen,
+  .copy-glare,
   .copy-glint {
     display: none;
   }
