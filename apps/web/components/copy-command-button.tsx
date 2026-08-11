@@ -17,15 +17,12 @@ export function CopyCommandButton({ value }: { value: string }) {
     <Button
       data-slot="copy-command-button"
       data-copied={hasCopied}
-      className="h-auto shrink-0 px-5"
+      className="h-auto min-w-28 shrink-0 px-5"
       onClick={async () => {
         if (await copyToClipboardWithMeta(value)) setHasCopied(true);
       }}
     >
-      Copy
-      <span className="sr-only" aria-live="polite">
-        {hasCopied ? 'Copied' : ''}
-      </span>
+      <span aria-live="polite">{hasCopied ? 'Copied' : 'Copy'}</span>
     </Button>
   );
 }
