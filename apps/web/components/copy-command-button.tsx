@@ -16,11 +16,35 @@ const GLOW = [
   'data-[copied=true]:shadow-[0_0_30px_0px_rgba(236,72,153,0.9),0_0_56px_-4px_rgba(168,85,247,0.75)]',
 ].join(' ');
 
+type Sweep = {
+  n: number;
+  duration: number;
+  glints: { left: number; top: number; size: number; delay: number }[];
+};
+
+function makeSweep(n: number): Sweep {
+  const duration = 2.6 + Math.random() * 1.6;
+  const glints = Array.from(
+    { length: 2 + Math.floor(Math.random() * 3) },
+    () => {
+      const left = 12 + Math.random() * 74;
+      return {
+        left,
+        top: 18 + Math.random() * 62,
+        size: 2 + Math.random() * 3,
+        // fire as the ray passes this x rather than on a fixed beat
+        delay: duration * (0.12 + (left / 100) * 0.62),
+      };
+    },
+  );
+  return { n, duration, glints };
+}
+
 export function CopyCommandButton({ value }: { value: string }) {
   const [hasCopied, setHasCopied] = React.useState(false);
-  // deterministic first value: randomising during render would not survive
-  // hydration. Remounting on `n` restarts the one-shot sweep.
-  const [sweep, setSweep] = React.useState({ n: 0, duration: 1.4 });
+  // null until the client schedules one: randomising during render would not
+  // survive hydration. Remounting on `n` restarts the one-shot animations.
+  const [sweep, setSweep] = React.useState<Sweep | null>(null);
 
   React.useEffect(() => {
     if (!hasCopied) return;
@@ -31,19 +55,16 @@ export function CopyCommandButton({ value }: { value: string }) {
   React.useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     let timer: ReturnType<typeof setTimeout>;
-    const schedule = () => {
+    const schedule = (first = false) => {
       timer = setTimeout(
         () => {
-          setSweep((prev) => ({
-            n: prev.n + 1,
-            duration: 1.1 + Math.random() * 0.8,
-          }));
+          setSweep((prev) => makeSweep((prev?.n ?? 0) + 1));
           schedule();
         },
-        2500 + Math.random() * 5000,
+        first ? 900 : 4000 + Math.random() * 7000,
       );
     };
-    schedule();
+    schedule(true);
     return () => clearTimeout(timer);
   }, []);
 
@@ -59,16 +80,33 @@ export function CopyCommandButton({ value }: { value: string }) {
         if (await copyToClipboardWithMeta(value)) setHasCopied(true);
       }}
     >
-      <span
-        key={sweep.n}
-        aria-hidden
-        className="copy-sheen"
-        style={
-          {
-            '--sheen-duration': `${sweep.duration}s`,
-          } as React.CSSProperties
-        }
-      />
+      {sweep && (
+        <span key={sweep.n} aria-hidden>
+          <span
+            className="copy-sheen"
+            style={
+              {
+                '--sheen-duration': `${sweep.duration}s`,
+              } as React.CSSProperties
+            }
+          />
+          {sweep.glints.map((glint, i) => (
+            <span
+              key={i}
+              className="copy-glint"
+              style={
+                {
+                  left: `${glint.left}%`,
+                  top: `${glint.top}%`,
+                  width: `${glint.size}px`,
+                  height: `${glint.size}px`,
+                  '--glint-delay': `${glint.delay}s`,
+                } as React.CSSProperties
+              }
+            />
+          ))}
+        </span>
+      )}
       <span className="relative" aria-live="polite">
         {hasCopied ? 'Copied' : 'Copy'}
       </span>
