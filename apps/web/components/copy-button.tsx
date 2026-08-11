@@ -94,9 +94,7 @@ export function CopyButton({
         />
       </span>
       {label ? (
-        <span className="font-mono text-xs">
-          {hasCopied ? 'copied' : label}
-        </span>
+        <span className="font-mono text-xs">{label}</span>
       ) : (
         <span className="sr-only">Copy</span>
       )}
