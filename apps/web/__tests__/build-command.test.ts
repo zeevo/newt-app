@@ -71,6 +71,6 @@ describe('buildCommand', () => {
         deployment: 'none',
         nestDiOnly: false,
       }),
-    ).toBe('npm create newt-app my-app -- --shadcn');
+    ).toBe('npm create newt-app@latest my-app -- --shadcn');
   });
 });

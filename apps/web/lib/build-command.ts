@@ -67,6 +67,6 @@ export function buildCommand(c: Config): string {
   // and shadcn would come back on — the opposite of what the panel shows.
   if (!flags.length && !c.shadcn) flags.push('--testing jest');
   return flags.length
-    ? `npm create newt-app my-app -- ${flags.join(' ')}`
-    : 'npm create newt-app my-app';
+    ? `npm create newt-app@latest my-app -- ${flags.join(' ')}`
+    : 'npm create newt-app@latest my-app';
 }
