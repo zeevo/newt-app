@@ -1,5 +1,5 @@
 export default {
-  filename: "apps/api/vitest.config.ts",
+  filename: "apps/api/vitest.config.mts",
   template: `import swc from 'unplugin-swc';
 import { defineConfig } from 'vitest/config';
 

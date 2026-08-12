@@ -17,7 +17,7 @@ const testingVitest: Module = {
     { module: "apps/api", name: "test:watch", script: "vitest" },
     { module: "apps/api", name: "test:cov", script: "vitest run --coverage" },
     { module: "apps/api", name: "test:debug", script: "vitest --inspect-brk --inspect --logHeapUsage --threads=false" },
-    { module: "apps/api", name: "test:e2e", script: "vitest run --config ./vitest.config.e2e.ts" },
+    { module: "apps/api", name: "test:e2e", script: "vitest run --config ./vitest.config.e2e.mts" },
   ],
 };
 

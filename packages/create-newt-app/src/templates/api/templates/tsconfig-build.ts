@@ -2,6 +2,6 @@ export default {
   filename: "apps/api/tsconfig.build.json",
   template: `{
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "vitest.config.ts", "vitest.config.e2e.ts", "jest.config.ts"]
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "vitest.config.mts", "vitest.config.e2e.mts", "jest.config.ts"]
 }`,
 };

@@ -28,7 +28,7 @@ export const versions = {
   "@types/react": "19.2.14",
   "@types/react-dom": "19.2.3",
   "@types/supertest": "^6.0.2",
-  "@vitest/coverage-v8": "^3.0.0",
+  "@vitest/coverage-v8": "^4.1.10",
   "auth": "^1.5.5",
   "better-auth": "^1.2.8",
   "better-sqlite3": "^12.11.1",
@@ -79,7 +79,7 @@ export const versions = {
   "typescript": "6.0.2",
   "typescript-eslint": "^8.50.0",
   "unplugin-swc": "^1.5.9",
-  "vitest": "^3.0.0",
+  "vitest": "^4.1.10",
 } as const;
 
 export type Versions = typeof versions;
