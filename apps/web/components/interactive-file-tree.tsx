@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { FileTree } from '@newt-app/file-tree';
-import { CopyButton } from '@/components/copy-button';
+import { CopyCommandButton } from '@/components/copy-command-button';
 import { Toggle } from '@newt-app/ui/components/toggle';
 import {
   ToggleGroup,
@@ -308,12 +308,16 @@ export function InteractiveFileTree({ className }: { className?: string }) {
           </div>
         </div>
 
-        <div className="relative rounded-lg border bg-code p-4 pr-12">
-          <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
-            <span className="text-muted-foreground select-none">$ </span>
-            {command}
-          </code>
-          <CopyButton value={command} className="top-3" />
+        <div className="flex items-stretch gap-3">
+          {/* min-w-0 lets the code scroll inside its own block instead of
+              growing the row and squeezing the button */}
+          <div className="min-w-0 flex-1 rounded-lg border bg-code p-4">
+            <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
+              <span className="text-muted-foreground select-none">$ </span>
+              {command}
+            </code>
+          </div>
+          <CopyCommandButton value={command} />
         </div>
       </div>
     </TooltipProvider>
