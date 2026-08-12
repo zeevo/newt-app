@@ -14,8 +14,10 @@ const nextConfig = {
   output: "standalone",
   serverExternalPackages: [
     '@<%= projectName %>/api',
+    '@newt-app/nest-next-adapter',
     '@<%= projectName %>/db',
     '@nestjs/core',
+    '@nestjs/platform-express',
     '@nestjs/common',
     '@nestjs/microservices',
     '@nestjs/websockets',

@@ -16,6 +16,7 @@ export default {
   "dependencies": {
     "@nestjs/common": "<%= versions["@nestjs/common"] %>",
     "@nestjs/core": "<%= versions["@nestjs/core"] %>",
+    "@nestjs/platform-express": "<%= versions["@nestjs/platform-express"] %>",
     "@<%= projectName %>/auth": "workspace:*",
     "@<%= projectName %>/db": "workspace:*",
     "@thallesp/nestjs-better-auth": "<%= versions["@thallesp/nestjs-better-auth"] %>",

@@ -105,16 +105,11 @@ export function scaffoldTree(c: Config): TreeNode[] {
                             kind: "file" as const,
                             path: "apps/api/src/todos/todos.service.ts",
                           },
-                          ...(c.nestDiOnly
-                            ? []
-                            : [
-                                {
-                                  name: "todos.controller.ts",
-                                  kind: "file" as const,
-                                  path: "apps/api/src/todos/todos.controller.ts",
-                                  conditional: true,
-                                },
-                              ]),
+                          {
+                            name: "todos.controller.ts",
+                            kind: "file" as const,
+                            path: "apps/api/src/todos/todos.controller.ts",
+                          },
                         ],
                       },
                     ]

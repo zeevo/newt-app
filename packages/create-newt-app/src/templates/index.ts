@@ -19,7 +19,6 @@ import deploymentStandaloneDi from "./deployment-standalone-di/index";
 import apiControllers from "./api-controllers/index";
 import {
   todoExampleApi,
-  todoExampleControllers,
   todoExampleDi,
   todoExampleWeb,
   todoExampleShadcn,
@@ -57,7 +56,6 @@ export const templates = {
   deploymentStandaloneDi,
   apiControllers,
   todoExampleApi,
-  todoExampleControllers,
   todoExampleDi,
   todoExampleWeb,
   todoExampleShadcn,
@@ -107,7 +105,7 @@ export function selectModules(selection: ModuleSelection): Module[] {
     ...(todoExample
       ? [
           todoExampleApi,
-          ...(nestDiOnly ? [todoExampleDi] : [todoExampleControllers]),
+          ...(nestDiOnly ? [todoExampleDi] : []),
           shadcn ? todoExampleShadcn : todoExampleWeb,
         ]
       : []),

@@ -1,0 +1,58 @@
+{
+  "name": "@newt-app/nest-next-adapter",
+  "version": "0.0.0",
+  "description": "Run NestJS controllers inside Next.js route handlers.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "lint": "oxlint",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@nestjs/common": ">=10.0.0",
+    "@nestjs/core": ">=10.0.0",
+    "@nestjs/platform-express": ">=10.0.0",
+    "reflect-metadata": ">=0.1.13"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/platform-express": "^11.0.1",
+    "oxlint": "^1.74.0",
+    "@newt-app/typescript-config": "workspace:*",
+    "@swc/core": "^1.10.0",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.0.0",
+    "express": "^5.2.1",
+    "reflect-metadata": "^0.2.2",
+    "tsdown": "^0.22.14",
+    "typescript": "6.0.2",
+    "unplugin-swc": "^1.5.9",
+    "vitest": "^4.1.2"
+  }
+}

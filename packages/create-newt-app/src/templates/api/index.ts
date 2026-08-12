@@ -6,6 +6,8 @@ import tsconfigBuild from "./templates/tsconfig-build";
 import appModule from "./templates/app-module";
 import appService from "./templates/app-service";
 import appServiceSpec from "./templates/app-service-spec";
+import appController from "./templates/app-controller";
+import appControllerSpec from "./templates/app-controller-spec";
 import readme from "./templates/readme";
 
 const api: Module = {
@@ -17,6 +19,8 @@ const api: Module = {
     appModule,
     appService,
     appServiceSpec,
+    appController,
+    appControllerSpec,
     readme,
   ],
 };

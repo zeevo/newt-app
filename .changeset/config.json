@@ -8,7 +8,8 @@
       "@newt-app/ui",
       "@newt-app/auth",
       "@newt-app/typescript-config",
-      "@newt-app/components"
+      "@newt-app/components",
+      "@newt-app/nest-next-adapter"
     ]
   ],
   "linked": [],
