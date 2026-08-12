@@ -1,12 +1,14 @@
 export default {
   filename: "apps/api/test/jest-e2e.json",
   template: `{
-  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleFileExtensions": ["js", "mjs", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
+  "extensionsToTreatAsEsm": [".ts"],
   "transform": {
-    "^.+\\\\.(t|j)s$": "ts-jest"
-  }
+    "^.+\\\\.ts$": ["ts-jest", { "useESM": true, "tsconfig": { "module": "esnext" } }]
+  },
+  "transformIgnorePatterns": ["node_modules/(?!.*\\\\.mjs$)"]
 }`,
 };

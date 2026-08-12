@@ -19,11 +19,11 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/hello (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/hello')
       .expect(200)
-      .expect('Hello World!');
+      .expect({ message: 'Hello from Nest' });
   });
 });`,
 };

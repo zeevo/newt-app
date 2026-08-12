@@ -19,7 +19,7 @@ const testingJest: Module = {
     { module: "apps/api", name: "test:watch", script: "jest --watch" },
     { module: "apps/api", name: "test:cov", script: "jest --coverage" },
     { module: "apps/api", name: "test:debug", script: "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand" },
-    { module: "apps/api", name: "test:e2e", script: "jest --config ./test/jest-e2e.json" },
+    { module: "apps/api", name: "test:e2e", script: "NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json" },
   ],
 };
 
