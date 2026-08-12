@@ -4,6 +4,7 @@ import { FeatureSection } from '@/components/feature-section';
 import { InlineCode } from '@/components/inline-code';
 import { InteractiveFileTree } from '@/components/interactive-file-tree';
 import Image from 'next/image';
+import { Suspense } from 'react';
 import LogoRain from '@/components/logo-rain';
 import RequestFlow from '@/components/request-flow';
 import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
@@ -163,7 +164,11 @@ export default function Home() {
               through it; the builder has to opt back in */}
           <div className="pointer-events-auto mt-16 w-full rounded-lg border bg-background p-4 shadow-lg">
             <div className="p-4">
-              <InteractiveFileTree />
+              {/* nuqs reads useSearchParams, which needs a boundary on a
+                  statically rendered page */}
+              <Suspense>
+                <InteractiveFileTree />
+              </Suspense>
             </div>
           </div>
         </div>

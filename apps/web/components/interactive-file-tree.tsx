@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useQueryStates } from 'nuqs';
 import { FileTree } from '@newt-app/file-tree';
 import { CopyCommandButton } from '@/components/copy-command-button';
 import { Toggle } from '@newt-app/ui/components/toggle';
@@ -30,15 +31,11 @@ import {
   type Config,
 } from '@/lib/build-command';
 import { scaffoldTree, type TreeNode } from '@/lib/scaffold-tree';
-
-const DEFAULT: Config = {
-  shadcn: true,
-  testing: 'vitest',
-  database: 'postgres',
-  linter: 'oxc',
-  deployment: 'none',
-  nestDiOnly: false,
-};
+import {
+  configParsers,
+  configUrlKeys,
+  sanitizeConfig,
+} from '@/lib/config-params';
 
 const grow = 'animate-in fade-in slide-in-from-left-1 duration-300';
 
@@ -195,9 +192,10 @@ function BoolToggle({
 }
 
 export function InteractiveFileTree({ className }: { className?: string }) {
-  const [c, setC] = useState<Config>(DEFAULT);
+  const [raw, setC] = useQueryStates(configParsers, { urlKeys: configUrlKeys });
+  const c = sanitizeConfig(raw);
   const set = <K extends keyof Config>(key: K, value: Config[K]) =>
-    setC((prev) => ({ ...prev, [key]: value }));
+    setC({ [key]: value });
 
   const command = useMemo(() => buildCommand(c), [c]);
   const hint = deploymentHint(c);
