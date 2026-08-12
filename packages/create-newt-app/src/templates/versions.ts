@@ -23,7 +23,7 @@ export const versions = {
   "@types/better-sqlite3": "^7.6.13",
   "@types/express": "^5.0.0",
   "@types/jest": "^30.0.0",
-  "@types/node": "^22.15.3",
+  "@types/node": "^24.13.3",
   "@types/pg": "^8.11.13",
   "@types/react": "19.2.14",
   "@types/react-dom": "19.2.3",
