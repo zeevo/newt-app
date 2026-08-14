@@ -46,7 +46,7 @@ const TEX_SIZE = 256;
 // the floor: a dot lattice drawn under the chips in the same scene, so it can
 // react to them. Chips shove nearby lattice points outward (PUSH, as a fraction
 // of chip radius, out to WAKE radii) and brighten the dots they pass over.
-const FLOOR_SPACING = 24;
+const FLOOR_SPACING = 20;
 const FLOOR_DOT = 1.1;
 const FLOOR_ALPHA = 0.6;
 const FLOOR_PUSH = 0.35;
