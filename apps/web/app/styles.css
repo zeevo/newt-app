@@ -1,3 +1,63 @@
+/* the tank floor: drafting-sheet ruler ticks hugging the inside of the frame,
+   minor every 24px and a longer major every 120px. The middle stays empty, so
+   nothing competes with the headline and no centre fade is needed. It still
+   sits on a pseudo-element to stay behind the canvas. */
+.logo-rain-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.logo-rain-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  --tick: color-mix(in oklab, var(--border) 55%, transparent);
+  --ticks-x: repeating-linear-gradient(
+    to right,
+    var(--tick) 0 1px,
+    transparent 1px 24px
+  );
+  --ticks-y: repeating-linear-gradient(
+    to bottom,
+    var(--tick) 0 1px,
+    transparent 1px 24px
+  );
+  --majors-x: repeating-linear-gradient(
+    to right,
+    var(--border) 0 1px,
+    transparent 1px 120px
+  );
+  --majors-y: repeating-linear-gradient(
+    to bottom,
+    var(--border) 0 1px,
+    transparent 1px 120px
+  );
+  background-image: var(--majors-x), var(--majors-x), var(--majors-y),
+    var(--majors-y), var(--ticks-x), var(--ticks-x), var(--ticks-y),
+    var(--ticks-y);
+  background-size:
+    100% 16px,
+    100% 16px,
+    16px 100%,
+    16px 100%,
+    100% 8px,
+    100% 8px,
+    8px 100%,
+    8px 100%;
+  background-position:
+    left top,
+    left bottom,
+    left top,
+    right top,
+    left top,
+    left bottom,
+    left top,
+    right top;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y, repeat-x, repeat-x,
+    repeat-y, repeat-y;
+}
+
 .logo-rain-logo {
   filter: brightness(0) opacity(0.3);
 }
