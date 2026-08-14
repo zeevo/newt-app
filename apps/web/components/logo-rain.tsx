@@ -43,15 +43,19 @@ const MAX_SPIN = 2.5;
 
 const TEX_SIZE = 256;
 
-// the floor: a dot lattice drawn under the chips in the same scene, so it can
-// react to them. Chips shove nearby lattice points outward (PUSH, as a fraction
-// of chip radius, out to WAKE radii) and brighten the dots they pass over.
-const FLOOR_SPACING = 20;
-const FLOOR_DOT = 1.1;
-const FLOOR_ALPHA = 0.6;
-const FLOOR_PUSH = 0.4;
-const FLOOR_WAKE = 1.6;
-const FLOOR_GLOW = 1.0;
+// the floor: a 22px dot lattice in --border, faded out from under the headline,
+// drawn under the chips in the same scene so it can react to them. Chips shove
+// nearby lattice points outward, PUSH as a fraction of chip radius, out to WAKE
+// radii.
+const FLOOR_SPACING = 22;
+const FLOOR_DOT = 1;
+const FLOOR_PUSH = 0.22;
+const FLOOR_WAKE = 1.4;
+
+// the fade ellipse as fractions of the visible rect, and the distance across it
+// at which the lattice reaches full strength
+const FLOOR_FADE_EDGE = 0.8;
+const FLOOR_FADE_MIN = 0.15;
 
 type Star = {
   x: number;
@@ -135,13 +139,11 @@ function floorMaterial(chipCount: number) {
         // every chip measures from the undisplaced position, so overlapping
         // fields add instead of compounding into streaks
         vec2 shift = vec2(0.0);
-        float glow = 0.0;
         for (int i = 0; i < CHIP_COUNT; i++) {
           vec2 d = vView - uChips[i];
           float len = max(length(d), 0.001);
           float f = 1.0 - smoothstep(0.0, uChipR[i] * ${FLOOR_WAKE.toFixed(1)}, len);
           shift += (d / len) * f * uChipR[i] * ${FLOOR_PUSH.toFixed(2)};
-          glow += f;
         }
         vec2 p = vView + shift;
 
@@ -153,14 +155,18 @@ function floorMaterial(chipCount: number) {
         float mark = 1.0 - smoothstep(
           ${FLOOR_DOT.toFixed(2)} - w, ${FLOOR_DOT.toFixed(2)} + w, d);
 
-        // fade the lattice out from under the headline, using the undisplaced
-        // position so a passing chip cannot drag the fade around with it
+        // fade the lattice out from under the headline, matching the CSS
+        // radial-gradient it is modelled on: a linear ramp across an ellipse
+        // 70% x 55% of the visible rect. Measured from the undisplaced position,
+        // so a passing chip cannot drag the fade around with it.
         vec2 span = uViewMax - uViewMin;
         vec2 centre = uViewMin + span * vec2(0.5, 0.35);
         float t = length((vView - centre) / (span * vec2(0.35, 0.28)));
-        float fade = mix(0.15, 1.0, smoothstep(0.0, 1.4, t));
+        float fade = mix(
+          ${FLOOR_FADE_MIN.toFixed(2)}, 1.0,
+          clamp(t / ${FLOOR_FADE_EDGE.toFixed(1)}, 0.0, 1.0));
 
-        float a = mark * ${FLOOR_ALPHA.toFixed(2)} * fade * (1.0 + glow * ${FLOOR_GLOW.toFixed(1)});
+        float a = mark * fade;
         if (a <= 0.002) discard;
         gl_FragColor = vec4(uColor, a);
         // uColor is in the linear working space, like every other material's;
