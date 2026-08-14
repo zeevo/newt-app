@@ -1,3 +1,29 @@
+/* the tank floor: rings spreading from a point under the headline, echoing the
+   round chips. It lives on a pseudo-element behind the canvas so the centre
+   fade, which clears the innermost rings out from under the headline, dims the
+   rings without also dimming the chips. */
+.logo-rain-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.logo-rain-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: repeating-radial-gradient(
+    circle at 50% 38%,
+    var(--border) 0 1px,
+    transparent 1px 68px
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 55% at 50% 35%,
+    rgb(0 0 0 / 0.15),
+    rgb(0 0 0 / 1) 80%
+  );
+}
+
 .logo-rain-logo {
   filter: brightness(0) opacity(0.3);
 }

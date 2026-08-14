@@ -448,7 +448,7 @@ export default function LogoRain({
   }, [density, speedFactor]);
 
   return (
-    <div className="h-full w-full text-foreground">
+    <div className="logo-rain-surface h-full w-full text-foreground">
       <canvas
         ref={canvasRef}
         aria-label="Floating logos visualization"
