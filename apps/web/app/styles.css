@@ -1,6 +1,16 @@
-/* the tank floor: a dot lattice the opaque chips slide over. Faded in the
-   middle so it never competes with the headline sitting on top of it. */
+/* the tank floor: a dot lattice the opaque chips slide over. It lives on a
+   pseudo-element behind the canvas so the centre fade, which keeps the lattice
+   off the headline, dims the dots without also dimming the chips. */
 .logo-rain-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.logo-rain-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
   background-size: 22px 22px;
   background-position: 11px 11px;
