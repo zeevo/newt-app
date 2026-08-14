@@ -57,7 +57,7 @@ const FLOOR_WAKE = 1.4;
 // how much of the middle stays empty: 1 is a linear ramp, higher holds the
 // centre clear for longer and gathers the dots toward the frame.
 const FLOOR_FADE_EDGE = 1;
-const FLOOR_FADE_CURVE = 2.2;
+const FLOOR_FADE_CURVE = 3.5;
 
 type Star = {
   x: number;
