@@ -43,6 +43,16 @@ const MAX_SPIN = 2.5;
 
 const TEX_SIZE = 256;
 
+// the floor: a dot lattice drawn under the chips in the same scene, so it can
+// react to them. Chips shove nearby lattice points outward (PUSH, as a fraction
+// of chip radius, out to WAKE radii) and brighten the dots they pass over.
+const FLOOR_SPACING = 24;
+const FLOOR_DOT = 1.1;
+const FLOOR_ALPHA = 0.6;
+const FLOOR_PUSH = 0.35;
+const FLOOR_WAKE = 1.5;
+const FLOOR_GLOW = 1.0;
+
 type Star = {
   x: number;
   y: number;
@@ -78,12 +88,84 @@ function readTheme() {
   const primary = cssColor(styles.color);
   probe.remove();
   const dark = document.documentElement.classList.contains('dark');
+  const border = cssColor(
+    getComputedStyle(document.documentElement).getPropertyValue('--border').trim(),
+  );
   return {
     background,
     primary,
+    border,
     silhouette: new THREE.Color(dark ? 0xffffff : 0x000000),
     logoAlpha: dark ? 0.35 : 0.3,
   };
+}
+
+// dot lattice in view coordinates, displaced and lit by the chips above it
+function floorMaterial(chipCount: number) {
+  return new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    uniforms: {
+      uColor: { value: new THREE.Color() },
+      uViewMin: { value: new THREE.Vector2() },
+      uViewMax: { value: new THREE.Vector2() },
+      uChips: {
+        value: Array.from({ length: chipCount }, () => new THREE.Vector2()),
+      },
+      uChipR: { value: new Float32Array(chipCount) },
+    },
+    vertexShader: `
+      varying vec2 vView;
+      void main() {
+        vec4 world = modelMatrix * vec4(position, 1.0);
+        vView = vec2(world.x, -world.y);
+        gl_Position = projectionMatrix * viewMatrix * world;
+      }
+    `,
+    fragmentShader: `
+      #define CHIP_COUNT ${chipCount}
+      uniform vec3 uColor;
+      uniform vec2 uViewMin;
+      uniform vec2 uViewMax;
+      uniform vec2 uChips[CHIP_COUNT];
+      uniform float uChipR[CHIP_COUNT];
+      varying vec2 vView;
+
+      void main() {
+        vec2 p = vView;
+        float glow = 0.0;
+        for (int i = 0; i < CHIP_COUNT; i++) {
+          vec2 d = p - uChips[i];
+          float len = max(length(d), 0.001);
+          float f = 1.0 - smoothstep(0.0, uChipR[i] * ${FLOOR_WAKE.toFixed(1)}, len);
+          p += (d / len) * f * uChipR[i] * ${FLOOR_PUSH.toFixed(2)};
+          glow += f;
+        }
+
+        // antialias against the on-screen gradient, which also softens the dots
+        // out where a chip's wake stretches the lattice instead of streaking them
+        vec2 cell = mod(p, ${FLOOR_SPACING.toFixed(1)}) - ${(FLOOR_SPACING / 2).toFixed(1)};
+        float d = length(cell);
+        float w = max(fwidth(d), 0.5);
+        float mark = 1.0 - smoothstep(
+          ${FLOOR_DOT.toFixed(2)} - w, ${FLOOR_DOT.toFixed(2)} + w, d);
+
+        // fade the lattice out from under the headline, using the undisplaced
+        // position so a passing chip cannot drag the fade around with it
+        vec2 span = uViewMax - uViewMin;
+        vec2 centre = uViewMin + span * vec2(0.5, 0.35);
+        float t = length((vView - centre) / (span * vec2(0.35, 0.28)));
+        float fade = mix(0.15, 1.0, smoothstep(0.0, 1.4, t));
+
+        float a = mark * ${FLOOR_ALPHA.toFixed(2)} * fade * (1.0 + glow * ${FLOOR_GLOW.toFixed(1)});
+        if (a <= 0.002) discard;
+        gl_FragColor = vec4(uColor, a);
+        // uColor is in the linear working space, like every other material's;
+        // a raw ShaderMaterial has to ask for the output conversion by hand
+        #include <colorspace_fragment>
+      }
+    `,
+  });
 }
 
 // rasterize an svg into a white silhouette texture, tinted later via material color
@@ -140,6 +222,10 @@ export default function LogoRain({
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(0, VIEW_W, 0, -VIEW_H, -10, 10);
 
+    const chipCount = logos.length * density;
+    const floorMat = floorMaterial(chipCount);
+    const floorUniforms = floorMat.uniforms;
+
     // cover the container like preserveAspectRatio="xMidYMid slice"
     function fit() {
       const cw = container.clientWidth || 1;
@@ -154,21 +240,30 @@ export default function LogoRain({
       camera.top = -VIEW_H / 2 + visH / 2;
       camera.bottom = -VIEW_H / 2 - visH / 2;
       camera.updateProjectionMatrix();
+      floorUniforms.uViewMin!.value.set(camera.left, -camera.top);
+      floorUniforms.uViewMax!.value.set(camera.right, -camera.bottom);
     }
     fit();
+
+    const floorGeometry = new THREE.PlaneGeometry(VIEW_W, VIEW_H);
+    const floor = new THREE.Mesh(floorGeometry, floorMat);
+    floor.position.set(VIEW_W / 2, -VIEW_H / 2, 0);
+    floor.renderOrder = -1;
+    scene.add(floor);
 
     const circleGeometry = new THREE.CircleGeometry(1, 64);
     const ringGeometry = new THREE.RingGeometry(0.985, 1, 64);
     const planeGeometry = new THREE.PlaneGeometry(1.2, 1.2);
 
     let theme = readTheme();
+    floorUniforms.uColor!.value.copy(theme.border);
     const circleMaterials: THREE.MeshBasicMaterial[] = [];
     const ringMaterials: THREE.MeshBasicMaterial[] = [];
     const logoMaterials: THREE.MeshBasicMaterial[] = [];
 
     const meanSize = (MIN_SIZE + MAX_SIZE) / 2;
     const stars: Star[] = [];
-    Array.from({ length: logos.length * density }).forEach(() => {
+    Array.from({ length: chipCount }).forEach(() => {
       const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
       // seed across the whole view so it starts populated; a few best-candidate
       // samples gently discourage clumping without looking gridded
@@ -248,6 +343,13 @@ export default function LogoRain({
       });
     });
 
+    const chipRadii = floorUniforms.uChipR!.value as Float32Array;
+    const chipPositions = floorUniforms.uChips!.value as THREE.Vector2[];
+    stars.forEach((s, i) => {
+      chipRadii[i] = s.size;
+      chipPositions[i]!.set(s.x, s.y);
+    });
+
     const textures: THREE.CanvasTexture[] = [];
     stars.forEach((_, i) => {
       loadSilhouette(logos[i % logos.length]!).then((texture) => {
@@ -277,6 +379,7 @@ export default function LogoRain({
         m.color.copy(theme.silhouette);
         m.opacity = theme.logoAlpha;
       });
+      floorUniforms.uColor!.value.copy(theme.border);
       renderer.render(scene, camera);
     }
 
@@ -421,9 +524,10 @@ export default function LogoRain({
           });
         });
 
-        stars.forEach((s) => {
+        stars.forEach((s, i) => {
           s.group.position.set(s.x, -s.y, 0);
           s.group.rotation.z = -s.angle;
+          chipPositions[i]!.set(s.x, s.y);
         });
         renderer.render(scene, camera);
       });
@@ -439,6 +543,8 @@ export default function LogoRain({
       circleGeometry.dispose();
       ringGeometry.dispose();
       planeGeometry.dispose();
+      floorGeometry.dispose();
+      floorMat.dispose();
       [...circleMaterials, ...ringMaterials, ...logoMaterials].forEach((m) =>
         m.dispose(),
       );
