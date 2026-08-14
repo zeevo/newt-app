@@ -1,3 +1,25 @@
+/* the tank floor: graph paper, minor rules every 24px and a heavier rule every
+   120px. Faded in the middle so it never competes with the headline on top. */
+.logo-rain-surface {
+  --rule: color-mix(in oklab, var(--border) 45%, transparent);
+  --rule-major: var(--border);
+  background-image:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px),
+    linear-gradient(to right, var(--rule-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule-major) 1px, transparent 1px);
+  background-size:
+    24px 24px,
+    24px 24px,
+    120px 120px,
+    120px 120px;
+  mask-image: radial-gradient(
+    ellipse 70% 55% at 50% 35%,
+    rgb(0 0 0 / 0.15),
+    rgb(0 0 0 / 1) 80%
+  );
+}
+
 .logo-rain-logo {
   filter: brightness(0) opacity(0.3);
 }
