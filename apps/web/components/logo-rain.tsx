@@ -49,8 +49,8 @@ const TEX_SIZE = 256;
 const FLOOR_SPACING = 20;
 const FLOOR_DOT = 1.1;
 const FLOOR_ALPHA = 0.6;
-const FLOOR_PUSH = 0.35;
-const FLOOR_WAKE = 1.5;
+const FLOOR_PUSH = 0.45;
+const FLOOR_WAKE = 1.8;
 const FLOOR_GLOW = 1.0;
 
 type Star = {
@@ -132,15 +132,18 @@ function floorMaterial(chipCount: number) {
       varying vec2 vView;
 
       void main() {
-        vec2 p = vView;
+        // every chip measures from the undisplaced position, so overlapping
+        // fields add instead of compounding into streaks
+        vec2 shift = vec2(0.0);
         float glow = 0.0;
         for (int i = 0; i < CHIP_COUNT; i++) {
-          vec2 d = p - uChips[i];
+          vec2 d = vView - uChips[i];
           float len = max(length(d), 0.001);
           float f = 1.0 - smoothstep(0.0, uChipR[i] * ${FLOOR_WAKE.toFixed(1)}, len);
-          p += (d / len) * f * uChipR[i] * ${FLOOR_PUSH.toFixed(2)};
+          shift += (d / len) * f * uChipR[i] * ${FLOOR_PUSH.toFixed(2)};
           glow += f;
         }
+        vec2 p = vView + shift;
 
         // antialias against the on-screen gradient, which also softens the dots
         // out where a chip's wake stretches the lattice instead of streaking them
