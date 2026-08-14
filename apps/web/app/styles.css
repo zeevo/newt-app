@@ -1,6 +1,16 @@
 /* the tank floor: graph paper, minor rules every 24px and a heavier rule every
-   120px. Faded in the middle so it never competes with the headline on top. */
+   120px. It lives on a pseudo-element behind the canvas so the centre fade,
+   which keeps the rules off the headline, dims them without dimming the chips. */
 .logo-rain-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.logo-rain-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   --rule: color-mix(in oklab, var(--border) 45%, transparent);
   --rule-major: var(--border);
   background-image:
