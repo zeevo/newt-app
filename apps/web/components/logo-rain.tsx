@@ -48,7 +48,7 @@ const TEX_SIZE = 256;
 // nearby lattice points outward, PUSH as a fraction of chip radius, out to WAKE
 // radii.
 const FLOOR_SPACING = 19;
-const FLOOR_DOT = 1;
+const FLOOR_DOT = 0.75;
 const FLOOR_PUSH = 0.22;
 const FLOOR_WAKE = 1.4;
 
