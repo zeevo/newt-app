@@ -49,8 +49,12 @@ const TEX_SIZE = 256;
 // radii.
 const FLOOR_SPACING = 19;
 const FLOOR_DOT = 0.75;
-const FLOOR_PUSH = 0.22;
-const FLOOR_WAKE = 1.4;
+// smallest edge ramp the dots are allowed, in view units. fwidth still widens it
+// wherever a wake stretches the lattice, so this only sets how crisp the dots
+// read across the calm floor.
+const FLOOR_DOT_SOFT = 0.25;
+const FLOOR_PUSH = 0.28;
+const FLOOR_WAKE = 1.5;
 
 // the fade ellipse as fractions of the visible rect, and the distance across it
 // at which the lattice reaches full strength
@@ -151,7 +155,7 @@ function floorMaterial(chipCount: number) {
         // out where a chip's wake stretches the lattice instead of streaking them
         vec2 cell = mod(p, ${FLOOR_SPACING.toFixed(1)}) - ${(FLOOR_SPACING / 2).toFixed(1)};
         float d = length(cell);
-        float w = max(fwidth(d), 0.5);
+        float w = max(fwidth(d), ${FLOOR_DOT_SOFT.toFixed(2)});
         float mark = 1.0 - smoothstep(
           ${FLOOR_DOT.toFixed(2)} - w, ${FLOOR_DOT.toFixed(2)} + w, d);
 
