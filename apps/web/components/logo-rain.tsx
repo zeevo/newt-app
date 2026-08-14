@@ -52,12 +52,10 @@ const FLOOR_DOT = 1;
 const FLOOR_PUSH = 0.22;
 const FLOOR_WAKE = 1.4;
 
-// the lattice fades to nothing at the centre and reaches full strength at the
-// edge of an ellipse 70% x 55% of the visible rect. The curve exponent decides
-// how much of the middle stays empty: 1 is a linear ramp, higher holds the
-// centre clear for longer and gathers the dots toward the frame.
-const FLOOR_FADE_EDGE = 1;
-const FLOOR_FADE_CURVE = 5.5;
+// the fade ellipse as fractions of the visible rect, and the distance across it
+// at which the lattice reaches full strength
+const FLOOR_FADE_EDGE = 0.8;
+const FLOOR_FADE_MIN = 0.15;
 
 type Star = {
   x: number;
@@ -157,14 +155,16 @@ function floorMaterial(chipCount: number) {
         float mark = 1.0 - smoothstep(
           ${FLOOR_DOT.toFixed(2)} - w, ${FLOOR_DOT.toFixed(2)} + w, d);
 
-        // fade the lattice out from under the headline. Measured from the
-        // undisplaced position, so a passing chip cannot drag the fade with it.
+        // fade the lattice out from under the headline, matching the CSS
+        // radial-gradient it is modelled on: a linear ramp across an ellipse
+        // 70% x 55% of the visible rect. Measured from the undisplaced position,
+        // so a passing chip cannot drag the fade around with it.
         vec2 span = uViewMax - uViewMin;
         vec2 centre = uViewMin + span * vec2(0.5, 0.35);
         float t = length((vView - centre) / (span * vec2(0.35, 0.28)));
-        float fade = pow(
-          clamp(t / ${FLOOR_FADE_EDGE.toFixed(1)}, 0.0, 1.0),
-          ${FLOOR_FADE_CURVE.toFixed(1)});
+        float fade = mix(
+          ${FLOOR_FADE_MIN.toFixed(2)}, 1.0,
+          clamp(t / ${FLOOR_FADE_EDGE.toFixed(1)}, 0.0, 1.0));
 
         float a = mark * fade;
         if (a <= 0.002) discard;
