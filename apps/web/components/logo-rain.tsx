@@ -43,11 +43,11 @@ const MAX_SPIN = 2.5;
 
 const TEX_SIZE = 256;
 
-// the floor: a 22px dot lattice in --border, faded out from under the headline,
+// the floor: a 19px dot lattice in --border, faded out from under the headline,
 // drawn under the chips in the same scene so it can react to them. Chips shove
 // nearby lattice points outward, PUSH as a fraction of chip radius, out to WAKE
 // radii.
-const FLOOR_SPACING = 22;
+const FLOOR_SPACING = 19;
 const FLOOR_DOT = 1;
 const FLOOR_PUSH = 0.22;
 const FLOOR_WAKE = 1.4;
