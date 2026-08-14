@@ -1,3 +1,41 @@
+/* the tank floor: a dot lattice whose dots swell toward the frame, so the floor
+   reads as a bowl rather than flat wallpaper. Two pseudo-elements because a
+   mask applies to a whole element, and each dot size needs its own falloff:
+   ::before carries the small dots everywhere, ::after the large dots at the
+   rim. Both sit behind the canvas so neither fade touches the chips. */
+.logo-rain-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.logo-rain-surface::before,
+.logo-rain-surface::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+}
+
+.logo-rain-surface::before {
+  background-image: radial-gradient(var(--border) 0.8px, transparent 0.8px);
+  mask-image: radial-gradient(
+    ellipse 70% 55% at 50% 35%,
+    rgb(0 0 0 / 0.15),
+    rgb(0 0 0 / 1) 80%
+  );
+}
+
+.logo-rain-surface::after {
+  background-image: radial-gradient(var(--border) 1.8px, transparent 1.8px);
+  mask-image: radial-gradient(
+    ellipse 85% 70% at 50% 35%,
+    rgb(0 0 0 / 0),
+    rgb(0 0 0 / 1) 100%
+  );
+}
+
 .logo-rain-logo {
   filter: brightness(0) opacity(0.3);
 }
