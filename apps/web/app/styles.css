@@ -1,3 +1,26 @@
+/* the tank floor: a CAD-style lattice of registration crosshairs. It lives on a
+   pseudo-element behind the canvas so the centre fade dims the lattice without
+   also dimming the chips. */
+.logo-rain-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.logo-rain-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--border);
+  mask-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M28 22v12M22 28h12' stroke='%23fff' stroke-width='1'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 70% 55% at 50% 35%, rgb(0 0 0 / 0.15), rgb(0 0 0 / 1) 80%);
+  mask-size:
+    56px 56px,
+    100% 100%;
+  mask-composite: intersect;
+}
+
 .logo-rain-logo {
   filter: brightness(0) opacity(0.3);
 }
