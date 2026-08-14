@@ -1,3 +1,16 @@
+/* the tank floor: a dot lattice the opaque chips slide over. Faded in the
+   middle so it never competes with the headline sitting on top of it. */
+.logo-rain-surface {
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+  mask-image: radial-gradient(
+    ellipse 70% 55% at 50% 35%,
+    rgb(0 0 0 / 0.15),
+    rgb(0 0 0 / 1) 80%
+  );
+}
+
 .logo-rain-logo {
   filter: brightness(0) opacity(0.3);
 }
