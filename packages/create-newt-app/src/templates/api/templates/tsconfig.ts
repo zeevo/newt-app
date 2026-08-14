@@ -26,6 +26,6 @@ export default {
     "noFallthroughCasesInSwitch": false,
     "types": [<% if (testing === 'jest') { %>"jest", <% } %><% if (testing === 'vitest') { %>"vitest/globals", <% } %>"node"]
   },
-  "exclude": ["vitest.config.ts", "vitest.config.e2e.ts", "node_modules", "dist"]
+  "exclude": ["vitest.config.mts", "vitest.config.e2e.mts", "node_modules", "dist"]
 }`,
 };
