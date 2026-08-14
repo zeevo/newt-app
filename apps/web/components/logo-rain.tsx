@@ -49,8 +49,8 @@ const TEX_SIZE = 256;
 const FLOOR_SPACING = 20;
 const FLOOR_DOT = 1.1;
 const FLOOR_ALPHA = 0.6;
-const FLOOR_PUSH = 0.45;
-const FLOOR_WAKE = 1.8;
+const FLOOR_PUSH = 0.4;
+const FLOOR_WAKE = 1.6;
 const FLOOR_GLOW = 1.0;
 
 type Star = {
