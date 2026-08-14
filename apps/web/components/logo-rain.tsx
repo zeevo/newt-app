@@ -48,9 +48,9 @@ const TEX_SIZE = 256;
 // nearby lattice points outward, PUSH as a fraction of chip radius, out to WAKE
 // radii.
 const FLOOR_SPACING = 19;
-const FLOOR_DOT = 0.75;
-const FLOOR_PUSH = 0.22;
-const FLOOR_WAKE = 1.4;
+const FLOOR_DOT = 0.6;
+const FLOOR_PUSH = 0.28;
+const FLOOR_WAKE = 1.5;
 
 // the fade ellipse as fractions of the visible rect, and the distance across it
 // at which the lattice reaches full strength
