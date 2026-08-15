@@ -6,7 +6,6 @@ import { InteractiveFileTree } from '@/components/interactive-file-tree';
 import Image from 'next/image';
 import { Suspense } from 'react';
 import LogoRain from '@/components/logo-rain';
-import RequestFlow from '@/components/request-flow';
 import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
 
 const STACK = [
@@ -314,13 +313,6 @@ export class UserController {
               </p>
             </div>
           </FeatureSection>
-        </div>
-      </section>
-      <section className="border-t bg-background py-24">
-        <div className="mx-auto max-w-[1200px] px-4 text-center">
-          <div className="mx-auto max-w-3xl">
-            <RequestFlow />
-          </div>
         </div>
       </section>
     </div >
