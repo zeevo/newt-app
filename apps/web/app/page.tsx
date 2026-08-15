@@ -1,6 +1,10 @@
 import { CodeShowcase } from "@/components/code-showcase";
 import { CopyButton } from "@/components/copy-button";
-import { FeatureSection } from "@/components/feature-section";
+import {
+  FeatureIndex,
+  FeatureSection,
+  SectionRule,
+} from "@/components/feature-section";
 import { InlineCode } from "@/components/inline-code";
 import { InteractiveFileTree } from "@/components/interactive-file-tree";
 import Image from "next/image";
@@ -246,7 +250,8 @@ export default function Home() {
           </dl>
         </div>
       </section>
-      <section className="border-t bg-background py-24">
+      <section className="relative bg-background py-24">
+        <SectionRule />
         <div className="mx-auto max-w-[1200px] px-4">
           <FeatureSection>
             <CodeShowcase
@@ -272,6 +277,7 @@ export default async function Dashboard() {
             />
             <div className="flex flex-col justify-center gap-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+                <FeatureIndex value="01" />
                 Shared packages, imported by name.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
@@ -288,11 +294,13 @@ export default async function Dashboard() {
           </FeatureSection>
         </div>
       </section>
-      <section className="border-t bg-background py-24">
+      <section className="relative bg-background py-24">
+        <SectionRule />
         <div className="mx-auto max-w-[1200px] px-4">
           <FeatureSection>
             <div className="flex flex-col justify-center gap-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+                <FeatureIndex value="02" />
                 NestJS services in route handlers.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
@@ -326,7 +334,8 @@ export async function POST(req: Request) {
           </FeatureSection>
         </div>
       </section>
-      <section className="border-t bg-background py-24">
+      <section className="relative bg-background py-24">
+        <SectionRule />
         <div className="mx-auto max-w-[1200px] px-4">
           <FeatureSection>
             <CodeShowcase
@@ -350,6 +359,7 @@ export class UserController {
             />
             <div className="flex flex-col justify-center gap-4">
               <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+                <FeatureIndex value="03" />
                 One auth config, both apps.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
