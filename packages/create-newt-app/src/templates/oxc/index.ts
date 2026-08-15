@@ -17,8 +17,16 @@ const oxc: Module = {
     { package: "oxfmt", module: root, version: versions.oxfmt, dev: true },
   ],
   scripts: [
-    { module: web, name: "lint", script: "oxlint --fix && next typegen && tsc --noEmit" },
-    { module: web, name: "lint:check", script: "oxlint && next typegen && tsc --noEmit" },
+    {
+      module: web,
+      name: "lint",
+      script: "oxlint --fix && next typegen && tsc --noEmit",
+    },
+    {
+      module: web,
+      name: "lint:check",
+      script: "oxlint && next typegen && tsc --noEmit",
+    },
     { module: api, name: "lint", script: "oxlint src --fix" },
     { module: api, name: "lint:check", script: "oxlint src" },
     { module: ui, name: "lint", script: "oxlint --fix" },

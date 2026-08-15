@@ -2,27 +2,27 @@ import type { Versions } from "./versions";
 
 export type TemplateData = {
   projectName: string;
-  testing: 'jest' | 'vitest';
-  database: 'sqlite' | 'postgres';
-  deployment: 'none' | 'standalone' | 'custom-server' | 'spa';
+  testing: "jest" | "vitest";
+  database: "sqlite" | "postgres";
+  deployment: "none" | "standalone" | "custom-server" | "spa";
   authSecret: string;
   versions: Versions;
 };
 // Every option a template can select on. Kept separate from TemplateData
 // because these steer *which* template is used, not what it renders.
 export type Selection = {
-  deployment: 'none' | 'standalone' | 'custom-server' | 'spa';
+  deployment: "none" | "standalone" | "custom-server" | "spa";
   nestDiOnly: boolean;
   todoExample: boolean;
   shadcn: boolean;
-  database: 'sqlite' | 'postgres';
+  database: "sqlite" | "postgres";
 };
 
 // Everything `selectModules` reads: `Selection` plus the options that only ever
 // swap one whole module for another and never reach a `when` predicate.
 export type ModuleSelection = Selection & {
-  testing: TemplateData['testing'];
-  linter: 'eslint' | 'oxc';
+  testing: TemplateData["testing"];
+  linter: "eslint" | "oxc";
 };
 
 // `when` makes precedence explicit: exactly one template may claim a filename
@@ -33,7 +33,12 @@ export type Template = {
   when?: (selection: Selection) => boolean;
 };
 export type File = { src: string; filename: string };
-export type Package = { package: string; module: string; version: string; dev?: boolean };
+export type Package = {
+  package: string;
+  module: string;
+  version: string;
+  dev?: boolean;
+};
 export type Script = { module: string; name: string; script: string };
 export type Module = {
   templates: Template[];

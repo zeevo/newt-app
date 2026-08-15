@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import Link, { LinkProps } from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Button } from '@newt-app/ui/components/button';
+import * as React from "react";
+import Link, { LinkProps } from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@newt-app/ui/components/button";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from '@newt-app/ui/components/popover';
-import { cn } from '@newt-app/ui/lib/utils';
+} from "@newt-app/ui/components/popover";
+import { cn } from "@newt-app/ui/lib/utils";
 
 export function MobileNav({
   items,
@@ -27,32 +27,32 @@ export function MobileNav({
           <Button
             variant="ghost"
             className={cn(
-              'extend-touch-target h-8 touch-manipulation items-center justify-start gap-2.5 !p-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent',
+              "extend-touch-target h-8 touch-manipulation items-center justify-start gap-2.5 !p-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent",
               className,
             )}
           />
         }
       >
-          <div className="relative flex h-8 w-4 items-center justify-center">
-            <div className="relative size-4">
-              <span
-                className={cn(
-                  'absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100',
-                  open ? 'top-[0.4rem] -rotate-45' : 'top-1',
-                )}
-              />
-              <span
-                className={cn(
-                  'absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100',
-                  open ? 'top-[0.4rem] rotate-45' : 'top-2.5',
-                )}
-              />
-            </div>
-            <span className="sr-only">Toggle Menu</span>
+        <div className="relative flex h-8 w-4 items-center justify-center">
+          <div className="relative size-4">
+            <span
+              className={cn(
+                "absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100",
+                open ? "top-[0.4rem] -rotate-45" : "top-1",
+              )}
+            />
+            <span
+              className={cn(
+                "absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-100",
+                open ? "top-[0.4rem] rotate-45" : "top-2.5",
+              )}
+            />
           </div>
-          <span className="flex h-8 items-center text-lg leading-none font-medium">
-            Menu
-          </span>
+          <span className="sr-only">Toggle Menu</span>
+        </div>
+        <span className="flex h-8 items-center text-lg leading-none font-medium">
+          Menu
+        </span>
       </PopoverTrigger>
       <PopoverContent
         className="no-scrollbar flex h-(--available-height) w-(--available-width) flex-col overflow-hidden rounded-none border-none bg-background/90 p-0 shadow-none backdrop-blur duration-100"
@@ -104,7 +104,7 @@ function MobileLink({
         router.push(href.toString());
         onOpenChange?.(false);
       }}
-      className={cn('text-2xl font-medium', className)}
+      className={cn("text-2xl font-medium", className)}
       {...props}
     >
       {children}

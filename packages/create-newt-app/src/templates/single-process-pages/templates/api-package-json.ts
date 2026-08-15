@@ -40,5 +40,5 @@ export default {
     "tsconfig-paths": "<%= versions["tsconfig-paths"] %>",
     "typescript": "<%= versions.typescript %>"
   }
-}`
+}`,
 };

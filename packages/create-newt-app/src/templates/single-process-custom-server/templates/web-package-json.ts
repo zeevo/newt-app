@@ -35,5 +35,5 @@ export default {
     "tsx": "<%= versions.tsx %>",
     "typescript": "<%= versions.typescript %>"
   }
-}`
+}`,
 };

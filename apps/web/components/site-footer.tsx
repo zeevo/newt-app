@@ -1,6 +1,6 @@
-import { siteConfig } from '@/lib/config';
-import { Icons } from './icons';
-import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
+import { siteConfig } from "@/lib/config";
+import { Icons } from "./icons";
+import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
 
 export function SiteFooter() {
   return (
@@ -9,7 +9,7 @@ export function SiteFooter() {
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <Icons.logo className="size-4" />
           <span>
-            © {new Date().getFullYear()} Shane O&apos;Neill ·{' '}
+            © {new Date().getFullYear()} Shane O&apos;Neill ·{" "}
             <a
               href={siteConfig.links.license}
               target="_blank"

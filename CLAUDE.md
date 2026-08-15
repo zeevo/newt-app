@@ -42,6 +42,7 @@ cd /tmp/test-app && pnpm install && pnpm lint
 ```
 
 To re-test from scratch:
+
 ```bash
 chmod -R 755 /tmp/test-app && rm -rf /tmp/test-app
 ```
@@ -81,6 +82,7 @@ Three places to update when adding a template (e.g. a new UI component):
 Static files (binaries, fonts, SVGs) live in `packages/create-newt-app/src/templates/web/static/` and are mapped to output paths via `staticFiles` in `packages/create-newt-app/src/templates/web/index.ts`.
 
 To add a new static file:
+
 1. Copy the file into `packages/create-newt-app/src/templates/web/static/` (or a subdirectory)
 2. Add a `{ src: "web/static/...", filename: "apps/web/..." }` entry to `staticFiles` in `packages/create-newt-app/src/templates/web/index.ts`
 

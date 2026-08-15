@@ -1,10 +1,10 @@
-import Link from 'next/link';
-import { MobileNav } from './mobile-nav';
-import { Button } from '@newt-app/ui/components/button';
-import { siteConfig } from '@/lib/config';
-import { Icons } from './icons';
-import { MainNav } from './main-nav';
-import { ModeToggle } from '@/app/_components/mode-toggle';
+import Link from "next/link";
+import { MobileNav } from "./mobile-nav";
+import { Button } from "@newt-app/ui/components/button";
+import { siteConfig } from "@/lib/config";
+import { Icons } from "./icons";
+import { MainNav } from "./main-nav";
+import { ModeToggle } from "@/app/_components/mode-toggle";
 
 export function SiteHeader() {
   return (

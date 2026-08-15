@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { MoonIcon, SunIcon } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { Button } from '@newt-app/ui/components/button';
+import * as React from "react";
+import { MoonIcon, SunIcon } from "lucide-react";
+import { useTheme } from "next-themes";
+import { Button } from "@newt-app/ui/components/button";
 
 export function ModeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
 
   const toggleTheme = React.useCallback(() => {
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   }, [resolvedTheme, setTheme]);
 
   return (

@@ -1,7 +1,7 @@
 import type { Selection } from "../../types";
 export default {
   when: (s) => s.todoExample && !s.shadcn,
-  filename: 'apps/web/app/page.tsx',
+  filename: "apps/web/app/page.tsx",
   template: `'use client';
 
 import { useQuery } from '@tanstack/react-query';

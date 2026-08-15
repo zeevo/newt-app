@@ -7,7 +7,7 @@ Not published yet. It lives here to prove the shape before it moves to its own
 name on npm.
 
 ```tsx
-import { FileTree } from '@newt-app/file-tree';
+import { FileTree } from "@newt-app/file-tree";
 
 <FileTree name="my-app">
   <FileTree.Folder name="apps">
@@ -30,7 +30,7 @@ Tailwind only generates classes it can see, and it does not scan `node_modules`
 by default, so point it at the package:
 
 ```css
-@import 'tailwindcss';
+@import "tailwindcss";
 @source '../node_modules/@newt-app/file-tree/dist/**/*.js';
 ```
 

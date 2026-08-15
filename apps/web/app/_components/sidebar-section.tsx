@@ -5,8 +5,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@newt-app/ui/components/sidebar';
-import { cn } from '@newt-app/ui/lib/utils';
+} from "@newt-app/ui/components/sidebar";
+import { cn } from "@newt-app/ui/lib/utils";
 
 export type Item = {
   title: string;
@@ -25,7 +25,7 @@ export function SidebarSection({
   children: (thing: Item) => React.ReactElement;
 }): React.ReactElement {
   return (
-    <SidebarGroup className={cn('p-0', className)}>
+    <SidebarGroup className={cn("p-0", className)}>
       <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>

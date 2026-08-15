@@ -5,10 +5,10 @@ import type { ModuleSelection, TemplateData } from "./types";
 import { versions } from "./versions";
 import { validateDeploymentCombo } from "../utils";
 
-const DEPLOYMENTS = ['none', 'standalone', 'custom-server', 'spa'] as const;
-const TESTING = ['jest', 'vitest'] as const;
-const DATABASES = ['sqlite', 'postgres'] as const;
-const LINTERS = ['eslint', 'oxc'] as const;
+const DEPLOYMENTS = ["none", "standalone", "custom-server", "spa"] as const;
+const TESTING = ["jest", "vitest"] as const;
+const DATABASES = ["sqlite", "postgres"] as const;
+const LINTERS = ["eslint", "oxc"] as const;
 const BOOLS = [true, false];
 const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies"];
 
@@ -34,8 +34,9 @@ const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
       ),
     ),
   ),
-).filter(({ deployment, nestDiOnly }) =>
-  validateDeploymentCombo(deployment, nestDiOnly).valid,
+).filter(
+  ({ deployment, nestDiOnly }) =>
+    validateDeploymentCombo(deployment, nestDiOnly).valid,
 );
 
 const label = (selection: ModuleSelection) =>

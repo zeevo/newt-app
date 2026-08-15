@@ -1,22 +1,22 @@
-import { siteConfig } from '@/lib/config';
-import { SiteFooter } from '@/components/site-footer';
-import { SiteHeader } from '@/components/site-header';
-import { TailwindIndicator } from '@/components/tailwind-indicator';
-import { Toaster } from '@newt-app/ui/components/sonner';
-import '@newt-app/ui/globals.css';
-import './styles.css';
-import type { Metadata } from 'next';
-import localFont from 'next/font/local';
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { ThemeProvider } from './_components/theme-provider';
+import { siteConfig } from "@/lib/config";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { Toaster } from "@newt-app/ui/components/sonner";
+import "@newt-app/ui/globals.css";
+import "./styles.css";
+import type { Metadata } from "next";
+import localFont from "next/font/local";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { ThemeProvider } from "./_components/theme-provider";
 
 const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
+  src: "./fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
 });
 const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
+  src: "./fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
@@ -24,14 +24,14 @@ export const metadata: Metadata = {
   title: siteConfig.title,
   description: siteConfig.description,
   openGraph: {
-    type: 'website',
+    type: "website",
     url: siteConfig.url,
     siteName: siteConfig.name,
     title: siteConfig.title,
     description: siteConfig.description,
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
     title: siteConfig.title,
     description: siteConfig.description,
     creator: siteConfig.twitterHandle,

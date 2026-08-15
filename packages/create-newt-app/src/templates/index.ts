@@ -66,19 +66,29 @@ export const templates = {
 // The single source of truth for which modules a selection scaffolds. Kept here
 // rather than in the CLI so the render tests exercise the real selection.
 export function selectModules(selection: ModuleSelection): Module[] {
-  const { deployment, nestDiOnly, todoExample, shadcn, database, linter, testing } =
-    selection;
+  const {
+    deployment,
+    nestDiOnly,
+    todoExample,
+    shadcn,
+    database,
+    linter,
+    testing,
+  } = selection;
 
   const deploymentModule =
-    deployment === 'standalone' ? deploymentStandalone :
-    deployment === 'custom-server' ? deploymentCustomServer :
-    deployment === 'spa' ? deploymentSpa :
-    null;
+    deployment === "standalone"
+      ? deploymentStandalone
+      : deployment === "custom-server"
+        ? deploymentCustomServer
+        : deployment === "spa"
+          ? deploymentSpa
+          : null;
 
   // In SPA mode NestJS serves Better Auth (AuthModule.forRoot); the Next.js
   // auth handler is redundant and can't be statically exported, so drop it.
   const webModule =
-    deployment === 'spa'
+    deployment === "spa"
       ? {
           ...web,
           templates: web.templates.filter(
@@ -91,17 +101,17 @@ export function selectModules(selection: ModuleSelection): Module[] {
     root,
     webModule,
     api,
-    database === 'postgres' ? dbPostgres : dbSqlite,
+    database === "postgres" ? dbPostgres : dbSqlite,
     auth,
     shadcn ? shadcnUi : ui,
-    linter === 'oxc' ? oxc : eslintConfig,
+    linter === "oxc" ? oxc : eslintConfig,
     typescriptConfig,
-    testing === 'vitest' ? testingVitest : testingJest,
+    testing === "vitest" ? testingVitest : testingJest,
     ...(deploymentModule ? [deploymentModule] : []),
     ...(nestDiOnly ? [nestDiOnlyModule] : [apiControllers]),
     // nest-di-only overwrites the standalone next.config.js and leaves the
     // Dockerfile pointing at an api entrypoint DI-only never emits
-    ...(nestDiOnly && deployment === 'standalone'
+    ...(nestDiOnly && deployment === "standalone"
       ? [deploymentStandaloneDi]
       : []),
     ...(todoExample
