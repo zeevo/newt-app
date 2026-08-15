@@ -270,7 +270,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               onChange={(v) => set('shadcn', v)}
             />
             <BoolToggle
-              label="todo example"
+              label="include example app"
               hint={TODO_EXAMPLE_HINT}
               pressed={c.todoExample}
               onChange={(v) => set('todoExample', v)}

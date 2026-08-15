@@ -37,8 +37,7 @@ export function deploymentHint(c: Config): string | null {
 export const DI_ONLY_HINT =
   'Nest runs as an application context with no HTTP server, and Next.js route handlers resolve its services through inject(). The app stays a single Next.js project, so it deploys to Vercel with no extra infrastructure.';
 
-export const TODO_EXAMPLE_HINT =
-  'A working CRUD slice: a Kysely-backed TodosService, its todos migration, and the list UI on the home page. Off (--bare) keeps auth and everything else.';
+export const TODO_EXAMPLE_HINT = 'Include an example to-do list feature.';
 
 export const DATABASE_HINT =
   'SQLite writes to a local file, which is not persisted on serverless filesystems like Vercel’s. Better Auth and your app share one Kysely connection either way.';
