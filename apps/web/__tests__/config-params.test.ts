@@ -8,7 +8,8 @@ describe("config params", () => {
       testing: ["jest", "vitest"],
       database: ["sqlite", "postgres"],
       linter: ["eslint", "oxc"],
-      deployment: deploymentOptions(false),
+      deployment: deploymentOptions("separate"),
+      nest: ["separate", "embedded", "di-only"],
     } as const;
 
     Object.entries(accepted).forEach(([key, values]) => {
@@ -25,18 +26,19 @@ describe("config params", () => {
     expect(configParsers.deployment.parse("docker")).toBeNull();
   });
 
-  it("drops a deployment the CLI rejects with di-only", () => {
+  it("drops a deployment the CLI rejects with an in-process Nest", () => {
     const base: Config = {
       shadcn: true,
       testing: "vitest",
       database: "postgres",
       linter: "oxc",
       deployment: "spa",
-      nestDiOnly: true,
+      nest: "di-only",
       todoExample: true,
     };
     expect(sanitizeConfig(base).deployment).toBe("none");
+    expect(sanitizeConfig({ ...base, nest: "embedded" }).deployment).toBe("none");
     expect(sanitizeConfig({ ...base, deployment: "standalone" }).deployment).toBe("standalone");
-    expect(sanitizeConfig({ ...base, nestDiOnly: false }).deployment).toBe("spa");
+    expect(sanitizeConfig({ ...base, nest: "separate" }).deployment).toBe("spa");
   });
 });

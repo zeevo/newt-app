@@ -1,6 +1,4 @@
-import type { Selection } from "../../types";
 export default {
-  when: (s) => !s.nestDiOnly && !s.nestEmbedded,
   filename: "docker-compose.yml",
   template: `x-app-env: &app-env
   BETTER_AUTH_SECRET: \${BETTER_AUTH_SECRET}
@@ -14,14 +12,15 @@ services:
     build:
       context: .
       target: web
-      args:
-        - API_HOST=api
     ports:
       - "3000:3000"
     environment:
       <<: *app-env
     depends_on:
-      - api
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   migrate:
     build:
@@ -33,20 +32,6 @@ services:
       db:
         condition: service_healthy
     restart: "no"
-
-  api:
-    build:
-      context: .
-      target: api
-    ports:
-      - "3001:3001"
-    environment:
-      <<: *app-env
-    depends_on:
-      db:
-        condition: service_healthy
-      migrate:
-        condition: service_completed_successfully
 
   db:
     image: postgres:17-alpine

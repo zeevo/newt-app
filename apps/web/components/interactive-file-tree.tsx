@@ -20,8 +20,8 @@ import {
   DATABASE_HINT,
   deploymentHint,
   deploymentOptions,
-  DI_ONLY_HINT,
-  DI_ONLY_REJECTS,
+  IN_PROCESS_REJECTS,
+  NEST_HINTS,
   TODO_EXAMPLE_HINT,
   type Config,
 } from "@/lib/build-command";
@@ -191,19 +191,18 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             <Segmented
               label="NestJS"
               logo="/logos/nestjs.svg"
-              hint={DI_ONLY_HINT}
-              value={c.nestDiOnly ? "di-only" : "on"}
-              options={["on", "di-only"] as const}
-              onChange={(v) =>
-                setC((prev) => {
-                  const nestDiOnly = v === "di-only";
-                  return {
-                    ...prev,
-                    nestDiOnly,
-                    deployment:
-                      nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment) ? "none" : prev.deployment,
-                  };
-                })
+              hint={NEST_HINTS[c.nest]}
+              value={c.nest}
+              options={["separate", "embedded", "di-only"] as const}
+              onChange={(nest) =>
+                setC((prev) => ({
+                  ...prev,
+                  nest,
+                  deployment:
+                    nest !== "separate" && IN_PROCESS_REJECTS.has(prev.deployment)
+                      ? "none"
+                      : prev.deployment,
+                }))
               }
             />
             <BoolToggle label="Better Auth" logo="/logos/better-auth.svg" pressed disabled />
@@ -251,7 +250,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
                 onChange={(e) => set("deployment", e.target.value as Config["deployment"])}
                 className="font-mono text-xs"
               >
-                {deploymentOptions(c.nestDiOnly).map((option) => (
+                {deploymentOptions(c.nest).map((option) => (
                   <NativeSelectOption key={option} value={option}>
                     {option}
                   </NativeSelectOption>

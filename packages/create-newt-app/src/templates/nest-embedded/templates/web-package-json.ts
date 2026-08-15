@@ -14,8 +14,14 @@ export default {
   "dependencies": {
     "@<%= projectName %>/api": "workspace:*",
     "@<%= projectName %>/auth": "workspace:*",
+    "@<%= projectName %>/db": "workspace:*",
     "@<%= projectName %>/ui": "workspace:*",
+    "@nestjs/common": "<%= versions["@nestjs/common"] %>",
+    "@nestjs/core": "<%= versions["@nestjs/core"] %>",
+    "@nestjs/platform-express": "<%= versions["@nestjs/platform-express"] %>",
+    "@newt-app/nest-next": "<%= versions["@newt-app/nest-next"] %>",
     "@tailwindcss/postcss": "<%= versions["@tailwindcss/postcss"] %>",
+    "@thallesp/nestjs-better-auth": "<%= versions["@thallesp/nestjs-better-auth"] %>",
     "dotenv": "<%= versions.dotenv %>",
     "@tanstack/react-form": "<%= versions["@tanstack/react-form"] %>",
     "@tanstack/react-query": "<%= versions["@tanstack/react-query"] %>",
@@ -23,6 +29,7 @@ export default {
     "next": "<%= versions.next %>",
     "react": "<%= versions.react %>",
     "react-dom": "<%= versions["react-dom"] %>",
+    "reflect-metadata": "<%= versions["reflect-metadata"] %>",
     "tailwindcss": "<%= versions.tailwindcss %>"
   },
   "devDependencies": {

@@ -1,6 +1,4 @@
-import type { Selection } from "../../types";
 export default {
-  when: (s) => !s.nestDiOnly && !s.nestEmbedded && s.deployment !== "custom-server",
   filename: "apps/web/tsconfig.json",
   template: `{
   "extends": "@<%= projectName %>/typescript-config/nextjs.json",
@@ -11,6 +9,8 @@ export default {
       }
     ],
     "strictNullChecks": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
       "@/*": ["./*"]
     }

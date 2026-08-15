@@ -17,11 +17,15 @@ const TESTING_CHOICES = ["jest", "vitest"] as const;
 const DATABASE_CHOICES = ["sqlite", "postgres"] as const;
 const LINTER_CHOICES = ["eslint", "oxc"] as const;
 const DEPLOYMENT_CHOICES = ["none", "standalone", "custom-server", "spa"] as const;
+// Prompt-only: the two Nest booleans are mutually exclusive, so one control
+// sets both. The flags stay separate.
+const NEST_MODE_CHOICES = ["separate", "embedded", "di-only"] as const;
 
 type Testing = (typeof TESTING_CHOICES)[number];
 type Database = (typeof DATABASE_CHOICES)[number];
 type Linter = (typeof LINTER_CHOICES)[number];
 type Deployment = (typeof DEPLOYMENT_CHOICES)[number];
+type NestMode = (typeof NEST_MODE_CHOICES)[number];
 
 type Options = {
   name?: string;
@@ -34,6 +38,7 @@ type Options = {
   linter: Linter;
   deployment: Deployment;
   nestDiOnly: boolean;
+  nestEmbedded: boolean;
   includeExample: boolean;
 };
 
@@ -92,10 +97,23 @@ export async function doInit(options: Options) {
           ],
           initialValue: "eslint",
         }),
-      nestDiOnly: () =>
-        p.confirm({
-          message: "Use NestJS for dependency injection only?",
-          initialValue: false,
+      nestMode: () =>
+        p.select<NestMode>({
+          message: "How should NestJS run?",
+          options: [
+            { value: "separate", label: "Its own server", hint: "port 3001, proxied by Next.js" },
+            {
+              value: "embedded",
+              label: "Inside Next.js",
+              hint: "one process, full Nest HTTP pipeline",
+            },
+            {
+              value: "di-only",
+              label: "Dependency injection only",
+              hint: "no HTTP pipeline; route handlers call inject()",
+            },
+          ],
+          initialValue: "separate",
         }),
       todoExample: () =>
         p.confirm({
@@ -112,9 +130,9 @@ export async function doInit(options: Options) {
               label: "Standalone + Dockerfile",
               hint: "Dockerfiles + docker-compose.yml",
             },
-            // DI-only already runs Nest inside the Next process, and SPA's static
-            // export can't hold the route handlers DI-only depends on
-            ...(results.nestDiOnly
+            // Both in-process modes already run Nest inside Next, and SPA's
+            // static export can't hold the API route either one depends on
+            ...(results.nestMode !== "separate"
               ? []
               : [
                   {
@@ -169,14 +187,14 @@ export async function doInit(options: Options) {
     const deployment: Deployment = options.nonInteractive
       ? options.deployment
       : ((group as { deployment?: Deployment }).deployment ?? "none");
-    const nestDiOnly = options.nonInteractive
-      ? options.nestDiOnly
-      : ((group as { nestDiOnly?: boolean }).nestDiOnly ?? false);
+    const nestMode: NestMode = (group as { nestMode?: NestMode }).nestMode ?? "separate";
+    const nestDiOnly = options.nonInteractive ? options.nestDiOnly : nestMode === "di-only";
+    const nestEmbedded = options.nonInteractive ? options.nestEmbedded : nestMode === "embedded";
     const todoExample = options.nonInteractive
       ? options.includeExample
       : ((group as { todoExample?: boolean }).todoExample ?? true);
 
-    const deploymentCombo = validateDeploymentCombo(deployment, nestDiOnly);
+    const deploymentCombo = validateDeploymentCombo(deployment, nestDiOnly, nestEmbedded);
     if (!deploymentCombo.valid) {
       throw new Error(deploymentCombo.error);
     }
@@ -184,6 +202,7 @@ export async function doInit(options: Options) {
     const selection: ModuleSelection = {
       deployment,
       nestDiOnly,
+      nestEmbedded,
       todoExample,
       shadcn: useShadcn,
       database,
@@ -269,6 +288,7 @@ program
   .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
   .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
+  .option("--nest-embedded", "Run the full NestJS HTTP app inside Next.js", false)
   .option("--include-example", "Include the todo example", false)
   .action(
     async (
@@ -282,6 +302,7 @@ program
         linter: string;
         deployment: string;
         nestDiOnly: boolean;
+        nestEmbedded: boolean;
         includeExample: boolean;
       },
       command: Command,
@@ -296,6 +317,7 @@ program
         "linter",
         "deployment",
         "nestDiOnly",
+        "nestEmbedded",
         "includeExample",
       ];
       const nonInteractive = configFlags.some(
@@ -338,6 +360,7 @@ program
         linter: options.linter as Linter,
         deployment: options.deployment as Deployment,
         nestDiOnly: options.nestDiOnly,
+        nestEmbedded: options.nestEmbedded,
         includeExample: options.includeExample,
       });
     },

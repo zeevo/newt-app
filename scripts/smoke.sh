@@ -24,13 +24,16 @@ esac
 
 # The todo example is opt-in, so without it the guarded route doesn't exist
 case "$FLAGS" in *--include-example*) TODOS=yes ;; *) TODOS=no ;; esac
-# DI-only runs Nest inside Next: no api process, so /api is served on the web port
+# Both in-process modes run Nest inside Next: no api process, so /api is served
+# on the web port. Embedded serves it from a Next API route that hands the whole
+# request to Nest; DI-only from hand-rolled route handlers calling inject().
 case "$FLAGS" in *--nest-di-only*) DI_ONLY=yes ;; *) DI_ONLY=no ;; esac
+case "$FLAGS" in *--nest-embedded*) EMBEDDED=yes ;; *) EMBEDDED=no ;; esac
 # SQLite needs no server, so the signup flow below can migrate and use a real
 # database. Postgres would need one this script does not start.
 case "$FLAGS" in *--database\ postgres*) DB=postgres ;; *) DB=sqlite ;; esac
 
-echo "smoke: mode=$MODE di-only=$DI_ONLY db=$DB flags=${FLAGS:-none}"
+echo "smoke: mode=$MODE di-only=$DI_ONLY embedded=$EMBEDDED db=$DB flags=${FLAGS:-none}"
 
 # Processes started through pnpm pick up .env via next.config/dotenv, but the
 # standalone bundle does not — in production those vars come from the container
@@ -106,7 +109,7 @@ else
       ;;
   esac
 
-  if [ "$DI_ONLY" = yes ] || [ "$MODE" = custom-server ]; then
+  if [ "$DI_ONLY" = yes ] || [ "$EMBEDDED" = yes ] || [ "$MODE" = custom-server ]; then
     BASE=$WEB
     SERVER_LOG=web
   else

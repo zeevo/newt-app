@@ -87,6 +87,34 @@ describe("validateDeploymentCombo", () => {
     expect(validateDeploymentCombo("custom-server", false).valid).toBe(true);
   });
 
+  it("rejects spa combined with nest-embedded", () => {
+    const result = validateDeploymentCombo("spa", false, true);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("--deployment spa cannot be combined with --nest-embedded.");
+  });
+
+  it("rejects custom-server combined with nest-embedded", () => {
+    const result = validateDeploymentCombo("custom-server", false, true);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain(
+      "--deployment custom-server cannot be combined with --nest-embedded.",
+    );
+  });
+
+  it("rejects nest-di-only combined with nest-embedded", () => {
+    const result = validateDeploymentCombo("none", true, true);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("--nest-di-only cannot be combined with --nest-embedded.");
+  });
+
+  it("accepts nest-embedded with the deployments that support it", () => {
+    expect(
+      ["none", "standalone"].map(
+        (deployment) => validateDeploymentCombo(deployment, false, true).valid,
+      ),
+    ).toEqual([true, true]);
+  });
+
   it("accepts nest-di-only with the deployments that support it", () => {
     expect(
       ["none", "standalone"].map((deployment) => validateDeploymentCombo(deployment, true).valid),

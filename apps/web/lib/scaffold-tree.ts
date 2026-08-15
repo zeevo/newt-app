@@ -57,6 +57,57 @@ export function scaffoldTree(c: Config): TreeNode[] {
                   : []),
               ],
             },
+            ...(c.nest === "embedded"
+              ? [
+                  {
+                    name: "pages",
+                    kind: "dir" as const,
+                    path: "apps/web/pages",
+                    conditional: true,
+                    children: [
+                      {
+                        name: "api",
+                        kind: "dir" as const,
+                        path: "apps/web/pages/api",
+                        children: [
+                          {
+                            name: "[[...path]].ts",
+                            kind: "file" as const,
+                            path: "apps/web/pages/api/[[...path]].ts",
+                            annotation: "every /api request, into Nest",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ]
+              : []),
+            {
+              name: "lib",
+              kind: "dir",
+              path: "apps/web/lib",
+              children: [
+                {
+                  name: "auth-client.ts",
+                  kind: "file",
+                  path: "apps/web/lib/auth-client.ts",
+                },
+                // Both in-process modes boot Nest from here; they differ in how
+                // much of it they boot.
+                ...(c.nest !== "separate"
+                  ? [
+                      {
+                        name: "nest.ts",
+                        kind: "file" as const,
+                        path: "apps/web/lib/nest.ts",
+                        annotation:
+                          c.nest === "embedded" ? "boots the Nest app" : "boots the DI context",
+                        conditional: true,
+                      },
+                    ]
+                  : []),
+              ],
+            },
             ...(c.deployment === "custom-server"
               ? [
                   {
@@ -105,7 +156,7 @@ export function scaffoldTree(c: Config): TreeNode[] {
                             kind: "file" as const,
                             path: "apps/api/src/todos/todos.service.ts",
                           },
-                          ...(c.nestDiOnly
+                          ...(c.nest === "di-only"
                             ? []
                             : [
                                 {
@@ -124,8 +175,9 @@ export function scaffoldTree(c: Config): TreeNode[] {
                   kind: "file",
                   path: "apps/api/src/app.module.ts",
                 },
-                // di-only never bootstraps an HTTP server, so it has no main.ts.
-                ...(c.nestDiOnly
+                // Neither in-process mode starts a standalone api server, so
+                // neither emits main.ts.
+                ...(c.nest !== "separate"
                   ? []
                   : [
                       {
@@ -136,17 +188,20 @@ export function scaffoldTree(c: Config): TreeNode[] {
                       },
                     ]),
                 // index.ts re-exports AppModule for whoever boots Nest from
-                // outside apps/api: the Next.js route handlers under di-only,
-                // or apps/web/server.ts under custom-server.
-                ...(c.nestDiOnly || c.deployment === "custom-server"
+                // outside apps/api: apps/web/lib/nest.ts under the in-process
+                // modes, or apps/web/server.ts under custom-server.
+                ...(c.nest !== "separate" || c.deployment === "custom-server"
                   ? [
                       {
                         name: "index.ts",
                         kind: "file" as const,
                         path: "apps/api/src/index.ts",
-                        annotation: c.nestDiOnly
-                          ? "exports the DI context"
-                          : "AppModule for server.ts",
+                        annotation:
+                          c.nest === "di-only"
+                            ? "exports the DI context"
+                            : c.nest === "embedded"
+                              ? "AppModule for lib/nest.ts"
+                              : "AppModule for server.ts",
                         conditional: true,
                       },
                     ]

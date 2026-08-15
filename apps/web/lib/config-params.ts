@@ -1,5 +1,5 @@
 import { parseAsBoolean, parseAsStringLiteral } from "nuqs/server";
-import { DI_ONLY_REJECTS, type Config } from "@/lib/build-command";
+import { IN_PROCESS_REJECTS, type Config } from "@/lib/build-command";
 
 // Defaults mirror the panel's initial selection. nuqs clears params at their
 // default, so the bare URL means this config and only changes become params.
@@ -14,17 +14,18 @@ export const configParsers = {
     "custom-server",
     "spa",
   ] as const).withDefault("none"),
-  nestDiOnly: parseAsBoolean.withDefault(false),
+  nest: parseAsStringLiteral(["separate", "embedded", "di-only"] as const).withDefault("separate"),
   todoExample: parseAsBoolean.withDefault(true),
 };
 
 export const configUrlKeys = {
-  nestDiOnly: "nest-di-only",
   todoExample: "todo-example",
 };
 
-// A hand-edited URL can pair di-only with a deployment the CLI rejects; the
-// panel never renders that combo.
+// A hand-edited URL can pair an in-process Nest with a deployment the CLI
+// rejects; the panel never renders that combo.
 export function sanitizeConfig(c: Config): Config {
-  return c.nestDiOnly && DI_ONLY_REJECTS.has(c.deployment) ? { ...c, deployment: "none" } : c;
+  return c.nest !== "separate" && IN_PROCESS_REJECTS.has(c.deployment)
+    ? { ...c, deployment: "none" }
+    : c;
 }
