@@ -49,8 +49,8 @@ const TEX_SIZE = 256;
 // radii.
 const FLOOR_SPACING = 19;
 const FLOOR_DOT = 0.55;
-const FLOOR_PUSH = 0.28;
-const FLOOR_WAKE = 1.5;
+const FLOOR_PUSH = 0.34;
+const FLOOR_WAKE = 1.6;
 
 // the fade ellipse as fractions of the visible rect, and the distance across it
 // at which the lattice reaches full strength
