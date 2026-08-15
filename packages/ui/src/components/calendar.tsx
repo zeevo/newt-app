@@ -134,7 +134,6 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        // eslint-disable-next-line react/prop-types
         Root: ({ className, rootRef, ...props }) => {
           return (
             <div
@@ -145,7 +144,6 @@ function Calendar({
             />
           )
         },
-        // eslint-disable-next-line react/prop-types
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
             return (
