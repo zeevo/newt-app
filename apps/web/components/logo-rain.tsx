@@ -48,7 +48,7 @@ const TEX_SIZE = 256;
 // nearby lattice points outward, PUSH as a fraction of chip radius, out to WAKE
 // radii.
 const FLOOR_SPACING = 19;
-const FLOOR_DOT = 0.6;
+const FLOOR_DOT = 0.55;
 const FLOOR_PUSH = 0.28;
 const FLOOR_WAKE = 1.5;
 
@@ -147,11 +147,14 @@ function floorMaterial(chipCount: number) {
         }
         vec2 p = vView + shift;
 
-        // antialias against the on-screen gradient, which also softens the dots
-        // out where a chip's wake stretches the lattice instead of streaking them
+        // antialias against the on-screen gradient. fwidth is one pixel of
+        // change, so half of it either side of the edge is a one-pixel ramp:
+        // enough to stay smooth, tight enough that the dot keeps a solid core.
+        // It still widens where a chip's wake stretches the lattice, which
+        // softens those dots instead of streaking them.
         vec2 cell = mod(p, ${FLOOR_SPACING.toFixed(1)}) - ${(FLOOR_SPACING / 2).toFixed(1)};
         float d = length(cell);
-        float w = max(fwidth(d), 0.5);
+        float w = fwidth(d) * 0.5;
         float mark = 1.0 - smoothstep(
           ${FLOOR_DOT.toFixed(2)} - w, ${FLOOR_DOT.toFixed(2)} + w, d);
 
