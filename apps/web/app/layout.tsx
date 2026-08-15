@@ -10,13 +10,15 @@ import localFont from "next/font/local";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ThemeProvider } from "./_components/theme-provider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+// the whole site runs on one mono; --font-mono resolves to it too. The files
+// are subset to the glyphs the site uses: stock Iosevka is ~1MB per weight.
+const appFont = localFont({
+  src: [
+    { path: "./fonts/Iosevka-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Iosevka-600.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/Iosevka-700.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-app-sans",
 });
 
 export const metadata: Metadata = {
@@ -46,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*18)] [--header-height:calc(var(--spacing)*14)]`}
+        className={`${appFont.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*18)] [--header-height:calc(var(--spacing)*14)]`}
       >
         <NuqsAdapter>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
