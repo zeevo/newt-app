@@ -253,10 +253,7 @@ if (upstream) {
   );
 
   // Divergences we chose. Anything not listed here is unexplained and fails.
-  const INTENTIONAL = {
-    calendar:
-      "two eslint-disable-next-line react/prop-types, without which the package lints with 4 warnings and --max-warnings 0 fails",
-  };
+  const INTENTIONAL = {};
 
   const diverged = [];
   const expected = [];
