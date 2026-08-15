@@ -28,6 +28,7 @@ import {
   deploymentOptions,
   DI_ONLY_HINT,
   DI_ONLY_REJECTS,
+  TODO_EXAMPLE_HINT,
   type Config,
 } from '@/lib/build-command';
 import { scaffoldTree, type TreeNode } from '@/lib/scaffold-tree';
@@ -267,6 +268,12 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               logo="/logos/shadcn.svg"
               pressed={c.shadcn}
               onChange={(v) => set('shadcn', v)}
+            />
+            <BoolToggle
+              label="include example app"
+              hint={TODO_EXAMPLE_HINT}
+              pressed={c.todoExample}
+              onChange={(v) => set('todoExample', v)}
             />
             <Row label="extras">
               <NativeSelect

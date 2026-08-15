@@ -44,12 +44,17 @@ export function scaffoldTree(c: Config): TreeNode[] {
                   path: 'apps/web/app/page.tsx',
                   annotation: 'home route',
                 },
-                {
-                  name: 'todo-list.tsx',
-                  kind: 'file',
-                  path: 'apps/web/app/todo-list.tsx',
-                  annotation: 'todo example',
-                },
+                ...(c.todoExample
+                  ? [
+                      {
+                        name: 'todo-list.tsx',
+                        kind: 'file' as const,
+                        path: 'apps/web/app/todo-list.tsx',
+                        annotation: 'todo example',
+                        conditional: true,
+                      },
+                    ]
+                  : []),
               ],
             },
             ...(c.deployment === 'custom-server'
@@ -87,28 +92,33 @@ export function scaffoldTree(c: Config): TreeNode[] {
               kind: 'dir',
               path: 'apps/api/src',
               children: [
-                {
-                  name: 'todos',
-                  kind: 'dir',
-                  path: 'apps/api/src/todos',
-                  children: [
-                    {
-                      name: 'todos.service.ts',
-                      kind: 'file',
-                      path: 'apps/api/src/todos/todos.service.ts',
-                    },
-                    ...(c.nestDiOnly
-                      ? []
-                      : [
+                ...(c.todoExample
+                  ? [
+                      {
+                        name: 'todos',
+                        kind: 'dir' as const,
+                        path: 'apps/api/src/todos',
+                        conditional: true,
+                        children: [
                           {
-                            name: 'todos.controller.ts',
+                            name: 'todos.service.ts',
                             kind: 'file' as const,
-                            path: 'apps/api/src/todos/todos.controller.ts',
-                            conditional: true,
+                            path: 'apps/api/src/todos/todos.service.ts',
                           },
-                        ]),
-                  ],
-                },
+                          ...(c.nestDiOnly
+                            ? []
+                            : [
+                                {
+                                  name: 'todos.controller.ts',
+                                  kind: 'file' as const,
+                                  path: 'apps/api/src/todos/todos.controller.ts',
+                                  conditional: true,
+                                },
+                              ]),
+                        ],
+                      },
+                    ]
+                  : []),
                 {
                   name: 'app.module.ts',
                   kind: 'file',
