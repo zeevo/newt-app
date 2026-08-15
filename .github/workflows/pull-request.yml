@@ -116,8 +116,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # nest-next too: dist/ is gitignored, so the file: copy the embedded
+      # entries install below would otherwise have no entrypoint or types.
       - name: Build CLI
-        run: pnpm build --filter=create-newt-app
+        run: pnpm build --filter=create-newt-app --filter=@newt-app/nest-next
 
       # initGit commits, and a runner has no git identity of its own.
       - name: Configure git identity
