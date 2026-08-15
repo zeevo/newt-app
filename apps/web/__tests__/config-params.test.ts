@@ -34,6 +34,7 @@ describe('config params', () => {
       linter: 'oxc',
       deployment: 'spa',
       nestDiOnly: true,
+      todoExample: true,
     };
     expect(sanitizeConfig(base).deployment).toBe('none');
     expect(sanitizeConfig({ ...base, deployment: 'standalone' }).deployment).toBe(

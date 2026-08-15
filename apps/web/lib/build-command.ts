@@ -5,6 +5,7 @@ export type Config = {
   linter: 'eslint' | 'oxc';
   deployment: 'none' | 'standalone' | 'custom-server' | 'spa';
   nestDiOnly: boolean;
+  todoExample: boolean;
 };
 
 // Both pairs are rejected by validateDeploymentCombo in create-newt-app, so the
@@ -36,6 +37,9 @@ export function deploymentHint(c: Config): string | null {
 export const DI_ONLY_HINT =
   'Nest runs as an application context with no HTTP server, and Next.js route handlers resolve its services through inject(). The app stays a single Next.js project, so it deploys to Vercel with no extra infrastructure.';
 
+export const TODO_EXAMPLE_HINT =
+  'A working CRUD slice: a Kysely-backed TodosService, its todos migration, and the list UI on the home page. Off (--bare) keeps auth and everything else.';
+
 export const DATABASE_HINT =
   'SQLite writes to a local file, which is not persisted on serverless filesystems like Vercel’s. Better Auth and your app share one Kysely connection either way.';
 
@@ -62,6 +66,7 @@ export function buildCommand(c: Config): string {
   if (c.linter !== 'eslint') flags.push('--linter oxc');
   if (c.deployment !== 'none') flags.push(`--deployment ${c.deployment}`);
   if (c.nestDiOnly) flags.push('--nest-di-only');
+  if (!c.todoExample) flags.push('--bare');
   // Passing a config flag is what puts the CLI in non-interactive mode. Every
   // other option here matches its default, so without this the CLI would prompt
   // and shadcn would come back on — the opposite of what the panel shows.

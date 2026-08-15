@@ -19,9 +19,13 @@ export const configParsers = {
     'spa',
   ] as const).withDefault('none'),
   nestDiOnly: parseAsBoolean.withDefault(false),
+  todoExample: parseAsBoolean.withDefault(true),
 };
 
-export const configUrlKeys = { nestDiOnly: 'nest-di-only' };
+export const configUrlKeys = {
+  nestDiOnly: 'nest-di-only',
+  todoExample: 'todo-example',
+};
 
 // A hand-edited URL can pair di-only with a deployment the CLI rejects; the
 // panel never renders that combo.

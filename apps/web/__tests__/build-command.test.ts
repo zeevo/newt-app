@@ -11,16 +11,19 @@ import {
 const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
   deploymentOptions(nestDiOnly).flatMap((deployment) =>
     [true, false].flatMap((shadcn) =>
-      (['jest', 'vitest'] as const).flatMap((testing) =>
-        (['sqlite', 'postgres'] as const).flatMap((database) =>
-          (['eslint', 'oxc'] as const).map((linter) => ({
-            shadcn,
-            testing,
-            database,
-            linter,
-            deployment,
-            nestDiOnly,
-          })),
+      [true, false].flatMap((todoExample) =>
+        (['jest', 'vitest'] as const).flatMap((testing) =>
+          (['sqlite', 'postgres'] as const).flatMap((database) =>
+            (['eslint', 'oxc'] as const).map((linter) => ({
+              shadcn,
+              testing,
+              database,
+              linter,
+              deployment,
+              nestDiOnly,
+              todoExample,
+            })),
+          ),
         ),
       ),
     ),
@@ -70,6 +73,7 @@ describe('buildCommand', () => {
         linter: 'eslint',
         deployment: 'none',
         nestDiOnly: false,
+        todoExample: true,
       }),
     ).toBe('npm create newt-app@latest my-app -- --shadcn');
   });

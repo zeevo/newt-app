@@ -24,19 +24,22 @@ const CLI = fileURLToPath(
   new URL('../../../packages/create-newt-app/dist/index.js', import.meta.url),
 );
 
-// Only these five options change which files exist. `testing` changes none of
+// Only these options change which files exist. `testing` changes none of
 // them, and `database` only swaps an annotation, so both stay pinned.
 const configs: Config[] = [true, false].flatMap((nestDiOnly) =>
   deploymentOptions(nestDiOnly).flatMap((deployment) =>
     [true, false].flatMap((shadcn) =>
-      (['eslint', 'oxc'] as const).map((linter) => ({
-        shadcn,
-        testing: 'jest' as const,
-        database: 'sqlite' as const,
-        linter,
-        deployment,
-        nestDiOnly,
-      })),
+      [true, false].flatMap((todoExample) =>
+        (['eslint', 'oxc'] as const).map((linter) => ({
+          shadcn,
+          testing: 'jest' as const,
+          database: 'sqlite' as const,
+          linter,
+          deployment,
+          nestDiOnly,
+          todoExample,
+        })),
+      ),
     ),
   ),
 );
@@ -47,6 +50,7 @@ const key = (c: Config) =>
     c.deployment,
     c.shadcn ? 'shadcn' : 'plain',
     c.linter,
+    c.todoExample ? 'todo' : 'bare',
   ].join(' ');
 
 // The builder hands users this exact command, so drive the CLI with the flags
