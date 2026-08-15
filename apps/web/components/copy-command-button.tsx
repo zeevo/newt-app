@@ -11,10 +11,10 @@ import { copyToClipboardWithMeta } from '@/components/copy-button';
 // flash is over in a frame, so the copied state holds it for the full two
 // seconds.
 const GLOW = [
-  'shadow-[0_0_30px_-2px_rgba(236,72,153,0.55),0_0_58px_-10px_rgba(168,85,247,0.5)]',
-  'hover:shadow-[0_0_20px_-3px_rgba(236,72,153,0.7),0_0_36px_-10px_rgba(168,85,247,0.55)]',
-  'active:shadow-[0_0_34px_0px_rgba(236,72,153,0.95),0_0_64px_-4px_rgba(168,85,247,0.8)]',
-  'data-[copied=true]:shadow-[0_0_34px_0px_rgba(236,72,153,0.95),0_0_64px_-4px_rgba(168,85,247,0.8)]',
+  'shadow-[0_0_30px_-2px_rgba(59,130,246,0.55),0_0_58px_-10px_rgba(99,102,241,0.5)]',
+  'hover:shadow-[0_0_20px_-3px_rgba(59,130,246,0.7),0_0_36px_-10px_rgba(99,102,241,0.55)]',
+  'active:shadow-[0_0_34px_0px_rgba(59,130,246,0.95),0_0_64px_-4px_rgba(99,102,241,0.8)]',
+  'data-[copied=true]:shadow-[0_0_34px_0px_rgba(59,130,246,0.95),0_0_64px_-4px_rgba(99,102,241,0.8)]',
 ].join(' ');
 
 export function CopyCommandButton({ value }: { value: string }) {
