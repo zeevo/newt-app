@@ -62,6 +62,26 @@ function StackLogo({ src }: { src: string }) {
   );
 }
 
+// L-marks at the tank's corners, so the frame reads as a HUD rather than a box
+function HudCorners() {
+  return (
+    <>
+      {[
+        "top-0 left-0 border-t-2 border-l-2",
+        "top-0 right-0 border-t-2 border-r-2",
+        "bottom-0 left-0 border-b-2 border-l-2",
+        "bottom-0 right-0 border-b-2 border-r-2",
+      ].map((corner) => (
+        <span
+          key={corner}
+          aria-hidden
+          className={`absolute z-[2] size-6 border-cyan-600 dark:border-cyan-400 ${corner}`}
+        />
+      ))}
+    </>
+  );
+}
+
 export default function Home() {
   return (
     <div>
@@ -73,8 +93,9 @@ export default function Home() {
             the section grows to hold the builder, and letting the tank grow
             with it would drag its floor, and the chips resting on it, below the
             fold. The builder is meant to hang out of the tank's bottom edge. */}
-        <div className="pointer-events-none absolute inset-x-5 top-5 z-0 h-[calc(100svh_-_var(--header-height)_-_2.5rem)] overflow-hidden border">
+        <div className="hero-scanlines pointer-events-none absolute inset-x-5 top-5 z-0 h-[calc(100svh_-_var(--header-height)_-_2.5rem)] overflow-hidden border border-cyan-600/30 dark:border-cyan-400/30">
           <LogoRain />
+          <HudCorners />
         </div>
         {/* px-6 clears the tank's inset-5 walls, so the card lands on the tank
             rather than poking out past it on narrow screens */}
@@ -83,14 +104,19 @@ export default function Home() {
             href="https://www.npmjs.com/package/create-newt-app"
             target="_blank"
             rel="noreferrer"
-            className="pointer-events-auto flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
+            className="group pointer-events-auto flex items-center gap-2.5 rounded-sm border border-cyan-600/40 bg-background/80 py-1.5 pr-3 pl-4 font-mono text-xs tracking-widest text-muted-foreground uppercase shadow-[0_0_24px_-8px_rgb(34_211_238/0.9)] backdrop-blur transition-colors hover:border-cyan-600/70 hover:text-foreground dark:border-cyan-400/40 dark:hover:border-cyan-400/70"
           >
-            <span className="size-2 rounded-full bg-green-500" />
+            <span className="size-1.5 rounded-full bg-cyan-600 shadow-[0_0_7px_rgb(34_211_238)] dark:bg-cyan-400" />
             Latest update · v{cliVersion} released
-            <span aria-hidden>→</span>
+            <span
+              aria-hidden
+              className="text-fuchsia-600 transition-transform group-hover:translate-x-0.5 dark:text-fuchsia-400"
+            >
+              →
+            </span>
           </a>
           {/* px-4 keeps the longest wrapped line clear of the inset-5 frame */}
-          <h1 className="max-w-4xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text px-4 text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
+          <h1 className="max-w-4xl bg-linear-to-r from-foreground via-muted-foreground to-cyan-600 bg-clip-text px-4 text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter dark:to-cyan-400">
             A production-grade,{" "}
             <span className="whitespace-nowrap">monorepo-first</span> starter
             for{" "}
@@ -163,11 +189,15 @@ export default function Home() {
               </span>
             </span>
           </h1>
-          <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
-            <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
+          <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-sm border border-cyan-600/40 bg-background pr-2 pl-4 text-sm whitespace-nowrap text-foreground shadow-[0_0_32px_-10px_rgb(34_211_238/0.9)] dark:border-cyan-400/40">
+            <span className="pointer-events-none shrink-0 font-mono text-cyan-600 select-none dark:text-cyan-400">
               $
             </span>
             <span className="font-mono">npm create newt-app</span>
+            <span
+              aria-hidden
+              className="terminal-cursor -ml-1 h-4 w-2 shrink-0 bg-fuchsia-600 dark:bg-fuchsia-400"
+            />
             <CopyButton
               value={"npm create newt-app"}
               className="static shrink-0"
@@ -175,7 +205,7 @@ export default function Home() {
           </div>
           {/* the column is pointer-events-none so the chips stay clickable
               through it; the builder has to opt back in */}
-          <div className="pointer-events-auto mt-16 w-full rounded-lg border bg-background p-4 shadow-lg">
+          <div className="pointer-events-auto mt-16 w-full rounded-md border border-cyan-600/25 bg-background p-4 shadow-[0_0_70px_-30px_rgb(34_211_238/0.9)] dark:border-cyan-400/25">
             <div className="p-4">
               {/* nuqs reads useSearchParams, which needs a boundary on a
                   statically rendered page */}
