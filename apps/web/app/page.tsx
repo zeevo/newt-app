@@ -47,7 +47,7 @@ function StackLogo({ src }: { src: string }) {
   return (
     <span
       aria-hidden
-      className="size-4 shrink-0 bg-foreground"
+      className="size-4 shrink-0 bg-foreground transition-colors group-hover:bg-cyan-600 dark:group-hover:bg-cyan-400"
       style={{
         maskImage: `url(${src})`,
         WebkitMaskImage: `url(${src})`,
@@ -188,13 +188,23 @@ export default function Home() {
       </section>
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4">
-          <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {STACK.map((item) => (
+          {/* gap-px over a border-coloured bed, so the cells share hairlines
+              instead of each carrying its own outline. The cells' hover tint
+              has to stay opaque or the bed shows through it. */}
+          <dl className="grid grid-cols-1 gap-px overflow-hidden rounded-md border bg-border sm:grid-cols-2 lg:grid-cols-3">
+            {STACK.map((item, index) => (
               <div
                 key={item.name}
-                className="flex flex-col gap-1.5 rounded-lg border p-5"
+                className="group relative flex flex-col gap-2 bg-background p-5 transition-colors hover:bg-cyan-50 dark:hover:bg-cyan-950"
               >
-                <dt className="flex items-center gap-2 font-mono text-sm font-medium">
+                <span
+                  aria-hidden
+                  className="absolute inset-y-0 left-0 w-0.5 bg-cyan-600 opacity-0 transition-opacity group-hover:opacity-100 dark:bg-cyan-400"
+                />
+                <dt className="flex items-center gap-2.5 font-mono text-sm font-medium">
+                  <span className="text-cyan-600 transition-colors group-hover:text-fuchsia-600 dark:text-cyan-400 dark:group-hover:text-fuchsia-400">
+                    {String(index).padStart(2, "0")}
+                  </span>
                   <StackLogo src={item.logo} />
                   {item.name}
                 </dt>
