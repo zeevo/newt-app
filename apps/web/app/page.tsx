@@ -97,7 +97,7 @@ export default function Home() {
             the section grows to hold the builder, and letting the tank grow
             with it would drag its floor, and the chips resting on it, below the
             fold. The builder is meant to hang out of the tank's bottom edge. */}
-        <div className="hero-scanlines pointer-events-none absolute inset-x-5 top-5 z-0 h-[calc(100svh_-_var(--header-height)_-_2.5rem)] overflow-hidden border border-cyan-600/30 dark:border-cyan-400/30">
+        <div className="hero-scanlines hero-ticks pointer-events-none absolute inset-x-5 top-5 z-0 h-[calc(100svh_-_var(--header-height)_-_2.5rem)] overflow-hidden border border-cyan-600/30 dark:border-cyan-400/30">
           <LogoRain />
           <HudCorners />
         </div>
@@ -108,9 +108,9 @@ export default function Home() {
             href="https://www.npmjs.com/package/create-newt-app"
             target="_blank"
             rel="noreferrer"
-            className="group pointer-events-auto flex items-center gap-2.5 rounded-sm border border-cyan-600/40 bg-background/80 py-1.5 pr-3 pl-4 font-mono text-xs tracking-widest text-muted-foreground uppercase shadow-[0_0_24px_-8px_rgb(34_211_238/0.9)] backdrop-blur transition-colors hover:border-cyan-600/70 hover:text-foreground dark:border-cyan-400/40 dark:hover:border-cyan-400/70"
+            className="group pointer-events-auto flex items-center gap-2.5 rounded-none border-y border-cyan-600/50 bg-background/80 py-1.5 pr-3 pl-4 font-mono text-xs tracking-widest text-muted-foreground uppercase backdrop-blur transition-colors hover:border-cyan-600 hover:text-foreground dark:border-cyan-400/50 dark:hover:border-cyan-400"
           >
-            <span className="size-1.5 rounded-full bg-cyan-600 shadow-[0_0_7px_rgb(34_211_238)] dark:bg-cyan-400" />
+            <span className="size-1.5 bg-cyan-600 dark:bg-cyan-400" />
             Latest update · v{cliVersion} released
             <span
               aria-hidden
@@ -193,23 +193,36 @@ export default function Home() {
               </span>
             </span>
           </h1>
-          <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-sm border border-cyan-600/40 bg-background pr-2 pl-4 text-sm whitespace-nowrap text-foreground shadow-[0_0_32px_-10px_rgb(34_211_238/0.9)] dark:border-cyan-400/40">
-            <span className="pointer-events-none shrink-0 font-mono text-cyan-600 select-none dark:text-cyan-400">
-              $
-            </span>
-            <span className="font-mono">npm create newt-app</span>
+          {/* leader lines run the command out to the tank walls, so it reads as
+              a callout on the frame rather than a floating pill */}
+          <div className="flex w-full max-w-3xl items-center gap-4 px-4">
             <span
               aria-hidden
-              className="terminal-cursor -ml-1 h-4 w-2 shrink-0 bg-fuchsia-600 dark:bg-fuchsia-400"
+              className="h-px flex-1 bg-linear-to-r from-transparent to-cyan-600/60 dark:to-cyan-400/60"
             />
-            <CopyButton
-              value={"npm create newt-app"}
-              className="static shrink-0"
+            <div className="pointer-events-auto flex h-11 shrink-0 items-center gap-2 rounded-none border border-cyan-600/50 bg-background pr-2 pl-4 text-sm whitespace-nowrap text-foreground dark:border-cyan-400/50">
+              <span className="pointer-events-none shrink-0 font-mono text-cyan-600 select-none dark:text-cyan-400">
+                $
+              </span>
+              <span className="font-mono">npm create newt-app</span>
+              <span
+                aria-hidden
+                className="terminal-cursor -ml-1 h-4 w-2 shrink-0 bg-fuchsia-600 dark:bg-fuchsia-400"
+              />
+              <CopyButton
+                value={"npm create newt-app"}
+                className="static shrink-0"
+              />
+            </div>
+            <span
+              aria-hidden
+              className="h-px flex-1 bg-linear-to-l from-transparent to-cyan-600/60 dark:to-cyan-400/60"
             />
           </div>
           {/* the column is pointer-events-none so the chips stay clickable
               through it; the builder has to opt back in */}
-          <div className="pointer-events-auto mt-16 w-full rounded-md border border-cyan-600/25 bg-background p-4 shadow-[0_0_70px_-30px_rgb(34_211_238/0.9)] dark:border-cyan-400/25">
+          <div className="pointer-events-auto relative mt-16 w-full rounded-none border border-t-2 border-cyan-600/30 border-t-cyan-600 bg-background p-4 dark:border-cyan-400/30 dark:border-t-cyan-400">
+            <HudCorners />
             <div className="p-4">
               {/* nuqs reads useSearchParams, which needs a boundary on a
                   statically rendered page */}

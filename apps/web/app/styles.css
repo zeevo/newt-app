@@ -21,6 +21,48 @@
   );
 }
 
+/* ruler ticks inside the tank's four edges, the frame reading as a measured
+   scale rather than a plain box. Long ticks every fifth short one. */
+.hero-ticks::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      rgb(34 211 238 / 0.5) 0 1px,
+      transparent 1px 20px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgb(34 211 238 / 0.5) 0 1px,
+      transparent 1px 20px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgb(34 211 238 / 0.5) 0 1px,
+      transparent 1px 20px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgb(34 211 238 / 0.5) 0 1px,
+      transparent 1px 20px
+    );
+  background-size:
+    100% 5px,
+    100% 5px,
+    5px 100%,
+    5px 100%;
+  background-position:
+    0 0,
+    0 100%,
+    0 0,
+    100% 0;
+  background-repeat: no-repeat;
+}
+
 @keyframes terminal-blink {
   0%,
   49% {

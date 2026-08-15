@@ -15,7 +15,7 @@ export async function CodeShowcase({
   const cut = filename ? filename.lastIndexOf("/") + 1 : 0;
 
   return (
-    <div className="overflow-hidden rounded-md border border-cyan-600/25 bg-code shadow-[0_0_50px_-24px_rgb(34_211_238/0.9)] dark:border-cyan-400/25">
+    <div className="overflow-hidden rounded-none border border-l-2 border-cyan-600/30 border-l-cyan-600 bg-code dark:border-cyan-400/30 dark:border-l-cyan-400">
       {filename && (
         <div className="flex items-center gap-2.5 border-b border-cyan-600/20 px-4 py-2 font-mono text-xs dark:border-cyan-400/20">
           <span

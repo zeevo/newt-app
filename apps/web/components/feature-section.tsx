@@ -6,14 +6,20 @@ export function FeatureSection({ children }: { children: React.ReactNode }) {
   );
 }
 
-// a bus line between sections rather than a box edge, so the page reads as
-// stacked modules
+// a double bus line between sections rather than a box edge, so the page reads
+// as stacked modules
 export function SectionRule() {
   return (
-    <span
-      aria-hidden
-      className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-cyan-600/60 to-transparent dark:via-cyan-400/60"
-    />
+    <>
+      <span
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-cyan-600/60 to-transparent dark:via-cyan-400/60"
+      />
+      <span
+        aria-hidden
+        className="absolute inset-x-0 top-[3px] h-px bg-linear-to-r from-transparent via-cyan-600/25 to-transparent dark:via-cyan-400/25"
+      />
+    </>
   );
 }
 
