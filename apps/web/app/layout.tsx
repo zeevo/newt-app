@@ -6,17 +6,15 @@ import { Toaster } from "@newt-app/ui/components/sonner";
 import "@newt-app/ui/globals.css";
 import "./styles.css";
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Space_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ThemeProvider } from "./_components/theme-provider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+// the whole site runs on one mono; --font-mono resolves to it too
+const appFont = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-app-sans",
 });
 
 export const metadata: Metadata = {
@@ -46,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*18)] [--header-height:calc(var(--spacing)*14)]`}
+        className={`${appFont.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*18)] [--header-height:calc(var(--spacing)*14)]`}
       >
         <NuqsAdapter>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
