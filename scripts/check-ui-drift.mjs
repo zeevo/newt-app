@@ -72,12 +72,11 @@ let failed = false;
 // ---------------------------------------------------------------- internal
 
 // Intentional divergences between the templates and the site's ui package:
-// package.json carries repo-specific fields, globals.css holds the site's own
-// design work, and the repo lints with its own eslint.config.js.
+// package.json carries repo-specific fields and globals.css holds the site's
+// own design work.
 const SKIP = new Set([
   "packages/ui/package.json",
   "packages/ui/src/styles/globals.css",
-  "packages/ui/eslint.config.mjs",
 ]);
 
 const tracked = templates.shadcnUi.templates.filter(
