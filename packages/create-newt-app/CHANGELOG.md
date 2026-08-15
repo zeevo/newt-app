@@ -1,5 +1,24 @@
 # create-newt-app
 
+## 0.27.0
+
+### Minor Changes
+
+- 7e86ea1: Target the active Node LTS. Scaffolded apps declared `engines.node >= 20.9.0`, but Node 20 reached end of life on 2026-04-30, so new projects were claiming support for an unsupported runtime. The floor is now 24, `@types/node` moves from the maintenance line to `^24`, and CI runs on 24 as well, so the declared floor, the types and the tested runtime all agree.
+
+  Node 22 is supported until 2027-04, so anyone who needs to stay there can lower `engines.node` and `@types/node` together in the generated project.
+
+- 7c7fc24: Ship vitest 4 to scaffolded apps
+
+  `vitest` and `@vitest/coverage-v8` move from `^3.0.0` to `^4.1.10`, matching the version this repo already runs its own tests on. Vitest 4 builds on Vite 7, which warns when a `.ts` config is loaded as CommonJS, so the API's vitest configs are now `vitest.config.mts` and `vitest.config.e2e.mts`.
+
+### Patch Changes
+
+- 9f31adf: Fill in the package metadata npm surfaces: author, repository (with the monorepo `directory`), homepage, and bugs. The package previously published with none of them, so npm showed no maintainer, no source link, and no way to file an issue.
+- bac0772: Make `pnpm test:e2e` pass in a fresh app
+
+  The e2e test requested `GET /` and expected the body `Hello World!`, but the controller serves `@Get('hello')` and returns `{ message: 'Hello from Nest' }`, so the test 404'd in both testing modes. Jest failed even earlier: `@thallesp/nestjs-better-auth` is ESM-only, and the e2e config transformed CommonJS, so the suite could not import `app.module.ts` at all. The jest e2e config now runs in ESM mode.
+
 ## 0.26.1
 
 ### Patch Changes
