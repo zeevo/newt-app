@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { Button } from '@newt-app/ui/components/button';
-import { cn } from '@newt-app/ui/lib/utils';
-import { CheckIcon, ClipboardIcon } from 'lucide-react';
-import * as React from 'react';
+import { Button } from "@newt-app/ui/components/button";
+import { cn } from "@newt-app/ui/lib/utils";
+import { CheckIcon, ClipboardIcon } from "lucide-react";
+import * as React from "react";
 
 function legacyCopyToClipboard(value: string) {
-  const textArea = document.createElement('textarea');
+  const textArea = document.createElement("textarea");
   textArea.value = value;
-  textArea.setAttribute('readonly', '');
-  textArea.style.position = 'fixed';
-  textArea.style.opacity = '0';
-  textArea.style.pointerEvents = 'none';
+  textArea.setAttribute("readonly", "");
+  textArea.style.position = "fixed";
+  textArea.style.opacity = "0";
+  textArea.style.pointerEvents = "none";
   document.body.appendChild(textArea);
   textArea.focus();
   textArea.select();
   textArea.setSelectionRange(0, value.length);
   let hasCopied = false;
   try {
-    hasCopied = document.execCommand('copy');
+    hasCopied = document.execCommand("copy");
   } catch {
     hasCopied = false;
   }
@@ -27,7 +27,7 @@ function legacyCopyToClipboard(value: string) {
 }
 
 export async function copyToClipboardWithMeta(value: string) {
-  if (typeof window === 'undefined' || !value) return false;
+  if (typeof window === "undefined" || !value) return false;
   let hasCopied = false;
   if (navigator.clipboard?.writeText) {
     try {
@@ -45,7 +45,7 @@ export async function copyToClipboardWithMeta(value: string) {
 export function CopyButton({
   value,
   className,
-  variant = 'ghost',
+  variant = "ghost",
   ...props
 }: React.ComponentProps<typeof Button> & {
   value: string;
@@ -67,7 +67,7 @@ export function CopyButton({
       size="icon"
       variant={variant}
       className={cn(
-        'absolute top-3 right-2 z-10 size-7 bg-code hover:opacity-100 focus-visible:opacity-100',
+        "absolute top-3 right-2 z-10 size-7 bg-code hover:opacity-100 focus-visible:opacity-100",
         className,
       )}
       onClick={async () => {

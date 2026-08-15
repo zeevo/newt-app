@@ -155,7 +155,11 @@ const shadcnUi: Module = {
     webComponentsJson,
   ],
   packages: [
-    { package: "next-themes", module: "apps/web", version: versions["next-themes"] },
+    {
+      package: "next-themes",
+      module: "apps/web",
+      version: versions["next-themes"],
+    },
     { package: "sonner", module: "apps/web", version: versions.sonner },
   ],
 };

@@ -1,4 +1,4 @@
-import { highlightCode } from '@/lib/highlight-code';
+import { highlightCode } from "@/lib/highlight-code";
 
 interface CodeShowcaseProps {
   code: string;
@@ -8,7 +8,7 @@ interface CodeShowcaseProps {
 
 export async function CodeShowcase({
   code,
-  language = 'tsx',
+  language = "tsx",
   filename,
 }: CodeShowcaseProps) {
   const html = await highlightCode(code, language);

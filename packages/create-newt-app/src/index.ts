@@ -5,7 +5,13 @@ import pkg from "../package.json" with { type: "json" };
 import { Command } from "commander";
 import * as p from "@clack/prompts";
 import { selectModules, type ModuleSelection } from "./templates";
-import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
+import {
+  hasCommand,
+  initGit,
+  pnpmFormat,
+  pnpmInstall,
+  scaffold,
+} from "./tasks.js";
 import {
   checkRequiredTools,
   validateDeploymentCombo,
@@ -13,10 +19,15 @@ import {
   validateNodeVersion,
 } from "./utils.js";
 
-const TESTING_CHOICES = ['jest', 'vitest'] as const;
-const DATABASE_CHOICES = ['sqlite', 'postgres'] as const;
-const LINTER_CHOICES = ['eslint', 'oxc'] as const;
-const DEPLOYMENT_CHOICES = ['none', 'standalone', 'custom-server', 'spa'] as const;
+const TESTING_CHOICES = ["jest", "vitest"] as const;
+const DATABASE_CHOICES = ["sqlite", "postgres"] as const;
+const LINTER_CHOICES = ["eslint", "oxc"] as const;
+const DEPLOYMENT_CHOICES = [
+  "none",
+  "standalone",
+  "custom-server",
+  "spa",
+] as const;
 
 type Testing = (typeof TESTING_CHOICES)[number];
 type Database = (typeof DATABASE_CHOICES)[number];
@@ -55,7 +66,8 @@ export async function doInit(options: Options) {
           validate: (value) => {
             if (!value) return "Project name is required";
             if (value.length > 214) return "Project name is too long";
-            if (/[<>:"/\\|?*]/.test(value)) return "Project name contains invalid characters";
+            if (/[<>:"/\\|?*]/.test(value))
+              return "Project name contains invalid characters";
           },
         }),
     }),
@@ -107,14 +119,26 @@ export async function doInit(options: Options) {
           message: "Deployment extras?",
           options: [
             { value: "none", label: "None", hint: "skip" },
-            { value: "standalone", label: "Standalone + Dockerfile", hint: "Dockerfiles + docker-compose.yml" },
+            {
+              value: "standalone",
+              label: "Standalone + Dockerfile",
+              hint: "Dockerfiles + docker-compose.yml",
+            },
             // DI-only already runs Nest inside the Next process, and SPA's static
             // export can't hold the route handlers DI-only depends on
             ...(results.nestDiOnly
               ? []
               : [
-                  { value: "custom-server" as const, label: "Custom Server", hint: "single process, single port" },
-                  { value: "spa" as const, label: "SPA Mode", hint: "static export served by NestJS" },
+                  {
+                    value: "custom-server" as const,
+                    label: "Custom Server",
+                    hint: "single process, single port",
+                  },
+                  {
+                    value: "spa" as const,
+                    label: "SPA Mode",
+                    hint: "static export served by NestJS",
+                  },
                 ]),
           ],
           initialValue: "none",
@@ -145,13 +169,27 @@ export async function doInit(options: Options) {
       },
     });
 
-    const useShadcn = options.nonInteractive ? options.shadcn : (group as { shadcn?: boolean }).shadcn ?? true;
-    const testing: Testing = options.nonInteractive ? options.testing : (group as { testing?: Testing }).testing ?? 'jest';
-    const database: Database = options.nonInteractive ? options.database : (group as { database?: Database }).database ?? 'sqlite';
-    const linter: Linter = options.nonInteractive ? options.linter : (group as { linter?: Linter }).linter ?? 'eslint';
-    const deployment: Deployment = options.nonInteractive ? options.deployment : (group as { deployment?: Deployment }).deployment ?? 'none';
-    const nestDiOnly = options.nonInteractive ? options.nestDiOnly : (group as { nestDiOnly?: boolean }).nestDiOnly ?? false;
-    const todoExample = options.nonInteractive ? !options.bare : (group as { todoExample?: boolean }).todoExample ?? true;
+    const useShadcn = options.nonInteractive
+      ? options.shadcn
+      : ((group as { shadcn?: boolean }).shadcn ?? true);
+    const testing: Testing = options.nonInteractive
+      ? options.testing
+      : ((group as { testing?: Testing }).testing ?? "jest");
+    const database: Database = options.nonInteractive
+      ? options.database
+      : ((group as { database?: Database }).database ?? "sqlite");
+    const linter: Linter = options.nonInteractive
+      ? options.linter
+      : ((group as { linter?: Linter }).linter ?? "eslint");
+    const deployment: Deployment = options.nonInteractive
+      ? options.deployment
+      : ((group as { deployment?: Deployment }).deployment ?? "none");
+    const nestDiOnly = options.nonInteractive
+      ? options.nestDiOnly
+      : ((group as { nestDiOnly?: boolean }).nestDiOnly ?? false);
+    const todoExample = options.nonInteractive
+      ? !options.bare
+      : ((group as { todoExample?: boolean }).todoExample ?? true);
 
     const deploymentCombo = validateDeploymentCombo(deployment, nestDiOnly);
     if (!deploymentCombo.valid) {
@@ -227,7 +265,7 @@ export async function doInit(options: Options) {
     console.log();
   } catch (error) {
     console.error(
-      `Error: ${error instanceof Error ? error.message : "Unknown error"}`
+      `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
     );
     process.exit(1);
   }
@@ -246,7 +284,11 @@ program
   .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
   .option("--database <database>", "Database: sqlite or postgres", "sqlite")
   .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
-  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa", "none")
+  .option(
+    "--deployment <strategy>",
+    "Deployment extras: standalone, custom-server, spa",
+    "none",
+  )
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
   .option("--bare", "Skip the todo example", false)
   .action(
@@ -263,7 +305,7 @@ program
         nestDiOnly: boolean;
         bare: boolean;
       },
-      command: Command
+      command: Command,
     ) => {
       intro(`Create a ${chalk.blue("newt")} app.`);
 
@@ -278,19 +320,29 @@ program
         "bare",
       ];
       const nonInteractive = configFlags.some(
-        (flag) => command.getOptionValueSource(flag) === "cli"
+        (flag) => command.getOptionValueSource(flag) === "cli",
       );
 
       // Reject typos instead of silently falling back to a default.
       const choices = [
         { flag: "--testing", value: options.testing, allowed: TESTING_CHOICES },
-        { flag: "--database", value: options.database, allowed: DATABASE_CHOICES },
+        {
+          flag: "--database",
+          value: options.database,
+          allowed: DATABASE_CHOICES,
+        },
         { flag: "--linter", value: options.linter, allowed: LINTER_CHOICES },
-        { flag: "--deployment", value: options.deployment, allowed: DEPLOYMENT_CHOICES },
+        {
+          flag: "--deployment",
+          value: options.deployment,
+          allowed: DEPLOYMENT_CHOICES,
+        },
       ];
 
       const invalid = choices
-        .map(({ flag, value, allowed }) => validateFlagValue(flag, value, allowed))
+        .map(({ flag, value, allowed }) =>
+          validateFlagValue(flag, value, allowed),
+        )
         .find((result) => !result.valid);
 
       if (invalid) {
@@ -311,7 +363,7 @@ program
         nestDiOnly: options.nestDiOnly,
         bare: options.bare,
       });
-    }
+    },
   );
 
 program.parse();

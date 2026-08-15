@@ -1,7 +1,13 @@
 import ejs from "ejs";
 import { existsSync, promises } from "fs";
 import path from "path";
-import type { Module, Package, Script, Selection, TemplateData } from "./types.js";
+import type {
+  Module,
+  Package,
+  Script,
+  Selection,
+  TemplateData,
+} from "./types.js";
 import { getStaticFilePath } from "./templates";
 
 export interface ValidationResult {
@@ -12,7 +18,7 @@ export interface ValidationResult {
 export async function updatePackageJson(
   destDir: string,
   packages: Package[],
-  templateData: TemplateData
+  templateData: TemplateData,
 ) {
   for (const pkg of packages) {
     const renderedPackage = ejs.render(pkg.package, templateData);
@@ -44,7 +50,7 @@ export async function updatePackageJson(
 
     await promises.writeFile(
       packageJsonPath,
-      JSON.stringify(packageJson, null, 2)
+      JSON.stringify(packageJson, null, 2),
     );
   }
 }
@@ -52,7 +58,7 @@ export async function updatePackageJson(
 export async function updateScripts(
   destDir: string,
   scripts: Script[],
-  templateData: TemplateData
+  templateData: TemplateData,
 ) {
   for (const script of scripts) {
     const renderedScript = ejs.render(script.script, templateData);
@@ -84,7 +90,7 @@ export async function updateScripts(
 
     await promises.writeFile(
       packageJsonPath,
-      JSON.stringify(packageJson, null, 2)
+      JSON.stringify(packageJson, null, 2),
     );
   }
 }
@@ -93,7 +99,7 @@ export async function renderTemplatesToDisk(
   basePackages: Module[],
   destDir: string,
   templateData: TemplateData,
-  selection: Selection
+  selection: Selection,
 ) {
   await promises.mkdir(destDir, { recursive: true });
 
@@ -103,7 +109,7 @@ export async function renderTemplatesToDisk(
     // `when` decides which template owns a file for these options; templates
     // that don't apply are skipped rather than overwritten by a later one.
     const applicable = pkg.templates.filter(
-      (template) => template.when?.(selection) ?? true
+      (template) => template.when?.(selection) ?? true,
     );
 
     await applicable.reduce(async (prev, template) => {
@@ -139,9 +145,7 @@ const DEP_FIELDS = [
   "optionalDependencies",
 ];
 
-function sortByKey(
-  obj: Record<string, unknown>,
-): Record<string, unknown> {
+function sortByKey(obj: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(
     Object.keys(obj)
       .sort()

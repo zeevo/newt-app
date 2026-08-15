@@ -1,6 +1,7 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s) => s.deployment !== 'standalone' && s.deployment !== 'custom-server',
+  when: (s) =>
+    s.deployment !== "standalone" && s.deployment !== "custom-server",
   filename: "turbo.json",
   template: `{
   "$schema": "https://turborepo.dev/schema.json",

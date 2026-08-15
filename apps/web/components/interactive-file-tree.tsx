@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { useQueryStates } from 'nuqs';
-import { FileTree } from '@newt-app/file-tree';
-import { CopyCommandButton } from '@/components/copy-command-button';
-import { Toggle } from '@newt-app/ui/components/toggle';
+import { useMemo } from "react";
+import { useQueryStates } from "nuqs";
+import { FileTree } from "@newt-app/file-tree";
+import { CopyCommandButton } from "@/components/copy-command-button";
+import { Toggle } from "@newt-app/ui/components/toggle";
 import {
   ToggleGroup,
   ToggleGroupItem,
-} from '@newt-app/ui/components/toggle-group';
+} from "@newt-app/ui/components/toggle-group";
 import {
   NativeSelect,
   NativeSelectOption,
-} from '@newt-app/ui/components/native-select';
+} from "@newt-app/ui/components/native-select";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@newt-app/ui/components/tooltip';
-import { Info } from 'lucide-react';
-import { cn } from '@newt-app/ui/lib/utils';
+} from "@newt-app/ui/components/tooltip";
+import { Info } from "lucide-react";
+import { cn } from "@newt-app/ui/lib/utils";
 import {
   buildCommand,
   DATABASE_HINT,
@@ -30,20 +30,20 @@ import {
   DI_ONLY_REJECTS,
   TODO_EXAMPLE_HINT,
   type Config,
-} from '@/lib/build-command';
-import { scaffoldTree, type TreeNode } from '@/lib/scaffold-tree';
+} from "@/lib/build-command";
+import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
 import {
   configParsers,
   configUrlKeys,
   sanitizeConfig,
-} from '@/lib/config-params';
+} from "@/lib/config-params";
 
-const grow = 'animate-in fade-in slide-in-from-left-1 duration-300';
+const grow = "animate-in fade-in slide-in-from-left-1 duration-300";
 
 function renderNodes(nodes: TreeNode[]) {
   return nodes.map((node) => {
     const className = node.conditional ? grow : undefined;
-    return node.kind === 'dir' ? (
+    return node.kind === "dir" ? (
       <FileTree.Folder
         key={node.path}
         name={node.name}
@@ -68,16 +68,16 @@ function Logo({ src, className }: { src: string; className?: string }) {
   return (
     <span
       aria-hidden
-      className={cn('size-4 shrink-0 bg-foreground', className)}
+      className={cn("size-4 shrink-0 bg-foreground", className)}
       style={{
         maskImage: `url(${src})`,
         WebkitMaskImage: `url(${src})`,
-        maskSize: 'contain',
-        WebkitMaskSize: 'contain',
-        maskRepeat: 'no-repeat',
-        WebkitMaskRepeat: 'no-repeat',
-        maskPosition: 'center',
-        WebkitMaskPosition: 'center',
+        maskSize: "contain",
+        WebkitMaskSize: "contain",
+        maskRepeat: "no-repeat",
+        WebkitMaskRepeat: "no-repeat",
+        maskPosition: "center",
+        WebkitMaskPosition: "center",
       }}
     />
   );
@@ -186,7 +186,7 @@ function BoolToggle({
         onPressedChange={onChange}
         disabled={disabled}
       >
-        {pressed ? 'on' : 'off'}
+        {pressed ? "on" : "off"}
       </Toggle>
     </Row>
   );
@@ -203,7 +203,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
 
   return (
     <TooltipProvider>
-      <div className={cn('flex flex-col gap-4', className)}>
+      <div className={cn("flex flex-col gap-4", className)}>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
           <div className="flex flex-col gap-3 rounded-lg border p-5 lg:w-[42%] lg:shrink-0">
             <BoolToggle
@@ -216,17 +216,17 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               label="NestJS"
               logo="/logos/nestjs.svg"
               hint={DI_ONLY_HINT}
-              value={c.nestDiOnly ? 'di-only' : 'on'}
-              options={['on', 'di-only'] as const}
+              value={c.nestDiOnly ? "di-only" : "on"}
+              options={["on", "di-only"] as const}
               onChange={(v) =>
                 setC((prev) => {
-                  const nestDiOnly = v === 'di-only';
+                  const nestDiOnly = v === "di-only";
                   return {
                     ...prev,
                     nestDiOnly,
                     deployment:
                       nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment)
-                        ? 'none'
+                        ? "none"
                         : prev.deployment,
                   };
                 })
@@ -242,45 +242,45 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               label="database"
               hint={DATABASE_HINT}
               value={c.database}
-              options={['sqlite', 'postgres'] as const}
-              onChange={(v) => set('database', v)}
+              options={["sqlite", "postgres"] as const}
+              onChange={(v) => set("database", v)}
               logos={{
-                sqlite: '/logos/sqlite.svg',
-                postgres: '/logos/postgres.svg',
+                sqlite: "/logos/sqlite.svg",
+                postgres: "/logos/postgres.svg",
               }}
             />
             <Segmented
               label="testing"
               value={c.testing}
-              options={['jest', 'vitest'] as const}
-              onChange={(v) => set('testing', v)}
-              logos={{ jest: '/logos/jest.svg', vitest: '/logos/vitest.svg' }}
+              options={["jest", "vitest"] as const}
+              onChange={(v) => set("testing", v)}
+              logos={{ jest: "/logos/jest.svg", vitest: "/logos/vitest.svg" }}
             />
             <Segmented
               label="linter"
               value={c.linter}
-              options={['eslint', 'oxc'] as const}
-              onChange={(v) => set('linter', v)}
-              logos={{ eslint: '/logos/eslint.svg', oxc: '/logos/oxc.svg' }}
+              options={["eslint", "oxc"] as const}
+              onChange={(v) => set("linter", v)}
+              logos={{ eslint: "/logos/eslint.svg", oxc: "/logos/oxc.svg" }}
             />
             <BoolToggle
               label="shadcn/ui"
               logo="/logos/shadcn.svg"
               pressed={c.shadcn}
-              onChange={(v) => set('shadcn', v)}
+              onChange={(v) => set("shadcn", v)}
             />
             <BoolToggle
               label="include example app"
               hint={TODO_EXAMPLE_HINT}
               pressed={c.todoExample}
-              onChange={(v) => set('todoExample', v)}
+              onChange={(v) => set("todoExample", v)}
             />
             <Row label="extras">
               <NativeSelect
                 size="sm"
                 value={c.deployment}
                 onChange={(e) =>
-                  set('deployment', e.target.value as Config['deployment'])
+                  set("deployment", e.target.value as Config["deployment"])
                 }
                 className="font-mono text-xs"
               >

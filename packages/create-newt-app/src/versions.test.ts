@@ -62,9 +62,7 @@ describe("dependency versions", () => {
     }, {});
 
     const conflicts = Object.entries(byName)
-      .filter(
-        ([, entries]) => new Set(entries.map((e) => e.version)).size > 1,
-      )
+      .filter(([, entries]) => new Set(entries.map((e) => e.version)).size > 1)
       .map(([name, entries]) => ({
         name,
         pins: entries.map((e) => `${e.version} in ${e.source}`).sort(),

@@ -11,7 +11,18 @@ import postcssConfig from "./templates/postcss-config";
 import tsconfig from "./templates/tsconfig";
 
 const ui: Module = {
-  templates: [packageJson, button, card, code, link, logo, utils, globalsCss, postcssConfig, tsconfig],
+  templates: [
+    packageJson,
+    button,
+    card,
+    code,
+    link,
+    logo,
+    utils,
+    globalsCss,
+    postcssConfig,
+    tsconfig,
+  ],
 };
 
 export default ui;

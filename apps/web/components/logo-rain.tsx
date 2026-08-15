@@ -1,15 +1,15 @@
-'use client';
-import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
+"use client";
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
 
 const logos = [
-  '/logos/better-auth.svg',
-  '/logos/nextjs.svg',
-  '/logos/tailwind.svg',
-  '/logos/shadcn.svg',
-  '/logos/nestjs.svg',
-  '/logos/kysely.svg',
-  '/logos/oxc.svg',
+  "/logos/better-auth.svg",
+  "/logos/nextjs.svg",
+  "/logos/tailwind.svg",
+  "/logos/shadcn.svg",
+  "/logos/nestjs.svg",
+  "/logos/kysely.svg",
+  "/logos/oxc.svg",
 ];
 
 const VIEW_W = 1440;
@@ -75,29 +75,36 @@ type Star = {
 
 // normalize any CSS color (oklch, var-resolved, named) to a THREE.Color
 function cssColor(css: string): THREE.Color {
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = canvas.height = 1;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext("2d")!;
   ctx.fillStyle = css;
   ctx.fillRect(0, 0, 1, 1);
   const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-  return new THREE.Color().setRGB(r! / 255, g! / 255, b! / 255, THREE.SRGBColorSpace);
+  return new THREE.Color().setRGB(
+    r! / 255,
+    g! / 255,
+    b! / 255,
+    THREE.SRGBColorSpace,
+  );
 }
 
 // theme colors matching the SVG version: fill-background circles,
 // stroke-primary/15 rings, and black (light) / white (dark) silhouettes
 function readTheme() {
-  const probe = document.createElement('div');
-  probe.className = 'bg-background text-primary';
-  probe.style.display = 'none';
+  const probe = document.createElement("div");
+  probe.className = "bg-background text-primary";
+  probe.style.display = "none";
   document.body.appendChild(probe);
   const styles = getComputedStyle(probe);
   const background = cssColor(styles.backgroundColor);
   const primary = cssColor(styles.color);
   probe.remove();
-  const dark = document.documentElement.classList.contains('dark');
+  const dark = document.documentElement.classList.contains("dark");
   const border = cssColor(
-    getComputedStyle(document.documentElement).getPropertyValue('--border').trim(),
+    getComputedStyle(document.documentElement)
+      .getPropertyValue("--border")
+      .trim(),
   );
   return {
     background,
@@ -184,24 +191,31 @@ function floorMaterial(chipCount: number) {
 // rasterize an svg into a white silhouette texture, tinted later via material color
 async function loadSilhouette(url: string): Promise<THREE.CanvasTexture> {
   const text = await (await fetch(url)).text();
-  const viewBox = text.match(/viewBox="([^"]+)"/)?.[1]?.split(/[\s,]+/).map(Number);
+  const viewBox = text
+    .match(/viewBox="([^"]+)"/)?.[1]
+    ?.split(/[\s,]+/)
+    .map(Number);
   const aspect =
-    viewBox && viewBox.length === 4 && viewBox[3]! > 0 ? viewBox[2]! / viewBox[3]! : 1;
+    viewBox && viewBox.length === 4 && viewBox[3]! > 0
+      ? viewBox[2]! / viewBox[3]!
+      : 1;
 
-  const blobUrl = URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' }));
+  const blobUrl = URL.createObjectURL(
+    new Blob([text], { type: "image/svg+xml" }),
+  );
   const img = new Image();
   img.src = blobUrl;
   await img.decode();
 
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = canvas.height = TEX_SIZE;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext("2d")!;
   // contain fit, centered, like the svg <image> default
   const w = aspect >= 1 ? TEX_SIZE : TEX_SIZE * aspect;
   const h = aspect >= 1 ? TEX_SIZE / aspect : TEX_SIZE;
   ctx.drawImage(img, (TEX_SIZE - w) / 2, (TEX_SIZE - h) / 2, w, h);
-  ctx.globalCompositeOperation = 'source-in';
-  ctx.fillStyle = '#fff';
+  ctx.globalCompositeOperation = "source-in";
+  ctx.fillStyle = "#fff";
   ctx.fillRect(0, 0, TEX_SIZE, TEX_SIZE);
   URL.revokeObjectURL(blobUrl);
 
@@ -226,7 +240,11 @@ export default function LogoRain({
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+      });
     } catch {
       return; // no WebGL: leave the background empty
     }
@@ -341,7 +359,9 @@ export default function LogoRain({
 
       // small chips cruise fast, large ones slow, so the big shapes stay calm
       const speed =
-        meanSize * speedFactor * (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t);
+        meanSize *
+        speedFactor *
+        (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t);
       const heading = Math.random() * Math.PI * 2;
       stars.push({
         x,
@@ -399,7 +419,7 @@ export default function LogoRain({
     const themeObserver = new MutationObserver(applyTheme);
     themeObserver.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class'],
+      attributeFilter: ["class"],
     });
 
     const resizeObserver = new ResizeObserver(() => {
@@ -410,7 +430,7 @@ export default function LogoRain({
 
     const reduceMotion =
       window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // map a pointer event through the camera bounds into view (svg) coords and
     // find the chip under it, if any
@@ -423,7 +443,7 @@ export default function LogoRain({
       return stars.find((s) => Math.hypot(x - s.x, y - s.y) < s.size);
     };
     const onPointerMove = (e: PointerEvent) => {
-      canvas.style.cursor = chipAt(e) ? 'pointer' : '';
+      canvas.style.cursor = chipAt(e) ? "pointer" : "";
     };
     const onPointerDown = (e: PointerEvent) => {
       const s = chipAt(e);
@@ -438,8 +458,8 @@ export default function LogoRain({
     if (reduceMotion) {
       renderer.render(scene, camera);
     } else {
-      canvas.addEventListener('pointermove', onPointerMove);
-      canvas.addEventListener('pointerdown', onPointerDown as EventListener);
+      canvas.addEventListener("pointermove", onPointerMove);
+      canvas.addEventListener("pointerdown", onPointerDown as EventListener);
       let last = performance.now();
       renderer.setAnimationLoop((now) => {
         const dt = (now - last) / 1000;
@@ -549,8 +569,8 @@ export default function LogoRain({
     return () => {
       disposed = true;
       renderer.setAnimationLoop(null);
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerdown', onPointerDown as EventListener);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerdown", onPointerDown as EventListener);
       themeObserver.disconnect();
       resizeObserver.disconnect();
       circleGeometry.dispose();

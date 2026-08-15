@@ -32,5 +32,5 @@ export default {
     "@types/react-dom": "<%= versions["@types/react-dom"] %>",
     "typescript": "<%= versions.typescript %>"
   }
-}`
+}`,
 };

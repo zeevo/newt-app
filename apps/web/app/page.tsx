@@ -1,43 +1,43 @@
-import { CodeShowcase } from '@/components/code-showcase';
-import { CopyButton } from '@/components/copy-button';
-import { FeatureSection } from '@/components/feature-section';
-import { InlineCode } from '@/components/inline-code';
-import { InteractiveFileTree } from '@/components/interactive-file-tree';
-import Image from 'next/image';
-import { Suspense } from 'react';
-import LogoRain from '@/components/logo-rain';
-import { version as cliVersion } from '../../../packages/create-newt-app/package.json';
+import { CodeShowcase } from "@/components/code-showcase";
+import { CopyButton } from "@/components/copy-button";
+import { FeatureSection } from "@/components/feature-section";
+import { InlineCode } from "@/components/inline-code";
+import { InteractiveFileTree } from "@/components/interactive-file-tree";
+import Image from "next/image";
+import { Suspense } from "react";
+import LogoRain from "@/components/logo-rain";
+import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
 
 const STACK = [
   {
-    name: 'Next.js',
-    logo: '/logos/nextjs.svg',
-    role: 'handles the frontend. App Router, server components, file-based routing.',
+    name: "Next.js",
+    logo: "/logos/nextjs.svg",
+    role: "handles the frontend. App Router, server components, file-based routing.",
   },
   {
-    name: 'NestJS',
-    logo: '/logos/nestjs.svg',
-    role: 'handles the backend. Structured, testable, scales when you need it to.',
+    name: "NestJS",
+    logo: "/logos/nestjs.svg",
+    role: "handles the backend. Structured, testable, scales when you need it to.",
   },
   {
-    name: 'Better Auth',
-    logo: '/logos/better-auth.svg',
-    role: 'handles authentication. One config in packages/auth, imported by both apps.',
+    name: "Better Auth",
+    logo: "/logos/better-auth.svg",
+    role: "handles authentication. One config in packages/auth, imported by both apps.",
   },
   {
-    name: 'Kysely',
-    logo: '/logos/kysely.svg',
-    role: 'handles persistence. A typed query builder over SQLite or Postgres, shared by auth and your app.',
+    name: "Kysely",
+    logo: "/logos/kysely.svg",
+    role: "handles persistence. A typed query builder over SQLite or Postgres, shared by auth and your app.",
   },
   {
-    name: 'pnpm workspaces',
-    logo: '/logos/pnpm.svg',
-    role: 'link the packages. apps/ for runnable apps, packages/ for shared code.',
+    name: "pnpm workspaces",
+    logo: "/logos/pnpm.svg",
+    role: "link the packages. apps/ for runnable apps, packages/ for shared code.",
   },
   {
-    name: 'Turborepo',
-    logo: '/logos/turborepo.svg',
-    role: 'caches and parallelizes builds across the workspace.',
+    name: "Turborepo",
+    logo: "/logos/turborepo.svg",
+    role: "caches and parallelizes builds across the workspace.",
   },
 ];
 
@@ -51,12 +51,12 @@ function StackLogo({ src }: { src: string }) {
       style={{
         maskImage: `url(${src})`,
         WebkitMaskImage: `url(${src})`,
-        maskSize: 'contain',
-        WebkitMaskSize: 'contain',
-        maskRepeat: 'no-repeat',
-        WebkitMaskRepeat: 'no-repeat',
-        maskPosition: 'center',
-        WebkitMaskPosition: 'center',
+        maskSize: "contain",
+        WebkitMaskSize: "contain",
+        maskRepeat: "no-repeat",
+        WebkitMaskRepeat: "no-repeat",
+        maskPosition: "center",
+        WebkitMaskPosition: "center",
       }}
     />
   );
@@ -91,7 +91,9 @@ export default function Home() {
           </a>
           {/* px-4 keeps the longest wrapped line clear of the inset-5 frame */}
           <h1 className="max-w-4xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text px-4 text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
-            A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter for{' '}
+            A production-grade,{" "}
+            <span className="whitespace-nowrap">monorepo-first</span> starter
+            for{" "}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
               <span
                 title="Next.js"
@@ -111,7 +113,13 @@ export default function Home() {
                 title="NestJS"
                 className="z-[1] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
               >
-                <Image src="/logos/nestjs.svg" alt="NestJS" width={32} height={32} className="size-3/5" />
+                <Image
+                  src="/logos/nestjs.svg"
+                  alt="NestJS"
+                  width={32}
+                  height={32}
+                  className="size-3/5"
+                />
               </span>
               <span
                 title="Better Auth"
@@ -145,7 +153,13 @@ export default function Home() {
                 title="oxc"
                 className="z-[4] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
               >
-                <Image src="/logos/oxc.svg" alt="oxc" width={32} height={32} className="size-3/5" />
+                <Image
+                  src="/logos/oxc.svg"
+                  alt="oxc"
+                  width={32}
+                  height={32}
+                  className="size-3/5"
+                />
               </span>
             </span>
           </h1>
@@ -155,7 +169,7 @@ export default function Home() {
             </span>
             <span className="font-mono">npm create newt-app</span>
             <CopyButton
-              value={'npm create newt-app'}
+              value={"npm create newt-app"}
               className="static shrink-0"
             />
           </div>
@@ -171,7 +185,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section >
+      </section>
       <section className="border-t bg-background py-24">
         <div className="mx-auto max-w-[1200px] px-4">
           <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -221,9 +235,9 @@ export default async function Dashboard() {
                 Shared packages, imported by name.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
-                <InlineCode>@my-app/ui</InlineCode> and{' '}
+                <InlineCode>@my-app/ui</InlineCode> and{" "}
                 <InlineCode>@my-app/auth</InlineCode> resolve as workspace
-                packages in both <InlineCode>apps/web</InlineCode> and{' '}
+                packages in both <InlineCode>apps/web</InlineCode> and{" "}
                 <InlineCode>apps/api</InlineCode>.
               </p>
               <p className="leading-relaxed text-muted-foreground">
@@ -242,7 +256,7 @@ export default async function Dashboard() {
                 NestJS services in route handlers.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
-                In di-only mode, route handlers resolve providers through{' '}
+                In di-only mode, route handlers resolve providers through{" "}
                 <InlineCode>inject()</InlineCode>, so business logic stays in
                 NestJS modules and services instead of the route file.
               </p>
@@ -299,12 +313,12 @@ export class UserController {
                 One auth config, both apps.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
-                Better Auth is configured once in{' '}
-                <InlineCode>packages/auth</InlineCode> and imported by{' '}
-                <InlineCode>apps/web</InlineCode> and{' '}
+                Better Auth is configured once in{" "}
+                <InlineCode>packages/auth</InlineCode> and imported by{" "}
+                <InlineCode>apps/web</InlineCode> and{" "}
                 <InlineCode>apps/api</InlineCode>. NestJS routes are guarded by
-                default; opt out per route with{' '}
-                <InlineCode>@AllowAnonymous</InlineCode> or{' '}
+                default; opt out per route with{" "}
+                <InlineCode>@AllowAnonymous</InlineCode> or{" "}
                 <InlineCode>@OptionalAuth</InlineCode>.
               </p>
               <p className="leading-relaxed text-muted-foreground">
@@ -315,6 +329,6 @@ export class UserController {
           </FeatureSection>
         </div>
       </section>
-    </div >
+    </div>
   );
 }

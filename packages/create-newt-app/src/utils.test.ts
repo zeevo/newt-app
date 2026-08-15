@@ -183,7 +183,8 @@ describe("validateFlagValue", () => {
   it("accepts every allowed value", () => {
     expect(
       ["jest", "vitest"].every(
-        (value) => validateFlagValue("--testing", value, ["jest", "vitest"]).valid,
+        (value) =>
+          validateFlagValue("--testing", value, ["jest", "vitest"]).valid,
       ),
     ).toBe(true);
   });
@@ -202,15 +203,15 @@ describe("validateFlagValue", () => {
   });
 
   it("rejects a value that only differs by case", () => {
-    expect(validateFlagValue("--linter", "ESLint", ["eslint", "oxc"]).valid).toBe(
-      false,
-    );
+    expect(
+      validateFlagValue("--linter", "ESLint", ["eslint", "oxc"]).valid,
+    ).toBe(false);
   });
 
   it("rejects an empty value", () => {
-    expect(validateFlagValue("--database", "", ["sqlite", "postgres"]).valid).toBe(
-      false,
-    );
+    expect(
+      validateFlagValue("--database", "", ["sqlite", "postgres"]).valid,
+    ).toBe(false);
   });
 });
 
@@ -220,7 +221,13 @@ describe("updatePackageJson", () => {
 
     await updatePackageJson(
       destDir,
-      [{ module: "apps/web", package: "<%= projectName %>-ui", version: "1.0.0" }],
+      [
+        {
+          module: "apps/web",
+          package: "<%= projectName %>-ui",
+          version: "1.0.0",
+        },
+      ],
       templateData,
     );
 
