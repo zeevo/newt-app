@@ -68,13 +68,15 @@ export const templates = {
 export function selectModules(selection: ModuleSelection): Module[] {
   const {
     deployment,
-    nestDiOnly,
-    todoExample,
+    mode,
+    includeExample,
     shadcn,
     database,
     linter,
     testing,
   } = selection;
+
+  const diOnly = mode === "nest-di-only";
 
   const deploymentModule =
     deployment === "standalone"
@@ -108,16 +110,14 @@ export function selectModules(selection: ModuleSelection): Module[] {
     typescriptConfig,
     testing === "vitest" ? testingVitest : testingJest,
     ...(deploymentModule ? [deploymentModule] : []),
-    ...(nestDiOnly ? [nestDiOnlyModule] : [apiControllers]),
+    ...(diOnly ? [nestDiOnlyModule] : [apiControllers]),
     // nest-di-only overwrites the standalone next.config.js and leaves the
     // Dockerfile pointing at an api entrypoint DI-only never emits
-    ...(nestDiOnly && deployment === "standalone"
-      ? [deploymentStandaloneDi]
-      : []),
-    ...(todoExample
+    ...(diOnly && deployment === "standalone" ? [deploymentStandaloneDi] : []),
+    ...(includeExample
       ? [
           todoExampleApi,
-          ...(nestDiOnly ? [todoExampleDi] : [todoExampleControllers]),
+          ...(diOnly ? [todoExampleDi] : [todoExampleControllers]),
           shadcn ? todoExampleShadcn : todoExampleWeb,
         ]
       : []),

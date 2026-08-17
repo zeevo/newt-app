@@ -1,7 +1,9 @@
 import type { Selection } from "../../types";
 export default {
   when: (s) =>
-    !s.nestDiOnly && s.deployment !== "spa" && s.deployment !== "custom-server",
+    s.mode === "full" &&
+    s.deployment !== "spa" &&
+    s.deployment !== "custom-server",
   filename: "apps/api/package.json",
   template: `{
   "name": "api",

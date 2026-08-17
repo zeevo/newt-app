@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s) => !s.nestDiOnly,
+  when: (s) => s.mode === "full",
   filename: "apps/api/tsconfig.json",
   template: `{
   "compilerOptions": {

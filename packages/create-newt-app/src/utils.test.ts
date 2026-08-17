@@ -9,6 +9,7 @@ import {
   updateScripts,
   validateDeploymentCombo,
   validateFlagValue,
+  validateModeFlags,
   validateNodeVersion,
   validateProjectName,
 } from "./utils";
@@ -68,35 +69,56 @@ describe("validateProjectName", () => {
   });
 });
 
+describe("validateModeFlags", () => {
+  it("rejects --full passed alongside --nest-di-only", () => {
+    const result = validateModeFlags(true, true);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain(
+      "--full and --nest-di-only both choose how NestJS runs.",
+    );
+  });
+
+  it("accepts either flag on its own, and neither", () => {
+    expect(
+      [
+        [true, false],
+        [false, true],
+        [false, false],
+      ].map(([full, diOnly]) => validateModeFlags(full, diOnly).valid),
+    ).toEqual([true, true, true]);
+  });
+});
+
 describe("validateDeploymentCombo", () => {
   it("rejects spa combined with nest-di-only", () => {
-    const result = validateDeploymentCombo("spa", true);
+    const result = validateDeploymentCombo("spa", "nest-di-only");
     expect(result.valid).toBe(false);
     expect(result.error).toContain(
       "--deployment spa cannot be combined with --nest-di-only.",
     );
   });
 
-  it("accepts spa without nest-di-only", () => {
-    expect(validateDeploymentCombo("spa", false).valid).toBe(true);
+  it("accepts spa in full mode", () => {
+    expect(validateDeploymentCombo("spa", "full").valid).toBe(true);
   });
 
   it("rejects custom-server combined with nest-di-only", () => {
-    const result = validateDeploymentCombo("custom-server", true);
+    const result = validateDeploymentCombo("custom-server", "nest-di-only");
     expect(result.valid).toBe(false);
     expect(result.error).toContain(
       "--deployment custom-server cannot be combined with --nest-di-only.",
     );
   });
 
-  it("accepts custom-server without nest-di-only", () => {
-    expect(validateDeploymentCombo("custom-server", false).valid).toBe(true);
+  it("accepts custom-server in full mode", () => {
+    expect(validateDeploymentCombo("custom-server", "full").valid).toBe(true);
   });
 
   it("accepts nest-di-only with the deployments that support it", () => {
     expect(
       ["none", "standalone"].map(
-        (deployment) => validateDeploymentCombo(deployment, true).valid,
+        (deployment) =>
+          validateDeploymentCombo(deployment, "nest-di-only").valid,
       ),
     ).toEqual([true, true]);
   });

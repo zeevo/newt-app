@@ -2,6 +2,7 @@ import ejs from "ejs";
 import { existsSync, promises } from "fs";
 import path from "path";
 import type {
+  Mode,
   Module,
   Package,
   Script,
@@ -200,10 +201,31 @@ export function validateFlagValue(
   };
 }
 
-export function validateDeploymentCombo(
-  deployment: string,
+// The mode flags name one axis, so passing two of them is a contradiction
+// rather than a last-one-wins.
+export function validateModeFlags(
+  full: boolean,
   nestDiOnly: boolean,
 ): ValidationResult {
+  if (full && nestDiOnly) {
+    return {
+      valid: false,
+      error:
+        "--full and --nest-di-only both choose how NestJS runs. Pass one.\n" +
+        "--full runs it as an HTTP server on port 3001, --nest-di-only runs it as an\n" +
+        "application context that Next.js route handlers inject services from.",
+    };
+  }
+
+  return { valid: true };
+}
+
+export function validateDeploymentCombo(
+  deployment: string,
+  mode: Mode,
+): ValidationResult {
+  const nestDiOnly = mode === "nest-di-only";
+
   if (deployment === "spa" && nestDiOnly) {
     return {
       valid: false,

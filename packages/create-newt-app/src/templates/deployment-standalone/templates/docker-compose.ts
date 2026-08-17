@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s) => !s.nestDiOnly,
+  when: (s) => s.mode === "full",
   filename: "docker-compose.yml",
   template: `x-app-env: &app-env
   BETTER_AUTH_SECRET: \${BETTER_AUTH_SECRET}

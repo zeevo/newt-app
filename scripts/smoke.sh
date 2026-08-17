@@ -22,8 +22,8 @@ case "$FLAGS" in
   *)                            MODE=default ;;
 esac
 
-# --bare drops the todo example, so the guarded route doesn't exist
-case "$FLAGS" in *--bare*) TODOS=no ;; *) TODOS=yes ;; esac
+# the todos are opt-in, so without the flag the guarded route doesn't exist
+case "$FLAGS" in *--include-example*) TODOS=yes ;; *) TODOS=no ;; esac
 # DI-only runs Nest inside Next: no api process, so /api is served on the web port
 case "$FLAGS" in *--nest-di-only*) DI_ONLY=yes ;; *) DI_ONLY=no ;; esac
 # SQLite needs no server, so the signup flow below can migrate and use a real
@@ -186,7 +186,7 @@ if [ "$DB" = sqlite ]; then
     request GET "$BASE/api/todos"
     expect "the created todo reads back" 200 "$TITLE"
   else
-    echo "  --  todo flow skipped: --bare has no todo example"
+    echo "  --  todo flow skipped: no --include-example"
   fi
 else
   echo "  --  signup flow skipped: --database postgres needs a server this script does not start"

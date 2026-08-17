@@ -4,8 +4,8 @@ export type Config = {
   database: "sqlite" | "postgres";
   linter: "eslint" | "oxc";
   deployment: "none" | "standalone" | "custom-server" | "spa";
-  nestDiOnly: boolean;
-  todoExample: boolean;
+  mode: "full" | "nest-di-only";
+  includeExample: boolean;
 };
 
 // Both pairs are rejected by validateDeploymentCombo in create-newt-app, so the
@@ -30,14 +30,14 @@ export const DEPLOYMENT_HINTS: Record<
 // "none" adds no deployment files, so there is nothing to describe.
 export function deploymentHint(c: Config): string | null {
   const base = c.deployment === "none" ? null : DEPLOYMENT_HINTS[c.deployment];
-  if (!c.nestDiOnly) return base;
+  if (c.mode !== "nest-di-only") return base;
   return base ? `${base} ${DI_ONLY_REJECTS_HINT}` : DI_ONLY_REJECTS_HINT;
 }
 
 export const DI_ONLY_HINT =
   "Nest runs as an application context with no HTTP server, and Next.js route handlers resolve its services through inject(). The app stays a single Next.js project, so it deploys to Vercel with no extra infrastructure.";
 
-export const TODO_EXAMPLE_HINT = "Include an example to-do list feature.";
+export const EXAMPLE_APP_HINT = "Include an example to-do list feature.";
 
 export const DATABASE_HINT =
   "SQLite writes to a local file, which is not persisted on serverless filesystems like Vercel’s. Better Auth and your app share one Kysely connection either way.";
@@ -50,10 +50,11 @@ const DEPLOYMENTS = [
 ] as const satisfies readonly Config["deployment"][];
 
 export function deploymentOptions(
-  nestDiOnly: boolean,
+  mode: Config["mode"],
 ): readonly Config["deployment"][] {
   return DEPLOYMENTS.filter(
-    (deployment) => !(nestDiOnly && DI_ONLY_REJECTS.has(deployment)),
+    (deployment) =>
+      !(mode === "nest-di-only" && DI_ONLY_REJECTS.has(deployment)),
   );
 }
 
@@ -64,8 +65,8 @@ export function buildCommand(c: Config): string {
   if (c.database !== "sqlite") flags.push("--database postgres");
   if (c.linter !== "eslint") flags.push("--linter oxc");
   if (c.deployment !== "none") flags.push(`--deployment ${c.deployment}`);
-  if (c.nestDiOnly) flags.push("--nest-di-only");
-  if (!c.todoExample) flags.push("--bare");
+  if (c.mode === "nest-di-only") flags.push("--nest-di-only");
+  if (c.includeExample) flags.push("--include-example");
   // Passing a config flag is what puts the CLI in non-interactive mode. Every
   // other option here matches its default, so without this the CLI would prompt
   // and shadcn would come back on — the opposite of what the panel shows.
