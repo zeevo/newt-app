@@ -3,10 +3,10 @@ import { buildCommand, deploymentOptions, DI_ONLY_REJECTS, type Config } from "@
 
 // every config the panel can reach — deployment comes from the same function
 // that renders the select, so hiding an option here means hiding it in the UI
-const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
-  deploymentOptions(nestDiOnly).flatMap((deployment) =>
+const reachable: Config[] = (["full", "nest-di-only"] as const).flatMap((mode) =>
+  deploymentOptions(mode).flatMap((deployment) =>
     [true, false].flatMap((shadcn) =>
-      [true, false].flatMap((todoExample) =>
+      [true, false].flatMap((includeExample) =>
         (["jest", "vitest"] as const).flatMap((testing) =>
           (["sqlite", "postgres"] as const).flatMap((database) =>
             (["eslint", "oxc"] as const).map((linter) => ({
@@ -15,8 +15,8 @@ const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
               database,
               linter,
               deployment,
-              nestDiOnly,
-              todoExample,
+              mode,
+              includeExample,
             })),
           ),
         ),
@@ -31,7 +31,7 @@ describe("buildCommand", () => {
     // reachable set below is derived from DI_ONLY_REJECTS, so without this the
     // suite would happily agree with a wrong value.
     expect([...DI_ONLY_REJECTS].sort()).toEqual(["custom-server", "spa"]);
-    expect(deploymentOptions(true)).toEqual(["none", "standalone"]);
+    expect(deploymentOptions("nest-di-only")).toEqual(["none", "standalone"]);
   });
 
   it("never pairs --nest-di-only with a deployment the CLI rejects", () => {
@@ -40,7 +40,7 @@ describe("buildCommand", () => {
       .filter(
         (command) =>
           command.includes("--nest-di-only") &&
-          [...DI_ONLY_REJECTS].some((mode) => command.includes(`--deployment ${mode}`)),
+          [...DI_ONLY_REJECTS].some((deployment) => command.includes(`--deployment ${deployment}`)),
       );
 
     expect(invalid).toEqual([]);
@@ -65,9 +65,9 @@ describe("buildCommand", () => {
         database: "sqlite",
         linter: "eslint",
         deployment: "none",
-        nestDiOnly: false,
-        todoExample: true,
+        mode: "full",
+        includeExample: false,
       }),
-    ).toBe("npm create newt-app@latest my-app -- --shadcn --include-example");
+    ).toBe("npm create newt-app@latest my-app -- --shadcn");
   });
 });

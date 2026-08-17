@@ -6,6 +6,7 @@ import { versions } from "./versions";
 import { validateDeploymentCombo } from "../utils";
 
 const DEPLOYMENTS = ["none", "standalone", "custom-server", "spa"] as const;
+const MODES = ["full", "nest-di-only"] as const;
 const TESTING = ["jest", "vitest"] as const;
 const DATABASES = ["sqlite", "postgres"] as const;
 const LINTERS = ["eslint", "oxc"] as const;
@@ -15,26 +16,26 @@ const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies"];
 // Every selection the CLI will accept. The rejected pairs are filtered with the
 // same validator the CLI uses, so a change there changes the matrix here too.
 const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
-  BOOLS.flatMap((nestDiOnly) =>
+  MODES.flatMap((mode) =>
     BOOLS.flatMap((shadcn) =>
       TESTING.flatMap((testing) =>
         DATABASES.flatMap((database) =>
           LINTERS.flatMap((linter) =>
-            BOOLS.map((todoExample) => ({
+            BOOLS.map((includeExample) => ({
               deployment,
-              nestDiOnly,
+              mode,
               shadcn,
               testing,
               database,
               linter,
-              todoExample,
+              includeExample,
             })),
           ),
         ),
       ),
     ),
   ),
-).filter(({ deployment, nestDiOnly }) => validateDeploymentCombo(deployment, nestDiOnly).valid);
+).filter(({ deployment, mode }) => validateDeploymentCombo(deployment, mode).valid);
 
 const label = (selection: ModuleSelection) =>
   Object.entries(selection)
@@ -74,6 +75,7 @@ function renderCombo(selection: ModuleSelection) {
 
   modules
     .flatMap((mod) => mod.packages ?? [])
+    .filter((pkg) => pkg.when?.(selection) ?? true)
     .forEach((pkg) => {
       const target = `${pkg.module}/package.json`;
       const contents = files.get(target);

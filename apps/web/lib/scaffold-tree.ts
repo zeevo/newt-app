@@ -44,7 +44,7 @@ export function scaffoldTree(c: Config): TreeNode[] {
                   path: "apps/web/app/page.tsx",
                   annotation: "home route",
                 },
-                ...(c.todoExample
+                ...(c.includeExample
                   ? [
                       {
                         name: "todo-list.tsx",
@@ -92,7 +92,7 @@ export function scaffoldTree(c: Config): TreeNode[] {
               kind: "dir",
               path: "apps/api/src",
               children: [
-                ...(c.todoExample
+                ...(c.includeExample
                   ? [
                       {
                         name: "todos",
@@ -105,7 +105,7 @@ export function scaffoldTree(c: Config): TreeNode[] {
                             kind: "file" as const,
                             path: "apps/api/src/todos/todos.service.ts",
                           },
-                          ...(c.nestDiOnly
+                          ...(c.mode === "nest-di-only"
                             ? []
                             : [
                                 {
@@ -125,7 +125,7 @@ export function scaffoldTree(c: Config): TreeNode[] {
                   path: "apps/api/src/app.module.ts",
                 },
                 // di-only never bootstraps an HTTP server, so it has no main.ts.
-                ...(c.nestDiOnly
+                ...(c.mode === "nest-di-only"
                   ? []
                   : [
                       {
@@ -138,15 +138,16 @@ export function scaffoldTree(c: Config): TreeNode[] {
                 // index.ts re-exports AppModule for whoever boots Nest from
                 // outside apps/api: the Next.js route handlers under di-only,
                 // or apps/web/server.ts under custom-server.
-                ...(c.nestDiOnly || c.deployment === "custom-server"
+                ...(c.mode === "nest-di-only" || c.deployment === "custom-server"
                   ? [
                       {
                         name: "index.ts",
                         kind: "file" as const,
                         path: "apps/api/src/index.ts",
-                        annotation: c.nestDiOnly
-                          ? "exports the DI context"
-                          : "AppModule for server.ts",
+                        annotation:
+                          c.mode === "nest-di-only"
+                            ? "exports the DI context"
+                            : "AppModule for server.ts",
                         conditional: true,
                       },
                     ]

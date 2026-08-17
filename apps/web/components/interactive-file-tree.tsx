@@ -22,7 +22,7 @@ import {
   deploymentOptions,
   DI_ONLY_HINT,
   DI_ONLY_REJECTS,
-  TODO_EXAMPLE_HINT,
+  EXAMPLE_APP_HINT,
   type Config,
 } from "@/lib/build-command";
 import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
@@ -192,16 +192,18 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               label="NestJS"
               logo="/logos/nestjs.svg"
               hint={DI_ONLY_HINT}
-              value={c.nestDiOnly ? "di-only" : "on"}
+              value={c.mode === "nest-di-only" ? "di-only" : "on"}
               options={["on", "di-only"] as const}
               onChange={(v) =>
                 setC((prev) => {
-                  const nestDiOnly = v === "di-only";
+                  const mode = v === "di-only" ? "nest-di-only" : "full";
                   return {
                     ...prev,
-                    nestDiOnly,
+                    mode,
                     deployment:
-                      nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment) ? "none" : prev.deployment,
+                      mode === "nest-di-only" && DI_ONLY_REJECTS.has(prev.deployment)
+                        ? "none"
+                        : prev.deployment,
                   };
                 })
               }
@@ -240,9 +242,9 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             />
             <BoolToggle
               label="include example app"
-              hint={TODO_EXAMPLE_HINT}
-              pressed={c.todoExample}
-              onChange={(v) => set("todoExample", v)}
+              hint={EXAMPLE_APP_HINT}
+              pressed={c.includeExample}
+              onChange={(v) => set("includeExample", v)}
             />
             <Row label="extras">
               <NativeSelect
@@ -251,7 +253,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
                 onChange={(e) => set("deployment", e.target.value as Config["deployment"])}
                 className="font-mono text-xs"
               >
-                {deploymentOptions(c.nestDiOnly).map((option) => (
+                {deploymentOptions(c.mode).map((option) => (
                   <NativeSelectOption key={option} value={option}>
                     {option}
                   </NativeSelectOption>

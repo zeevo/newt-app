@@ -40,7 +40,8 @@ export async function scaffold(
   const packages = modules
     .map((mod) => mod.packages)
     .filter((ele) => ele !== undefined)
-    .flat();
+    .flat()
+    .filter((pkg) => pkg.when?.(options.selection) ?? true);
 
   if (packages.length > 0) {
     await updatePackageJson(options.name, packages, templateData);
@@ -49,7 +50,8 @@ export async function scaffold(
   const scripts = modules
     .map((mod) => mod.scripts)
     .filter((ele) => ele !== undefined)
-    .flat();
+    .flat()
+    .filter((script) => script.when?.(options.selection) ?? true);
 
   if (scripts.length > 0) {
     await updateScripts(options.name, scripts, templateData);

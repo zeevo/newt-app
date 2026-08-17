@@ -14,17 +14,18 @@ export const configParsers = {
     "custom-server",
     "spa",
   ] as const).withDefault("none"),
-  nestDiOnly: parseAsBoolean.withDefault(false),
-  todoExample: parseAsBoolean.withDefault(true),
+  mode: parseAsStringLiteral(["full", "nest-di-only"] as const).withDefault("full"),
+  includeExample: parseAsBoolean.withDefault(false),
 };
 
 export const configUrlKeys = {
-  nestDiOnly: "nest-di-only",
-  todoExample: "todo-example",
+  includeExample: "include-example",
 };
 
 // A hand-edited URL can pair di-only with a deployment the CLI rejects; the
 // panel never renders that combo.
 export function sanitizeConfig(c: Config): Config {
-  return c.nestDiOnly && DI_ONLY_REJECTS.has(c.deployment) ? { ...c, deployment: "none" } : c;
+  return c.mode === "nest-di-only" && DI_ONLY_REJECTS.has(c.deployment)
+    ? { ...c, deployment: "none" }
+    : c;
 }

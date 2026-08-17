@@ -4,12 +4,13 @@ import chalk from "chalk";
 import pkg from "../package.json" with { type: "json" };
 import { Command } from "commander";
 import * as p from "@clack/prompts";
-import { selectModules, type ModuleSelection } from "./templates";
+import { selectModules, type Mode, type ModuleSelection } from "./templates";
 import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 import {
   checkRequiredTools,
   validateDeploymentCombo,
   validateFlagValue,
+  validateModeFlags,
   validateNodeVersion,
 } from "./utils.js";
 
@@ -33,7 +34,7 @@ type Options = {
   database: Database;
   linter: Linter;
   deployment: Deployment;
-  nestDiOnly: boolean;
+  mode: Mode;
   includeExample: boolean;
 };
 
@@ -92,15 +93,27 @@ export async function doInit(options: Options) {
           ],
           initialValue: "eslint",
         }),
-      nestDiOnly: () =>
-        p.confirm({
-          message: "Use NestJS for dependency injection only?",
-          initialValue: false,
+      mode: () =>
+        p.select<Mode>({
+          message: "How should NestJS run?",
+          options: [
+            {
+              value: "full",
+              label: "HTTP server",
+              hint: "apps/api on port 3001",
+            },
+            {
+              value: "nest-di-only",
+              label: "Dependency injection only",
+              hint: "no HTTP server, injected into Next.js",
+            },
+          ],
+          initialValue: "full",
         }),
-      todoExample: () =>
+      includeExample: () =>
         p.confirm({
-          message: "Include the todo example?",
-          initialValue: true,
+          message: "Include the example to-do app?",
+          initialValue: false,
         }),
       deployment: ({ results }) =>
         p.select<Deployment>({
@@ -114,7 +127,7 @@ export async function doInit(options: Options) {
             },
             // DI-only already runs Nest inside the Next process, and SPA's static
             // export can't hold the route handlers DI-only depends on
-            ...(results.nestDiOnly
+            ...(results.mode === "nest-di-only"
               ? []
               : [
                   {
@@ -169,22 +182,22 @@ export async function doInit(options: Options) {
     const deployment: Deployment = options.nonInteractive
       ? options.deployment
       : ((group as { deployment?: Deployment }).deployment ?? "none");
-    const nestDiOnly = options.nonInteractive
-      ? options.nestDiOnly
-      : ((group as { nestDiOnly?: boolean }).nestDiOnly ?? false);
-    const todoExample = options.nonInteractive
+    const mode: Mode = options.nonInteractive
+      ? options.mode
+      : ((group as { mode?: Mode }).mode ?? "full");
+    const includeExample = options.nonInteractive
       ? options.includeExample
-      : ((group as { todoExample?: boolean }).todoExample ?? true);
+      : ((group as { includeExample?: boolean }).includeExample ?? false);
 
-    const deploymentCombo = validateDeploymentCombo(deployment, nestDiOnly);
+    const deploymentCombo = validateDeploymentCombo(deployment, mode);
     if (!deploymentCombo.valid) {
       throw new Error(deploymentCombo.error);
     }
 
     const selection: ModuleSelection = {
       deployment,
-      nestDiOnly,
-      todoExample,
+      mode,
+      includeExample,
       shadcn: useShadcn,
       database,
       linter,
@@ -268,8 +281,9 @@ program
   .option("--database <database>", "Database: sqlite or postgres", "sqlite")
   .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
   .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa", "none")
+  .option("--full", "Run NestJS as an HTTP server on port 3001 (default)", false)
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
-  .option("--include-example", "Include the todo example", false)
+  .option("--include-example", "Include the example to-do app", false)
   .action(
     async (
       name: string,
@@ -281,6 +295,7 @@ program
         database: string;
         linter: string;
         deployment: string;
+        full: boolean;
         nestDiOnly: boolean;
         includeExample: boolean;
       },
@@ -295,6 +310,7 @@ program
         "database",
         "linter",
         "deployment",
+        "full",
         "nestDiOnly",
         "includeExample",
       ];
@@ -320,6 +336,7 @@ program
 
       const invalid = choices
         .map(({ flag, value, allowed }) => validateFlagValue(flag, value, allowed))
+        .concat(validateModeFlags(options.full, options.nestDiOnly))
         .find((result) => !result.valid);
 
       if (invalid) {
@@ -337,7 +354,7 @@ program
         database: options.database as Database,
         linter: options.linter as Linter,
         deployment: options.deployment as Deployment,
-        nestDiOnly: options.nestDiOnly,
+        mode: options.nestDiOnly ? "nest-di-only" : "full",
         includeExample: options.includeExample,
       });
     },

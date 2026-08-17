@@ -74,8 +74,8 @@ jobs:
       fail-fast: true
       matrix:
         flags:
+          - "--testing jest --include-example"
           - "--testing jest"
-          - "--include-example"
           - "--shadcn --testing vitest --include-example"
           - "--nest-di-only"
           - "--database postgres --include-example"
@@ -89,7 +89,7 @@ jobs:
         # pnpmFormat and initGit never run. This include matches an existing
         # combination, so it adds a flag to that job rather than adding a job.
         include:
-          - flags: "--include-example"
+          - flags: "--testing jest"
             cli_tasks: true
     name: scaffold (${{ matrix.flags }})
     steps:
