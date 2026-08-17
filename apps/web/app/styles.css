@@ -1,3 +1,9 @@
+/* Iosevka is narrow, so it reads a size down from a proportional face. A
+   percentage rather than a px value, so a reader's own default still scales. */
+html {
+  font-size: 106.25%;
+}
+
 .logo-rain-logo {
   filter: brightness(0) opacity(0.3);
 }
