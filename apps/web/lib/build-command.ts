@@ -65,7 +65,7 @@ export function buildCommand(c: Config): string {
   if (c.linter !== "eslint") flags.push("--linter oxc");
   if (c.deployment !== "none") flags.push(`--deployment ${c.deployment}`);
   if (c.nestDiOnly) flags.push("--nest-di-only");
-  if (!c.todoExample) flags.push("--bare");
+  if (c.todoExample) flags.push("--include-example");
   // Passing a config flag is what puts the CLI in non-interactive mode. Every
   // other option here matches its default, so without this the CLI would prompt
   // and shadcn would come back on — the opposite of what the panel shows.

@@ -45,7 +45,7 @@ type Options = {
   linter: Linter;
   deployment: Deployment;
   nestDiOnly: boolean;
-  bare: boolean;
+  includeExample: boolean;
 };
 
 class TaskBuilder {
@@ -188,7 +188,7 @@ export async function doInit(options: Options) {
       ? options.nestDiOnly
       : ((group as { nestDiOnly?: boolean }).nestDiOnly ?? false);
     const todoExample = options.nonInteractive
-      ? !options.bare
+      ? options.includeExample
       : ((group as { todoExample?: boolean }).todoExample ?? true);
 
     const deploymentCombo = validateDeploymentCombo(deployment, nestDiOnly);
@@ -290,7 +290,7 @@ program
     "none",
   )
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
-  .option("--bare", "Skip the todo example", false)
+  .option("--include-example", "Include the todo example", false)
   .action(
     async (
       name: string,
@@ -303,7 +303,7 @@ program
         linter: string;
         deployment: string;
         nestDiOnly: boolean;
-        bare: boolean;
+        includeExample: boolean;
       },
       command: Command,
     ) => {
@@ -317,7 +317,7 @@ program
         "linter",
         "deployment",
         "nestDiOnly",
-        "bare",
+        "includeExample",
       ];
       const nonInteractive = configFlags.some(
         (flag) => command.getOptionValueSource(flag) === "cli",
@@ -361,7 +361,7 @@ program
         linter: options.linter as Linter,
         deployment: options.deployment as Deployment,
         nestDiOnly: options.nestDiOnly,
-        bare: options.bare,
+        includeExample: options.includeExample,
       });
     },
   );
