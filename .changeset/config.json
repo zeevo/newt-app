@@ -7,7 +7,6 @@
       "create-newt-app",
       "@newt-app/ui",
       "@newt-app/auth",
-      "@newt-app/eslint-config",
       "@newt-app/typescript-config",
       "@newt-app/components"
     ]
