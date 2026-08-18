@@ -1,4 +1,6 @@
+import type { Selection } from "../../types";
 export default {
+  when: (s) => s.mode !== "bare",
   filename: "apps/api/jest.config.ts",
   template: `import type { Config } from 'jest';
 

@@ -31,6 +31,7 @@ export async function scaffold(
     testing: options.testing,
     database: options.database,
     deployment: options.deployment,
+    mode: options.selection.mode,
     authSecret: randomBytes(32).toString("base64url"),
     versions,
   };

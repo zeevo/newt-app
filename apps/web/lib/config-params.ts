@@ -14,7 +14,7 @@ export const configParsers = {
     "custom-server",
     "spa",
   ] as const).withDefault("none"),
-  mode: parseAsStringLiteral(["full", "nest-di-only"] as const).withDefault("full"),
+  mode: parseAsStringLiteral(["full", "nest-di-only", "bare"] as const).withDefault("full"),
   includeExample: parseAsBoolean.withDefault(false),
 };
 
@@ -22,9 +22,12 @@ export const configUrlKeys = {
   includeExample: "include-example",
 };
 
-// A hand-edited URL can pair di-only with a deployment the CLI rejects; the
-// panel never renders that combo.
+// A hand-edited URL can pair a mode with a deployment the CLI rejects; the
+// panel never renders those combos.
 export function sanitizeConfig(c: Config): Config {
+  if (c.mode === "bare" && c.deployment !== "none") {
+    return { ...c, deployment: "none" };
+  }
   return c.mode === "nest-di-only" && DI_ONLY_REJECTS.has(c.deployment)
     ? { ...c, deployment: "none" }
     : c;

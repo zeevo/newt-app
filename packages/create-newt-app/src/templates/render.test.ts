@@ -6,7 +6,7 @@ import { versions } from "./versions";
 import { validateDeploymentCombo } from "../utils";
 
 const DEPLOYMENTS = ["none", "standalone", "custom-server", "spa"] as const;
-const MODES = ["full", "nest-di-only"] as const;
+const MODES = ["full", "nest-di-only", "bare"] as const;
 const TESTING = ["jest", "vitest"] as const;
 const DATABASES = ["sqlite", "postgres"] as const;
 const LINTERS = ["eslint", "oxc"] as const;
@@ -50,6 +50,7 @@ function renderCombo(selection: ModuleSelection) {
     testing: selection.testing,
     database: selection.database,
     deployment: selection.deployment,
+    mode: selection.mode,
     authSecret: "test-secret",
     versions,
   };

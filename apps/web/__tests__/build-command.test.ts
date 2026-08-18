@@ -3,7 +3,7 @@ import { buildCommand, deploymentOptions, DI_ONLY_REJECTS, type Config } from "@
 
 // every config the panel can reach — deployment comes from the same function
 // that renders the select, so hiding an option here means hiding it in the UI
-const reachable: Config[] = (["full", "nest-di-only"] as const).flatMap((mode) =>
+const reachable: Config[] = (["full", "nest-di-only", "bare"] as const).flatMap((mode) =>
   deploymentOptions(mode).flatMap((deployment) =>
     [true, false].flatMap((shadcn) =>
       [true, false].flatMap((includeExample) =>
@@ -32,6 +32,16 @@ describe("buildCommand", () => {
     // suite would happily agree with a wrong value.
     expect([...DI_ONLY_REJECTS].sort()).toEqual(["custom-server", "spa"]);
     expect(deploymentOptions("nest-di-only")).toEqual(["none", "standalone"]);
+  });
+
+  it("offers no deployment extras at all in bare mode", () => {
+    expect(deploymentOptions("bare")).toEqual(["none"]);
+  });
+
+  it("emits --bare for the off position", () => {
+    const bare = reachable.filter((c) => c.mode === "bare").map(buildCommand);
+    expect(bare.every((command) => command.includes("--bare"))).toBe(true);
+    expect(bare.some((command) => command.includes("--deployment"))).toBe(false);
   });
 
   it("never pairs --nest-di-only with a deployment the CLI rejects", () => {

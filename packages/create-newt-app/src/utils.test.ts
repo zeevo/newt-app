@@ -21,6 +21,7 @@ const templateData: TemplateData = {
   testing: "jest",
   database: "sqlite",
   deployment: "none",
+  mode: "full",
   authSecret: "secret",
   versions,
 };
@@ -66,20 +67,21 @@ describe("validateProjectName", () => {
 });
 
 describe("validateModeFlags", () => {
-  it("rejects --full passed alongside --nest-di-only", () => {
-    const result = validateModeFlags(true, true);
+  it("rejects two mode flags and names both", () => {
+    const result = validateModeFlags(true, false, true);
     expect(result.valid).toBe(false);
-    expect(result.error).toContain("--full and --nest-di-only both choose how NestJS runs.");
+    expect(result.error).toContain("--full and --bare all choose how NestJS runs.");
   });
 
-  it("accepts either flag on its own, and neither", () => {
+  it("accepts any single flag, and none", () => {
     expect(
       [
-        [true, false],
-        [false, true],
-        [false, false],
-      ].map(([full, diOnly]) => validateModeFlags(full, diOnly).valid),
-    ).toEqual([true, true, true]);
+        [true, false, false],
+        [false, true, false],
+        [false, false, true],
+        [false, false, false],
+      ].map(([full, diOnly, bare]) => validateModeFlags(full, diOnly, bare).valid),
+    ).toEqual([true, true, true, true]);
   });
 });
 
@@ -112,6 +114,21 @@ describe("validateDeploymentCombo", () => {
         (deployment) => validateDeploymentCombo(deployment, "nest-di-only").valid,
       ),
     ).toEqual([true, true]);
+  });
+
+  it("rejects every deployment extra in bare mode", () => {
+    expect(
+      ["standalone", "custom-server", "spa"].map(
+        (deployment) => validateDeploymentCombo(deployment, "bare").valid,
+      ),
+    ).toEqual([false, false, false]);
+    expect(validateDeploymentCombo("standalone", "bare").error).toContain(
+      "cannot be combined with --bare.",
+    );
+  });
+
+  it("accepts bare with no deployment extras", () => {
+    expect(validateDeploymentCombo("none", "bare").valid).toBe(true);
   });
 });
 
