@@ -26,22 +26,23 @@ const CLI = fileURLToPath(
 
 // Only these options change which files exist. `testing` changes none of
 // them, and `database` only swaps an annotation, so both stay pinned.
-const configs: Config[] = (["full", "nest-di-only"] as const).flatMap((mode) =>
-  deploymentOptions(mode).flatMap((deployment) =>
-    [true, false].flatMap((shadcn) =>
-      [true, false].flatMap((includeExample) =>
-        (["eslint", "oxc"] as const).map((linter) => ({
-          shadcn,
-          testing: "jest" as const,
-          database: "sqlite" as const,
-          linter,
-          deployment,
-          mode,
-          includeExample,
-        })),
+const configs: Config[] = (["full", "nest-di-only", "bare"] as const).flatMap(
+  (mode) =>
+    deploymentOptions(mode).flatMap((deployment) =>
+      [true, false].flatMap((shadcn) =>
+        [true, false].flatMap((includeExample) =>
+          (["eslint", "oxc"] as const).map((linter) => ({
+            shadcn,
+            testing: "jest" as const,
+            database: "sqlite" as const,
+            linter,
+            deployment,
+            mode,
+            includeExample,
+          })),
+        ),
       ),
     ),
-  ),
 );
 
 const key = (c: Config) =>

@@ -26,9 +26,9 @@ import {
   DATABASE_HINT,
   deploymentHint,
   deploymentOptions,
-  DI_ONLY_HINT,
   DI_ONLY_REJECTS,
   EXAMPLE_APP_HINT,
+  modeHint,
   type Config,
 } from "@/lib/build-command";
 import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
@@ -39,6 +39,23 @@ import {
 } from "@/lib/config-params";
 
 const grow = "animate-in fade-in slide-in-from-left-1 duration-300";
+
+// The toggle reads as a property of the NestJS row, so it says on/off rather
+// than naming the CLI's modes.
+const MODE_LABELS = {
+  full: "on",
+  "nest-di-only": "di-only",
+  bare: "off",
+} as const satisfies Record<Config["mode"], string>;
+
+const MODE_VALUES = {
+  on: "full",
+  "di-only": "nest-di-only",
+  off: "bare",
+} as const satisfies Record<
+  (typeof MODE_LABELS)[keyof typeof MODE_LABELS],
+  Config["mode"]
+>;
 
 function renderNodes(nodes: TreeNode[]) {
   return nodes.map((node) => {
@@ -215,20 +232,21 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             <Segmented
               label="NestJS"
               logo="/logos/nestjs.svg"
-              hint={DI_ONLY_HINT}
-              value={c.mode === "nest-di-only" ? "di-only" : "on"}
-              options={["on", "di-only"] as const}
+              hint={modeHint(c)}
+              value={MODE_LABELS[c.mode]}
+              options={["on", "di-only", "off"] as const}
               onChange={(v) =>
                 setC((prev) => {
-                  const mode = v === "di-only" ? "nest-di-only" : "full";
+                  const mode = MODE_VALUES[v];
+                  const rejected =
+                    mode === "bare"
+                      ? prev.deployment !== "none"
+                      : mode === "nest-di-only" &&
+                        DI_ONLY_REJECTS.has(prev.deployment);
                   return {
                     ...prev,
                     mode,
-                    deployment:
-                      mode === "nest-di-only" &&
-                      DI_ONLY_REJECTS.has(prev.deployment)
-                        ? "none"
-                        : prev.deployment,
+                    deployment: rejected ? "none" : prev.deployment,
                   };
                 })
               }

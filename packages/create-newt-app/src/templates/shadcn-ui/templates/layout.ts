@@ -17,7 +17,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "<%= projectName %>",
-  description: "Next + Nest = Newt",
+  description: "<% if (mode === 'bare') { %>Next.js, batteries included<% } else { %>Next + Nest = Newt<% } %>",
   icons: {
     icon: [
       { url: "/icon0.svg", type: "image/svg+xml" },

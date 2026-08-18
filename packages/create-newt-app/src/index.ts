@@ -119,6 +119,11 @@ export async function doInit(options: Options) {
               label: "Dependency injection only",
               hint: "no HTTP server, injected into Next.js",
             },
+            {
+              value: "bare",
+              label: "Not at all",
+              hint: "Next.js only, no apps/api",
+            },
           ],
           initialValue: "full",
         }),
@@ -132,16 +137,20 @@ export async function doInit(options: Options) {
           message: "Deployment extras?",
           options: [
             { value: "none", label: "None", hint: "skip" },
-            {
-              value: "standalone",
-              label: "Standalone + Dockerfile",
-              hint: "Dockerfiles + docker-compose.yml",
-            },
-            // DI-only already runs Nest inside the Next process, and SPA's static
-            // export can't hold the route handlers DI-only depends on
-            ...(results.mode === "nest-di-only"
+            // every extra either builds apps/api or is served by it
+            ...(results.mode === "bare"
               ? []
               : [
+                  {
+                    value: "standalone" as const,
+                    label: "Standalone + Dockerfile",
+                    hint: "Dockerfiles + docker-compose.yml",
+                  },
+                ]),
+            // DI-only already runs Nest inside the Next process, and SPA's static
+            // export can't hold the route handlers DI-only depends on
+            ...(results.mode === "full"
+              ? [
                   {
                     value: "custom-server" as const,
                     label: "Custom Server",
@@ -152,7 +161,8 @@ export async function doInit(options: Options) {
                     label: "SPA Mode",
                     hint: "static export served by NestJS",
                   },
-                ]),
+                ]
+              : []),
           ],
           initialValue: "none",
         }),
@@ -308,6 +318,7 @@ program
     false,
   )
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
+  .option("--bare", "Skip NestJS entirely: Next.js only", false)
   .option("--include-example", "Include the example to-do app", false)
   .action(
     async (
@@ -322,6 +333,7 @@ program
         deployment: string;
         full: boolean;
         nestDiOnly: boolean;
+        bare: boolean;
         includeExample: boolean;
       },
       command: Command,
@@ -337,6 +349,7 @@ program
         "deployment",
         "full",
         "nestDiOnly",
+        "bare",
         "includeExample",
       ];
       const nonInteractive = configFlags.some(
@@ -363,7 +376,9 @@ program
         .map(({ flag, value, allowed }) =>
           validateFlagValue(flag, value, allowed),
         )
-        .concat(validateModeFlags(options.full, options.nestDiOnly))
+        .concat(
+          validateModeFlags(options.full, options.nestDiOnly, options.bare),
+        )
         .find((result) => !result.valid);
 
       if (invalid) {
@@ -381,7 +396,11 @@ program
         database: options.database as Database,
         linter: options.linter as Linter,
         deployment: options.deployment as Deployment,
-        mode: options.nestDiOnly ? "nest-di-only" : "full",
+        mode: options.bare
+          ? "bare"
+          : options.nestDiOnly
+            ? "nest-di-only"
+            : "full",
         includeExample: options.includeExample,
       });
     },

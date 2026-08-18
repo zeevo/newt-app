@@ -9,7 +9,7 @@ describe("config params", () => {
       database: ["sqlite", "postgres"],
       linter: ["eslint", "oxc"],
       deployment: deploymentOptions("full"),
-      mode: ["full", "nest-di-only"],
+      mode: ["full", "nest-di-only", "bare"],
     } as const;
 
     Object.entries(accepted).forEach(([key, values]) => {
@@ -25,7 +25,7 @@ describe("config params", () => {
   it("rejects unknown values so hand-edited urls fall back to the default", () => {
     expect(configParsers.testing.parse("mocha")).toBeNull();
     expect(configParsers.deployment.parse("docker")).toBeNull();
-    expect(configParsers.mode.parse("bare")).toBeNull();
+    expect(configParsers.mode.parse("no-nest")).toBeNull();
   });
 
   it("drops a deployment the CLI rejects with di-only", () => {
@@ -43,5 +43,21 @@ describe("config params", () => {
       sanitizeConfig({ ...base, deployment: "standalone" }).deployment,
     ).toBe("standalone");
     expect(sanitizeConfig({ ...base, mode: "full" }).deployment).toBe("spa");
+  });
+
+  it("drops every deployment in bare mode", () => {
+    const base: Config = {
+      shadcn: true,
+      testing: "vitest",
+      database: "postgres",
+      linter: "oxc",
+      deployment: "standalone",
+      mode: "bare",
+      includeExample: true,
+    };
+    expect(sanitizeConfig(base).deployment).toBe("none");
+    expect(sanitizeConfig({ ...base, deployment: "spa" }).deployment).toBe(
+      "none",
+    );
   });
 });

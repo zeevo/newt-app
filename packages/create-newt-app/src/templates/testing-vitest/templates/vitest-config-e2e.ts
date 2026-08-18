@@ -1,4 +1,6 @@
+import type { Selection } from "../../types";
 export default {
+  when: (s) => s.mode !== "bare",
   filename: "apps/api/vitest.config.e2e.mts",
   template: `import swc from 'unplugin-swc';
 import { defineConfig } from 'vitest/config';

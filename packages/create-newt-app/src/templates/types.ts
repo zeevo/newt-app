@@ -5,12 +5,13 @@ export type TemplateData = {
   testing: "jest" | "vitest";
   database: "sqlite" | "postgres";
   deployment: "none" | "standalone" | "custom-server" | "spa";
+  mode: Mode;
   authSecret: string;
   versions: Versions;
 };
-// How NestJS runs: an HTTP server on its own port, or an application context
-// with no server that Next.js route handlers resolve services out of.
-export type Mode = "full" | "nest-di-only";
+// How NestJS runs: an HTTP server on its own port, an application context with
+// no server that Next.js route handlers resolve services out of, or not at all.
+export type Mode = "full" | "nest-di-only" | "bare";
 
 // Every option a template can select on. Kept separate from TemplateData
 // because these steer *which* template is used, not what it renders.

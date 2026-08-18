@@ -2,7 +2,7 @@ export default {
   filename: "README.md",
   template: `# <%= projectName %>
 
-Full-stack monorepo: Next.js 16 + NestJS 11 + better-auth + <%= database === 'postgres' ? 'Postgres' : 'SQLite' %>.
+Full-stack monorepo: Next.js 16 + <% if (mode !== 'bare') { %>NestJS 11 + <% } %>better-auth + <%= database === 'postgres' ? 'Postgres' : 'SQLite' %>.
 
 ## Quick start
 
@@ -17,8 +17,8 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Apps
 
 - **web**: Next.js frontend (port 3000)
-- **api**: NestJS backend (port 3001)
-
+<% if (mode !== 'bare') { %>- **api**: NestJS backend (port 3001)
+<% } %>
 ## Packages
 
 - **\`@<%= projectName %>/auth\`**: better-auth config

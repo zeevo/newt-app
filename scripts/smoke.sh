@@ -26,11 +26,13 @@ esac
 case "$FLAGS" in *--include-example*) TODOS=yes ;; *) TODOS=no ;; esac
 # DI-only runs Nest inside Next: no api process, so /api is served on the web port
 case "$FLAGS" in *--nest-di-only*) DI_ONLY=yes ;; *) DI_ONLY=no ;; esac
+# bare scaffolds no apps/api at all: Next.js route handlers serve /api themselves
+case "$FLAGS" in *--bare*) BARE=yes ;; *) BARE=no ;; esac
 # SQLite needs no server, so the signup flow below can migrate and use a real
 # database. Postgres would need one this script does not start.
 case "$FLAGS" in *--database\ postgres*) DB=postgres ;; *) DB=sqlite ;; esac
 
-echo "smoke: mode=$MODE di-only=$DI_ONLY db=$DB flags=${FLAGS:-none}"
+echo "smoke: mode=$MODE di-only=$DI_ONLY bare=$BARE db=$DB flags=${FLAGS:-none}"
 
 # Processes started through pnpm pick up .env via next.config/dotenv, but the
 # standalone bundle does not — in production those vars come from the container
@@ -106,7 +108,7 @@ else
       ;;
   esac
 
-  if [ "$DI_ONLY" = yes ] || [ "$MODE" = custom-server ]; then
+  if [ "$DI_ONLY" = yes ] || [ "$BARE" = yes ] || [ "$MODE" = custom-server ]; then
     BASE=$WEB
     SERVER_LOG=web
   else
@@ -132,7 +134,8 @@ probe "unknown api route 404s"    "$BASE/api/__nope__"          404
 [ "$TODOS" = yes ] && probe "auth guard rejects anonymous" "$BASE/api/todos" 401
 
 body=$(curl -sf "$BASE/api/hello")
-echo "$body" | grep -q "Hello from Nest" || fail "unexpected /api/hello body: $body"
+if [ "$BARE" = yes ]; then WHO="Hello from Next.js"; else WHO="Hello from Nest"; fi
+echo "$body" | grep -q "$WHO" || fail "unexpected /api/hello body: $body"
 echo "  ok  /api/hello body: $body"
 
 # Status codes cannot tell you that sessions broke: a dependency bump can leave
