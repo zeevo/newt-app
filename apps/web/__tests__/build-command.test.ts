@@ -75,6 +75,6 @@ describe("buildCommand", () => {
         nestDiOnly: false,
         todoExample: true,
       }),
-    ).toBe("npm create newt-app@latest my-app -- --shadcn");
+    ).toBe("npm create newt-app@latest my-app -- --shadcn --include-example");
   });
 });
