@@ -24,8 +24,6 @@ If asked to change the default app (styling, components, structure), edit the te
 - UI package templates: `packages/create-newt-app/src/templates/ui/templates/`
 - API templates: `packages/create-newt-app/src/templates/api/templates/`
 
-Do not edit `apps/web` or other live packages unless explicitly asked.
-
 ## Iterating on templates
 
 After editing any template source file, rebuild with the fast filter command (not full `pnpm build`):
