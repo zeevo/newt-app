@@ -75,21 +75,21 @@ jobs:
       matrix:
         flags:
           - "--testing jest"
-          - "--bare"
-          - "--shadcn --testing vitest"
-          - "--bare --nest-di-only"
-          - "--database postgres"
-          - "--shadcn --linter oxc"
-          - "--shadcn --nest-di-only"
-          - "--deployment standalone"
-          - "--deployment standalone --nest-di-only"
-          - "--deployment spa"
-          - "--deployment custom-server"
+          - "--include-example"
+          - "--shadcn --testing vitest --include-example"
+          - "--nest-di-only"
+          - "--database postgres --include-example"
+          - "--shadcn --linter oxc --include-example"
+          - "--shadcn --nest-di-only --include-example"
+          - "--deployment standalone --include-example"
+          - "--deployment standalone --nest-di-only --include-example"
+          - "--deployment spa --include-example"
+          - "--deployment custom-server --include-example"
         # Every entry above scaffolds with --no-install --no-git, so pnpmInstall,
         # pnpmFormat and initGit never run. This include matches an existing
         # combination, so it adds a flag to that job rather than adding a job.
         include:
-          - flags: "--testing jest"
+          - flags: "--include-example"
             cli_tasks: true
     name: scaffold (${{ matrix.flags }})
     steps:
