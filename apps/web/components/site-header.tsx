@@ -22,9 +22,7 @@ export function SiteHeader() {
             <Icons.logo className="size-5" />
             {/* the visible wordmark is the link's accessible name now, so the
                 sr-only label it replaced would just be read twice */}
-            <span className="text-lg leading-none font-medium">
-              {siteConfig.title}
-            </span>
+            <span className="text-lg leading-none font-medium">{siteConfig.title}</span>
           </Button>
           <MainNav items={siteConfig.navItems} className="hidden lg:flex" />
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
@@ -33,13 +31,7 @@ export function SiteHeader() {
               variant="ghost"
               className="h-8 w-8 shadow-none"
               nativeButton={false}
-              render={
-                <Link
-                  href={siteConfig.links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                />
-              }
+              render={<Link href={siteConfig.links.github} target="_blank" rel="noreferrer" />}
             >
               <Icons.gitHub />
             </Button>

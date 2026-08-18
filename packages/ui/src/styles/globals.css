@@ -263,11 +263,7 @@ html {
       transparent 0%,
       var(--dot-mask-color, var(--background)) 100%
     );
-    -webkit-mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--dot-mask-color, black) 100%
-    );
+    -webkit-mask-image: linear-gradient(to top, transparent 0%, var(--dot-mask-color, black) 100%);
     background-blend-mode: multiply;
     pointer-events: none;
     z-index: -1;
@@ -289,11 +285,7 @@ html {
       transparent 0%,
       var(--dot-mask-color, var(--background)) 100%
     );
-    -webkit-mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--dot-mask-color, black) 100%
-    );
+    -webkit-mask-image: linear-gradient(to top, transparent 0%, var(--dot-mask-color, black) 100%);
     background-blend-mode: multiply;
     pointer-events: none;
     z-index: -1;

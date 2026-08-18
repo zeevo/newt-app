@@ -1,13 +1,7 @@
 import ejs from "ejs";
 import { existsSync, promises } from "fs";
 import path from "path";
-import type {
-  Module,
-  Package,
-  Script,
-  Selection,
-  TemplateData,
-} from "./types.js";
+import type { Module, Package, Script, Selection, TemplateData } from "./types.js";
 import { getStaticFilePath } from "./templates";
 
 export interface ValidationResult {
@@ -28,11 +22,7 @@ export async function updatePackageJson(
     try {
       packageJsonContent = await promises.readFile(packageJsonPath, "utf8");
     } catch (err: unknown) {
-      if (
-        typeof err === "object" &&
-        err &&
-        (err as NodeJS.ErrnoException).code === "ENOENT"
-      ) {
+      if (typeof err === "object" && err && (err as NodeJS.ErrnoException).code === "ENOENT") {
         continue;
       }
       throw err;
@@ -48,10 +38,7 @@ export async function updatePackageJson(
 
     packageJson[dependencyKey][renderedPackage] = pkg.version;
 
-    await promises.writeFile(
-      packageJsonPath,
-      JSON.stringify(packageJson, null, 2),
-    );
+    await promises.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
   }
 }
 
@@ -70,11 +57,7 @@ export async function updateScripts(
     try {
       packageJsonContent = await promises.readFile(packageJsonPath, "utf8");
     } catch (err: unknown) {
-      if (
-        typeof err === "object" &&
-        err &&
-        (err as NodeJS.ErrnoException).code === "ENOENT"
-      ) {
+      if (typeof err === "object" && err && (err as NodeJS.ErrnoException).code === "ENOENT") {
         continue;
       }
       throw err;
@@ -88,10 +71,7 @@ export async function updateScripts(
 
     packageJson.scripts[script.name] = renderedScript;
 
-    await promises.writeFile(
-      packageJsonPath,
-      JSON.stringify(packageJson, null, 2),
-    );
+    await promises.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
   }
 }
 
@@ -108,9 +88,7 @@ export async function renderTemplatesToDisk(
 
     // `when` decides which template owns a file for these options; templates
     // that don't apply are skipped rather than overwritten by a later one.
-    const applicable = pkg.templates.filter(
-      (template) => template.when?.(selection) ?? true,
-    );
+    const applicable = pkg.templates.filter((template) => template.when?.(selection) ?? true);
 
     await applicable.reduce(async (prev, template) => {
       await prev;
@@ -138,12 +116,7 @@ export async function renderTemplatesToDisk(
   }, Promise.resolve());
 }
 
-const DEP_FIELDS = [
-  "dependencies",
-  "devDependencies",
-  "peerDependencies",
-  "optionalDependencies",
-];
+const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
 
 function sortByKey(obj: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(
@@ -200,10 +173,7 @@ export function validateFlagValue(
   };
 }
 
-export function validateDeploymentCombo(
-  deployment: string,
-  nestDiOnly: boolean,
-): ValidationResult {
+export function validateDeploymentCombo(deployment: string, nestDiOnly: boolean): ValidationResult {
   if (deployment === "spa" && nestDiOnly) {
     return {
       valid: false,
@@ -241,33 +211,22 @@ export async function checkRequiredTools(
   needs: { install: boolean; git: boolean },
   hasCommand: (command: string) => Promise<boolean>,
 ): Promise<ValidationResult> {
-  const required = [
-    ...(needs.install ? ["pnpm"] : []),
-    ...(needs.git ? ["git"] : []),
-  ];
+  const required = [...(needs.install ? ["pnpm"] : []), ...(needs.git ? ["git"] : [])];
 
   const missing = (
-    await Promise.all(
-      required.map(async (tool) => ((await hasCommand(tool)) ? null : tool)),
-    )
+    await Promise.all(required.map(async (tool) => ((await hasCommand(tool)) ? null : tool)))
   ).filter((tool) => tool !== null);
 
   if (missing.length === 0) return { valid: true };
 
   return {
     valid: false,
-    error: missing
-      .map((tool) => `${tool} was not found on PATH. ${TOOL_HINTS[tool]}`)
-      .join("\n"),
+    error: missing.map((tool) => `${tool} was not found on PATH. ${TOOL_HINTS[tool]}`).join("\n"),
   };
 }
 
-export function validateNodeVersion(
-  current: string,
-  requirement: string,
-): ValidationResult {
-  const parse = (value: string) =>
-    (value.match(/\d+/g) ?? []).slice(0, 3).map(Number);
+export function validateNodeVersion(current: string, requirement: string): ValidationResult {
+  const parse = (value: string) => (value.match(/\d+/g) ?? []).slice(0, 3).map(Number);
   const [major = 0, minor = 0, patch = 0] = parse(current);
   const [minMajor = 0, minMinor = 0, minPatch = 0] = parse(requirement);
 

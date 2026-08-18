@@ -20,13 +20,7 @@ import shadcnPage from "./templates/shadcn-page";
 // Shared by every mode: the Kysely-backed todos service, its Nest module, and
 // the db schema + migration for the todo table.
 export const todoExampleApi: Module = {
-  templates: [
-    todosModule,
-    todosService,
-    todosServiceSpec,
-    dbSchema,
-    dbMigrationTodos,
-  ],
+  templates: [todosModule, todosService, todosServiceSpec, dbSchema, dbMigrationTodos],
 };
 
 // api-controllers mode: REST controller plus app.module wired with TodosModule.
@@ -36,13 +30,7 @@ export const todoExampleControllers: Module = {
 
 // nest-di-only mode: Next.js route handlers plus app.module wired with TodosModule.
 export const todoExampleDi: Module = {
-  templates: [
-    webTodosRoute,
-    webTodosIdRoute,
-    webTodosToggleRoute,
-    appModuleDi,
-    apiIndex,
-  ],
+  templates: [webTodosRoute, webTodosIdRoute, webTodosToggleRoute, appModuleDi, apiIndex],
 };
 
 // Web UI: TodoList component and the homepage that renders it.

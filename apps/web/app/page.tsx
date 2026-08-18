@@ -91,8 +91,7 @@ export default function Home() {
           </a>
           {/* px-4 keeps the longest wrapped line clear of the inset-5 frame */}
           <h1 className="max-w-4xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text px-4 text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
-            A production-grade,{" "}
-            <span className="whitespace-nowrap">monorepo-first</span> starter
+            A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter
             for{" "}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
               <span
@@ -153,13 +152,7 @@ export default function Home() {
                 title="oxc"
                 className="z-[4] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
               >
-                <Image
-                  src="/logos/oxc.svg"
-                  alt="oxc"
-                  width={32}
-                  height={32}
-                  className="size-3/5"
-                />
+                <Image src="/logos/oxc.svg" alt="oxc" width={32} height={32} className="size-3/5" />
               </span>
             </span>
           </h1>
@@ -168,10 +161,7 @@ export default function Home() {
               $
             </span>
             <span className="font-mono">npm create newt-app</span>
-            <CopyButton
-              value={"npm create newt-app"}
-              className="static shrink-0"
-            />
+            <CopyButton value={"npm create newt-app"} className="static shrink-0" />
           </div>
           {/* the column is pointer-events-none so the chips stay clickable
               through it; the builder has to opt back in */}
@@ -190,17 +180,12 @@ export default function Home() {
         <div className="mx-auto max-w-[1200px] px-4">
           <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {STACK.map((item) => (
-              <div
-                key={item.name}
-                className="flex flex-col gap-1.5 rounded-lg border p-5"
-              >
+              <div key={item.name} className="flex flex-col gap-1.5 rounded-lg border p-5">
                 <dt className="flex items-center gap-2 font-mono text-sm font-medium">
                   <StackLogo src={item.logo} />
                   {item.name}
                 </dt>
-                <dd className="text-sm leading-relaxed text-muted-foreground">
-                  {item.role}
-                </dd>
+                <dd className="text-sm leading-relaxed text-muted-foreground">{item.role}</dd>
               </div>
             ))}
           </dl>
@@ -235,14 +220,12 @@ export default async function Dashboard() {
                 Shared packages, imported by name.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
-                <InlineCode>@my-app/ui</InlineCode> and{" "}
-                <InlineCode>@my-app/auth</InlineCode> resolve as workspace
-                packages in both <InlineCode>apps/web</InlineCode> and{" "}
+                <InlineCode>@my-app/ui</InlineCode> and <InlineCode>@my-app/auth</InlineCode>{" "}
+                resolve as workspace packages in both <InlineCode>apps/web</InlineCode> and{" "}
                 <InlineCode>apps/api</InlineCode>.
               </p>
               <p className="leading-relaxed text-muted-foreground">
-                No relative path climbing, no publishing to a registry, no
-                manual workspace links.
+                No relative path climbing, no publishing to a registry, no manual workspace links.
               </p>
             </div>
           </FeatureSection>
@@ -257,12 +240,12 @@ export default async function Dashboard() {
               </h2>
               <p className="leading-relaxed text-muted-foreground">
                 In di-only mode, route handlers resolve providers through{" "}
-                <InlineCode>inject()</InlineCode>, so business logic stays in
-                NestJS modules and services instead of the route file.
+                <InlineCode>inject()</InlineCode>, so business logic stays in NestJS modules and
+                services instead of the route file.
               </p>
               <p className="leading-relaxed text-muted-foreground">
-                The same modules run behind a standalone HTTP server if you
-                scaffold without <InlineCode>--nest-di-only</InlineCode>.
+                The same modules run behind a standalone HTTP server if you scaffold without{" "}
+                <InlineCode>--nest-di-only</InlineCode>.
               </p>
             </div>
             <CodeShowcase
@@ -313,17 +296,14 @@ export class UserController {
                 One auth config, both apps.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
-                Better Auth is configured once in{" "}
-                <InlineCode>packages/auth</InlineCode> and imported by{" "}
-                <InlineCode>apps/web</InlineCode> and{" "}
-                <InlineCode>apps/api</InlineCode>. NestJS routes are guarded by
-                default; opt out per route with{" "}
-                <InlineCode>@AllowAnonymous</InlineCode> or{" "}
-                <InlineCode>@OptionalAuth</InlineCode>.
+                Better Auth is configured once in <InlineCode>packages/auth</InlineCode> and
+                imported by <InlineCode>apps/web</InlineCode> and <InlineCode>apps/api</InlineCode>.
+                NestJS routes are guarded by default; opt out per route with{" "}
+                <InlineCode>@AllowAnonymous</InlineCode> or <InlineCode>@OptionalAuth</InlineCode>.
               </p>
               <p className="leading-relaxed text-muted-foreground">
-                Sessions, sign-up, and sign-in run on the same Kysely connection
-                as your own tables, in <InlineCode>packages/db</InlineCode>.
+                Sessions, sign-up, and sign-in run on the same Kysely connection as your own tables,
+                in <InlineCode>packages/db</InlineCode>.
               </p>
             </div>
           </FeatureSection>

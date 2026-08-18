@@ -58,8 +58,7 @@ const parseVersion = (value) => {
   };
 };
 
-const compareVersions = (a, b) =>
-  a.major - b.major || a.minor - b.minor || a.patch - b.patch;
+const compareVersions = (a, b) => a.major - b.major || a.minor - b.minor || a.patch - b.patch;
 
 // Ranges in this repo are exact, caret, or tilde. Anything more exotic is
 // reported as unparsed rather than guessed at.
@@ -274,12 +273,8 @@ const renderGroup = (title, blurb, findings) => {
   const idle = (finding, low, high) =>
     finding.idleDays !== null && finding.idleDays >= low && finding.idleDays < high;
 
-  const dormant = resolved
-    .filter((finding) => idle(finding, DORMANT_DAYS, Infinity))
-    .sort(byAge);
-  const quiet = resolved
-    .filter((finding) => idle(finding, QUIET_DAYS, DORMANT_DAYS))
-    .sort(byAge);
+  const dormant = resolved.filter((finding) => idle(finding, DORMANT_DAYS, Infinity)).sort(byAge);
+  const quiet = resolved.filter((finding) => idle(finding, QUIET_DAYS, DORMANT_DAYS)).sort(byAge);
   const majors = resolved
     .filter((finding) => finding.majorsBehind > 0)
     .sort((a, b) => b.majorsBehind - a.majorsBehind);
@@ -292,9 +287,7 @@ const renderGroup = (title, blurb, findings) => {
       finding.pinned.major === 0 &&
       finding.latest.major === 0,
   );
-  const floating = resolved.filter(
-    (finding) => finding.floats && finding.majorsBehind === 0,
-  );
+  const floating = resolved.filter((finding) => finding.floats && finding.majorsBehind === 0);
   // "Current" means the range installs the latest release, not that the number
   // written down matches it.
   const current = resolved.filter(
@@ -379,9 +372,7 @@ const renderGroup = (title, blurb, findings) => {
       `Could not be checked (${unresolved.length})`,
       unresolved.length === 0
         ? ""
-        : unresolved
-            .map((finding) => `- ${link(finding.name)}: ${finding.unresolved}`)
-            .join("\n"),
+        : unresolved.map((finding) => `- ${link(finding.name)}: ${finding.unresolved}`).join("\n"),
     ),
   ]
     .filter(Boolean)

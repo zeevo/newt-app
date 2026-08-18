@@ -1,9 +1,6 @@
 import { cn } from "@newt-app/ui/lib/utils";
 
-export function InlineCode({
-  className,
-  ...props
-}: React.ComponentProps<"code">) {
+export function InlineCode({ className, ...props }: React.ComponentProps<"code">) {
   return (
     <code
       className={cn(

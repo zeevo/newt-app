@@ -81,12 +81,7 @@ function cssColor(css: string): THREE.Color {
   ctx.fillStyle = css;
   ctx.fillRect(0, 0, 1, 1);
   const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-  return new THREE.Color().setRGB(
-    r! / 255,
-    g! / 255,
-    b! / 255,
-    THREE.SRGBColorSpace,
-  );
+  return new THREE.Color().setRGB(r! / 255, g! / 255, b! / 255, THREE.SRGBColorSpace);
 }
 
 // theme colors matching the SVG version: fill-background circles,
@@ -102,9 +97,7 @@ function readTheme() {
   probe.remove();
   const dark = document.documentElement.classList.contains("dark");
   const border = cssColor(
-    getComputedStyle(document.documentElement)
-      .getPropertyValue("--border")
-      .trim(),
+    getComputedStyle(document.documentElement).getPropertyValue("--border").trim(),
   );
   return {
     background,
@@ -195,14 +188,9 @@ async function loadSilhouette(url: string): Promise<THREE.CanvasTexture> {
     .match(/viewBox="([^"]+)"/)?.[1]
     ?.split(/[\s,]+/)
     .map(Number);
-  const aspect =
-    viewBox && viewBox.length === 4 && viewBox[3]! > 0
-      ? viewBox[2]! / viewBox[3]!
-      : 1;
+  const aspect = viewBox && viewBox.length === 4 && viewBox[3]! > 0 ? viewBox[2]! / viewBox[3]! : 1;
 
-  const blobUrl = URL.createObjectURL(
-    new Blob([text], { type: "image/svg+xml" }),
-  );
+  const blobUrl = URL.createObjectURL(new Blob([text], { type: "image/svg+xml" }));
   const img = new Image();
   img.src = blobUrl;
   await img.decode();
@@ -305,10 +293,7 @@ export default function LogoRain({
         (best, candidate) => {
           const dist = stars.length
             ? Math.min(
-                ...stars.map(
-                  (o) =>
-                    Math.hypot(o.x - candidate.x, o.y - candidate.y) - o.size,
-                ),
+                ...stars.map((o) => Math.hypot(o.x - candidate.x, o.y - candidate.y) - o.size),
               )
             : Infinity;
           return dist > best.dist ? { ...candidate, dist } : best;
@@ -358,10 +343,7 @@ export default function LogoRain({
       scene.add(group);
 
       // small chips cruise fast, large ones slow, so the big shapes stay calm
-      const speed =
-        meanSize *
-        speedFactor *
-        (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t);
+      const speed = meanSize * speedFactor * (SPEED_SMALL - (SPEED_SMALL - SPEED_LARGE) * t);
       const heading = Math.random() * Math.PI * 2;
       stars.push({
         x,
@@ -429,8 +411,7 @@ export default function LogoRain({
     resizeObserver.observe(container);
 
     const reduceMotion =
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // map a pointer event through the camera bounds into view (svg) coords and
     // find the chip under it, if any
@@ -473,10 +454,7 @@ export default function LogoRain({
           s.vy *= scale;
           s.x += s.vx * dt;
           s.y += s.vy * dt;
-          s.angVel = Math.max(
-            -MAX_SPIN,
-            Math.min(MAX_SPIN, s.angVel * Math.exp(-SPIN_DAMP * dt)),
-          );
+          s.angVel = Math.max(-MAX_SPIN, Math.min(MAX_SPIN, s.angVel * Math.exp(-SPIN_DAMP * dt)));
           s.angle += s.angVel * dt;
           // bounce off the visible walls (camera bounds track the container);
           // sliding along a wall rubs the chip into rotation
@@ -544,9 +522,7 @@ export default function LogoRain({
             const tx = -ny;
             const ty = nx;
             const slip =
-              (b.vx - a.vx) * tx +
-              (b.vy - a.vy) * ty -
-              (a.angVel * a.size + b.angVel * b.size);
+              (b.vx - a.vx) * tx + (b.vy - a.vy) * ty - (a.angVel * a.size + b.angVel * b.size);
             const jt = (SPIN_GRIP * slip) / inv;
             a.vx += (jt / ma) * tx;
             a.vy += (jt / ma) * ty;
@@ -578,9 +554,7 @@ export default function LogoRain({
       planeGeometry.dispose();
       floorGeometry.dispose();
       floorMat.dispose();
-      [...circleMaterials, ...ringMaterials, ...logoMaterials].forEach((m) =>
-        m.dispose(),
-      );
+      [...circleMaterials, ...ringMaterials, ...logoMaterials].forEach((m) => m.dispose());
       textures.forEach((t) => t.dispose());
       renderer.dispose();
     };

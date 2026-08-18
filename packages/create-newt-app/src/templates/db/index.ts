@@ -9,13 +9,7 @@ import packageJsonPostgres from "./templates/package-json-postgres";
 import srcIndexSqlite from "./templates/src-index-sqlite";
 import srcIndexPostgres from "./templates/src-index-postgres";
 
-const shared = [
-  tsconfig,
-  srcSchema,
-  srcMigrate,
-  scriptsNewMigration,
-  migrationsReadme,
-];
+const shared = [tsconfig, srcSchema, srcMigrate, scriptsNewMigration, migrationsReadme];
 
 export const dbSqlite: Module = {
   templates: [...shared, packageJsonSqlite, srcIndexSqlite],

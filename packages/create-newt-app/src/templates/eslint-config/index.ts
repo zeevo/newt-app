@@ -15,16 +15,7 @@ const ui = "packages/ui";
 const root = "";
 
 const eslintConfig: Module = {
-  templates: [
-    packageJson,
-    base,
-    next,
-    reactInternal,
-    webConfig,
-    apiConfig,
-    uiConfig,
-    prettierrc,
-  ],
+  templates: [packageJson, base, next, reactInternal, webConfig, apiConfig, uiConfig, prettierrc],
   packages: [
     { package: "eslint", module: web, version: versions.eslint, dev: true },
     {

@@ -76,10 +76,7 @@ describe("dependency versions", () => {
 
     const offRegistry = pinsFromTemplates()
       .concat(pinsFromInjectedPackages())
-      .filter(
-        (pin) =>
-          pin.version !== "workspace:*" && registry[pin.name] !== pin.version,
-      );
+      .filter((pin) => pin.version !== "workspace:*" && registry[pin.name] !== pin.version);
 
     expect(offRegistry).toEqual([]);
   });

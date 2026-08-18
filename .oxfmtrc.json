@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "pnpm-lock.yaml",
+    "next-env.d.ts",
+    ".next/",
+    ".turbo/",
+    "build/",
+    "coverage/",
+    "dist/",
+    "out/",
+    "packages/ui/components.json",
+    "packages/ui/postcss.config.mjs",
+    "packages/ui/tsconfig.json",
+    "packages/ui/src/components/",
+    "packages/ui/src/hooks/",
+    "packages/ui/src/lib/"
+  ]
+}

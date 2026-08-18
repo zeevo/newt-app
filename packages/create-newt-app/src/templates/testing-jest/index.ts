@@ -47,8 +47,7 @@ const testingJest: Module = {
     {
       module: "apps/api",
       name: "test:e2e",
-      script:
-        "NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json",
+      script: "NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json",
     },
   ],
 };
