@@ -5,13 +5,7 @@ import pkg from "../package.json" with { type: "json" };
 import { Command } from "commander";
 import * as p from "@clack/prompts";
 import { selectModules, type ModuleSelection } from "./templates";
-import {
-  hasCommand,
-  initGit,
-  pnpmFormat,
-  pnpmInstall,
-  scaffold,
-} from "./tasks.js";
+import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 import {
   checkRequiredTools,
   validateDeploymentCombo,
@@ -22,12 +16,7 @@ import {
 const TESTING_CHOICES = ["jest", "vitest"] as const;
 const DATABASE_CHOICES = ["sqlite", "postgres"] as const;
 const LINTER_CHOICES = ["eslint", "oxc"] as const;
-const DEPLOYMENT_CHOICES = [
-  "none",
-  "standalone",
-  "custom-server",
-  "spa",
-] as const;
+const DEPLOYMENT_CHOICES = ["none", "standalone", "custom-server", "spa"] as const;
 
 type Testing = (typeof TESTING_CHOICES)[number];
 type Database = (typeof DATABASE_CHOICES)[number];
@@ -66,8 +55,7 @@ export async function doInit(options: Options) {
           validate: (value) => {
             if (!value) return "Project name is required";
             if (value.length > 214) return "Project name is too long";
-            if (/[<>:"/\\|?*]/.test(value))
-              return "Project name contains invalid characters";
+            if (/[<>:"/\\|?*]/.test(value)) return "Project name contains invalid characters";
           },
         }),
     }),
@@ -152,10 +140,7 @@ export async function doInit(options: Options) {
     // directory that the next run then refuses to overwrite.
     const preflight = [
       validateNodeVersion(process.version, pkg.engines.node),
-      await checkRequiredTools(
-        { install: options.install, git: options.git },
-        hasCommand,
-      ),
+      await checkRequiredTools({ install: options.install, git: options.git }, hasCommand),
     ].find((result) => !result.valid);
 
     if (preflight) {
@@ -264,9 +249,7 @@ export async function doInit(options: Options) {
     console.log(chalk.blue(`  pnpm dev`));
     console.log();
   } catch (error) {
-    console.error(
-      `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
-    );
+    console.error(`Error: ${error instanceof Error ? error.message : "Unknown error"}`);
     process.exit(1);
   }
 }
@@ -284,11 +267,7 @@ program
   .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
   .option("--database <database>", "Database: sqlite or postgres", "sqlite")
   .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
-  .option(
-    "--deployment <strategy>",
-    "Deployment extras: standalone, custom-server, spa",
-    "none",
-  )
+  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
   .option("--include-example", "Include the todo example", false)
   .action(
@@ -340,9 +319,7 @@ program
       ];
 
       const invalid = choices
-        .map(({ flag, value, allowed }) =>
-          validateFlagValue(flag, value, allowed),
-        )
+        .map(({ flag, value, allowed }) => validateFlagValue(flag, value, allowed))
         .find((result) => !result.valid);
 
       if (invalid) {

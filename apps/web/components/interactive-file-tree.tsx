@@ -5,14 +5,8 @@ import { useQueryStates } from "nuqs";
 import { FileTree } from "@newt-app/file-tree";
 import { CopyCommandButton } from "@/components/copy-command-button";
 import { Toggle } from "@newt-app/ui/components/toggle";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@newt-app/ui/components/toggle-group";
-import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@newt-app/ui/components/native-select";
+import { ToggleGroup, ToggleGroupItem } from "@newt-app/ui/components/toggle-group";
+import { NativeSelect, NativeSelectOption } from "@newt-app/ui/components/native-select";
 import {
   Tooltip,
   TooltipContent,
@@ -32,11 +26,7 @@ import {
   type Config,
 } from "@/lib/build-command";
 import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
-import {
-  configParsers,
-  configUrlKeys,
-  sanitizeConfig,
-} from "@/lib/config-params";
+import { configParsers, configUrlKeys, sanitizeConfig } from "@/lib/config-params";
 
 const grow = "animate-in fade-in slide-in-from-left-1 duration-300";
 
@@ -53,11 +43,7 @@ function renderNodes(nodes: TreeNode[]) {
         {node.children && renderNodes(node.children)}
       </FileTree.Folder>
     ) : (
-      <FileTree.File
-        key={node.path}
-        annotation={node.annotation}
-        className={className}
-      >
+      <FileTree.File key={node.path} annotation={node.annotation} className={className}>
         {node.name}
       </FileTree.File>
     );
@@ -147,11 +133,7 @@ function Segmented<T extends string>({
         }}
       >
         {options.map((opt) => (
-          <ToggleGroupItem
-            key={opt}
-            value={opt}
-            className="gap-1.5 font-mono text-xs"
-          >
+          <ToggleGroupItem key={opt} value={opt} className="gap-1.5 font-mono text-xs">
             {logos?.[opt] && <Logo src={logos[opt]!} className="size-3.5" />}
             {opt}
           </ToggleGroupItem>
@@ -195,8 +177,7 @@ function BoolToggle({
 export function InteractiveFileTree({ className }: { className?: string }) {
   const [raw, setC] = useQueryStates(configParsers, { urlKeys: configUrlKeys });
   const c = sanitizeConfig(raw);
-  const set = <K extends keyof Config>(key: K, value: Config[K]) =>
-    setC({ [key]: value });
+  const set = <K extends keyof Config>(key: K, value: Config[K]) => setC({ [key]: value });
 
   const command = useMemo(() => buildCommand(c), [c]);
   const hint = deploymentHint(c);
@@ -206,12 +187,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
       <div className={cn("flex flex-col gap-4", className)}>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
           <div className="flex flex-col gap-3 rounded-lg border p-5 lg:w-[42%] lg:shrink-0">
-            <BoolToggle
-              label="Next.js"
-              logo="/logos/nextjs.svg"
-              pressed
-              disabled
-            />
+            <BoolToggle label="Next.js" logo="/logos/nextjs.svg" pressed disabled />
             <Segmented
               label="NestJS"
               logo="/logos/nestjs.svg"
@@ -225,19 +201,12 @@ export function InteractiveFileTree({ className }: { className?: string }) {
                     ...prev,
                     nestDiOnly,
                     deployment:
-                      nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment)
-                        ? "none"
-                        : prev.deployment,
+                      nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment) ? "none" : prev.deployment,
                   };
                 })
               }
             />
-            <BoolToggle
-              label="Better Auth"
-              logo="/logos/better-auth.svg"
-              pressed
-              disabled
-            />
+            <BoolToggle label="Better Auth" logo="/logos/better-auth.svg" pressed disabled />
             <Segmented
               label="database"
               hint={DATABASE_HINT}
@@ -279,9 +248,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               <NativeSelect
                 size="sm"
                 value={c.deployment}
-                onChange={(e) =>
-                  set("deployment", e.target.value as Config["deployment"])
-                }
+                onChange={(e) => set("deployment", e.target.value as Config["deployment"])}
                 className="font-mono text-xs"
               >
                 {deploymentOptions(c.nestDiOnly).map((option) => (
@@ -294,20 +261,14 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             {/* the extras options are not self-describing, and a hover tooltip
                 cannot be read on a touch screen */}
             {hint && (
-              <p
-                aria-live="polite"
-                className="text-xs leading-relaxed text-muted-foreground"
-              >
+              <p aria-live="polite" className="text-xs leading-relaxed text-muted-foreground">
                 {hint}
               </p>
             )}
           </div>
 
           <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-5">
-            <FileTree
-              name="my-app"
-              className="my-0 bg-transparent p-0 dark:bg-transparent"
-            >
+            <FileTree name="my-app" className="my-0 bg-transparent p-0 dark:bg-transparent">
               {renderNodes(scaffoldTree(c))}
             </FileTree>
           </div>

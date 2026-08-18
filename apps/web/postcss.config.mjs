@@ -1,1 +1,1 @@
-export { default } from '@newt-app/ui/postcss.config';
+export { default } from "@newt-app/ui/postcss.config";

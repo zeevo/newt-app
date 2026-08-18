@@ -10,18 +10,12 @@ export type Config = {
 
 // Both pairs are rejected by validateDeploymentCombo in create-newt-app, so the
 // builder must not offer them — the emitted command would just error.
-export const DI_ONLY_REJECTS = new Set<Config["deployment"]>([
-  "spa",
-  "custom-server",
-]);
+export const DI_ONLY_REJECTS = new Set<Config["deployment"]>(["spa", "custom-server"]);
 
 export const DI_ONLY_REJECTS_HINT =
   "spa and custom-server already run Nest inside Next.js, so di-only rejects them.";
 
-export const DEPLOYMENT_HINTS: Record<
-  Exclude<Config["deployment"], "none">,
-  string
-> = {
+export const DEPLOYMENT_HINTS: Record<Exclude<Config["deployment"], "none">, string> = {
   standalone: 'Next.js output: "standalone", in Docker alongside Nest.',
   "custom-server": "A custom Node server runs Next.js and Nest together.",
   spa: "Next.js static export, served by Nest. No SSR.",
@@ -49,12 +43,8 @@ const DEPLOYMENTS = [
   "spa",
 ] as const satisfies readonly Config["deployment"][];
 
-export function deploymentOptions(
-  nestDiOnly: boolean,
-): readonly Config["deployment"][] {
-  return DEPLOYMENTS.filter(
-    (deployment) => !(nestDiOnly && DI_ONLY_REJECTS.has(deployment)),
-  );
+export function deploymentOptions(nestDiOnly: boolean): readonly Config["deployment"][] {
+  return DEPLOYMENTS.filter((deployment) => !(nestDiOnly && DI_ONLY_REJECTS.has(deployment)));
 }
 
 export function buildCommand(c: Config): string {

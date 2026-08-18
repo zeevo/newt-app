@@ -34,10 +34,7 @@ const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
       ),
     ),
   ),
-).filter(
-  ({ deployment, nestDiOnly }) =>
-    validateDeploymentCombo(deployment, nestDiOnly).valid,
-);
+).filter(({ deployment, nestDiOnly }) => validateDeploymentCombo(deployment, nestDiOnly).valid);
 
 const label = (selection: ModuleSelection) =>
   Object.entries(selection)
@@ -140,9 +137,7 @@ describe(`template rendering across ${combos.length} selections`, () => {
       // The root package.json is unconditional, so every scaffold gets the
       // Node types its config files and scripts are written against.
       const rootPkg = JSON.parse(files.get("package.json") ?? "{}");
-      expect(rootPkg.devDependencies?.["@types/node"]).toBe(
-        versions["@types/node"],
-      );
+      expect(rootPkg.devDependencies?.["@types/node"]).toBe(versions["@types/node"]);
     },
   );
 });

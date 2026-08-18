@@ -35,12 +35,7 @@ export async function scaffold(
     versions,
   };
 
-  await renderTemplatesToDisk(
-    modules,
-    options.name,
-    templateData,
-    options.selection,
-  );
+  await renderTemplatesToDisk(modules, options.name, templateData, options.selection);
 
   const packages = modules
     .map((mod) => mod.packages)

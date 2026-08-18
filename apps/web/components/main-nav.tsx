@@ -23,10 +23,7 @@ export function MainNav({
           size="sm"
           nativeButton={false}
           render={
-            <Link
-              href={item.href}
-              className={cn(pathname === item.href && "text-primary")}
-            />
+            <Link href={item.href} className={cn(pathname === item.href && "text-primary")} />
           }
         >
           {item.label}

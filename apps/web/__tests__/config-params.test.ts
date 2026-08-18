@@ -13,10 +13,9 @@ describe("config params", () => {
 
     Object.entries(accepted).forEach(([key, values]) => {
       values.forEach((value) => {
-        expect(
-          configParsers[key as keyof typeof accepted].parse(value),
-          `${key}=${value}`,
-        ).toBe(value);
+        expect(configParsers[key as keyof typeof accepted].parse(value), `${key}=${value}`).toBe(
+          value,
+        );
       });
     });
   });
@@ -37,11 +36,7 @@ describe("config params", () => {
       todoExample: true,
     };
     expect(sanitizeConfig(base).deployment).toBe("none");
-    expect(
-      sanitizeConfig({ ...base, deployment: "standalone" }).deployment,
-    ).toBe("standalone");
-    expect(sanitizeConfig({ ...base, nestDiOnly: false }).deployment).toBe(
-      "spa",
-    );
+    expect(sanitizeConfig({ ...base, deployment: "standalone" }).deployment).toBe("standalone");
+    expect(sanitizeConfig({ ...base, nestDiOnly: false }).deployment).toBe("spa");
   });
 });

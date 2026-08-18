@@ -41,9 +41,7 @@ async function writePkg(rel: string, contents: object) {
 }
 
 async function readPkg(rel: string) {
-  return JSON.parse(
-    await readFile(path.join(destDir, rel, "package.json"), "utf8"),
-  );
+  return JSON.parse(await readFile(path.join(destDir, rel, "package.json"), "utf8"));
 }
 
 describe("validateProjectName", () => {
@@ -57,9 +55,7 @@ describe("validateProjectName", () => {
 
   it("rejects names with invalid path characters", () => {
     expect(
-      ["foo/bar", "a:b", "we*rd", "no?"].map(
-        (name) => validateProjectName(name).valid,
-      ),
+      ["foo/bar", "a:b", "we*rd", "no?"].map((name) => validateProjectName(name).valid),
     ).toEqual([false, false, false, false]);
   });
 
@@ -72,9 +68,7 @@ describe("validateDeploymentCombo", () => {
   it("rejects spa combined with nest-di-only", () => {
     const result = validateDeploymentCombo("spa", true);
     expect(result.valid).toBe(false);
-    expect(result.error).toContain(
-      "--deployment spa cannot be combined with --nest-di-only.",
-    );
+    expect(result.error).toContain("--deployment spa cannot be combined with --nest-di-only.");
   });
 
   it("accepts spa without nest-di-only", () => {
@@ -95,9 +89,7 @@ describe("validateDeploymentCombo", () => {
 
   it("accepts nest-di-only with the deployments that support it", () => {
     expect(
-      ["none", "standalone"].map(
-        (deployment) => validateDeploymentCombo(deployment, true).valid,
-      ),
+      ["none", "standalone"].map((deployment) => validateDeploymentCombo(deployment, true).valid),
     ).toEqual([true, true]);
   });
 });
@@ -107,49 +99,34 @@ describe("checkRequiredTools", () => {
   const present = async () => true;
 
   it("passes when every tool the run needs is present", async () => {
-    const result = await checkRequiredTools(
-      { install: true, git: true },
-      present,
-    );
+    const result = await checkRequiredTools({ install: true, git: true }, present);
     expect(result.valid).toBe(true);
   });
 
   it("rejects a missing pnpm when installing, and says how to get it", async () => {
-    const result = await checkRequiredTools(
-      { install: true, git: false },
-      absent,
-    );
+    const result = await checkRequiredTools({ install: true, git: false }, absent);
     expect(result.valid).toBe(false);
     expect(result.error).toContain("pnpm was not found on PATH");
     expect(result.error).toContain("corepack enable");
   });
 
   it("does not require pnpm when install is skipped", async () => {
-    const result = await checkRequiredTools(
-      { install: false, git: false },
-      absent,
-    );
+    const result = await checkRequiredTools({ install: false, git: false }, absent);
     expect(result.valid).toBe(true);
   });
 
   it("does not require git when git is skipped", async () => {
     const asked: string[] = [];
-    const result = await checkRequiredTools(
-      { install: true, git: false },
-      async (command) => {
-        asked.push(command);
-        return true;
-      },
-    );
+    const result = await checkRequiredTools({ install: true, git: false }, async (command) => {
+      asked.push(command);
+      return true;
+    });
     expect(asked).toEqual(["pnpm"]);
     expect(result.valid).toBe(true);
   });
 
   it("reports every missing tool at once", async () => {
-    const result = await checkRequiredTools(
-      { install: true, git: true },
-      absent,
-    );
+    const result = await checkRequiredTools({ install: true, git: true }, absent);
     expect(result.error).toContain("pnpm was not found on PATH");
     expect(result.error).toContain("git was not found on PATH");
   });
@@ -183,8 +160,7 @@ describe("validateFlagValue", () => {
   it("accepts every allowed value", () => {
     expect(
       ["jest", "vitest"].every(
-        (value) =>
-          validateFlagValue("--testing", value, ["jest", "vitest"]).valid,
+        (value) => validateFlagValue("--testing", value, ["jest", "vitest"]).valid,
       ),
     ).toBe(true);
   });
@@ -203,15 +179,11 @@ describe("validateFlagValue", () => {
   });
 
   it("rejects a value that only differs by case", () => {
-    expect(
-      validateFlagValue("--linter", "ESLint", ["eslint", "oxc"]).valid,
-    ).toBe(false);
+    expect(validateFlagValue("--linter", "ESLint", ["eslint", "oxc"]).valid).toBe(false);
   });
 
   it("rejects an empty value", () => {
-    expect(
-      validateFlagValue("--database", "", ["sqlite", "postgres"]).valid,
-    ).toBe(false);
+    expect(validateFlagValue("--database", "", ["sqlite", "postgres"]).valid).toBe(false);
   });
 });
 

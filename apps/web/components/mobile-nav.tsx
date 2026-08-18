@@ -4,11 +4,7 @@ import * as React from "react";
 import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@newt-app/ui/components/button";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@newt-app/ui/components/popover";
+import { Popover, PopoverTrigger, PopoverContent } from "@newt-app/ui/components/popover";
 import { cn } from "@newt-app/ui/lib/utils";
 
 export function MobileNav({
@@ -50,9 +46,7 @@ export function MobileNav({
           </div>
           <span className="sr-only">Toggle Menu</span>
         </div>
-        <span className="flex h-8 items-center text-lg leading-none font-medium">
-          Menu
-        </span>
+        <span className="flex h-8 items-center text-lg leading-none font-medium">Menu</span>
       </PopoverTrigger>
       <PopoverContent
         className="no-scrollbar flex h-(--available-height) w-(--available-width) flex-col overflow-hidden rounded-none border-none bg-background/90 p-0 shadow-none backdrop-blur duration-100"
@@ -65,9 +59,7 @@ export function MobileNav({
             scroll; without it the links overflow the popover unreachably */}
         <div className="flex min-h-0 flex-1 flex-col gap-12 overflow-y-auto px-6 py-6">
           <div className="flex flex-col gap-4">
-            <div className="text-sm font-medium text-muted-foreground">
-              Menu
-            </div>
+            <div className="text-sm font-medium text-muted-foreground">Menu</div>
             <div className="flex flex-col gap-3">
               <MobileLink href="/" onOpenChange={setOpen}>
                 Home

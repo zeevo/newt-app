@@ -6,13 +6,7 @@ import webPackageJson from "./templates/web-package-json";
 import webNextConfig from "./templates/web-next-config";
 
 const singleProcessPages: Module = {
-  templates: [
-    apiPackageJson,
-    apiSrcIndex,
-    webApiCatchall,
-    webPackageJson,
-    webNextConfig,
-  ],
+  templates: [apiPackageJson, apiSrcIndex, webApiCatchall, webPackageJson, webNextConfig],
 };
 
 export default singleProcessPages;

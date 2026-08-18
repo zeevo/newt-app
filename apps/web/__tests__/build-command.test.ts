@@ -1,10 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  buildCommand,
-  deploymentOptions,
-  DI_ONLY_REJECTS,
-  type Config,
-} from "@/lib/build-command";
+import { buildCommand, deploymentOptions, DI_ONLY_REJECTS, type Config } from "@/lib/build-command";
 
 // every config the panel can reach — deployment comes from the same function
 // that renders the select, so hiding an option here means hiding it in the UI
@@ -45,9 +40,7 @@ describe("buildCommand", () => {
       .filter(
         (command) =>
           command.includes("--nest-di-only") &&
-          [...DI_ONLY_REJECTS].some((mode) =>
-            command.includes(`--deployment ${mode}`),
-          ),
+          [...DI_ONLY_REJECTS].some((mode) => command.includes(`--deployment ${mode}`)),
       );
 
     expect(invalid).toEqual([]);

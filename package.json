@@ -7,8 +7,8 @@
     "build:watch": "turbo run build:watch",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "db:migrate": "turbo run migrate",
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
-    "prettier": "^3.7.4",
+    "oxfmt": "^0.59.0",
     "turbo": "^2.8.16",
     "typescript": "6.0.2"
   },

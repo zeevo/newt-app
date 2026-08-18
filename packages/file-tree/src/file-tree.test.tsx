@@ -28,9 +28,7 @@ describe("FileTree", () => {
     );
     const folder = container.querySelector('[data-slot="file-tree-folder"]')!;
     expect(folder.tagName).toBe("LI");
-    expect(
-      folder.querySelector('ul > [data-slot="file-tree-file"]'),
-    ).toBeTruthy();
+    expect(folder.querySelector('ul > [data-slot="file-tree-file"]')).toBeTruthy();
   });
 
   // The elbow is the reason this component exists: every entry's vertical rule
@@ -50,10 +48,7 @@ describe("FileTree", () => {
 
     const shortRule = "[&:last-child>[data-tree-line]]:h-3.5";
     const byName = Object.fromEntries(
-      entries(container).map((e) => [
-        e.querySelector("span.flex")!.textContent,
-        e,
-      ]),
+      entries(container).map((e) => [e.querySelector("span.flex")!.textContent, e]),
     );
 
     // every entry carries both rules; :last-child decides which one wins, and a
@@ -84,9 +79,7 @@ describe("FileTree", () => {
     const all = entries(container);
     expect(all).toHaveLength(3);
     all.forEach((entry) => {
-      expect(entry.className).toContain(
-        "[&:last-child>[data-tree-line]]:h-3.5",
-      );
+      expect(entry.className).toContain("[&:last-child>[data-tree-line]]:h-3.5");
       expect(lineOf(entry)).toBeTruthy();
     });
   });
@@ -111,9 +104,7 @@ describe("FileTree", () => {
   it("shows an annotation only when given one", () => {
     const { container } = render(
       <FileTree name="my-app">
-        <FileTree.File annotation="standalone output">
-          next.config.js
-        </FileTree.File>
+        <FileTree.File annotation="standalone output">next.config.js</FileTree.File>
         <FileTree.File>plain.ts</FileTree.File>
       </FileTree>,
     );
@@ -125,9 +116,7 @@ describe("FileTree", () => {
   it("takes a replacement icon and keeps the default otherwise", () => {
     const { container } = render(
       <FileTree name="my-app">
-        <FileTree.File icon={<span data-testid="mine" />}>
-          custom.ts
-        </FileTree.File>
+        <FileTree.File icon={<span data-testid="mine" />}>custom.ts</FileTree.File>
         <FileTree.File>default.ts</FileTree.File>
       </FileTree>,
     );
@@ -136,9 +125,7 @@ describe("FileTree", () => {
   });
 
   it("merges consumer classes over the defaults instead of duplicating them", () => {
-    const { container } = render(
-      <FileTree name="my-app" className="my-0 bg-transparent" />,
-    );
+    const { container } = render(<FileTree name="my-app" className="my-0 bg-transparent" />);
     const root = container.querySelector('[data-slot="file-tree"]')!;
     expect(root.className).toContain("my-0");
     expect(root.className).not.toContain("my-4");

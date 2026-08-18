@@ -7,11 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import {
-  buildCommand,
-  deploymentOptions,
-  type Config,
-} from "@/lib/build-command";
+import { buildCommand, deploymentOptions, type Config } from "@/lib/build-command";
 import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
 
 // The tree claims to show what `create-newt-app` writes to disk. Nothing about
@@ -68,9 +64,7 @@ async function emittedFiles(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { recursive: true, withFileTypes: true });
   return entries
     .filter((entry) => entry.isFile())
-    .map((entry) =>
-      path.relative(dir, path.join(entry.parentPath, entry.name)),
-    );
+    .map((entry) => path.relative(dir, path.join(entry.parentPath, entry.name)));
 }
 
 const scaffolded = new Map<string, string[]>();
@@ -78,9 +72,7 @@ let root: string;
 
 beforeAll(async () => {
   if (!existsSync(CLI)) {
-    throw new Error(
-      `${CLI} is missing. Run \`pnpm build --filter=create-newt-app\` first.`,
-    );
+    throw new Error(`${CLI} is missing. Run \`pnpm build --filter=create-newt-app\` first.`);
   }
 
   root = await mkdtemp(path.join(tmpdir(), "scaffold-tree-"));
@@ -88,11 +80,9 @@ beforeAll(async () => {
   await Promise.all(
     configs.map(async (c, i) => {
       const name = `probe-${i}`;
-      await run(
-        process.execPath,
-        [CLI, name, ...flagsFor(c), "--no-install", "--no-git"],
-        { cwd: root },
-      );
+      await run(process.execPath, [CLI, name, ...flagsFor(c), "--no-install", "--no-git"], {
+        cwd: root,
+      });
       scaffolded.set(key(c), await emittedFiles(path.join(root, name)));
     }),
   );
@@ -107,9 +97,7 @@ describe("scaffoldTree", () => {
   const everyPath = [
     ...new Map(
       configs.flatMap((c) =>
-        flatten(scaffoldTree(c)).map(
-          (node) => [node.path, node] as [string, TreeNode],
-        ),
+        flatten(scaffoldTree(c)).map((node) => [node.path, node] as [string, TreeNode]),
       ),
     ).values(),
   ];
@@ -137,9 +125,7 @@ describe("scaffoldTree", () => {
 
   it("counts the shadcn components it advertises", () => {
     const c = configs.find((config) => config.shadcn)!;
-    const node = flatten(scaffoldTree(c)).find(
-      (n) => n.path === "packages/ui",
-    )!;
+    const node = flatten(scaffoldTree(c)).find((n) => n.path === "packages/ui")!;
     const count = scaffolded
       .get(key(c))!
       .filter((file) => file.startsWith("packages/ui/src/components/")).length;

@@ -19,9 +19,7 @@ const allIndexes = dirs
   .map((dir) => fs.readFileSync(path.join(root, dir, "index.ts"), "utf8"))
   .join("\n");
 
-const modules = dirs.filter((dir) =>
-  fs.existsSync(path.join(root, dir, "templates")),
-);
+const modules = dirs.filter((dir) => fs.existsSync(path.join(root, dir, "templates")));
 
 // A template no module imports is never emitted, and nothing else notices: the
 // render tests walk the registered set, and the ui drift check compares against

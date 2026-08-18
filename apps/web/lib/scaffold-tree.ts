@@ -166,9 +166,7 @@ export function scaffoldTree(c: Config): TreeNode[] {
           name: "ui",
           kind: "dir",
           path: "packages/ui",
-          annotation: c.shadcn
-            ? "shadcn/ui + 63 components"
-            : "minimal UI package",
+          annotation: c.shadcn ? "shadcn/ui + 63 components" : "minimal UI package",
         },
         {
           name: "auth",
@@ -180,8 +178,7 @@ export function scaffoldTree(c: Config): TreeNode[] {
           name: "db",
           kind: "dir",
           path: "packages/db",
-          annotation:
-            c.database === "postgres" ? "Kysely + Postgres" : "Kysely + SQLite",
+          annotation: c.database === "postgres" ? "Kysely + Postgres" : "Kysely + SQLite",
         },
         ...(c.linter === "eslint"
           ? [
