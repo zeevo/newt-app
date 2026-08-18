@@ -1,5 +1,18 @@
 # create-newt-app
 
+## 0.28.0
+
+### Minor Changes
+
+- 9a9c50f: The todo example is now opt-in via `--include-example`, matching how `--shadcn` works.
+
+  **Breaking:** the `--bare` flag is removed, and a non-interactive run without `--include-example` no longer scaffolds the todo example. Pass `--include-example` to keep it. The interactive prompt is unchanged and still defaults to including it.
+
+### Patch Changes
+
+- e9c9bc1: Scaffolded apps now ship an empty `.prettierrc`, so formatting follows prettier's defaults the way `create-turbo` and `create-next-app` do, instead of the `singleQuote` style inherited from `nest new`.
+- 90e6493: Turn off `react/prop-types` in the React eslint config, which is redundant when props are typed, and drop the two `eslint-disable` comments it forced into the calendar component. All 60 registry components now match stock `shadcn add` output.
+
 ## 0.27.0
 
 ### Minor Changes
