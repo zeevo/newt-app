@@ -1,10 +1,18 @@
 import { describe, it, expect } from "vitest";
-import { buildCommand, deploymentOptions, DI_ONLY_REJECTS, type Config } from "@/lib/build-command";
+import {
+  buildCommand,
+  deploymentOptions,
+  IN_PROCESS_REJECTS,
+  type Config,
+  type NestMode,
+} from "@/lib/build-command";
 
 // every config the panel can reach — deployment comes from the same function
 // that renders the select, so hiding an option here means hiding it in the UI
-const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
-  deploymentOptions(nestDiOnly).flatMap((deployment) =>
+const reachable: Config[] = (
+  ["separate", "embedded", "di-only"] as const satisfies readonly NestMode[]
+).flatMap((nest) =>
+  deploymentOptions(nest).flatMap((deployment) =>
     [true, false].flatMap((shadcn) =>
       [true, false].flatMap((todoExample) =>
         (["jest", "vitest"] as const).flatMap((testing) =>
@@ -15,7 +23,7 @@ const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
               database,
               linter,
               deployment,
-              nestDiOnly,
+              nest,
               todoExample,
             })),
           ),
@@ -26,24 +34,36 @@ const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
 );
 
 describe("buildCommand", () => {
-  it("hides exactly the deployments the CLI rejects with di-only", () => {
+  it("hides exactly the deployments the CLI rejects with an in-process Nest", () => {
     // Pinned against validateDeploymentCombo in packages/create-newt-app. The
-    // reachable set below is derived from DI_ONLY_REJECTS, so without this the
-    // suite would happily agree with a wrong value.
-    expect([...DI_ONLY_REJECTS].sort()).toEqual(["custom-server", "spa"]);
-    expect(deploymentOptions(true)).toEqual(["none", "standalone"]);
+    // reachable set below is derived from IN_PROCESS_REJECTS, so without this
+    // the suite would happily agree with a wrong value.
+    expect([...IN_PROCESS_REJECTS].sort()).toEqual(["custom-server", "spa"]);
+    expect(deploymentOptions("di-only")).toEqual(["none", "standalone"]);
+    expect(deploymentOptions("embedded")).toEqual(["none", "standalone"]);
+    expect(deploymentOptions("separate")).toEqual(["none", "standalone", "custom-server", "spa"]);
   });
 
-  it("never pairs --nest-di-only with a deployment the CLI rejects", () => {
+  it("never pairs an in-process Nest flag with a deployment the CLI rejects", () => {
     const invalid = reachable
       .map(buildCommand)
       .filter(
         (command) =>
-          command.includes("--nest-di-only") &&
-          [...DI_ONLY_REJECTS].some((mode) => command.includes(`--deployment ${mode}`)),
+          (command.includes("--nest-di-only") || command.includes("--nest-embedded")) &&
+          [...IN_PROCESS_REJECTS].some((mode) => command.includes(`--deployment ${mode}`)),
       );
 
     expect(invalid).toEqual([]);
+  });
+
+  it("never emits both Nest flags at once", () => {
+    const both = reachable
+      .map(buildCommand)
+      .filter(
+        (command) => command.includes("--nest-di-only") && command.includes("--nest-embedded"),
+      );
+
+    expect(both).toEqual([]);
   });
 
   it("emits a config flag whenever shadcn is off, so the CLI stays non-interactive", () => {
@@ -65,7 +85,7 @@ describe("buildCommand", () => {
         database: "sqlite",
         linter: "eslint",
         deployment: "none",
-        nestDiOnly: false,
+        nest: "separate",
         todoExample: true,
       }),
     ).toBe("npm create newt-app@latest my-app -- --shadcn --include-example");

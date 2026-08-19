@@ -13,6 +13,7 @@ export const versions = {
   "@nestjs/schematics": "^11.0.0",
   "@nestjs/serve-static": "^5.0.0",
   "@nestjs/testing": "^11.0.1",
+  "@newt-app/nest-next": "^1.0.0",
   "@next/eslint-plugin-next": "^16.3.0",
   "@shadcn/react": "^0.2.1",
   "@swc/core": "^1.10.0",

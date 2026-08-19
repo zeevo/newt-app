@@ -16,25 +16,31 @@ const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies"];
 // same validator the CLI uses, so a change there changes the matrix here too.
 const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
   BOOLS.flatMap((nestDiOnly) =>
-    BOOLS.flatMap((shadcn) =>
-      TESTING.flatMap((testing) =>
-        DATABASES.flatMap((database) =>
-          LINTERS.flatMap((linter) =>
-            BOOLS.map((todoExample) => ({
-              deployment,
-              nestDiOnly,
-              shadcn,
-              testing,
-              database,
-              linter,
-              todoExample,
-            })),
+    BOOLS.flatMap((nestEmbedded) =>
+      BOOLS.flatMap((shadcn) =>
+        TESTING.flatMap((testing) =>
+          DATABASES.flatMap((database) =>
+            LINTERS.flatMap((linter) =>
+              BOOLS.map((todoExample) => ({
+                deployment,
+                nestDiOnly,
+                nestEmbedded,
+                shadcn,
+                testing,
+                database,
+                linter,
+                todoExample,
+              })),
+            ),
           ),
         ),
       ),
     ),
   ),
-).filter(({ deployment, nestDiOnly }) => validateDeploymentCombo(deployment, nestDiOnly).valid);
+).filter(
+  ({ deployment, nestDiOnly, nestEmbedded }) =>
+    validateDeploymentCombo(deployment, nestDiOnly, nestEmbedded).valid,
+);
 
 const label = (selection: ModuleSelection) =>
   Object.entries(selection)

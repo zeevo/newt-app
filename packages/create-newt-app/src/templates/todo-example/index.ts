@@ -30,7 +30,13 @@ export const todoExampleControllers: Module = {
 
 // nest-di-only mode: Next.js route handlers plus app.module wired with TodosModule.
 export const todoExampleDi: Module = {
-  templates: [webTodosRoute, webTodosIdRoute, webTodosToggleRoute, appModuleDi, apiIndex],
+  templates: [webTodosRoute, webTodosIdRoute, webTodosToggleRoute, appModuleDi],
+};
+
+// Every mode that runs Nest inside the web app imports the api as TS source,
+// so it needs an entrypoint re-exporting what the web app resolves.
+export const todoExampleApiIndex: Module = {
+  templates: [apiIndex],
 };
 
 // Web UI: TodoList component and the homepage that renders it.

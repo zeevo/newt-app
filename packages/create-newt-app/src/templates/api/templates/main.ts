@@ -1,4 +1,8 @@
+import type { Selection } from "../../types";
 export default {
+  // Embedded mode reuses these controllers but boots them from the web app,
+  // so there is no standalone api process for this entrypoint to start.
+  when: (s) => !s.nestEmbedded,
   filename: "apps/api/src/main.ts",
   template: `import dotenv from 'dotenv';
 import { resolve } from 'path';

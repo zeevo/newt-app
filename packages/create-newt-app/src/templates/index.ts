@@ -16,11 +16,14 @@ import deploymentCustomServer from "./single-process-custom-server/index";
 import deploymentSpa from "./single-process-static-export/index";
 import nestDiOnlyModule from "./nest-di-only/index";
 import deploymentStandaloneDi from "./deployment-standalone-di/index";
+import nestEmbeddedModule from "./nest-embedded/index";
+import nestEmbeddedStandalone from "./nest-embedded-standalone/index";
 import apiControllers from "./api-controllers/index";
 import {
   todoExampleApi,
   todoExampleControllers,
   todoExampleDi,
+  todoExampleApiIndex,
   todoExampleWeb,
   todoExampleShadcn,
 } from "./todo-example/index";
@@ -55,10 +58,13 @@ export const templates = {
   deploymentSpa,
   nestDiOnly: nestDiOnlyModule,
   deploymentStandaloneDi,
+  nestEmbedded: nestEmbeddedModule,
+  nestEmbeddedStandalone,
   apiControllers,
   todoExampleApi,
   todoExampleControllers,
   todoExampleDi,
+  todoExampleApiIndex,
   todoExampleWeb,
   todoExampleShadcn,
 };
@@ -66,7 +72,8 @@ export const templates = {
 // The single source of truth for which modules a selection scaffolds. Kept here
 // rather than in the CLI so the render tests exercise the real selection.
 export function selectModules(selection: ModuleSelection): Module[] {
-  const { deployment, nestDiOnly, todoExample, shadcn, database, linter, testing } = selection;
+  const { deployment, nestDiOnly, nestEmbedded, todoExample, shadcn, database, linter, testing } =
+    selection;
 
   const deploymentModule =
     deployment === "standalone"
@@ -77,10 +84,11 @@ export function selectModules(selection: ModuleSelection): Module[] {
           ? deploymentSpa
           : null;
 
-  // In SPA mode NestJS serves Better Auth (AuthModule.forRoot); the Next.js
-  // auth handler is redundant and can't be statically exported, so drop it.
+  // Wherever NestJS serves Better Auth itself (AuthModule.forRoot), the Next.js
+  // auth handler is redundant: in SPA mode it also can't be statically
+  // exported, and in embedded mode it would put a second owner on /api.
   const webModule =
-    deployment === "spa"
+    deployment === "spa" || nestEmbedded
       ? {
           ...web,
           templates: web.templates.filter(
@@ -101,13 +109,18 @@ export function selectModules(selection: ModuleSelection): Module[] {
     testing === "vitest" ? testingVitest : testingJest,
     ...(deploymentModule ? [deploymentModule] : []),
     ...(nestDiOnly ? [nestDiOnlyModule] : [apiControllers]),
+    // Embedded mode keeps api-controllers and only repackages it, so it is
+    // composed after rather than instead of it.
+    ...(nestEmbedded ? [nestEmbeddedModule] : []),
     // nest-di-only overwrites the standalone next.config.js and leaves the
     // Dockerfile pointing at an api entrypoint DI-only never emits
     ...(nestDiOnly && deployment === "standalone" ? [deploymentStandaloneDi] : []),
+    ...(nestEmbedded && deployment === "standalone" ? [nestEmbeddedStandalone] : []),
     ...(todoExample
       ? [
           todoExampleApi,
           ...(nestDiOnly ? [todoExampleDi] : [todoExampleControllers]),
+          ...(nestDiOnly || nestEmbedded ? [todoExampleApiIndex] : []),
           shadcn ? todoExampleShadcn : todoExampleWeb,
         ]
       : []),

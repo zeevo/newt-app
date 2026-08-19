@@ -7,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { buildCommand, deploymentOptions, type Config } from "@/lib/build-command";
+import { buildCommand, deploymentOptions, type Config, type NestMode } from "@/lib/build-command";
 import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
 
 // The tree claims to show what `create-newt-app` writes to disk. Nothing about
@@ -22,8 +22,10 @@ const CLI = fileURLToPath(
 
 // Only these options change which files exist. `testing` changes none of
 // them, and `database` only swaps an annotation, so both stay pinned.
-const configs: Config[] = [true, false].flatMap((nestDiOnly) =>
-  deploymentOptions(nestDiOnly).flatMap((deployment) =>
+const configs: Config[] = (
+  ["separate", "embedded", "di-only"] as const satisfies readonly NestMode[]
+).flatMap((nest) =>
+  deploymentOptions(nest).flatMap((deployment) =>
     [true, false].flatMap((shadcn) =>
       [true, false].flatMap((todoExample) =>
         (["eslint", "oxc"] as const).map((linter) => ({
@@ -32,7 +34,7 @@ const configs: Config[] = [true, false].flatMap((nestDiOnly) =>
           database: "sqlite" as const,
           linter,
           deployment,
-          nestDiOnly,
+          nest,
           todoExample,
         })),
       ),
@@ -42,7 +44,7 @@ const configs: Config[] = [true, false].flatMap((nestDiOnly) =>
 
 const key = (c: Config) =>
   [
-    c.nestDiOnly ? "di-only" : "nest",
+    c.nest,
     c.deployment,
     c.shadcn ? "shadcn" : "plain",
     c.linter,

@@ -25,6 +25,9 @@ jobs:
           filters: |
             scaffolder:
               - 'packages/create-newt-app/**'
+              # the embedded matrix entries install this package from the
+              # workspace, so a change to it must re-run the scaffold job
+              - 'packages/nest-next/**'
               - 'pnpm-lock.yaml'
               - '.github/workflows/pull-request.yml'
               # the scaffold job runs scripts/smoke.sh, so a change to it is
@@ -78,6 +81,9 @@ jobs:
           - "--include-example"
           - "--shadcn --testing vitest --include-example"
           - "--nest-di-only"
+          - "--nest-embedded"
+          - "--shadcn --nest-embedded --include-example"
+          - "--deployment standalone --nest-embedded --include-example"
           - "--database postgres --include-example"
           - "--shadcn --linter oxc --include-example"
           - "--shadcn --nest-di-only --include-example"
@@ -110,8 +116,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # nest-next too: dist/ is gitignored, so the file: copy the embedded
+      # entries install below would otherwise have no entrypoint or types.
       - name: Build CLI
-        run: pnpm build --filter=create-newt-app
+        run: pnpm build --filter=create-newt-app --filter=@newt-app/nest-next
 
       # initGit commits, and a runner has no git identity of its own.
       - name: Configure git identity
@@ -128,6 +136,26 @@ jobs:
           SKIP_FLAGS="--no-install --no-git"
           if [ "$CLI_TASKS" = "true" ]; then SKIP_FLAGS=""; fi
           node $GITHUB_WORKSPACE/packages/create-newt-app/dist/index.js test-app ${{ matrix.flags }} $SKIP_FLAGS
+
+      # @newt-app/nest-next is not on npm until this branch releases, so point
+      # the scaffolded app's dependency at the workspace copy. pnpm *copies* a
+      # file: dep, so this has to run before the install below.
+      - name: Use the workspace nest-next
+        if: ${{ contains(matrix.flags, '--nest-embedded') }}
+        working-directory: ${{ runner.temp }}/test-app
+        run: |
+          node -e '
+            const fs = require("fs");
+            const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+            pkg.pnpm = {
+              ...pkg.pnpm,
+              overrides: {
+                ...pkg.pnpm?.overrides,
+                "@newt-app/nest-next": `file:${process.env.GITHUB_WORKSPACE}/packages/nest-next`,
+              },
+            };
+            fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
+          '
 
       # The CLI already installed for the cli_tasks entry. A failed install there
       # aborts the CLI with a non-zero exit, which fails this job at the step above.

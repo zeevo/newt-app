@@ -13,6 +13,7 @@ export type TemplateData = {
 export type Selection = {
   deployment: "none" | "standalone" | "custom-server" | "spa";
   nestDiOnly: boolean;
+  nestEmbedded: boolean;
   todoExample: boolean;
   shadcn: boolean;
   database: "sqlite" | "postgres";

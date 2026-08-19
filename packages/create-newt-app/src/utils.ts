@@ -173,7 +173,45 @@ export function validateFlagValue(
   };
 }
 
-export function validateDeploymentCombo(deployment: string, nestDiOnly: boolean): ValidationResult {
+export function validateDeploymentCombo(
+  deployment: string,
+  nestDiOnly: boolean,
+  nestEmbedded = false,
+): ValidationResult {
+  if (nestDiOnly && nestEmbedded) {
+    return {
+      valid: false,
+      error:
+        "--nest-di-only cannot be combined with --nest-embedded.\n" +
+        "Both run Nest inside the Next.js process and both own apps/web/lib/nest.ts; they\n" +
+        "differ only in how much of Nest runs. Embedded boots the full HTTP application, so\n" +
+        "controllers, guards, pipes and filters all work. DI-only boots an application\n" +
+        "context with no HTTP pipeline, and route handlers call inject() themselves.",
+    };
+  }
+
+  if (deployment === "spa" && nestEmbedded) {
+    return {
+      valid: false,
+      error:
+        "--deployment spa cannot be combined with --nest-embedded.\n" +
+        "SPA mode statically exports Next.js (output: 'export'), which cannot include the\n" +
+        "API route that embedded mode serves Nest from. Pick one: drop --nest-embedded to\n" +
+        "get SPA mode with a standalone Nest server, or drop --deployment spa.",
+    };
+  }
+
+  if (deployment === "custom-server" && nestEmbedded) {
+    return {
+      valid: false,
+      error:
+        "--deployment custom-server cannot be combined with --nest-embedded.\n" +
+        "Both run the full Nest HTTP application in the Next.js process, just from different\n" +
+        "entrypoints: custom-server from apps/web/server.ts, embedded from a Next API route.\n" +
+        "Pick one.",
+    };
+  }
+
   if (deployment === "spa" && nestDiOnly) {
     return {
       valid: false,

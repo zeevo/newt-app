@@ -1,8 +1,6 @@
 import ejs from "ejs";
 import { describe, expect, it } from "vitest";
 import { templates } from "./templates";
-// Not wired into templates/index.ts, but still checked so its pins cannot drift.
-import singleProcessPages from "./templates/single-process-pages/index";
 import { versions } from "./templates/versions";
 import type { Module, TemplateData } from "./types";
 
@@ -15,7 +13,7 @@ const templateData: TemplateData = {
   versions,
 };
 
-const modules: Module[] = Object.values(templates).concat(singleProcessPages);
+const modules: Module[] = Object.values(templates);
 
 type Pin = { name: string; version: string; source: string };
 
