@@ -5,6 +5,8 @@ export type TemplateData = {
   testing: "jest" | "vitest";
   database: "sqlite" | "postgres";
   deployment: "none" | "standalone" | "custom-server" | "spa";
+  antiSlop: boolean;
+  shadcn: boolean;
   authSecret: string;
   versions: Versions;
 };
@@ -23,7 +25,12 @@ export type Selection = {
 export type ModuleSelection = Selection & {
   testing: TemplateData["testing"];
   linter: "eslint" | "oxc";
+  extras: readonly Extra[];
 };
+
+// Opt-in additions that need no choice beyond on or off. anti-slop vendors a
+// set of oxlint rules, so it only applies to the oxc linter.
+export type Extra = "anti-slop";
 
 // `when` makes precedence explicit: exactly one template may claim a filename
 // for a given selection, so no template can silently overwrite another.

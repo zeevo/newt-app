@@ -8,6 +8,7 @@ import {
   updatePackageJson,
   updateScripts,
   validateDeploymentCombo,
+  validateExtrasCombo,
   validateFlagValue,
   validateNodeVersion,
   validateProjectName,
@@ -20,6 +21,8 @@ const templateData: TemplateData = {
   testing: "jest",
   database: "sqlite",
   deployment: "none",
+  antiSlop: false,
+  shadcn: false,
   authSecret: "secret",
   versions,
 };
@@ -277,5 +280,22 @@ describe("sortPackageJsons", () => {
 
     const web = await readPkg("apps/web");
     expect(Object.keys(web.devDependencies)).toEqual(["eslint", "vitest"]);
+  });
+});
+
+describe("validateExtrasCombo", () => {
+  it("rejects anti-slop under eslint", () => {
+    const result = validateExtrasCombo(["anti-slop"], "eslint");
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("--extras anti-slop needs --linter oxc.");
+  });
+
+  it("accepts anti-slop under oxc", () => {
+    expect(validateExtrasCombo(["anti-slop"], "oxc").valid).toBe(true);
+  });
+
+  it("accepts no extras under either linter", () => {
+    expect(validateExtrasCombo([], "eslint").valid).toBe(true);
+    expect(validateExtrasCombo([], "oxc").valid).toBe(true);
   });
 });

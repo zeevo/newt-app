@@ -1,15 +1,16 @@
 import ejs from "ejs";
 import { describe, expect, it } from "vitest";
 import { selectModules } from "./index";
-import type { ModuleSelection, TemplateData } from "./types";
+import type { Extra, ModuleSelection, TemplateData } from "./types";
 import { versions } from "./versions";
-import { validateDeploymentCombo } from "../utils";
+import { validateDeploymentCombo, validateExtrasCombo } from "../utils";
 
 const DEPLOYMENTS = ["none", "standalone", "custom-server", "spa"] as const;
 const TESTING = ["jest", "vitest"] as const;
 const DATABASES = ["sqlite", "postgres"] as const;
 const LINTERS = ["eslint", "oxc"] as const;
 const BOOLS = [true, false];
+const EXTRAS = [[], ["anti-slop"]] as const satisfies readonly (readonly Extra[])[];
 const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies"];
 
 // Every selection the CLI will accept. The rejected pairs are filtered with the
@@ -20,21 +21,26 @@ const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
       TESTING.flatMap((testing) =>
         DATABASES.flatMap((database) =>
           LINTERS.flatMap((linter) =>
-            BOOLS.map((todoExample) => ({
-              deployment,
-              nestDiOnly,
-              shadcn,
-              testing,
-              database,
-              linter,
-              todoExample,
-            })),
+            BOOLS.flatMap((todoExample) =>
+              EXTRAS.map((extras) => ({
+                deployment,
+                nestDiOnly,
+                shadcn,
+                testing,
+                database,
+                linter,
+                todoExample,
+                extras,
+              })),
+            ),
           ),
         ),
       ),
     ),
   ),
-).filter(({ deployment, nestDiOnly }) => validateDeploymentCombo(deployment, nestDiOnly).valid);
+)
+  .filter(({ deployment, nestDiOnly }) => validateDeploymentCombo(deployment, nestDiOnly).valid)
+  .filter(({ extras, linter }) => validateExtrasCombo(extras, linter).valid);
 
 const label = (selection: ModuleSelection) =>
   Object.entries(selection)
@@ -49,6 +55,8 @@ function renderCombo(selection: ModuleSelection) {
     testing: selection.testing,
     database: selection.database,
     deployment: selection.deployment,
+    antiSlop: selection.extras.includes("anti-slop"),
+    shadcn: selection.shadcn,
     authSecret: "test-secret",
     versions,
   };
@@ -156,6 +164,26 @@ describe("linter config files follow the selected linter", () => {
         selection.linter === "oxc"
           ? { prettier: [], oxfmt: [".oxfmtrc.json"] }
           : { prettier: [".prettierrc"], oxfmt: [] },
+      );
+    },
+  );
+});
+
+// The rules are an oxlint plugin vendored into the app, so they ship only with
+// the extra and skip the shadcn components, which are upstream code.
+describe("anti-slop ships only with the extra", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const { files } = renderCombo(selection);
+      const selected = selection.extras.includes("anti-slop");
+      const oxlintrc = files.get(".oxlintrc.json") ?? "";
+
+      expect(files.has("tools/oxlint/anti-slop/package.json")).toBe(selected);
+      expect(oxlintrc.includes('"jsPlugins"')).toBe(selected);
+      expect(oxlintrc.includes('"anti-slop/no-runtime-typeof": "error"')).toBe(selected);
+      expect(oxlintrc.includes('"packages/ui/src/components/**"')).toBe(
+        selected && selection.shadcn,
       );
     },
   );

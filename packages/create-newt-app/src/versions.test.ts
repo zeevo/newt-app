@@ -11,6 +11,8 @@ const templateData: TemplateData = {
   testing: "jest",
   database: "sqlite",
   deployment: "none",
+  antiSlop: false,
+  shadcn: false,
   authSecret: "secret",
   versions,
 };

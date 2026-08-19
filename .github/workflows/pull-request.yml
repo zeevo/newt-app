@@ -80,6 +80,7 @@ jobs:
           - "--nest-di-only"
           - "--database postgres --include-example"
           - "--shadcn --linter oxc --include-example"
+          - "--shadcn --linter oxc --extras anti-slop --include-example"
           - "--shadcn --nest-di-only --include-example"
           - "--deployment standalone --include-example"
           - "--deployment standalone --nest-di-only --include-example"

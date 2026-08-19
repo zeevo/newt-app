@@ -15,6 +15,7 @@
     "packages/ui/tsconfig.json",
     "packages/ui/src/components/",
     "packages/ui/src/hooks/",
-    "packages/ui/src/lib/"
+    "packages/ui/src/lib/",
+    "packages/create-newt-app/src/templates/anti-slop/static/"
   ]
 }

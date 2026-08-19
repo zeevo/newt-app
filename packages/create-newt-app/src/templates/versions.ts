@@ -14,6 +14,7 @@ export const versions = {
   "@nestjs/serve-static": "^5.0.0",
   "@nestjs/testing": "^11.0.1",
   "@next/eslint-plugin-next": "^16.3.0",
+  "@oxlint/plugins": "^1.74.0",
   "@shadcn/react": "^0.2.1",
   "@swc/core": "^1.10.0",
   "@tailwindcss/postcss": "^4.2.1",

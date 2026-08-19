@@ -173,6 +173,20 @@ export function validateFlagValue(
   };
 }
 
+export function validateExtrasCombo(extras: readonly string[], linter: string): ValidationResult {
+  if (extras.includes("anti-slop") && linter !== "oxc") {
+    return {
+      valid: false,
+      error:
+        "--extras anti-slop needs --linter oxc.\n" +
+        "anti-slop is a set of oxlint rules, and the eslint option installs neither oxlint\n" +
+        "nor a config to register them in. Add --linter oxc, or drop the extra.",
+    };
+  }
+
+  return { valid: true };
+}
+
 export function validateDeploymentCombo(deployment: string, nestDiOnly: boolean): ValidationResult {
   if (deployment === "spa" && nestDiOnly) {
     return {

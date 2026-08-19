@@ -6,23 +6,34 @@ import { FileTree } from "@newt-app/file-tree";
 import { CopyCommandButton } from "@/components/copy-command-button";
 import { Toggle } from "@newt-app/ui/components/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@newt-app/ui/components/toggle-group";
-import { NativeSelect, NativeSelectOption } from "@newt-app/ui/components/native-select";
+import { Button } from "@newt-app/ui/components/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@newt-app/ui/components/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@newt-app/ui/components/tooltip";
-import { Info } from "lucide-react";
+import { ChevronDown, Info } from "lucide-react";
 import { cn } from "@newt-app/ui/lib/utils";
 import {
+  antiSlopAvailable,
   buildCommand,
   DATABASE_HINT,
-  deploymentHint,
   deploymentOptions,
   DI_ONLY_HINT,
   DI_ONLY_REJECTS,
-  TODO_EXAMPLE_HINT,
+  extrasHints,
   type Config,
 } from "@/lib/build-command";
 import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
@@ -180,7 +191,14 @@ export function InteractiveFileTree({ className }: { className?: string }) {
   const set = <K extends keyof Config>(key: K, value: Config[K]) => setC({ [key]: value });
 
   const command = useMemo(() => buildCommand(c), [c]);
-  const hint = deploymentHint(c);
+  const hints = extrasHints(c);
+  // The trigger has to say what is selected: the menu is closed most of the
+  // time, and two of the three extras are off by default.
+  const selected = [
+    c.deployment === "none" ? null : c.deployment,
+    c.todoExample ? "example app" : null,
+    c.antiSlop ? "anti-slop" : null,
+  ].filter((extra) => extra !== null);
 
   return (
     <TooltipProvider>
@@ -229,7 +247,13 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               label="linter"
               value={c.linter}
               options={["eslint", "oxc"] as const}
-              onChange={(v) => set("linter", v)}
+              onChange={(v) =>
+                setC((prev) => ({
+                  ...prev,
+                  linter: v,
+                  antiSlop: v === "oxc" && prev.antiSlop,
+                }))
+              }
               logos={{ eslint: "/logos/eslint.svg", oxc: "/logos/oxc.svg" }}
             />
             <BoolToggle
@@ -238,33 +262,68 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               pressed={c.shadcn}
               onChange={(v) => set("shadcn", v)}
             />
-            <BoolToggle
-              label="include example app"
-              hint={TODO_EXAMPLE_HINT}
-              pressed={c.todoExample}
-              onChange={(v) => set("todoExample", v)}
-            />
             <Row label="extras">
-              <NativeSelect
-                size="sm"
-                value={c.deployment}
-                onChange={(e) => set("deployment", e.target.value as Config["deployment"])}
-                className="font-mono text-xs"
-              >
-                {deploymentOptions(c.nestDiOnly).map((option) => (
-                  <NativeSelectOption key={option} value={option}>
-                    {option}
-                  </NativeSelectOption>
-                ))}
-              </NativeSelect>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button variant="outline" size="sm" className="min-w-32 font-mono text-xs" />
+                  }
+                >
+                  <span className="max-w-48 truncate">
+                    {selected.length ? selected.join(", ") : "none"}
+                  </span>
+                  <ChevronDown />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuRadioGroup
+                    value={c.deployment}
+                    onValueChange={(v) => set("deployment", v as Config["deployment"])}
+                  >
+                    <DropdownMenuLabel>Deployment</DropdownMenuLabel>
+                    {deploymentOptions(c.nestDiOnly).map((option) => (
+                      <DropdownMenuRadioItem
+                        key={option}
+                        value={option}
+                        className="font-mono text-xs"
+                      >
+                        {option}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>Include</DropdownMenuLabel>
+                    <DropdownMenuCheckboxItem
+                      checked={c.todoExample}
+                      onCheckedChange={(v) => set("todoExample", v)}
+                      className="font-mono text-xs"
+                    >
+                      example app
+                    </DropdownMenuCheckboxItem>
+                    {antiSlopAvailable(c.linter) && (
+                      <DropdownMenuCheckboxItem
+                        checked={c.antiSlop}
+                        onCheckedChange={(v) => set("antiSlop", v)}
+                        className="font-mono text-xs"
+                      >
+                        anti-slop
+                      </DropdownMenuCheckboxItem>
+                    )}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </Row>
             {/* the extras options are not self-describing, and a hover tooltip
                 cannot be read on a touch screen */}
-            {hint && (
-              <p aria-live="polite" className="text-xs leading-relaxed text-muted-foreground">
-                {hint}
+            {hints.map((text) => (
+              <p
+                key={text}
+                aria-live="polite"
+                className="text-xs leading-relaxed text-muted-foreground"
+              >
+                {text}
               </p>
-            )}
+            ))}
           </div>
 
           <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-5">

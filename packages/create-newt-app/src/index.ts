@@ -4,11 +4,12 @@ import chalk from "chalk";
 import pkg from "../package.json" with { type: "json" };
 import { Command } from "commander";
 import * as p from "@clack/prompts";
-import { selectModules, type ModuleSelection } from "./templates";
+import { selectModules, type Extra, type ModuleSelection } from "./templates";
 import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 import {
   checkRequiredTools,
   validateDeploymentCombo,
+  validateExtrasCombo,
   validateFlagValue,
   validateNodeVersion,
 } from "./utils.js";
@@ -17,6 +18,7 @@ const TESTING_CHOICES = ["jest", "vitest"] as const;
 const DATABASE_CHOICES = ["sqlite", "postgres"] as const;
 const LINTER_CHOICES = ["eslint", "oxc"] as const;
 const DEPLOYMENT_CHOICES = ["none", "standalone", "custom-server", "spa"] as const;
+const EXTRAS_CHOICES = ["anti-slop"] as const satisfies readonly Extra[];
 
 type Testing = (typeof TESTING_CHOICES)[number];
 type Database = (typeof DATABASE_CHOICES)[number];
@@ -35,6 +37,7 @@ type Options = {
   deployment: Deployment;
   nestDiOnly: boolean;
   includeExample: boolean;
+  extras: readonly Extra[];
 };
 
 class TaskBuilder {
@@ -92,6 +95,21 @@ export async function doInit(options: Options) {
           ],
           initialValue: "eslint",
         }),
+      // anti-slop is an oxlint plugin, so there is nothing to offer under eslint
+      extras: ({ results }) =>
+        results.linter === "oxc"
+          ? p.multiselect<Extra>({
+              message: "Extras?",
+              options: [
+                {
+                  value: "anti-slop",
+                  label: "anti-slop",
+                  hint: "oxlint rules that reject low-evidence TypeScript",
+                },
+              ],
+              required: false,
+            })
+          : undefined,
       nestDiOnly: () =>
         p.confirm({
           message: "Use NestJS for dependency injection only?",
@@ -104,7 +122,7 @@ export async function doInit(options: Options) {
         }),
       deployment: ({ results }) =>
         p.select<Deployment>({
-          message: "Deployment extras?",
+          message: "Deployment?",
           options: [
             { value: "none", label: "None", hint: "skip" },
             {
@@ -175,10 +193,18 @@ export async function doInit(options: Options) {
     const todoExample = options.nonInteractive
       ? options.includeExample
       : ((group as { todoExample?: boolean }).todoExample ?? true);
+    const extras: readonly Extra[] = options.nonInteractive
+      ? options.extras
+      : ((group as { extras?: Extra[] }).extras ?? []);
 
     const deploymentCombo = validateDeploymentCombo(deployment, nestDiOnly);
     if (!deploymentCombo.valid) {
       throw new Error(deploymentCombo.error);
+    }
+
+    const extrasCombo = validateExtrasCombo(extras, linter);
+    if (!extrasCombo.valid) {
+      throw new Error(extrasCombo.error);
     }
 
     const selection: ModuleSelection = {
@@ -189,6 +215,7 @@ export async function doInit(options: Options) {
       database,
       linter,
       testing,
+      extras,
     };
 
     const allModules = selectModules(selection);
@@ -205,6 +232,7 @@ export async function doInit(options: Options) {
           testing,
           database,
           deployment,
+          antiSlop: extras.includes("anti-slop"),
           selection,
         });
         return "Scaffolded.";
@@ -267,9 +295,10 @@ program
   .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
   .option("--database <database>", "Database: sqlite or postgres", "sqlite")
   .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
-  .option("--deployment <strategy>", "Deployment extras: standalone, custom-server, spa", "none")
+  .option("--deployment <strategy>", "Deployment: standalone, custom-server, spa", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
   .option("--include-example", "Include the todo example", false)
+  .option("--extras <list>", "Extras, comma-separated: anti-slop", "")
   .action(
     async (
       name: string,
@@ -283,6 +312,7 @@ program
         deployment: string;
         nestDiOnly: boolean;
         includeExample: boolean;
+        extras: string;
       },
       command: Command,
     ) => {
@@ -297,10 +327,17 @@ program
         "deployment",
         "nestDiOnly",
         "includeExample",
+        "extras",
       ];
       const nonInteractive = configFlags.some(
         (flag) => command.getOptionValueSource(flag) === "cli",
       );
+
+      // A list flag, so an empty string means none rather than a bad value.
+      const extras = options.extras
+        .split(",")
+        .map((extra) => extra.trim())
+        .filter(Boolean);
 
       // Reject typos instead of silently falling back to a default.
       const choices = [
@@ -316,6 +353,11 @@ program
           value: options.deployment,
           allowed: DEPLOYMENT_CHOICES,
         },
+        ...extras.map((extra) => ({
+          flag: "--extras",
+          value: extra,
+          allowed: EXTRAS_CHOICES,
+        })),
       ];
 
       const invalid = choices
@@ -339,6 +381,7 @@ program
         deployment: options.deployment as Deployment,
         nestDiOnly: options.nestDiOnly,
         includeExample: options.includeExample,
+        extras: extras as Extra[],
       });
     },
   );

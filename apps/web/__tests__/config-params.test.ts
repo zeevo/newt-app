@@ -34,9 +34,24 @@ describe("config params", () => {
       deployment: "spa",
       nestDiOnly: true,
       todoExample: true,
+      antiSlop: true,
     };
     expect(sanitizeConfig(base).deployment).toBe("none");
     expect(sanitizeConfig({ ...base, deployment: "standalone" }).deployment).toBe("standalone");
     expect(sanitizeConfig({ ...base, nestDiOnly: false }).deployment).toBe("spa");
+  });
+  it("drops anti-slop when the linter cannot run it", () => {
+    const base: Config = {
+      shadcn: true,
+      testing: "vitest",
+      database: "postgres",
+      linter: "oxc",
+      deployment: "none",
+      nestDiOnly: false,
+      todoExample: true,
+      antiSlop: true,
+    };
+    expect(sanitizeConfig(base).antiSlop).toBe(true);
+    expect(sanitizeConfig({ ...base, linter: "eslint" }).antiSlop).toBe(false);
   });
 });
