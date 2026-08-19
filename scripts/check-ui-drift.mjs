@@ -16,9 +16,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const require = createRequire(
-  path.join(repo, "packages/create-newt-app/package.json"),
-);
+const require = createRequire(path.join(repo, "packages/create-newt-app/package.json"));
 const ejs = require("ejs");
 
 let templates;
