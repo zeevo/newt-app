@@ -59,7 +59,6 @@ describe("buildCommand", () => {
   });
 
   it("only offers anti-slop with the linter that can run it", () => {
-    // The CLI rejects the pair, so a command carrying both would just error.
     const invalid = reachable
       .map(buildCommand)
       .filter((command) => command.includes("--extras anti-slop") && !command.includes("oxc"));
@@ -68,8 +67,6 @@ describe("buildCommand", () => {
   });
 
   it("explains every extra that is switched on", () => {
-    // They share one control, so the panel prints a line per selection rather
-    // than a tooltip per row.
     const c = reachable.find((config) => config.deployment === "spa")!;
 
     expect(extrasHints({ ...c, todoExample: true, antiSlop: true })).toEqual([

@@ -100,7 +100,6 @@ export function selectModules(selection: ModuleSelection): Module[] {
     auth,
     shadcn ? shadcnUi : ui,
     linter === "oxc" ? oxc : eslintConfig,
-    // anti-slop is a set of oxlint rules, so the CLI rejects it with eslint
     ...(extras.includes("anti-slop") ? [antiSlop] : []),
     typescriptConfig,
     testing === "vitest" ? testingVitest : testingJest,

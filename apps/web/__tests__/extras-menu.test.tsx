@@ -3,9 +3,6 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { withNuqsTestingAdapter } from "nuqs/adapters/testing";
 import { InteractiveFileTree } from "@/components/interactive-file-tree";
 
-// The panel's other tests all run against lib/, which typechecks clean even
-// when the markup throws: a menu label outside its group crashed Base UI at
-// open time and nothing but a browser caught it. This renders the real thing.
 const renderPanel = (searchParams = "") =>
   render(<InteractiveFileTree />, { wrapper: withNuqsTestingAdapter({ searchParams }) });
 

@@ -192,8 +192,6 @@ export function InteractiveFileTree({ className }: { className?: string }) {
 
   const command = useMemo(() => buildCommand(c), [c]);
   const hints = extrasHints(c);
-  // The trigger has to say what is selected: the menu is closed most of the
-  // time, and two of the three extras are off by default.
   const selected = [
     c.deployment === "none" ? null : c.deployment,
     c.todoExample ? "example app" : null,

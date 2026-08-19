@@ -27,7 +27,6 @@ const configs: Config[] = [true, false].flatMap((nestDiOnly) =>
     [true, false].flatMap((shadcn) =>
       [true, false].flatMap((todoExample) =>
         (["eslint", "oxc"] as const).flatMap((linter) =>
-          // anti-slop is an oxlint plugin, so eslint has no config to load it
           (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
             shadcn,
             testing: "jest" as const,

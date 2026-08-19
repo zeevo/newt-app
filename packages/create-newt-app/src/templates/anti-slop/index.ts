@@ -5,10 +5,7 @@ import pluginReadme from "./templates/plugin-readme";
 
 const plugin = "tools/oxlint/anti-slop";
 
-// Upstream publishes nothing to npm: the rules are meant to be copied in and
-// edited, so they ship as static files rather than a dependency. `.oxlintrc.json`
-// registers them (see the oxc module) and `package.json` marks the directory ESM
-// so oxlint loads the plugin without reparsing it.
+// Upstream publishes nothing to npm, and oxlint needs the directory marked ESM.
 const antiSlop: Module = {
   templates: [pluginPackageJson, pluginReadme],
   staticFiles: [
