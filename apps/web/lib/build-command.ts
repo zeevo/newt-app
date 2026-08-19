@@ -6,6 +6,7 @@ export type Config = {
   deployment: "none" | "standalone" | "custom-server" | "spa";
   nestDiOnly: boolean;
   todoExample: boolean;
+  antiSlop: boolean;
 };
 
 // Both pairs are rejected by validateDeploymentCombo in create-newt-app, so the
@@ -33,6 +34,11 @@ export const DI_ONLY_HINT =
 
 export const TODO_EXAMPLE_HINT = "Include an example to-do list feature.";
 
+// The rules are an oxlint plugin, so the eslint toolchain has nowhere to load
+// them from — the CLI rejects the pair rather than scaffolding a dead config.
+export const ANTI_SLOP_HINT =
+  "Vendors dmmulroy/anti-slop into tools/oxlint: oxlint rules that reject undocumented type assertions, unknown returns and runtime typeof narrowing. Needs the oxc linter.";
+
 export const DATABASE_HINT =
   "SQLite writes to a local file, which is not persisted on serverless filesystems like Vercel’s. Better Auth and your app share one Kysely connection either way.";
 
@@ -56,6 +62,7 @@ export function buildCommand(c: Config): string {
   if (c.deployment !== "none") flags.push(`--deployment ${c.deployment}`);
   if (c.nestDiOnly) flags.push("--nest-di-only");
   if (c.todoExample) flags.push("--include-example");
+  if (c.antiSlop) flags.push("--extras anti-slop");
   // Passing a config flag is what puts the CLI in non-interactive mode. Every
   // other option here matches its default, so without this the CLI would prompt
   // and shadcn would come back on — the opposite of what the panel shows.

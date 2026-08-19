@@ -16,15 +16,21 @@ export const configParsers = {
   ] as const).withDefault("none"),
   nestDiOnly: parseAsBoolean.withDefault(false),
   todoExample: parseAsBoolean.withDefault(true),
+  antiSlop: parseAsBoolean.withDefault(false),
 };
 
 export const configUrlKeys = {
   nestDiOnly: "nest-di-only",
   todoExample: "todo-example",
+  antiSlop: "anti-slop",
 };
 
-// A hand-edited URL can pair di-only with a deployment the CLI rejects; the
-// panel never renders that combo.
+// A hand-edited URL can pair di-only with a deployment the CLI rejects, or
+// anti-slop with eslint; the panel never renders either combo.
 export function sanitizeConfig(c: Config): Config {
-  return c.nestDiOnly && DI_ONLY_REJECTS.has(c.deployment) ? { ...c, deployment: "none" } : c;
+  const deployment = c.nestDiOnly && DI_ONLY_REJECTS.has(c.deployment) ? "none" : c.deployment;
+  const antiSlop = c.antiSlop && c.linter === "oxc";
+  return deployment === c.deployment && antiSlop === c.antiSlop
+    ? c
+    : { ...c, deployment, antiSlop };
 }

@@ -26,15 +26,19 @@ const configs: Config[] = [true, false].flatMap((nestDiOnly) =>
   deploymentOptions(nestDiOnly).flatMap((deployment) =>
     [true, false].flatMap((shadcn) =>
       [true, false].flatMap((todoExample) =>
-        (["eslint", "oxc"] as const).map((linter) => ({
-          shadcn,
-          testing: "jest" as const,
-          database: "sqlite" as const,
-          linter,
-          deployment,
-          nestDiOnly,
-          todoExample,
-        })),
+        (["eslint", "oxc"] as const).flatMap((linter) =>
+          // anti-slop is an oxlint plugin, so eslint has no config to load it
+          (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
+            shadcn,
+            testing: "jest" as const,
+            database: "sqlite" as const,
+            linter,
+            deployment,
+            nestDiOnly,
+            todoExample,
+            antiSlop,
+          })),
+        ),
       ),
     ),
   ),
@@ -47,6 +51,7 @@ const key = (c: Config) =>
     c.shadcn ? "shadcn" : "plain",
     c.linter,
     c.todoExample ? "todo" : "bare",
+    c.antiSlop ? "anti-slop" : "no-anti-slop",
   ].join(" ");
 
 // The builder hands users this exact command, so drive the CLI with the flags

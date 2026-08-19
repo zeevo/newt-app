@@ -16,6 +16,7 @@ import {
 import { Info } from "lucide-react";
 import { cn } from "@newt-app/ui/lib/utils";
 import {
+  ANTI_SLOP_HINT,
   buildCommand,
   DATABASE_HINT,
   deploymentHint,
@@ -229,8 +230,21 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               label="linter"
               value={c.linter}
               options={["eslint", "oxc"] as const}
-              onChange={(v) => set("linter", v)}
+              onChange={(v) =>
+                setC((prev) => ({
+                  ...prev,
+                  linter: v,
+                  antiSlop: v === "oxc" && prev.antiSlop,
+                }))
+              }
               logos={{ eslint: "/logos/eslint.svg", oxc: "/logos/oxc.svg" }}
+            />
+            <BoolToggle
+              label="anti-slop"
+              hint={ANTI_SLOP_HINT}
+              pressed={c.antiSlop}
+              onChange={(v) => set("antiSlop", v)}
+              disabled={c.linter !== "oxc"}
             />
             <BoolToggle
               label="shadcn/ui"
@@ -244,7 +258,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
               pressed={c.todoExample}
               onChange={(v) => set("todoExample", v)}
             />
-            <Row label="extras">
+            <Row label="deployment">
               <NativeSelect
                 size="sm"
                 value={c.deployment}

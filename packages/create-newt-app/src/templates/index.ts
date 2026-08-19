@@ -8,6 +8,7 @@ import ui from "./ui/index";
 import shadcnUi from "./shadcn-ui/index";
 import eslintConfig from "./eslint-config/index";
 import oxc from "./oxc/index";
+import antiSlop from "./anti-slop/index";
 import typescriptConfig from "./typescript-config/index";
 import testingJest from "./testing-jest/index";
 import testingVitest from "./testing-vitest/index";
@@ -47,6 +48,7 @@ export const templates = {
   shadcnUi,
   eslintConfig,
   oxc,
+  antiSlop,
   typescriptConfig,
   testingJest,
   testingVitest,
@@ -66,7 +68,8 @@ export const templates = {
 // The single source of truth for which modules a selection scaffolds. Kept here
 // rather than in the CLI so the render tests exercise the real selection.
 export function selectModules(selection: ModuleSelection): Module[] {
-  const { deployment, nestDiOnly, todoExample, shadcn, database, linter, testing } = selection;
+  const { deployment, nestDiOnly, todoExample, shadcn, database, linter, testing, extras } =
+    selection;
 
   const deploymentModule =
     deployment === "standalone"
@@ -97,6 +100,8 @@ export function selectModules(selection: ModuleSelection): Module[] {
     auth,
     shadcn ? shadcnUi : ui,
     linter === "oxc" ? oxc : eslintConfig,
+    // anti-slop is a set of oxlint rules, so the CLI rejects it with eslint
+    ...(extras.includes("anti-slop") ? [antiSlop] : []),
     typescriptConfig,
     testing === "vitest" ? testingVitest : testingJest,
     ...(deploymentModule ? [deploymentModule] : []),

@@ -9,15 +9,18 @@ const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
       [true, false].flatMap((todoExample) =>
         (["jest", "vitest"] as const).flatMap((testing) =>
           (["sqlite", "postgres"] as const).flatMap((database) =>
-            (["eslint", "oxc"] as const).map((linter) => ({
-              shadcn,
-              testing,
-              database,
-              linter,
-              deployment,
-              nestDiOnly,
-              todoExample,
-            })),
+            (["eslint", "oxc"] as const).flatMap((linter) =>
+              (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
+                shadcn,
+                testing,
+                database,
+                linter,
+                deployment,
+                nestDiOnly,
+                todoExample,
+                antiSlop,
+              })),
+            ),
           ),
         ),
       ),
@@ -46,6 +49,15 @@ describe("buildCommand", () => {
     expect(invalid).toEqual([]);
   });
 
+  it("only offers anti-slop with the linter that can run it", () => {
+    // The CLI rejects the pair, so a command carrying both would just error.
+    const invalid = reachable
+      .map(buildCommand)
+      .filter((command) => command.includes("--extras anti-slop") && !command.includes("oxc"));
+
+    expect(invalid).toEqual([]);
+  });
+
   it("emits a config flag whenever shadcn is off, so the CLI stays non-interactive", () => {
     // With no flags the CLI prompts, and its interactive default turns shadcn
     // back on — the panel would be lying.
@@ -67,6 +79,7 @@ describe("buildCommand", () => {
         deployment: "none",
         nestDiOnly: false,
         todoExample: true,
+        antiSlop: false,
       }),
     ).toBe("npm create newt-app@latest my-app -- --shadcn --include-example");
   });

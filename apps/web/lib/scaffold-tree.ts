@@ -199,6 +199,31 @@ export function scaffoldTree(c: Config): TreeNode[] {
         },
       ],
     },
+    ...(c.antiSlop
+      ? [
+          {
+            name: "tools",
+            kind: "dir" as const,
+            path: "tools",
+            conditional: true,
+            children: [
+              {
+                name: "oxlint",
+                kind: "dir" as const,
+                path: "tools/oxlint",
+                children: [
+                  {
+                    name: "anti-slop",
+                    kind: "dir" as const,
+                    path: "tools/oxlint/anti-slop",
+                    annotation: "vendored oxlint rules",
+                  },
+                ],
+              },
+            ],
+          },
+        ]
+      : []),
     // oxc has no config package at all: it configures oxlint and oxfmt from the
     // repo root and packages/eslint-config is simply not scaffolded. eslint puts
     // its rules in that package but still writes .prettierrc at the root, so the
