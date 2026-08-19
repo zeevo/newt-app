@@ -28,8 +28,6 @@ export type ModuleSelection = Selection & {
   extras: readonly Extra[];
 };
 
-// Opt-in additions that need no choice beyond on or off. anti-slop vendors a
-// set of oxlint rules, so it only applies to the oxc linter.
 export type Extra = "anti-slop";
 
 // `when` makes precedence explicit: exactly one template may claim a filename

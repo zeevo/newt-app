@@ -169,8 +169,6 @@ describe("linter config files follow the selected linter", () => {
   );
 });
 
-// The rules are an oxlint plugin vendored into the app, so they ship only with
-// the extra and skip the shadcn components, which are upstream code.
 describe("anti-slop ships only with the extra", () => {
   it.each(combos.map((selection) => [label(selection), selection] as const))(
     "%s",

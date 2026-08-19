@@ -1,7 +1,6 @@
 {
   "include": ["src/**/*.ts"],
-  // the vendored anti-slop plugin is copied into scaffolded apps verbatim and
-  // typechecks against oxlint's plugin types, which this package does not install
+  // the vendored plugin typechecks against oxlint types this package does not install
   "exclude": ["node_modules", "dist", "src/templates/anti-slop/static"],
   "compilerOptions": {
     "target": "ES2022",

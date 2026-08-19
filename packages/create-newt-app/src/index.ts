@@ -95,7 +95,6 @@ export async function doInit(options: Options) {
           ],
           initialValue: "eslint",
         }),
-      // anti-slop is an oxlint plugin, so there is nothing to offer under eslint
       extras: ({ results }) =>
         results.linter === "oxc"
           ? p.multiselect<Extra>({
@@ -333,7 +332,6 @@ program
         (flag) => command.getOptionValueSource(flag) === "cli",
       );
 
-      // A list flag, so an empty string means none rather than a bad value.
       const extras = options.extras
         .split(",")
         .map((extra) => extra.trim())
