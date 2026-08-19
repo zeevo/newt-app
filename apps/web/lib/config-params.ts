@@ -1,5 +1,5 @@
 import { parseAsBoolean, parseAsStringLiteral } from "nuqs/server";
-import { DI_ONLY_REJECTS, type Config } from "@/lib/build-command";
+import { antiSlopAvailable, DI_ONLY_REJECTS, type Config } from "@/lib/build-command";
 
 // Defaults mirror the panel's initial selection. nuqs clears params at their
 // default, so the bare URL means this config and only changes become params.
@@ -29,7 +29,7 @@ export const configUrlKeys = {
 // anti-slop with eslint; the panel never renders either combo.
 export function sanitizeConfig(c: Config): Config {
   const deployment = c.nestDiOnly && DI_ONLY_REJECTS.has(c.deployment) ? "none" : c.deployment;
-  const antiSlop = c.antiSlop && c.linter === "oxc";
+  const antiSlop = c.antiSlop && antiSlopAvailable(c.linter);
   return deployment === c.deployment && antiSlop === c.antiSlop
     ? c
     : { ...c, deployment, antiSlop };

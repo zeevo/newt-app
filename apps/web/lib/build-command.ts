@@ -34,10 +34,24 @@ export const DI_ONLY_HINT =
 
 export const TODO_EXAMPLE_HINT = "Include an example to-do list feature.";
 
+export const ANTI_SLOP_HINT =
+  "Vendors dmmulroy/anti-slop into tools/oxlint and turns its 15 rules on as errors: no undocumented type assertions, no unknown returns, no runtime typeof narrowing.";
+
 // The rules are an oxlint plugin, so the eslint toolchain has nowhere to load
 // them from — the CLI rejects the pair rather than scaffolding a dead config.
-export const ANTI_SLOP_HINT =
-  "Vendors dmmulroy/anti-slop into tools/oxlint: oxlint rules that reject undocumented type assertions, unknown returns and runtime typeof narrowing. Needs the oxc linter.";
+export function antiSlopAvailable(linter: Config["linter"]): boolean {
+  return linter === "oxc";
+}
+
+// One line per selected extra. They share a single control, and none of the
+// values are self-describing, so the panel spells out what each one adds.
+export function extrasHints(c: Config): string[] {
+  return [
+    deploymentHint(c),
+    c.todoExample ? TODO_EXAMPLE_HINT : null,
+    c.antiSlop ? ANTI_SLOP_HINT : null,
+  ].filter((hint) => hint !== null);
+}
 
 export const DATABASE_HINT =
   "SQLite writes to a local file, which is not persisted on serverless filesystems like Vercel’s. Better Auth and your app share one Kysely connection either way.";
