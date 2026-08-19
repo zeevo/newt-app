@@ -11,10 +11,11 @@
 // is none.
 //
 // Both halves compare formatting, so the files this script covers have to stay
-// in stock shadcn style and are listed in .prettierignore. Running prettier
-// over packages/ui reports 64 of 68 files as drift: the templates carry stock
-// style inside their `template:` literals, which prettier leaves alone, so
-// formatting only moves the packages/ui side and every file stops matching.
+// in stock shadcn style and are listed in ignorePatterns in .oxfmtrc.json.
+// Formatting packages/ui reports 64 of 68 files as drift: the templates carry
+// stock style inside their `template:` literals, which the formatter leaves
+// alone, so formatting only moves the packages/ui side and every file stops
+// matching.
 //
 //   node scripts/check-ui-drift.mjs             # internal only, offline
 //   node scripts/check-ui-drift.mjs --upstream  # also diff against shadcn add
@@ -42,13 +43,7 @@ const bundle = path.join(repo, "node_modules/.cache/ui-drift-templates.mjs");
 fs.mkdirSync(path.dirname(bundle), { recursive: true });
 execFileSync(
   require.resolve("esbuild/bin/esbuild"),
-  [
-    "src/templates/index.ts",
-    "--bundle",
-    "--format=esm",
-    "--platform=node",
-    `--outfile=${bundle}`,
-  ],
+  ["src/templates/index.ts", "--bundle", "--format=esm", "--platform=node", `--outfile=${bundle}`],
   { cwd: cna, stdio: "pipe" },
 );
 const { templates } = await import(`${bundle}?t=${process.pid}`);
@@ -74,10 +69,7 @@ let failed = false;
 // Intentional divergences between the templates and the site's ui package:
 // package.json carries repo-specific fields and globals.css holds the site's
 // own design work.
-const SKIP = new Set([
-  "packages/ui/package.json",
-  "packages/ui/src/styles/globals.css",
-]);
+const SKIP = new Set(["packages/ui/package.json", "packages/ui/src/styles/globals.css"]);
 
 const tracked = templates.shadcnUi.templates.filter(
   (t) => t.filename.startsWith("packages/ui/") && !SKIP.has(t.filename),
@@ -108,9 +100,7 @@ const untracked = ["src/components", "src/hooks", "src/lib"]
   .filter((f) => !claimed.has(f));
 
 if (drifted.length === 0) {
-  console.log(
-    `internal: packages/ui matches the templates (${tracked.length} files)`,
-  );
+  console.log(`internal: packages/ui matches the templates (${tracked.length} files)`);
 } else if (write) {
   console.log(`internal: synced ${drifted.length} file(s) from the templates:`);
   drifted.forEach((t) => console.log(`  ${t.filename}`));
@@ -125,9 +115,7 @@ if (drifted.length === 0) {
 
 if (untracked.length > 0) {
   failed = true;
-  console.error(
-    `\ninternal: ${untracked.length} file(s) in packages/ui that no template claims:`,
-  );
+  console.error(`\ninternal: ${untracked.length} file(s) in packages/ui that no template claims:`);
   untracked.forEach((f) => console.error(`  ${f}`));
 }
 
@@ -135,21 +123,14 @@ if (untracked.length > 0) {
 
 if (upstream) {
   const all = templates.shadcnUi.templates
-    .map(
-      (t) =>
-        t.filename.match(/^packages\/ui\/src\/components\/(.+)\.tsx$/)?.[1],
-    )
+    .map((t) => t.filename.match(/^packages\/ui\/src\/components\/(.+)\.tsx$/)?.[1])
     .filter(Boolean)
     .sort();
 
   // Asking for a name shadcn does not publish aborts the whole batch and emits
   // nothing, so intersect with the registry first. What is left over is ours.
-  const index = await (
-    await fetch("https://ui.shadcn.com/r/index.json")
-  ).json();
-  const published = new Set(
-    (Array.isArray(index) ? index : index.items).map((i) => i.name),
-  );
+  const index = await (await fetch("https://ui.shadcn.com/r/index.json")).json();
+  const published = new Set((Array.isArray(index) ? index : index.items).map((i) => i.name));
   const components = all.filter((n) => published.has(n));
   const local = all.filter((n) => !published.has(n));
 
@@ -172,14 +153,8 @@ if (upstream) {
       compilerOptions: { baseUrl: ".", paths: { "@/*": ["./src/*"] } },
     }),
   );
-  fs.writeFileSync(
-    path.join(dir, "src/styles.css"),
-    '@import "tailwindcss";\n',
-  );
-  fs.writeFileSync(
-    path.join(dir, "src/lib/utils.ts"),
-    "export const cn = (...a) => a.join(' ')\n",
-  );
+  fs.writeFileSync(path.join(dir, "src/styles.css"), '@import "tailwindcss";\n');
+  fs.writeFileSync(path.join(dir, "src/lib/utils.ts"), "export const cn = (...a) => a.join(' ')\n");
 
   const componentsJson = JSON.parse(
     fs.readFileSync(path.join(repo, "packages/ui/components.json"), "utf8"),
@@ -210,18 +185,12 @@ if (upstream) {
     }),
   );
 
-  console.log(
-    `\nupstream: asking shadcn to emit ${components.length} component(s)...`,
-  );
+  console.log(`\nupstream: asking shadcn to emit ${components.length} component(s)...`);
   try {
-    execFileSync(
-      "npx",
-      ["--yes", "shadcn@latest", "add", ...components, "--yes", "--overwrite"],
-      {
-        cwd: dir,
-        stdio: "pipe",
-      },
-    );
+    execFileSync("npx", ["--yes", "shadcn@latest", "add", ...components, "--yes", "--overwrite"], {
+      cwd: dir,
+      stdio: "pipe",
+    });
   } catch (error) {
     // the CLI exits non-zero when it skips a component it cannot emit, which is
     // expected here, so judge by what landed on disk rather than by exit code
@@ -245,9 +214,7 @@ if (upstream) {
 
   const ours = new Map(
     templates.shadcnUi.templates
-      .filter((t) =>
-        /^packages\/ui\/src\/components\/.+\.tsx$/.test(t.filename),
-      )
+      .filter((t) => /^packages\/ui\/src\/components\/.+\.tsx$/.test(t.filename))
       .map((t) => [path.basename(t.filename, ".tsx"), render(t.template)]),
   );
 
@@ -265,9 +232,7 @@ if (upstream) {
       missing.push(name);
       continue;
     }
-    if (
-      canonical(ours.get(name)) !== canonical(fs.readFileSync(emitted, "utf8"))
-    ) {
+    if (canonical(ours.get(name)) !== canonical(fs.readFileSync(emitted, "utf8"))) {
       (INTENTIONAL[name] ? expected : diverged).push(name);
     }
   }
@@ -279,16 +244,10 @@ if (upstream) {
     );
   } else {
     failed = true;
-    console.error(
-      `upstream: ${diverged.length} of ${compared} component(s) differ:`,
-    );
-    diverged.forEach((n) =>
-      console.error(`  ${n}  (diff ${path.join(ui, n + ".tsx")})`),
-    );
+    console.error(`upstream: ${diverged.length} of ${compared} component(s) differ:`);
+    diverged.forEach((n) => console.error(`  ${n}  (diff ${path.join(ui, n + ".tsx")})`));
   }
-  expected.forEach((n) =>
-    console.log(`upstream: ${n} differs on purpose, ${INTENTIONAL[n]}`),
-  );
+  expected.forEach((n) => console.log(`upstream: ${n} differs on purpose, ${INTENTIONAL[n]}`));
   if (missing.length > 0) {
     console.log(
       `upstream: ${missing.length} listed but not emitted for style ${componentsJson.style}: ${missing.join(", ")}`,
