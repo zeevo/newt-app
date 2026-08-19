@@ -17,10 +17,13 @@ import deploymentSpa from "./single-process-static-export/index";
 import nestDiOnlyModule from "./nest-di-only/index";
 import deploymentStandaloneDi from "./deployment-standalone-di/index";
 import apiControllers from "./api-controllers/index";
+import bareModule from "./bare/index";
 import {
-  todoExampleApi,
+  todoExampleDb,
+  todoExampleNest,
   todoExampleControllers,
   todoExampleDi,
+  todoExampleBare,
   todoExampleWeb,
   todoExampleShadcn,
 } from "./todo-example/index";
@@ -56,9 +59,12 @@ export const templates = {
   nestDiOnly: nestDiOnlyModule,
   deploymentStandaloneDi,
   apiControllers,
-  todoExampleApi,
+  bare: bareModule,
+  todoExampleDb,
+  todoExampleNest,
   todoExampleControllers,
   todoExampleDi,
+  todoExampleBare,
   todoExampleWeb,
   todoExampleShadcn,
 };
@@ -66,7 +72,10 @@ export const templates = {
 // The single source of truth for which modules a selection scaffolds. Kept here
 // rather than in the CLI so the render tests exercise the real selection.
 export function selectModules(selection: ModuleSelection): Module[] {
-  const { deployment, nestDiOnly, todoExample, shadcn, database, linter, testing } = selection;
+  const { deployment, mode, includeExample, shadcn, database, linter, testing } = selection;
+
+  const diOnly = mode === "nest-di-only";
+  const bare = mode === "bare";
 
   const deploymentModule =
     deployment === "standalone"
@@ -92,7 +101,8 @@ export function selectModules(selection: ModuleSelection): Module[] {
   return [
     root,
     webModule,
-    api,
+    // bare mode emits no apps/api at all, so nothing NestJS comes with it
+    ...(bare ? [bareModule] : [api]),
     database === "postgres" ? dbPostgres : dbSqlite,
     auth,
     shadcn ? shadcnUi : ui,
@@ -100,14 +110,16 @@ export function selectModules(selection: ModuleSelection): Module[] {
     typescriptConfig,
     testing === "vitest" ? testingVitest : testingJest,
     ...(deploymentModule ? [deploymentModule] : []),
-    ...(nestDiOnly ? [nestDiOnlyModule] : [apiControllers]),
+    ...(bare ? [] : diOnly ? [nestDiOnlyModule] : [apiControllers]),
     // nest-di-only overwrites the standalone next.config.js and leaves the
     // Dockerfile pointing at an api entrypoint DI-only never emits
-    ...(nestDiOnly && deployment === "standalone" ? [deploymentStandaloneDi] : []),
-    ...(todoExample
+    ...(diOnly && deployment === "standalone" ? [deploymentStandaloneDi] : []),
+    ...(includeExample
       ? [
-          todoExampleApi,
-          ...(nestDiOnly ? [todoExampleDi] : [todoExampleControllers]),
+          todoExampleDb,
+          ...(bare
+            ? [todoExampleBare]
+            : [todoExampleNest, diOnly ? todoExampleDi : todoExampleControllers]),
           shadcn ? todoExampleShadcn : todoExampleWeb,
         ]
       : []),

@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s) => s.todoExample && s.shadcn,
+  when: (s) => s.includeExample && s.shadcn,
   filename: "apps/web/app/page.tsx",
   template: `'use client';
 
@@ -36,7 +36,7 @@ export default function Home() {
         <div>
           <h1 className="text-4xl font-black tracking-tight"><%= projectName %></h1>
           <p className="text-sm text-muted-foreground tracking-widest uppercase">
-            Next + Nest = Newt 💜
+            <% if (mode === 'bare') { %>Next.js, batteries included 💜<% } else { %>Next + Nest = Newt 💜<% } %>
           </p>
         </div>
       </div>
@@ -56,7 +56,7 @@ export default function Home() {
       <Card>
         <CardHeader>
           <CardTitle className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-            nest.js
+            <% if (mode === 'bare') { %>route handler<% } else { %>nest.js<% } %>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -97,7 +97,7 @@ export default function Home() {
             <Link href="https://nextjs.org">Next.js</Link>
           </li>
           <li>
-            <Link href="https://nestjs.com">NestJS</Link>
+            <% if (mode === 'bare') { %><Link href="https://better-auth.com">Better Auth</Link><% } else { %><Link href="https://nestjs.com">NestJS</Link><% } %>
           </li>
         </ul>
       </div>

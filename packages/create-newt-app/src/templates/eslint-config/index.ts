@@ -1,5 +1,6 @@
 import type { Module } from "../types";
 import { versions } from "../versions";
+import { skipWithoutApi } from "../api-targets";
 import packageJson from "./templates/package-json";
 import base from "./templates/base";
 import next from "./templates/next";
@@ -16,7 +17,7 @@ const root = "";
 
 const eslintConfig: Module = {
   templates: [packageJson, base, next, reactInternal, webConfig, apiConfig, uiConfig, prettierrc],
-  packages: [
+  packages: skipWithoutApi([
     { package: "eslint", module: web, version: versions.eslint, dev: true },
     {
       package: "@<%= projectName %>/eslint-config",
@@ -63,8 +64,8 @@ const eslintConfig: Module = {
       version: versions.prettier,
       dev: true,
     },
-  ],
-  scripts: [
+  ]),
+  scripts: skipWithoutApi([
     {
       module: web,
       name: "lint",
@@ -89,7 +90,7 @@ const eslintConfig: Module = {
       name: "format:check",
       script: `prettier --check "**/*.{ts,tsx,js,jsx,json,md,yaml,yml}"`,
     },
-  ],
+  ]),
 };
 
 export default eslintConfig;

@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s) => s.mode === "full",
+  when: (s) => s.mode === "bare",
   filename: "apps/web/next.config.js",
   template: `import dotenv from 'dotenv';
 import { resolve } from 'path';
@@ -9,8 +9,6 @@ import { resolve } from 'path';
 dotenv.config({ path: resolve(process.cwd(), '../../.env') });
 dotenv.config({ path: resolve(process.cwd(), '.env') });
 
-// No output setting: server.ts is the server, so Next runs in-process rather
-// than through its own standalone entrypoint.
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
 

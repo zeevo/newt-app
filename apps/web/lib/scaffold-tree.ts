@@ -44,13 +44,38 @@ export function scaffoldTree(c: Config): TreeNode[] {
                   path: "apps/web/app/page.tsx",
                   annotation: "home route",
                 },
-                ...(c.todoExample
+                ...(c.includeExample
                   ? [
                       {
                         name: "todo-list.tsx",
                         kind: "file" as const,
                         path: "apps/web/app/todo-list.tsx",
                         annotation: "todo example",
+                        conditional: true,
+                      },
+                    ]
+                  : []),
+              ],
+            },
+            {
+              name: "lib",
+              kind: "dir",
+              path: "apps/web/lib",
+              children: [
+                {
+                  name: "auth-client.ts",
+                  kind: "file",
+                  path: "apps/web/lib/auth-client.ts",
+                },
+                // bare mode queries the database straight from the route
+                // handlers, so what apps/api owns elsewhere lives here
+                ...(c.mode === "bare" && c.includeExample
+                  ? [
+                      {
+                        name: "todos.ts",
+                        kind: "file" as const,
+                        path: "apps/web/lib/todos.ts",
+                        annotation: "Kysely queries",
                         conditional: true,
                       },
                     ]
@@ -81,80 +106,86 @@ export function scaffoldTree(c: Config): TreeNode[] {
             },
           ],
         },
-        {
-          name: "api",
-          kind: "dir",
-          path: "apps/api",
-          annotation: "NestJS backend",
-          children: [
-            {
-              name: "src",
-              kind: "dir",
-              path: "apps/api/src",
-              children: [
-                ...(c.todoExample
-                  ? [
-                      {
-                        name: "todos",
-                        kind: "dir" as const,
-                        path: "apps/api/src/todos",
-                        conditional: true,
-                        children: [
-                          {
-                            name: "todos.service.ts",
-                            kind: "file" as const,
-                            path: "apps/api/src/todos/todos.service.ts",
-                          },
-                          ...(c.nestDiOnly
-                            ? []
-                            : [
+        // bare mode scaffolds no apps/api at all
+        ...(c.mode === "bare"
+          ? []
+          : ([
+              {
+                name: "api",
+                kind: "dir" as const,
+                path: "apps/api",
+                annotation: "NestJS backend",
+                children: [
+                  {
+                    name: "src",
+                    kind: "dir" as const,
+                    path: "apps/api/src",
+                    children: [
+                      ...(c.includeExample
+                        ? [
+                            {
+                              name: "todos",
+                              kind: "dir" as const,
+                              path: "apps/api/src/todos",
+                              conditional: true,
+                              children: [
                                 {
-                                  name: "todos.controller.ts",
+                                  name: "todos.service.ts",
                                   kind: "file" as const,
-                                  path: "apps/api/src/todos/todos.controller.ts",
-                                  conditional: true,
+                                  path: "apps/api/src/todos/todos.service.ts",
                                 },
-                              ]),
-                        ],
-                      },
-                    ]
-                  : []),
-                {
-                  name: "app.module.ts",
-                  kind: "file",
-                  path: "apps/api/src/app.module.ts",
-                },
-                // di-only never bootstraps an HTTP server, so it has no main.ts.
-                ...(c.nestDiOnly
-                  ? []
-                  : [
+                                ...(c.mode === "nest-di-only"
+                                  ? []
+                                  : [
+                                      {
+                                        name: "todos.controller.ts",
+                                        kind: "file" as const,
+                                        path: "apps/api/src/todos/todos.controller.ts",
+                                        conditional: true,
+                                      },
+                                    ]),
+                              ],
+                            },
+                          ]
+                        : []),
                       {
-                        name: "main.ts",
-                        kind: "file" as const,
-                        path: "apps/api/src/main.ts",
-                        conditional: true,
+                        name: "app.module.ts",
+                        kind: "file",
+                        path: "apps/api/src/app.module.ts",
                       },
-                    ]),
-                // index.ts re-exports AppModule for whoever boots Nest from
-                // outside apps/api: the Next.js route handlers under di-only,
-                // or apps/web/server.ts under custom-server.
-                ...(c.nestDiOnly || c.deployment === "custom-server"
-                  ? [
-                      {
-                        name: "index.ts",
-                        kind: "file" as const,
-                        path: "apps/api/src/index.ts",
-                        annotation: c.nestDiOnly
-                          ? "exports the DI context"
-                          : "AppModule for server.ts",
-                        conditional: true,
-                      },
-                    ]
-                  : []),
-              ],
-            },
-          ],
-        },
+                      // di-only never bootstraps an HTTP server, so it has no main.ts.
+                      ...(c.mode === "nest-di-only"
+                        ? []
+                        : [
+                            {
+                              name: "main.ts",
+                              kind: "file" as const,
+                              path: "apps/api/src/main.ts",
+                              conditional: true,
+                            },
+                          ]),
+                      // index.ts re-exports AppModule for whoever boots Nest from
+                      // outside apps/api: the Next.js route handlers under di-only,
+                      // or apps/web/server.ts under custom-server.
+                      ...(c.mode === "nest-di-only" || c.deployment === "custom-server"
+                        ? [
+                            {
+                              name: "index.ts",
+                              kind: "file" as const,
+                              path: "apps/api/src/index.ts",
+                              annotation:
+                                c.mode === "nest-di-only"
+                                  ? "exports the DI context"
+                                  : "AppModule for server.ts",
+                              conditional: true,
+                            },
+                          ]
+                        : []),
+                    ],
+                  },
+                ],
+              },
+            ] as TreeNode[])),
       ],
     },
     {

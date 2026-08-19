@@ -20,15 +20,29 @@ import {
   DATABASE_HINT,
   deploymentHint,
   deploymentOptions,
-  DI_ONLY_HINT,
   DI_ONLY_REJECTS,
-  TODO_EXAMPLE_HINT,
+  EXAMPLE_APP_HINT,
+  modeHint,
   type Config,
 } from "@/lib/build-command";
 import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
 import { configParsers, configUrlKeys, sanitizeConfig } from "@/lib/config-params";
 
 const grow = "animate-in fade-in slide-in-from-left-1 duration-300";
+
+// The toggle reads as a property of the NestJS row, so it says on/off rather
+// than naming the CLI's modes.
+const MODE_LABELS = {
+  full: "on",
+  "nest-di-only": "di-only",
+  bare: "off",
+} as const satisfies Record<Config["mode"], string>;
+
+const MODE_VALUES = {
+  on: "full",
+  "di-only": "nest-di-only",
+  off: "bare",
+} as const satisfies Record<(typeof MODE_LABELS)[keyof typeof MODE_LABELS], Config["mode"]>;
 
 function renderNodes(nodes: TreeNode[]) {
   return nodes.map((node) => {
@@ -191,17 +205,20 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             <Segmented
               label="NestJS"
               logo="/logos/nestjs.svg"
-              hint={DI_ONLY_HINT}
-              value={c.nestDiOnly ? "di-only" : "on"}
-              options={["on", "di-only"] as const}
+              hint={modeHint(c)}
+              value={MODE_LABELS[c.mode]}
+              options={["on", "di-only", "off"] as const}
               onChange={(v) =>
                 setC((prev) => {
-                  const nestDiOnly = v === "di-only";
+                  const mode = MODE_VALUES[v];
+                  const rejected =
+                    mode === "bare"
+                      ? prev.deployment !== "none"
+                      : mode === "nest-di-only" && DI_ONLY_REJECTS.has(prev.deployment);
                   return {
                     ...prev,
-                    nestDiOnly,
-                    deployment:
-                      nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment) ? "none" : prev.deployment,
+                    mode,
+                    deployment: rejected ? "none" : prev.deployment,
                   };
                 })
               }
@@ -240,9 +257,9 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             />
             <BoolToggle
               label="include example app"
-              hint={TODO_EXAMPLE_HINT}
-              pressed={c.todoExample}
-              onChange={(v) => set("todoExample", v)}
+              hint={EXAMPLE_APP_HINT}
+              pressed={c.includeExample}
+              onChange={(v) => set("includeExample", v)}
             />
             <Row label="extras">
               <NativeSelect
@@ -251,7 +268,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
                 onChange={(e) => set("deployment", e.target.value as Config["deployment"])}
                 className="font-mono text-xs"
               >
-                {deploymentOptions(c.nestDiOnly).map((option) => (
+                {deploymentOptions(c.mode).map((option) => (
                   <NativeSelectOption key={option} value={option}>
                     {option}
                   </NativeSelectOption>

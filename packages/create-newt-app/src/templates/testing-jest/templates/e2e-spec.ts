@@ -1,4 +1,6 @@
+import type { Selection } from "../../types";
 export default {
+  when: (s) => s.mode !== "bare",
   filename: "apps/api/test/app.e2e-spec.ts",
   template: `import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';

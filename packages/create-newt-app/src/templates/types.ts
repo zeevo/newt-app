@@ -5,15 +5,20 @@ export type TemplateData = {
   testing: "jest" | "vitest";
   database: "sqlite" | "postgres";
   deployment: "none" | "standalone" | "custom-server" | "spa";
+  mode: Mode;
   authSecret: string;
   versions: Versions;
 };
+// How NestJS runs: an HTTP server on its own port, an application context with
+// no server that Next.js route handlers resolve services out of, or not at all.
+export type Mode = "full" | "nest-di-only" | "bare";
+
 // Every option a template can select on. Kept separate from TemplateData
 // because these steer *which* template is used, not what it renders.
 export type Selection = {
   deployment: "none" | "standalone" | "custom-server" | "spa";
-  nestDiOnly: boolean;
-  todoExample: boolean;
+  mode: Mode;
+  includeExample: boolean;
   shadcn: boolean;
   database: "sqlite" | "postgres";
 };
@@ -33,13 +38,21 @@ export type Template = {
   when?: (selection: Selection) => boolean;
 };
 export type File = { src: string; filename: string };
+// `when` here does for injected deps and scripts what it already does for
+// templates: a module can target a workspace that only some selections emit.
 export type Package = {
   package: string;
   module: string;
   version: string;
   dev?: boolean;
+  when?: (selection: Selection) => boolean;
 };
-export type Script = { module: string; name: string; script: string };
+export type Script = {
+  module: string;
+  name: string;
+  script: string;
+  when?: (selection: Selection) => boolean;
+};
 export type Module = {
   templates: Template[];
   staticFiles?: File[];

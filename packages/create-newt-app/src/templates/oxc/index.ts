@@ -1,5 +1,6 @@
 import type { Module } from "../types";
 import { versions } from "../versions";
+import { skipWithoutApi } from "../api-targets";
 import oxlintrc from "./templates/oxlintrc";
 import oxfmtrc from "./templates/oxfmtrc";
 
@@ -10,13 +11,13 @@ const root = "";
 
 const oxc: Module = {
   templates: [oxlintrc, oxfmtrc],
-  packages: [
+  packages: skipWithoutApi([
     { package: "oxlint", module: web, version: versions.oxlint, dev: true },
     { package: "oxlint", module: api, version: versions.oxlint, dev: true },
     { package: "oxlint", module: ui, version: versions.oxlint, dev: true },
     { package: "oxfmt", module: root, version: versions.oxfmt, dev: true },
-  ],
-  scripts: [
+  ]),
+  scripts: skipWithoutApi([
     {
       module: web,
       name: "lint",
@@ -33,7 +34,7 @@ const oxc: Module = {
     { module: ui, name: "lint:check", script: "oxlint" },
     { module: root, name: "format", script: "oxfmt" },
     { module: root, name: "format:check", script: "oxfmt --check" },
-  ],
+  ]),
 };
 
 export default oxc;

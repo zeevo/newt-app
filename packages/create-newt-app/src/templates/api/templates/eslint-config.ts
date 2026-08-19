@@ -1,4 +1,6 @@
+import type { Selection } from "../../types";
 export default {
+  when: (s) => s.mode !== "bare",
   filename: "apps/api/eslint.config.mjs",
   template: `// @ts-check
 import eslint from '@eslint/js';

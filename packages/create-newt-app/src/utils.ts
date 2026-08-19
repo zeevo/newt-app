@@ -1,7 +1,7 @@
 import ejs from "ejs";
 import { existsSync, promises } from "fs";
 import path from "path";
-import type { Module, Package, Script, Selection, TemplateData } from "./types.js";
+import type { Mode, Module, Package, Script, Selection, TemplateData } from "./types.js";
 import { getStaticFilePath } from "./templates";
 
 export interface ValidationResult {
@@ -173,7 +173,49 @@ export function validateFlagValue(
   };
 }
 
-export function validateDeploymentCombo(deployment: string, nestDiOnly: boolean): ValidationResult {
+// The mode flags name one axis, so passing two of them is a contradiction
+// rather than a last-one-wins.
+export function validateModeFlags(
+  full: boolean,
+  nestDiOnly: boolean,
+  bare: boolean,
+): ValidationResult {
+  const passed = [
+    { on: full, flag: "--full" },
+    { on: nestDiOnly, flag: "--nest-di-only" },
+    { on: bare, flag: "--bare" },
+  ]
+    .filter((entry) => entry.on)
+    .map((entry) => entry.flag);
+
+  if (passed.length > 1) {
+    return {
+      valid: false,
+      error:
+        `${passed.join(" and ")} all choose how NestJS runs. Pass one.\n` +
+        "--full runs it as an HTTP server on port 3001, --nest-di-only runs it as an\n" +
+        "application context that Next.js route handlers inject services from, and\n" +
+        "--bare leaves it out entirely.",
+    };
+  }
+
+  return { valid: true };
+}
+
+export function validateDeploymentCombo(deployment: string, mode: Mode): ValidationResult {
+  const nestDiOnly = mode === "nest-di-only";
+
+  if (mode === "bare" && deployment !== "none") {
+    return {
+      valid: false,
+      error:
+        `--deployment ${deployment} cannot be combined with --bare.\n` +
+        "Every deployment extra either builds apps/api into an image or has NestJS serve\n" +
+        "the Next.js output, and --bare scaffolds no apps/api at all. Drop --bare to get\n" +
+        "the deployment extras, or drop --deployment.",
+    };
+  }
+
   if (deployment === "spa" && nestDiOnly) {
     return {
       valid: false,

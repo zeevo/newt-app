@@ -9,6 +9,7 @@ import {
   updateScripts,
   validateDeploymentCombo,
   validateFlagValue,
+  validateModeFlags,
   validateNodeVersion,
   validateProjectName,
 } from "./utils";
@@ -20,6 +21,7 @@ const templateData: TemplateData = {
   testing: "jest",
   database: "sqlite",
   deployment: "none",
+  mode: "full",
   authSecret: "secret",
   versions,
 };
@@ -64,33 +66,69 @@ describe("validateProjectName", () => {
   });
 });
 
+describe("validateModeFlags", () => {
+  it("rejects two mode flags and names both", () => {
+    const result = validateModeFlags(true, false, true);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("--full and --bare all choose how NestJS runs.");
+  });
+
+  it("accepts any single flag, and none", () => {
+    expect(
+      [
+        [true, false, false],
+        [false, true, false],
+        [false, false, true],
+        [false, false, false],
+      ].map(([full, diOnly, bare]) => validateModeFlags(full, diOnly, bare).valid),
+    ).toEqual([true, true, true, true]);
+  });
+});
+
 describe("validateDeploymentCombo", () => {
   it("rejects spa combined with nest-di-only", () => {
-    const result = validateDeploymentCombo("spa", true);
+    const result = validateDeploymentCombo("spa", "nest-di-only");
     expect(result.valid).toBe(false);
     expect(result.error).toContain("--deployment spa cannot be combined with --nest-di-only.");
   });
 
-  it("accepts spa without nest-di-only", () => {
-    expect(validateDeploymentCombo("spa", false).valid).toBe(true);
+  it("accepts spa in full mode", () => {
+    expect(validateDeploymentCombo("spa", "full").valid).toBe(true);
   });
 
   it("rejects custom-server combined with nest-di-only", () => {
-    const result = validateDeploymentCombo("custom-server", true);
+    const result = validateDeploymentCombo("custom-server", "nest-di-only");
     expect(result.valid).toBe(false);
     expect(result.error).toContain(
       "--deployment custom-server cannot be combined with --nest-di-only.",
     );
   });
 
-  it("accepts custom-server without nest-di-only", () => {
-    expect(validateDeploymentCombo("custom-server", false).valid).toBe(true);
+  it("accepts custom-server in full mode", () => {
+    expect(validateDeploymentCombo("custom-server", "full").valid).toBe(true);
   });
 
   it("accepts nest-di-only with the deployments that support it", () => {
     expect(
-      ["none", "standalone"].map((deployment) => validateDeploymentCombo(deployment, true).valid),
+      ["none", "standalone"].map(
+        (deployment) => validateDeploymentCombo(deployment, "nest-di-only").valid,
+      ),
     ).toEqual([true, true]);
+  });
+
+  it("rejects every deployment extra in bare mode", () => {
+    expect(
+      ["standalone", "custom-server", "spa"].map(
+        (deployment) => validateDeploymentCombo(deployment, "bare").valid,
+      ),
+    ).toEqual([false, false, false]);
+    expect(validateDeploymentCombo("standalone", "bare").error).toContain(
+      "cannot be combined with --bare.",
+    );
+  });
+
+  it("accepts bare with no deployment extras", () => {
+    expect(validateDeploymentCombo("none", "bare").valid).toBe(true);
   });
 });
 

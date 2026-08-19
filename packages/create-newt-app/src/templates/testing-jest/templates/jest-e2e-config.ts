@@ -1,4 +1,6 @@
+import type { Selection } from "../../types";
 export default {
+  when: (s) => s.mode !== "bare",
   filename: "apps/api/test/jest-e2e.json",
   template: `{
   "moduleFileExtensions": ["js", "mjs", "json", "ts"],
