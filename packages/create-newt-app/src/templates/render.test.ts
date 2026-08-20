@@ -55,6 +55,7 @@ function renderCombo(selection: ModuleSelection) {
     testing: selection.testing,
     database: selection.database,
     deployment: selection.deployment,
+    linter: selection.linter,
     antiSlop: selection.extras.includes("anti-slop"),
     shadcn: selection.shadcn,
     authSecret: "test-secret",

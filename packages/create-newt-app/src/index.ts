@@ -231,6 +231,7 @@ export async function doInit(options: Options) {
           testing,
           database,
           deployment,
+          linter,
           antiSlop: extras.includes("anti-slop"),
           selection,
         });

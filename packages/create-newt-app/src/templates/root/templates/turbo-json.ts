@@ -12,10 +12,12 @@ export default {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
-    "lint": {
+<% if (linter === "oxc") { %>    "typecheck": {
+      "dependsOn": ["^build"]
+    },<% } else { %>    "lint": {
       "dependsOn": ["^lint"],
       "env": ["NODE_ENV"]
-    },
+    },<% } %>
     "test": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"]

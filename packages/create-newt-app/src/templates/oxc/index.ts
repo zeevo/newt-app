@@ -4,33 +4,21 @@ import oxlintrc from "./templates/oxlintrc";
 import oxfmtrc from "./templates/oxfmtrc";
 
 const web = "apps/web";
-const api = "apps/api";
-const ui = "packages/ui";
 const root = "";
 
+// oxlint reads the nearest config per file and covers the whole tree in one
+// pass, so it runs once from the root rather than as a task per workspace.
 const oxc: Module = {
   templates: [oxlintrc, oxfmtrc],
   packages: [
-    { package: "oxlint", module: web, version: versions.oxlint, dev: true },
-    { package: "oxlint", module: api, version: versions.oxlint, dev: true },
-    { package: "oxlint", module: ui, version: versions.oxlint, dev: true },
+    { package: "oxlint", module: root, version: versions.oxlint, dev: true },
     { package: "oxfmt", module: root, version: versions.oxfmt, dev: true },
   ],
   scripts: [
-    {
-      module: web,
-      name: "lint",
-      script: "oxlint --fix && next typegen && tsc --noEmit",
-    },
-    {
-      module: web,
-      name: "lint:check",
-      script: "oxlint && next typegen && tsc --noEmit",
-    },
-    { module: api, name: "lint", script: "oxlint src --fix" },
-    { module: api, name: "lint:check", script: "oxlint src" },
-    { module: ui, name: "lint", script: "oxlint --fix" },
-    { module: ui, name: "lint:check", script: "oxlint" },
+    { module: web, name: "typecheck", script: "next typegen && tsc --noEmit" },
+    { module: root, name: "lint", script: "oxlint --fix" },
+    { module: root, name: "typecheck", script: "turbo run typecheck" },
+    { module: root, name: "lint:check", script: "oxlint" },
     { module: root, name: "format", script: "oxfmt" },
     { module: root, name: "format:check", script: "oxfmt --check" },
   ],
