@@ -20,6 +20,7 @@
 //   node scripts/check-ui-drift.mjs             # internal only, offline
 //   node scripts/check-ui-drift.mjs --upstream  # also diff against shadcn add
 //   node scripts/check-ui-drift.mjs --write     # sync packages/ui from templates
+//   node scripts/check-ui-drift.mjs --upstream --write   # adopt shadcn's output
 
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
@@ -212,6 +213,31 @@ if (upstream) {
       .replace(/\s+/g, " ")
       .trim();
 
+  const templateSource = (emitted) =>
+    emitted
+      .replace(/@\/lib\/utils/g, "@<%= projectName %>/ui/lib/utils")
+      .replace(/@\/components\/ui\//g, "@<%= projectName %>/ui/components/")
+      .replace(/@\/hooks\//g, "@<%= projectName %>/ui/hooks/");
+
+  // The template is a JS template literal, so anything that would end or
+  // interpolate it has to survive as text.
+  const escaped = (source) =>
+    source.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$\{/g, "\\${");
+
+  const adopt = (name) => {
+    const source = templateSource(fs.readFileSync(path.join(ui, `${name}.tsx`), "utf8"));
+    const file = path.join(
+      repo,
+      "packages/create-newt-app/src/templates/shadcn-ui/templates",
+      `${name}.ts`,
+    );
+    const existing = fs.readFileSync(file, "utf8");
+    const opens = existing.indexOf("template: `") + "template: `".length;
+    const closes = existing.lastIndexOf("`,");
+    fs.writeFileSync(file, existing.slice(0, opens) + escaped(source) + existing.slice(closes));
+    fs.writeFileSync(path.join(repo, `packages/ui/src/components/${name}.tsx`), render(source));
+  };
+
   const ours = new Map(
     templates.shadcnUi.templates
       .filter((t) => /^packages\/ui\/src\/components\/.+\.tsx$/.test(t.filename))
@@ -242,10 +268,15 @@ if (upstream) {
     console.log(
       `upstream: ${compared - expected.length} of ${compared} component(s) match what shadcn emits`,
     );
+  } else if (write) {
+    diverged.forEach(adopt);
+    console.log(`upstream: adopted ${diverged.length} component(s) from shadcn:`);
+    diverged.forEach((n) => console.log(`  ${n}`));
   } else {
     failed = true;
     console.error(`upstream: ${diverged.length} of ${compared} component(s) differ:`);
     diverged.forEach((n) => console.error(`  ${n}  (diff ${path.join(ui, n + ".tsx")})`));
+    console.error("\nRe-run with --write to take shadcn's version.");
   }
   expected.forEach((n) => console.log(`upstream: ${n} differs on purpose, ${INTENTIONAL[n]}`));
   if (missing.length > 0) {

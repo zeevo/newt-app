@@ -65,6 +65,20 @@ cd /tmp/test-app && pnpm dev &
 
 Check it's up: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`
 
+## Keeping shadcn components current
+
+`packages/ui` is generated from the shadcn-ui templates, which are themselves
+`shadcn add` output. Two questions, one script:
+
+```bash
+node scripts/check-ui-drift.mjs                     # does packages/ui still match the templates?
+node scripts/check-ui-drift.mjs --upstream          # do the templates still match shadcn?
+node scripts/check-ui-drift.mjs --upstream --write  # take shadcn's version, then resync packages/ui
+```
+
+Manual, not CI: the upstream half runs the shadcn CLI over the network. Review
+the diff and open a PR with a changeset, since scaffolded apps get the result.
+
 ## Adding a new template file
 
 Three places to update when adding a template (e.g. a new UI component):
