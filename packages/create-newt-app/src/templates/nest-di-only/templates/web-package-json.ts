@@ -18,6 +18,8 @@ export default {
     "@<%= projectName %>/ui": "workspace:*",
     "@nestjs/common": "<%= versions["@nestjs/common"] %>",
     "@nestjs/core": "<%= versions["@nestjs/core"] %>",
+    "@nestjs/platform-express": "<%= versions["@nestjs/platform-express"] %>",
+    "@newt-app/nest-next-adapter": "<%= versions["@newt-app/nest-next-adapter"] %>",
     "reflect-metadata": "<%= versions["reflect-metadata"] %>",
     "@tailwindcss/postcss": "<%= versions["@tailwindcss/postcss"] %>",
     "dotenv": "<%= versions.dotenv %>",

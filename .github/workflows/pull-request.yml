@@ -130,6 +130,21 @@ jobs:
           if [ "$CLI_TASKS" = "true" ]; then SKIP_FLAGS=""; fi
           node $GITHUB_WORKSPACE/packages/create-newt-app/dist/index.js test-app ${{ matrix.flags }} $SKIP_FLAGS
 
+      # The adapter is developed in this repo, so di-only scaffolds consume the
+      # local build instead of npm: a PR that changes the adapter is then tested
+      # against its own changes, and the job works before the pin is published.
+      - name: Point the scaffolded app at the workspace adapter
+        if: ${{ contains(matrix.flags, 'nest-di-only') }}
+        run: |
+          pnpm build --filter=@newt-app/nest-next-adapter
+          node -e '
+            const fs = require("fs");
+            const p = process.env.RUNNER_TEMP + "/test-app/package.json";
+            const pkg = JSON.parse(fs.readFileSync(p, "utf8"));
+            pkg.pnpm = { ...pkg.pnpm, overrides: { "@newt-app/nest-next-adapter": "file:" + process.env.GITHUB_WORKSPACE + "/packages/nest-next-adapter" } };
+            fs.writeFileSync(p, JSON.stringify(pkg, null, 2) + "\n");
+          '
+
       # The CLI already installed for the cli_tasks entry. A failed install there
       # aborts the CLI with a non-zero exit, which fails this job at the step above.
       - name: Install scaffolded app
