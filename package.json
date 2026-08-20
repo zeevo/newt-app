@@ -5,21 +5,23 @@
   "scripts": {
     "build": "turbo run build",
     "build:watch": "turbo run build:watch",
+    "changeset": "changeset",
+    "db:generate": "turbo run generate",
+    "db:migrate": "turbo run migrate",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
+    "lint": "turbo run lint",
+    "release": "turbo run build && changeset publish",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "db:migrate": "turbo run migrate",
-    "db:generate": "turbo run generate",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "turbo run build && changeset publish"
+    "version-packages": "changeset version"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
+    "@oxlint/plugins": "^1.74.0",
     "oxfmt": "^0.59.0",
+    "oxlint": "^1.74.0",
     "turbo": "^2.8.16",
     "typescript": "6.0.2"
   },
