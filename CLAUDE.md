@@ -65,6 +65,19 @@ cd /tmp/test-app && pnpm dev &
 
 Check it's up: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`
 
+## anti-slop
+
+`tools/oxlint/anti-slop` holds oxlint rules vendored from dmmulroy/anti-slop, loaded
+by `.oxlintrc.json`, so `pnpm lint` enforces them like any other rule.
+
+Nine are on. The other six are listed as `off` because the repo does not pass them
+yet: 36 findings, 26 of which are type assertions with no `SAFETY:` comment. Turning
+one on means fixing its findings first — and note that another 25 sit in
+`packages/ui/src/components`, which is upstream shadcn code we re-pull rather than write.
+
+`packages/create-newt-app/src/templates/anti-slop/static/` is a second copy at the same
+upstream pin, shipped to scaffolded apps by `--extras anti-slop`. Re-sync both together.
+
 ## Keeping shadcn components current
 
 `packages/ui` is generated from the shadcn-ui templates, which are themselves
