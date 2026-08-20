@@ -120,9 +120,6 @@ importers:
       jsdom:
         specifier: ^29.0.1
         version: 29.0.1(@noble/hashes@2.0.1)
-      oxlint:
-        specifier: ^1.74.0
-        version: 1.78.0
       tailwindcss:
         specifier: ^4.0.8
         version: 4.2.1
@@ -182,9 +179,6 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.2.3(@types/react@19.2.14)
-      oxlint:
-        specifier: ^1.74.0
-        version: 1.78.0
       tailwindcss:
         specifier: ^4.0.8
         version: 4.2.1
@@ -256,9 +250,6 @@ importers:
       jsdom:
         specifier: ^29.0.1
         version: 29.0.1(@noble/hashes@2.0.1)
-      oxlint:
-        specifier: ^1.74.0
-        version: 1.78.0
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -358,9 +349,6 @@ importers:
       '@types/react-dom':
         specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.14)
-      oxlint:
-        specifier: ^1.74.0
-        version: 1.78.0
       tailwindcss:
         specifier: ^4.0.8
         version: 4.2.1

@@ -11,7 +11,7 @@
     "dev": "turbo run dev",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "lint": "turbo run lint",
+    "lint": "oxlint",
     "release": "turbo run build && changeset publish",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",

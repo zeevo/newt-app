@@ -8,10 +8,6 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
-    "lint": {
-      "dependsOn": ["^lint", "^build"],
-      "env": ["NODE_ENV"]
-    },
     "build:watch": {
       "cache": false,
       "persistent": true

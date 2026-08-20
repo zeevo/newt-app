@@ -132,8 +132,8 @@ const readWorkspaceVersions = async () => {
   manifests.forEach(({ relative, manifest }) => {
     const owner = manifest.name ?? relative;
     Object.entries({
-      ...(manifest.dependencies ?? {}),
-      ...(manifest.devDependencies ?? {}),
+      ...manifest.dependencies,
+      ...manifest.devDependencies,
     })
       // Workspace links and git or file specifiers have no registry entry.
       .filter(([, range]) => /^[\^~]?\d/.test(range))
@@ -177,7 +177,7 @@ const fetchPackument = async (name) => {
 };
 
 const runPool = async (items, limit, worker) => {
-  const results = new Array(items.length);
+  const results = Array.from({ length: items.length });
   const queue = items.map((item, index) => ({ item, index }));
   const runners = Array.from({ length: Math.min(limit, queue.length) }, async () => {
     while (queue.length > 0) {

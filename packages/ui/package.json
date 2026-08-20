@@ -11,9 +11,7 @@
     "./hooks/*": "./src/hooks/*.ts",
     "./*": "./src/components/*.tsx"
   },
-  "scripts": {
-    "lint": "oxlint"
-  },
+  "scripts": {},
   "dependencies": {
     "@base-ui/react": "^1.6.0",
     "@shadcn/react": "^0.2.1",
@@ -45,7 +43,6 @@
     "@types/node": "^24.13.3",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "oxlint": "^1.74.0",
     "tailwindcss": "^4.0.8"
   }
 }

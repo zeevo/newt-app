@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s) => !s.todoExample && !s.shadcn,
+  when: (s: Selection) => !s.todoExample && !s.shadcn,
   filename: "apps/web/app/page.tsx",
   template: `'use client';
 

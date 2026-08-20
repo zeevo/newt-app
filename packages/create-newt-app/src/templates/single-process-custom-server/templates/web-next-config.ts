@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s) => !s.nestDiOnly,
+  when: (s: Selection) => !s.nestDiOnly,
   filename: "apps/web/next.config.js",
   template: `import dotenv from 'dotenv';
 import { resolve } from 'path';
