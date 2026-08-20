@@ -277,7 +277,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
                     value={c.deployment}
                     onValueChange={(v) => set("deployment", v as Config["deployment"])}
                   >
-                    <DropdownMenuLabel>Deployment</DropdownMenuLabel>
+                    <DropdownMenuLabel>Deployment Add-ons</DropdownMenuLabel>
                     {deploymentOptions(c.nestDiOnly).map((option) => (
                       <DropdownMenuRadioItem
                         key={option}
