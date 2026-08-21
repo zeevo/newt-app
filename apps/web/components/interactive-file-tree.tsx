@@ -37,7 +37,7 @@ import {
   type Config,
 } from "@/lib/build-command";
 import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
-import { configParsers, configUrlKeys, sanitizeConfig } from "@/lib/config-params";
+import { builderHref, configParsers, configUrlKeys, sanitizeConfig } from "@/lib/config-params";
 
 const grow = "animate-in fade-in slide-in-from-left-1 duration-300";
 
@@ -214,10 +214,10 @@ export function InteractiveFileTree({
               size="sm"
               className="gap-1.5 font-mono text-xs text-muted-foreground"
               nativeButton={false}
-              render={<Link href="/builder" role="link" />}
+              render={<Link href={builderHref("/builder", c)} role="link" />}
             >
               <Maximize2 />
-              fullscreen
+              builder
             </Button>
           </div>
         )}
@@ -350,7 +350,7 @@ export function InteractiveFileTree({
           </div>
         </div>
 
-        <div className="flex items-stretch gap-3">
+        <div className={cn("flex items-stretch gap-3", fullscreen && "mt-auto")}>
           {/* min-w-0 lets the code scroll inside its own block instead of
               growing the row and squeezing the button */}
           <div className="min-w-0 flex-1 rounded-lg border bg-code p-4">

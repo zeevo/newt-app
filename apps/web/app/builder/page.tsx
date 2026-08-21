@@ -14,7 +14,7 @@ export default function BuilderPage() {
       {/* nuqs reads useSearchParams, which needs a boundary on a statically
           rendered page */}
       <Suspense>
-        <InteractiveFileTree fullscreen />
+        <InteractiveFileTree fullscreen className="flex-1" />
       </Suspense>
     </div>
   );
