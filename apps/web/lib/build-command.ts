@@ -30,7 +30,7 @@ export function deploymentHint(c: Config): string | null {
 }
 
 export const DI_ONLY_HINT =
-  "Nest runs as an application context with no HTTP server, and Next.js route handlers resolve its services through inject(). The app stays a single Next.js project, so it deploys to Vercel with no extra infrastructure.";
+  "Nest runs with no HTTP server, and Next.js route handlers resolve its services through inject().";
 
 export const TODO_EXAMPLE_HINT = "Include an example to-do list feature.";
 
