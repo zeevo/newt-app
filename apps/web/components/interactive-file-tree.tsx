@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useQueryStates } from "nuqs";
 import { FileTree } from "@newt-app/file-tree";
+import Link from "next/link";
 import { CopyCommandButton } from "@/components/copy-command-button";
 import { Toggle } from "@newt-app/ui/components/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@newt-app/ui/components/toggle-group";
@@ -24,7 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@newt-app/ui/components/tooltip";
-import { ChevronDown, Info } from "lucide-react";
+import { ChevronDown, Info, Maximize2 } from "lucide-react";
 import { cn } from "@newt-app/ui/lib/utils";
 import {
   antiSlopAvailable,
@@ -184,7 +185,13 @@ function BoolToggle({
   );
 }
 
-export function InteractiveFileTree({ className }: { className?: string }) {
+export function InteractiveFileTree({
+  className,
+  fullscreen,
+}: {
+  className?: string;
+  fullscreen?: boolean;
+}) {
   const [raw, setC] = useQueryStates(configParsers, { urlKeys: configUrlKeys });
   const c = sanitizeConfig(raw);
   const set = <K extends keyof Config>(key: K, value: Config[K]) => setC({ [key]: value });
@@ -200,6 +207,20 @@ export function InteractiveFileTree({ className }: { className?: string }) {
   return (
     <TooltipProvider>
       <div className={cn("flex flex-col gap-4", className)}>
+        {!fullscreen && (
+          <div className="flex justify-end">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1.5 font-mono text-xs text-muted-foreground"
+              nativeButton={false}
+              render={<Link href="/builder" role="link" />}
+            >
+              <Maximize2 />
+              fullscreen
+            </Button>
+          </div>
+        )}
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
           <div className="flex flex-col gap-3 rounded-lg border p-5 lg:w-[42%] lg:shrink-0">
             <BoolToggle label="Next.js" logo="/logos/nextjs.svg" pressed disabled />
