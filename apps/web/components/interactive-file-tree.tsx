@@ -29,7 +29,6 @@ import { cn } from "@newt-app/ui/lib/utils";
 import {
   antiSlopAvailable,
   buildCommand,
-  DATABASE_HINT,
   deploymentOptions,
   DI_ONLY_HINT,
   DI_ONLY_REJECTS,
@@ -225,7 +224,6 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             <BoolToggle label="Better Auth" logo="/logos/better-auth.svg" pressed disabled />
             <Segmented
               label="database"
-              hint={DATABASE_HINT}
               value={c.database}
               options={["sqlite", "postgres"] as const}
               onChange={(v) => set("database", v)}
