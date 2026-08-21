@@ -207,7 +207,7 @@ export function InteractiveFileTree({ className }: { className?: string }) {
             <Segmented
               label="NestJS"
               logo="/logos/nestjs.svg"
-              hint={DI_ONLY_HINT}
+              hint={c.nestDiOnly ? DI_ONLY_HINT : undefined}
               value={c.nestDiOnly ? "di-only" : "on"}
               options={["on", "di-only"] as const}
               onChange={(v) =>
