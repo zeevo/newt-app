@@ -25,7 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@newt-app/ui/components/tooltip";
-import { ChevronDown, Info, Maximize2 } from "lucide-react";
+import { ChevronDown, Info } from "lucide-react";
 import { cn } from "@newt-app/ui/lib/utils";
 import {
   antiSlopAvailable,
@@ -341,11 +341,10 @@ export function InteractiveFileTree({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="gap-1.5 font-mono text-xs text-muted-foreground"
+                  className="font-mono text-xs text-muted-foreground"
                   nativeButton={false}
                   render={<Link href={builderHref("/builder", c)} role="link" />}
                 >
-                  <Maximize2 />
                   builder
                 </Button>
               </div>
