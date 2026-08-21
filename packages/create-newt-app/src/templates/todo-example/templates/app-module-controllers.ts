@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s) => !s.nestDiOnly && s.todoExample,
+  when: (s: Selection) => !s.nestDiOnly && s.todoExample,
   filename: "apps/api/src/app.module.ts",
   template: `<% if (deployment === 'spa') { %>import { join } from 'path';
 <% } %>import { Module } from '@nestjs/common';
