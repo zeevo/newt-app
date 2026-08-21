@@ -213,136 +213,142 @@ export function InteractiveFileTree({
             fullscreen ? "lg:min-h-0 lg:flex-1" : "lg:items-start",
           )}
         >
-          <div className="flex flex-col gap-3 rounded-lg border p-5 lg:w-[42%] lg:shrink-0">
-            <BoolToggle label="Next.js" logo="/logos/nextjs.svg" pressed disabled />
-            <Segmented
-              label="NestJS"
-              logo="/logos/nestjs.svg"
-              hint={c.nestDiOnly ? DI_ONLY_HINT : undefined}
-              value={c.nestDiOnly ? "di-only" : "on"}
-              options={["on", "di-only"] as const}
-              onChange={(v) =>
-                setC((prev) => {
-                  const nestDiOnly = v === "di-only";
-                  return {
+          <div className="flex flex-col gap-2 lg:w-[42%] lg:shrink-0">
+            <div className="flex flex-1 flex-col gap-3 rounded-lg border p-5">
+              <BoolToggle label="Next.js" logo="/logos/nextjs.svg" pressed disabled />
+              <Segmented
+                label="NestJS"
+                logo="/logos/nestjs.svg"
+                hint={c.nestDiOnly ? DI_ONLY_HINT : undefined}
+                value={c.nestDiOnly ? "di-only" : "on"}
+                options={["on", "di-only"] as const}
+                onChange={(v) =>
+                  setC((prev) => {
+                    const nestDiOnly = v === "di-only";
+                    return {
+                      ...prev,
+                      nestDiOnly,
+                      deployment:
+                        nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment)
+                          ? "none"
+                          : prev.deployment,
+                    };
+                  })
+                }
+              />
+              <BoolToggle label="Better Auth" logo="/logos/better-auth.svg" pressed disabled />
+              <Segmented
+                label="database"
+                value={c.database}
+                options={["sqlite", "postgres"] as const}
+                onChange={(v) => set("database", v)}
+                logos={{
+                  sqlite: "/logos/sqlite.svg",
+                  postgres: "/logos/postgres.svg",
+                }}
+              />
+              <Segmented
+                label="testing"
+                value={c.testing}
+                options={["jest", "vitest"] as const}
+                onChange={(v) => set("testing", v)}
+                logos={{ jest: "/logos/jest.svg", vitest: "/logos/vitest.svg" }}
+              />
+              <Segmented
+                label="linter"
+                value={c.linter}
+                options={["eslint", "oxc"] as const}
+                onChange={(v) =>
+                  setC((prev) => ({
                     ...prev,
-                    nestDiOnly,
-                    deployment:
-                      nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment) ? "none" : prev.deployment,
-                  };
-                })
-              }
-            />
-            <BoolToggle label="Better Auth" logo="/logos/better-auth.svg" pressed disabled />
-            <Segmented
-              label="database"
-              value={c.database}
-              options={["sqlite", "postgres"] as const}
-              onChange={(v) => set("database", v)}
-              logos={{
-                sqlite: "/logos/sqlite.svg",
-                postgres: "/logos/postgres.svg",
-              }}
-            />
-            <Segmented
-              label="testing"
-              value={c.testing}
-              options={["jest", "vitest"] as const}
-              onChange={(v) => set("testing", v)}
-              logos={{ jest: "/logos/jest.svg", vitest: "/logos/vitest.svg" }}
-            />
-            <Segmented
-              label="linter"
-              value={c.linter}
-              options={["eslint", "oxc"] as const}
-              onChange={(v) =>
-                setC((prev) => ({
-                  ...prev,
-                  linter: v,
-                  antiSlop: v === "oxc" && prev.antiSlop,
-                }))
-              }
-              logos={{ eslint: "/logos/eslint.svg", oxc: "/logos/oxc.svg" }}
-            />
-            <BoolToggle
-              label="shadcn/ui"
-              logo="/logos/shadcn.svg"
-              pressed={c.shadcn}
-              onChange={(v) => set("shadcn", v)}
-            />
-            <Row label="extras">
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  render={
-                    <Button variant="outline" size="sm" className="min-w-32 font-mono text-xs" />
-                  }
-                >
-                  <span className="max-w-48 truncate">
-                    {selected.length ? selected.join(", ") : "none"}
-                  </span>
-                  <ChevronDown />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuRadioGroup
-                    value={c.deployment}
-                    onValueChange={(v) => set("deployment", v as Config["deployment"])}
+                    linter: v,
+                    antiSlop: v === "oxc" && prev.antiSlop,
+                  }))
+                }
+                logos={{ eslint: "/logos/eslint.svg", oxc: "/logos/oxc.svg" }}
+              />
+              <BoolToggle
+                label="shadcn/ui"
+                logo="/logos/shadcn.svg"
+                pressed={c.shadcn}
+                onChange={(v) => set("shadcn", v)}
+              />
+              <Row label="extras">
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button variant="outline" size="sm" className="min-w-32 font-mono text-xs" />
+                    }
                   >
-                    <DropdownMenuLabel>Deployment Add-ons</DropdownMenuLabel>
-                    {deploymentOptions(c.nestDiOnly).map((option) => (
-                      <DropdownMenuRadioItem
-                        key={option}
-                        value={option}
-                        className="font-mono text-xs"
-                      >
-                        {option}
-                      </DropdownMenuRadioItem>
-                    ))}
-                  </DropdownMenuRadioGroup>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>Include</DropdownMenuLabel>
-                    <DropdownMenuCheckboxItem
-                      checked={c.todoExample}
-                      onCheckedChange={(v) => set("todoExample", v)}
-                      className="font-mono text-xs"
+                    <span className="max-w-48 truncate">
+                      {selected.length ? selected.join(", ") : "none"}
+                    </span>
+                    <ChevronDown />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuRadioGroup
+                      value={c.deployment}
+                      onValueChange={(v) => set("deployment", v as Config["deployment"])}
                     >
-                      example app
-                    </DropdownMenuCheckboxItem>
-                    {antiSlopAvailable(c.linter) && (
+                      <DropdownMenuLabel>Deployment Add-ons</DropdownMenuLabel>
+                      {deploymentOptions(c.nestDiOnly).map((option) => (
+                        <DropdownMenuRadioItem
+                          key={option}
+                          value={option}
+                          className="font-mono text-xs"
+                        >
+                          {option}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Include</DropdownMenuLabel>
                       <DropdownMenuCheckboxItem
-                        checked={c.antiSlop}
-                        onCheckedChange={(v) => set("antiSlop", v)}
+                        checked={c.todoExample}
+                        onCheckedChange={(v) => set("todoExample", v)}
                         className="font-mono text-xs"
                       >
-                        anti-slop
+                        example app
                       </DropdownMenuCheckboxItem>
-                    )}
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </Row>
-            {/* the extras options are not self-describing, and a hover tooltip
+                      {antiSlopAvailable(c.linter) && (
+                        <DropdownMenuCheckboxItem
+                          checked={c.antiSlop}
+                          onCheckedChange={(v) => set("antiSlop", v)}
+                          className="font-mono text-xs"
+                        >
+                          anti-slop
+                        </DropdownMenuCheckboxItem>
+                      )}
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </Row>
+              {/* the extras options are not self-describing, and a hover tooltip
                 cannot be read on a touch screen */}
-            {hints.map((text) => (
-              <p
-                key={text}
-                aria-live="polite"
-                className="text-xs leading-relaxed text-muted-foreground"
-              >
-                {text}
-              </p>
-            ))}
+              {hints.map((text) => (
+                <p
+                  key={text}
+                  aria-live="polite"
+                  className="text-xs leading-relaxed text-muted-foreground"
+                >
+                  {text}
+                </p>
+              ))}
+            </div>
             {!fullscreen && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="mt-1 w-full gap-1.5 font-mono text-xs text-muted-foreground"
-                nativeButton={false}
-                render={<Link href={builderHref("/builder", c)} role="link" />}
-              >
-                <Maximize2 />
-                builder
-              </Button>
+              <div className="flex justify-end">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1.5 font-mono text-xs text-muted-foreground"
+                  nativeButton={false}
+                  render={<Link href={builderHref("/builder", c)} role="link" />}
+                >
+                  <Maximize2 />
+                  builder
+                </Button>
+              </div>
             )}
           </div>
 
