@@ -1,5 +1,25 @@
 # create-newt-app
 
+## 0.29.0
+
+### Minor Changes
+
+- 758759a: add `--extras anti-slop`, which vendors dmmulroy/anti-slop into the scaffolded app
+
+  The rules are an oxlint plugin, so the flag needs `--linter oxc` and is rejected with eslint. `tools/oxlint/anti-slop` holds the plugin source, `.oxlintrc.json` registers it and turns all 15 rules on as errors, and `pnpm lint` enforces them from the first commit. Vendored shadcn components are exempt, since they are upstream code rather than code you write.
+
+- a984c12: run oxlint once from the root when `--linter oxc` is selected
+
+  oxlint resolves the nearest config per file and covers a monorepo in one pass, so the per-package lint tasks were boilerplate around a tool fast enough not to need caching — and they left `apps/api`, `packages/auth` and `packages/db` unlinted. The root now owns `lint`, `lint:check`, `format` and `format:check`, turbo gains a `typecheck` task in place of `lint`, and `apps/web` keeps its `next typegen && tsc --noEmit` as a `typecheck` script. `--linter eslint` is unchanged.
+
+### Patch Changes
+
+- 831246d: The newt-app repo now formats itself with oxfmt instead of Prettier, matching what `create-newt-app --linter oxc` scaffolds: a root `.oxfmtrc.json` and `oxfmt` / `oxfmt --check` as the format scripts. Formatting moves to oxfmt's default 100 column width, and oxfmt also covers `.mjs` and `.css` files that the old Prettier glob missed. Scaffolded apps are unaffected; `--linter eslint` still ships Prettier and `--linter oxc` still ships oxfmt.
+- 1b38762: The newt-app repo now lints itself with oxlint instead of ESLint, matching the layout `create-newt-app --linter oxc` scaffolds: one root `.oxlintrc.json` and an `oxlint` dev dependency per package. Scaffolded apps are unaffected; both `--linter eslint` and `--linter oxc` still generate what they did before.
+- ac64cab: sync checkbox, field, radio-group and switch with current shadcn output
+
+  shadcn added focus-visible handling for controls inside a `FieldLabel`; the four templates were emitting the older class strings.
+
 ## 0.28.0
 
 ### Minor Changes
