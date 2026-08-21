@@ -17,6 +17,7 @@ export async function scaffold(
     testing: "jest" | "vitest";
     database: "sqlite" | "postgres";
     deployment: TemplateData["deployment"];
+    linter: TemplateData["linter"];
     antiSlop: boolean;
     selection: Selection;
   },
@@ -32,6 +33,7 @@ export async function scaffold(
     testing: options.testing,
     database: options.database,
     deployment: options.deployment,
+    linter: options.linter,
     antiSlop: options.antiSlop,
     shadcn: options.selection.shadcn,
     authSecret: randomBytes(32).toString("base64url"),

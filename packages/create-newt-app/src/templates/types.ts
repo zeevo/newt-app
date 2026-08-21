@@ -5,6 +5,7 @@ export type TemplateData = {
   testing: "jest" | "vitest";
   database: "sqlite" | "postgres";
   deployment: "none" | "standalone" | "custom-server" | "spa";
+  linter: "eslint" | "oxc";
   antiSlop: boolean;
   shadcn: boolean;
   authSecret: string;
