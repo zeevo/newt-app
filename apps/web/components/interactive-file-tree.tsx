@@ -207,21 +207,12 @@ export function InteractiveFileTree({
   return (
     <TooltipProvider>
       <div className={cn("flex flex-col gap-4", className)}>
-        {!fullscreen && (
-          <div className="flex justify-end">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1.5 font-mono text-xs text-muted-foreground"
-              nativeButton={false}
-              render={<Link href={builderHref("/builder", c)} role="link" />}
-            >
-              <Maximize2 />
-              builder
-            </Button>
-          </div>
-        )}
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+        <div
+          className={cn(
+            "flex flex-col gap-4 lg:flex-row",
+            fullscreen ? "lg:min-h-0 lg:flex-1" : "lg:items-start",
+          )}
+        >
           <div className="flex flex-col gap-3 rounded-lg border p-5 lg:w-[42%] lg:shrink-0">
             <BoolToggle label="Next.js" logo="/logos/nextjs.svg" pressed disabled />
             <Segmented
@@ -341,6 +332,18 @@ export function InteractiveFileTree({
                 {text}
               </p>
             ))}
+            {!fullscreen && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-1 w-full gap-1.5 font-mono text-xs text-muted-foreground"
+                nativeButton={false}
+                render={<Link href={builderHref("/builder", c)} role="link" />}
+              >
+                <Maximize2 />
+                builder
+              </Button>
+            )}
           </div>
 
           <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-5">
@@ -350,7 +353,7 @@ export function InteractiveFileTree({
           </div>
         </div>
 
-        <div className={cn("flex items-stretch gap-3", fullscreen && "mt-auto")}>
+        <div className="flex items-stretch gap-3">
           {/* min-w-0 lets the code scroll inside its own block instead of
               growing the row and squeezing the button */}
           <div className="min-w-0 flex-1 rounded-lg border bg-code p-4">
