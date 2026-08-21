@@ -49,9 +49,6 @@ export function extrasHints(c: Config): string[] {
   ].filter((hint) => hint !== null);
 }
 
-export const DATABASE_HINT =
-  "SQLite writes to a local file, which is not persisted on serverless filesystems like Vercel’s. Better Auth and your app share one Kysely connection either way.";
-
 const DEPLOYMENTS = [
   "none",
   "standalone",
