@@ -39,18 +39,18 @@ jobs:
       # Opens a "version packages" PR that accumulates changesets. When that PR
       # is merged, the same step publishes to npm, pushes the git tags, and
       # creates a GitHub Release per published package from its changelog.
+      # Pinned to v1: v2 requires Changesets CLI v3, which requires pnpm >= 10,
+      # and this repo is on pnpm 9.
       - name: Create Release PR or Publish
         id: changesets
-        uses: changesets/action@v2
+        uses: changesets/action@v1
         with:
-          # v2 pushes through the GitHub API and reads the token only from this
-          # input; the GITHUB_TOKEN environment variable no longer counts.
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          version-script: pnpm version-packages
-          publish-script: pnpm release
-          commit-message: "version packages"
-          pr-title: "version packages"
-          create-github-releases: true
+          version: pnpm version-packages
+          publish: pnpm release
+          commit: "version packages"
+          title: "version packages"
+          createGithubReleases: true
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
