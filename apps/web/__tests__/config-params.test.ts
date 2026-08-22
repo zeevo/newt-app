@@ -25,6 +25,7 @@ describe("config params", () => {
 
   it("drops a deployment the CLI rejects with di-only", () => {
     const base: Config = {
+      name: "my-app",
       shadcn: true,
       testing: "vitest",
       database: "postgres",
@@ -40,6 +41,7 @@ describe("config params", () => {
   });
   it("drops anti-slop when the linter cannot run it", () => {
     const base: Config = {
+      name: "my-app",
       shadcn: true,
       testing: "vitest",
       database: "postgres",

@@ -1,9 +1,10 @@
-import { createSerializer, parseAsBoolean, parseAsStringLiteral } from "nuqs/server";
-import { antiSlopAvailable, DI_ONLY_REJECTS, type Config } from "@/lib/build-command";
+import { createSerializer, parseAsBoolean, parseAsString, parseAsStringLiteral } from "nuqs/server";
+import { antiSlopAvailable, DEFAULT_NAME, DI_ONLY_REJECTS, type Config } from "@/lib/build-command";
 
 // Defaults mirror the panel's initial selection. nuqs clears params at their
 // default, so the bare URL means this config and only changes become params.
 export const configParsers = {
+  name: parseAsString.withDefault(DEFAULT_NAME),
   shadcn: parseAsBoolean.withDefault(true),
   testing: parseAsStringLiteral(["jest", "vitest"] as const).withDefault("vitest"),
   database: parseAsStringLiteral(["sqlite", "postgres"] as const).withDefault("postgres"),
