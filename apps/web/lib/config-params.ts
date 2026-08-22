@@ -1,4 +1,4 @@
-import { parseAsBoolean, parseAsStringLiteral } from "nuqs/server";
+import { createSerializer, parseAsBoolean, parseAsStringLiteral } from "nuqs/server";
 import { antiSlopAvailable, DI_ONLY_REJECTS, type Config } from "@/lib/build-command";
 
 // Defaults mirror the panel's initial selection. nuqs clears params at their
@@ -34,3 +34,7 @@ export function sanitizeConfig(c: Config): Config {
     ? c
     : { ...c, deployment, antiSlop };
 }
+
+// The panel's config lives in the URL, so the link to the full-page builder
+// carries it rather than dropping you back to the defaults.
+export const builderHref = createSerializer(configParsers, { urlKeys: configUrlKeys });
