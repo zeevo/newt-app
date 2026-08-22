@@ -5,7 +5,7 @@ export default {
   "ui": "tui",
   "tasks": {
     "build": {
-      "env": ["DATABASE_URL"],
+      "env": ["DATABASE_URL", "PORT"],
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
@@ -25,7 +25,7 @@ export default {
       "outputs": ["coverage/**"]
     },
     "dev": {
-      "env": ["DATABASE_URL"],
+      "env": ["DATABASE_URL", "PORT"],
       "dependsOn": ["^migrate", "^build"],
       "cache": false,
       "persistent": true
