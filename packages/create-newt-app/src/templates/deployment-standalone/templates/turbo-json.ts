@@ -10,10 +10,16 @@ export default {
       "env": ["API_HOST", "DATABASE_URL"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
-    "lint": {
+<% if (linter === "oxc") { %>    "typecheck": {
+      "dependsOn": ["^build"]
+    },<% } else { %>    "lint": {
       "dependsOn": ["^lint"],
       "env": ["NODE_ENV"]
     },
+    "lint:check": {
+      "dependsOn": ["^lint:check"],
+      "env": ["NODE_ENV"]
+    },<% } %>
     "test": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
