@@ -11,7 +11,7 @@ dotenv.config({ path: resolve(process.cwd(), '.env') });
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@<%= projectName %>/api';
 import next from 'next';
-import { createServer } from 'node:http';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = parseInt(process.env.PORT ?? '3000', 10);
@@ -29,7 +29,7 @@ async function main() {
 
   const nestListener = nestApp
     .getHttpServer()
-    .listeners('request')[0] as (req: any, res: any) => void;
+    .listeners('request')[0] as (req: IncomingMessage, res: ServerResponse) => void;
 
   const server = createServer((req, res) => {
     if (req.url?.startsWith('/api/')) {

@@ -83,6 +83,7 @@ jobs:
           - "--shadcn --linter oxc --extras anti-slop --include-example"
           - "--shadcn --nest-di-only --include-example"
           - "--deployment standalone --include-example"
+          - "--deployment standalone --linter oxc --include-example"
           - "--deployment standalone --nest-di-only --include-example"
           - "--deployment spa --include-example"
           - "--deployment custom-server --include-example"
@@ -168,7 +169,7 @@ jobs:
           fi
 
       - name: Lint scaffolded app
-        run: pnpm lint
+        run: pnpm lint:check
         working-directory: ${{ runner.temp }}/test-app
 
       - name: Test scaffolded app
