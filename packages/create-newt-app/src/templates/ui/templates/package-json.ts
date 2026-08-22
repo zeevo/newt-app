@@ -11,7 +11,7 @@ export default {
     "./*": "./src/*.tsx"
   },
   "scripts": {
-    "check-types": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@<%= projectName %>/typescript-config": "workspace:*",

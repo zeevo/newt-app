@@ -13,7 +13,9 @@ export default {
     "./hooks/*": "./src/hooks/*.ts",
     "./*": "./src/components/*.tsx"
   },
-  "scripts": {},
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@base-ui/react": "<%= versions["@base-ui/react"] %>",
     "@shadcn/react": "<%= versions["@shadcn/react"] %>",

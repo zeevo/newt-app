@@ -8,6 +8,7 @@ export default {
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
     "db:make": "pnpm --filter @<%= projectName %>/db run make",
     "db:migrate": "turbo run migrate",
     "db:generate": "turbo run generate"

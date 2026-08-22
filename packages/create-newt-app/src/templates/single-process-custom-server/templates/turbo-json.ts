@@ -10,9 +10,10 @@ export default {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
-<% if (linter === "oxc") { %>    "typecheck": {
+    "typecheck": {
       "dependsOn": ["^build"]
-    },<% } else { %>    "lint": {
+    },<% if (linter !== "oxc") { %>
+    "lint": {
       "dependsOn": ["^lint"],
       "env": ["NODE_ENV"]
     },

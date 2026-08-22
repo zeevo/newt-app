@@ -3,7 +3,6 @@ import { versions } from "../versions";
 import oxlintrc from "./templates/oxlintrc";
 import oxfmtrc from "./templates/oxfmtrc";
 
-const web = "apps/web";
 const root = "";
 
 // oxlint reads the nearest config per file and covers the whole tree in one
@@ -15,9 +14,7 @@ const oxc: Module = {
     { package: "oxfmt", module: root, version: versions.oxfmt, dev: true },
   ],
   scripts: [
-    { module: web, name: "typecheck", script: "next typegen && tsc --noEmit" },
     { module: root, name: "lint", script: "oxlint --fix" },
-    { module: root, name: "typecheck", script: "turbo run typecheck" },
     { module: root, name: "lint:check", script: "oxlint" },
     { module: root, name: "format", script: "oxfmt" },
     { module: root, name: "format:check", script: "oxfmt --check" },

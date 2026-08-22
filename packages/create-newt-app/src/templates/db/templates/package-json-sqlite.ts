@@ -8,6 +8,7 @@ export default {
     ".": "./src/index.ts"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "migrate": "dotenv -e ../../.env -- tsx src/migrate.ts",
     "make": "tsx scripts/new-migration.ts"
   },
