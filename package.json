@@ -18,15 +18,21 @@
     "version-packages": "changeset version"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.5",
+    "@changesets/cli": "^3.0.1",
     "@oxlint/plugins": "^1.74.0",
     "oxfmt": "^0.59.0",
     "oxlint": "^1.74.0",
     "turbo": "^2.8.16",
     "typescript": "6.0.2"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.34.5",
   "engines": {
     "node": ">=24.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }
