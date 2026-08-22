@@ -16,9 +16,9 @@ const oxc: Module = {
   ],
   scripts: [
     { module: web, name: "typecheck", script: "next typegen && tsc --noEmit" },
-    { module: root, name: "lint", script: "oxlint --fix" },
+    { module: root, name: "lint", script: "oxlint --fix && turbo run typecheck" },
+    { module: root, name: "lint:check", script: "oxlint && turbo run typecheck" },
     { module: root, name: "typecheck", script: "turbo run typecheck" },
-    { module: root, name: "lint:check", script: "oxlint" },
     { module: root, name: "format", script: "oxfmt" },
     { module: root, name: "format:check", script: "oxfmt --check" },
   ],

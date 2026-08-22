@@ -32,7 +32,7 @@ jobs:
         run: pnpm format:check
 
       - name: Lint
-        run: pnpm lint
+        run: pnpm exec oxlint
 
       - name: Typecheck
         run: pnpm typecheck
