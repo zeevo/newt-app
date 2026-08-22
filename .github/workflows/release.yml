@@ -41,14 +41,16 @@ jobs:
       # creates a GitHub Release per published package from its changelog.
       - name: Create Release PR or Publish
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          version: pnpm version-packages
-          publish: pnpm release
-          commit: "version packages"
-          title: "version packages"
-          createGithubReleases: true
+          # v2 pushes through the GitHub API and reads the token only from this
+          # input; the GITHUB_TOKEN environment variable no longer counts.
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version-script: pnpm version-packages
+          publish-script: pnpm release
+          commit-message: "version packages"
+          pr-title: "version packages"
+          create-github-releases: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
