@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   ANTI_SLOP_HINT,
   buildCommand,
+  nameError,
   DEPLOYMENT_HINTS,
   deploymentOptions,
   DI_ONLY_REJECTS,
@@ -20,6 +21,7 @@ const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
           (["sqlite", "postgres"] as const).flatMap((database) =>
             (["eslint", "oxc"] as const).flatMap((linter) =>
               (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
+                name: "my-app",
                 shadcn,
                 testing,
                 database,
@@ -93,6 +95,7 @@ describe("buildCommand", () => {
   it("leaves the command bare when every option is at its interactive default", () => {
     expect(
       buildCommand({
+        name: "my-app",
         shadcn: true,
         testing: "jest",
         database: "sqlite",
@@ -103,5 +106,20 @@ describe("buildCommand", () => {
         antiSlop: false,
       }),
     ).toBe("npm create newt-app@latest my-app -- --shadcn --include-example");
+  });
+  it("puts the project name in the command", () => {
+    const c = reachable[0]!;
+
+    expect(buildCommand({ ...c, name: "my-thing" })).toContain("newt-app@latest my-thing");
+    // an empty box should still emit a runnable command
+    expect(buildCommand({ ...c, name: "   " })).toContain("newt-app@latest my-app");
+  });
+
+  it("flags names the CLI would reject", () => {
+    // Pinned against validateProjectName in packages/create-newt-app.
+    expect(nameError("my-app")).toBeNull();
+    expect(nameError("")).toBeNull();
+    expect(nameError("my/app")).toContain("cannot contain");
+    expect(nameError("a".repeat(215))).toContain("214");
   });
 });

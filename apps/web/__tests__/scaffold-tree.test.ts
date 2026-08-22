@@ -28,6 +28,7 @@ const configs: Config[] = [true, false].flatMap((nestDiOnly) =>
       [true, false].flatMap((todoExample) =>
         (["eslint", "oxc"] as const).flatMap((linter) =>
           (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
+            name: "my-app",
             shadcn,
             testing: "jest" as const,
             database: "sqlite" as const,

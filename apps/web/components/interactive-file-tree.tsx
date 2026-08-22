@@ -8,6 +8,7 @@ import { CopyCommandButton } from "@/components/copy-command-button";
 import { Toggle } from "@newt-app/ui/components/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@newt-app/ui/components/toggle-group";
 import { Button } from "@newt-app/ui/components/button";
+import { Input } from "@newt-app/ui/components/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -30,6 +31,8 @@ import { cn } from "@newt-app/ui/lib/utils";
 import {
   antiSlopAvailable,
   buildCommand,
+  DEFAULT_NAME,
+  nameError,
   deploymentOptions,
   DI_ONLY_HINT,
   DI_ONLY_REJECTS,
@@ -199,6 +202,7 @@ export function InteractiveFileTree({
 
   const command = useMemo(() => buildCommand(c), [c]);
   const hints = extrasHints(c);
+  const badName = nameError(c.name);
   const selected = [
     c.deployment === "none" ? null : c.deployment,
     c.todoExample ? "example app" : null,
@@ -216,6 +220,16 @@ export function InteractiveFileTree({
         >
           <div className="flex flex-col gap-2 lg:w-[42%] lg:shrink-0">
             <div className="flex flex-1 flex-col gap-3 rounded-lg border p-5">
+              <Row label="name">
+                <Input
+                  value={c.name}
+                  onChange={(e) => set("name", e.target.value)}
+                  placeholder={DEFAULT_NAME}
+                  aria-label="Project name"
+                  aria-invalid={badName !== null}
+                  className="w-44 font-mono text-xs"
+                />
+              </Row>
               <BoolToggle label="Next.js" logo="/logos/nextjs.svg" pressed disabled />
               <Segmented
                 label="NestJS"
@@ -332,6 +346,11 @@ export function InteractiveFileTree({
               </Row>
               {/* the extras options are not self-describing, and a hover tooltip
                 cannot be read on a touch screen */}
+              {badName && (
+                <p aria-live="polite" className="text-xs leading-relaxed text-destructive">
+                  {badName}
+                </p>
+              )}
               {hints.map((text) => (
                 <p
                   key={text}
@@ -358,7 +377,10 @@ export function InteractiveFileTree({
           </div>
 
           <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-5">
-            <FileTree name="my-app" className="my-0 bg-transparent p-0 dark:bg-transparent">
+            <FileTree
+              name={c.name.trim() || DEFAULT_NAME}
+              className="my-0 bg-transparent p-0 dark:bg-transparent"
+            >
               {renderNodes(scaffoldTree(c))}
             </FileTree>
           </div>
