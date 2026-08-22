@@ -17,6 +17,10 @@ export default {
     },<% } else { %>    "lint": {
       "dependsOn": ["^lint"],
       "env": ["NODE_ENV"]
+    },
+    "lint:check": {
+      "dependsOn": ["^lint:check"],
+      "env": ["NODE_ENV"]
     },<% } %>
     "test": {
       "dependsOn": ["^build"],

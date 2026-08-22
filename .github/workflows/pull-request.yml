@@ -168,7 +168,7 @@ jobs:
           fi
 
       - name: Lint scaffolded app
-        run: pnpm lint
+        run: pnpm lint:check
         working-directory: ${{ runner.temp }}/test-app
 
       - name: Test scaffolded app

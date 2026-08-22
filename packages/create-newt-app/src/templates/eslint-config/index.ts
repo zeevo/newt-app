@@ -76,9 +76,10 @@ const eslintConfig: Module = {
       script: "eslint --max-warnings 0 && next typegen && tsc --noEmit",
     },
     { module: api, name: "lint", script: `eslint "src/**/*.ts" --fix` },
-    { module: api, name: "lint:check", script: `eslint "src/**/*.ts"` },
+    { module: api, name: "lint:check", script: `eslint "src/**/*.ts" --max-warnings 0` },
     { module: ui, name: "lint", script: "eslint . --fix" },
     { module: ui, name: "lint:check", script: "eslint . --max-warnings 0" },
+    { module: root, name: "lint:check", script: "turbo run lint:check" },
     {
       module: root,
       name: "format",
