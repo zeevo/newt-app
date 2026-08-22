@@ -9,6 +9,10 @@ export interface ValidationResult {
   error?: string;
 }
 
+function isMissingFile(cause: unknown): boolean {
+  return cause instanceof Error && "code" in cause && cause.code === "ENOENT";
+}
+
 export async function updatePackageJson(
   destDir: string,
   packages: Package[],
@@ -22,7 +26,7 @@ export async function updatePackageJson(
     try {
       packageJsonContent = await promises.readFile(packageJsonPath, "utf8");
     } catch (err: unknown) {
-      if (typeof err === "object" && err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      if (isMissingFile(err)) {
         continue;
       }
       throw err;
@@ -57,7 +61,7 @@ export async function updateScripts(
     try {
       packageJsonContent = await promises.readFile(packageJsonPath, "utf8");
     } catch (err: unknown) {
-      if (typeof err === "object" && err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      if (isMissingFile(err)) {
         continue;
       }
       throw err;
@@ -118,7 +122,7 @@ export async function renderTemplatesToDisk(
 
 const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
 
-function sortByKey(obj: Record<string, unknown>): Record<string, unknown> {
+function sortByKey<T>(obj: Record<string, T>): Record<string, T> {
   return Object.fromEntries(
     Object.keys(obj)
       .sort()
@@ -213,10 +217,10 @@ export function validateDeploymentCombo(deployment: string, nestDiOnly: boolean)
   return { valid: true };
 }
 
-const TOOL_HINTS: Record<string, string> = {
+const TOOL_HINTS = {
   pnpm: "Install it with `npm install -g pnpm`, or run `corepack enable`.",
   git: "Install it from https://git-scm.com/downloads, or pass --no-git.",
-};
+} satisfies Record<string, string>;
 
 // Only the tools this run will actually shell out to: --no-install never
 // invokes pnpm and --no-git never invokes git, so requiring them there would
@@ -225,7 +229,10 @@ export async function checkRequiredTools(
   needs: { install: boolean; git: boolean },
   hasCommand: (command: string) => Promise<boolean>,
 ): Promise<ValidationResult> {
-  const required = [...(needs.install ? ["pnpm"] : []), ...(needs.git ? ["git"] : [])];
+  const required = [
+    ...(needs.install ? (["pnpm"] as const) : []),
+    ...(needs.git ? (["git"] as const) : []),
+  ];
 
   const missing = (
     await Promise.all(required.map(async (tool) => ((await hasCommand(tool)) ? null : tool)))

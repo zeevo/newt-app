@@ -215,8 +215,8 @@ const analyze = ({ name, range, owners }, packument, now) => {
 
   const deprecations = [latest.raw, resolved?.raw]
     .filter((version) => version !== undefined)
-    .map((version) => ({ version, note: data.versions?.[version]?.deprecated }))
-    .filter((entry) => typeof entry.note === "string" && entry.note.length > 0);
+    .map((version) => ({ version, note: String(data.versions?.[version]?.deprecated ?? "") }))
+    .filter((entry) => entry.note.length > 0);
 
   return {
     ...base,

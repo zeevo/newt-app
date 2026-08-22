@@ -25,6 +25,18 @@ type Database = (typeof DATABASE_CHOICES)[number];
 type Linter = (typeof LINTER_CHOICES)[number];
 type Deployment = (typeof DEPLOYMENT_CHOICES)[number];
 
+type Answers = {
+  name?: string;
+  shadcn?: boolean;
+  testing?: Testing;
+  database?: Database;
+  linter?: Linter;
+  deployment?: Deployment;
+  nestDiOnly?: boolean;
+  todoExample?: boolean;
+  extras?: Extra[];
+};
+
 type Options = {
   name?: string;
   install: boolean;
@@ -164,37 +176,29 @@ export async function doInit(options: Options) {
       throw new Error(preflight.error);
     }
 
-    const group = await p.group(groupOpts, {
+    const answers: Answers = await p.group(groupOpts, {
       onCancel: () => {
         console.log("Exiting.");
         process.exit(0);
       },
     });
 
-    const useShadcn = options.nonInteractive
-      ? options.shadcn
-      : ((group as { shadcn?: boolean }).shadcn ?? true);
-    const testing: Testing = options.nonInteractive
-      ? options.testing
-      : ((group as { testing?: Testing }).testing ?? "jest");
+    const useShadcn = options.nonInteractive ? options.shadcn : (answers.shadcn ?? true);
+    const testing: Testing = options.nonInteractive ? options.testing : (answers.testing ?? "jest");
     const database: Database = options.nonInteractive
       ? options.database
-      : ((group as { database?: Database }).database ?? "sqlite");
-    const linter: Linter = options.nonInteractive
-      ? options.linter
-      : ((group as { linter?: Linter }).linter ?? "eslint");
+      : (answers.database ?? "sqlite");
+    const linter: Linter = options.nonInteractive ? options.linter : (answers.linter ?? "eslint");
     const deployment: Deployment = options.nonInteractive
       ? options.deployment
-      : ((group as { deployment?: Deployment }).deployment ?? "none");
-    const nestDiOnly = options.nonInteractive
-      ? options.nestDiOnly
-      : ((group as { nestDiOnly?: boolean }).nestDiOnly ?? false);
+      : (answers.deployment ?? "none");
+    const nestDiOnly = options.nonInteractive ? options.nestDiOnly : (answers.nestDiOnly ?? false);
     const todoExample = options.nonInteractive
       ? options.includeExample
-      : ((group as { todoExample?: boolean }).todoExample ?? true);
+      : (answers.todoExample ?? true);
     const extras: readonly Extra[] = options.nonInteractive
       ? options.extras
-      : ((group as { extras?: Extra[] }).extras ?? []);
+      : (answers.extras ?? []);
 
     const deploymentCombo = validateDeploymentCombo(deployment, nestDiOnly);
     if (!deploymentCombo.valid) {
@@ -219,7 +223,7 @@ export async function doInit(options: Options) {
 
     const allModules = selectModules(selection);
 
-    const name = (group as { name?: string }).name ?? options.name ?? "";
+    const name = answers.name ?? options.name ?? "";
 
     const taskBuilder = new TaskBuilder();
 
@@ -368,6 +372,8 @@ program
         process.exit(1);
       }
 
+      // SAFETY: validateFlagValue above rejected any value outside these choice
+      // lists and exited, so each string is a member of its union.
       await doInit({
         name,
         install: options.install,

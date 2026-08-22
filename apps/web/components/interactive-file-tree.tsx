@@ -140,7 +140,8 @@ function Segmented<T extends string>({
         size="sm"
         value={[value]}
         onValueChange={(v) => {
-          if (v[0]) onChange(v[0] as T);
+          const picked = options.find((option) => option === v[0]);
+          if (picked) onChange(picked);
         }}
       >
         {options.map((opt) => (
@@ -288,7 +289,12 @@ export function InteractiveFileTree({
                   <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuRadioGroup
                       value={c.deployment}
-                      onValueChange={(v) => set("deployment", v as Config["deployment"])}
+                      onValueChange={(v) => {
+                        const picked = deploymentOptions(c.nestDiOnly).find(
+                          (option) => option === v,
+                        );
+                        if (picked) set("deployment", picked);
+                      }}
                     >
                       <DropdownMenuLabel>Deployment Add-ons</DropdownMenuLabel>
                       {deploymentOptions(c.nestDiOnly).map((option) => (

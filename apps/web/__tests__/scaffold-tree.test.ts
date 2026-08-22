@@ -101,7 +101,7 @@ describe("scaffoldTree", () => {
   const everyPath = [
     ...new Map(
       configs.flatMap((c) =>
-        flatten(scaffoldTree(c)).map((node) => [node.path, node] as [string, TreeNode]),
+        flatten(scaffoldTree(c)).map((node): [string, TreeNode] => [node.path, node]),
       ),
     ).values(),
   ];

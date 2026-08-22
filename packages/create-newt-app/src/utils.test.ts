@@ -38,7 +38,14 @@ afterEach(async () => {
   await rm(destDir, { recursive: true, force: true });
 });
 
-async function writePkg(rel: string, contents: object) {
+type PackageJson = {
+  name?: string;
+  scripts?: Record<string, string>;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+};
+
+async function writePkg(rel: string, contents: PackageJson) {
   const file = path.join(destDir, rel, "package.json");
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, JSON.stringify(contents, null, 2));

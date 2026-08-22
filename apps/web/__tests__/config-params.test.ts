@@ -4,18 +4,16 @@ import { configParsers, sanitizeConfig } from "@/lib/config-params";
 
 describe("config params", () => {
   it("accepts every value the panel can select", () => {
-    const accepted = {
-      testing: ["jest", "vitest"],
-      database: ["sqlite", "postgres"],
-      linter: ["eslint", "oxc"],
-      deployment: deploymentOptions(false),
-    } as const;
+    const accepted = [
+      ["testing", ["jest", "vitest"]],
+      ["database", ["sqlite", "postgres"]],
+      ["linter", ["eslint", "oxc"]],
+      ["deployment", deploymentOptions(false)],
+    ] as const;
 
-    Object.entries(accepted).forEach(([key, values]) => {
+    accepted.forEach(([key, values]) => {
       values.forEach((value) => {
-        expect(configParsers[key as keyof typeof accepted].parse(value), `${key}=${value}`).toBe(
-          value,
-        );
+        expect(configParsers[key].parse(value), `${key}=${value}`).toBe(value);
       });
     });
   });
