@@ -16,11 +16,11 @@ export const DI_ONLY_REJECTS = new Set<Config["deployment"]>(["spa", "custom-ser
 export const DI_ONLY_REJECTS_HINT =
   "spa and custom-server already run Nest inside Next.js, so di-only rejects them.";
 
-export const DEPLOYMENT_HINTS: Record<Exclude<Config["deployment"], "none">, string> = {
+export const DEPLOYMENT_HINTS = {
   standalone: 'Next.js output: "standalone", in Docker alongside Nest.',
   "custom-server": "A custom Node server runs Next.js and Nest together.",
   spa: "Next.js static export, served by Nest. No SSR.",
-};
+} satisfies Record<Exclude<Config["deployment"], "none">, string>;
 
 // "none" adds no deployment files, so there is nothing to describe.
 export function deploymentHint(c: Config): string | null {
