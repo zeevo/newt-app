@@ -11,6 +11,7 @@ export default {
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit",
     "db:migrate": "better-auth migrate"
   },
   "dependencies": {

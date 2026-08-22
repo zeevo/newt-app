@@ -12,6 +12,7 @@ export default {
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "start": "nest start",
     "dev": "nest start --watch",
     "start:dev": "nest start --watch",
