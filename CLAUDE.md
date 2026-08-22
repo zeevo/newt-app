@@ -74,7 +74,8 @@ All fifteen are on. `packages/ui/src/components` is exempt from the three it tri
 since that is upstream shadcn code we re-pull rather than write.
 
 `packages/create-newt-app/src/templates/anti-slop/static/` is a second copy at the same
-upstream pin, shipped to scaffolded apps by `--extras anti-slop`. Re-sync both together.
+upstream pin, shipped to scaffolded apps by `--extras anti-slop`. Re-sync both together:
+`vendored.test.ts` fails if they stop matching.
 
 ## Keeping shadcn components current
 
