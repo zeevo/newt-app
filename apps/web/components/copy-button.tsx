@@ -27,7 +27,7 @@ function legacyCopyToClipboard(value: string) {
 }
 
 export async function copyToClipboardWithMeta(value: string) {
-  if (typeof window === "undefined" || !value) return false;
+  if (!globalThis.window || !value) return false;
   let hasCopied = false;
   if (navigator.clipboard?.writeText) {
     try {

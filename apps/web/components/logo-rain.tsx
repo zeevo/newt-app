@@ -358,8 +358,8 @@ export default function LogoRain({
       });
     });
 
-    const chipRadii = floorUniforms.uChipR!.value as Float32Array;
-    const chipPositions = floorUniforms.uChips!.value as THREE.Vector2[];
+    const chipRadii: Float32Array = floorUniforms.uChipR!.value;
+    const chipPositions: THREE.Vector2[] = floorUniforms.uChips!.value;
     stars.forEach((s, i) => {
       chipRadii[i] = s.size;
       chipPositions[i]!.set(s.x, s.y);
@@ -440,7 +440,7 @@ export default function LogoRain({
       renderer.render(scene, camera);
     } else {
       canvas.addEventListener("pointermove", onPointerMove);
-      canvas.addEventListener("pointerdown", onPointerDown as EventListener);
+      canvas.addEventListener("pointerdown", onPointerDown);
       let last = performance.now();
       renderer.setAnimationLoop((now) => {
         const dt = (now - last) / 1000;
@@ -546,7 +546,7 @@ export default function LogoRain({
       disposed = true;
       renderer.setAnimationLoop(null);
       canvas.removeEventListener("pointermove", onPointerMove);
-      canvas.removeEventListener("pointerdown", onPointerDown as EventListener);
+      canvas.removeEventListener("pointerdown", onPointerDown);
       themeObserver.disconnect();
       resizeObserver.disconnect();
       circleGeometry.dispose();

@@ -70,11 +70,8 @@ Check it's up: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`
 `tools/oxlint/anti-slop` holds oxlint rules vendored from dmmulroy/anti-slop, loaded
 by `.oxlintrc.json`, so `pnpm lint` enforces them like any other rule.
 
-Thirteen are on. `no-runtime-typeof` and `require-safety-comment-for-type-assertion`
-are listed as `off` because the repo does not pass them yet: 5 and 26 findings, plus
-24 more inside `packages/ui/src/components`, which is upstream shadcn code we re-pull
-rather than write. Turning one on means fixing its findings first, and exempting that
-directory in `overrides` the way `no-unknown-parameters` already is.
+All fifteen are on. `packages/ui/src/components` is exempt from the three it trips,
+since that is upstream shadcn code we re-pull rather than write.
 
 `packages/create-newt-app/src/templates/anti-slop/static/` is a second copy at the same
 upstream pin, shipped to scaffolded apps by `--extras anti-slop`. Re-sync both together.

@@ -3,10 +3,11 @@ import { render, screen } from "@testing-library/react";
 import { FileTree } from "./file-tree.js";
 
 const lineOf = (entry: Element) =>
-  entry.querySelector(":scope > span[aria-hidden].w-px") as HTMLElement;
+  entry.querySelector<HTMLElement>(":scope > span[aria-hidden].w-px");
 
-const entries = (container: HTMLElement) =>
-  [...container.querySelectorAll('[data-slot^="file-tree-"]')] as HTMLElement[];
+const entries = (container: HTMLElement) => [
+  ...container.querySelectorAll<HTMLElement>('[data-slot^="file-tree-"]'),
+];
 
 describe("FileTree", () => {
   it("renders the root name with a trailing slash", () => {

@@ -99,6 +99,10 @@ function renderCombo(selection: ModuleSelection) {
   return { files, collisions };
 }
 
+type Manifest = { name?: string } & Partial<
+  Record<(typeof DEP_FIELDS)[number], Record<string, string>>
+>;
+
 const packageJsons = (files: Map<string, string>) =>
   [...files].filter(([filename]) => filename.endsWith("package.json"));
 
@@ -129,15 +133,10 @@ describe(`template rendering across ${combos.length} selections`, () => {
         packageJsons(files).map(([, contents]) => JSON.parse(contents).name),
       );
       const unresolved = packageJsons(files).flatMap(([filename, contents]) => {
-        const json = JSON.parse(contents);
+        const json: Manifest = JSON.parse(contents);
         return DEP_FIELDS.flatMap((field) =>
           Object.entries(json[field] ?? {})
-            .filter(
-              ([dep, version]) =>
-                typeof version === "string" &&
-                version.startsWith("workspace:") &&
-                !scaffolded.has(dep),
-            )
+            .filter(([dep, version]) => version.startsWith("workspace:") && !scaffolded.has(dep))
             .map(([dep]) => `${filename} ${field}.${dep}`),
         );
       });

@@ -9,6 +9,10 @@ export interface ValidationResult {
   error?: string;
 }
 
+function isMissingFile(cause: unknown): boolean {
+  return cause instanceof Error && "code" in cause && cause.code === "ENOENT";
+}
+
 export async function updatePackageJson(
   destDir: string,
   packages: Package[],
@@ -22,7 +26,7 @@ export async function updatePackageJson(
     try {
       packageJsonContent = await promises.readFile(packageJsonPath, "utf8");
     } catch (err: unknown) {
-      if (typeof err === "object" && err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      if (isMissingFile(err)) {
         continue;
       }
       throw err;
@@ -57,7 +61,7 @@ export async function updateScripts(
     try {
       packageJsonContent = await promises.readFile(packageJsonPath, "utf8");
     } catch (err: unknown) {
-      if (typeof err === "object" && err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      if (isMissingFile(err)) {
         continue;
       }
       throw err;
