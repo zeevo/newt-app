@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { FileTree } from "./file-tree.js";
+import { FileTree, fileIcon } from "./file-tree.js";
 
 const lineOf = (entry: Element) =>
   entry.querySelector<HTMLElement>(":scope > span[aria-hidden].w-px");
+
+const glyphOf = (entry: Element) => entry.querySelector("svg")!.outerHTML;
 
 const entries = (container: HTMLElement) => [
   ...container.querySelectorAll<HTMLElement>('[data-slot^="file-tree-"]'),
@@ -123,6 +125,44 @@ describe("FileTree", () => {
     );
     expect(screen.getByTestId("mine")).toBeInTheDocument();
     expect(entries(container)[1]!.querySelector("svg")).toBeTruthy();
+  });
+
+  it("gives each mapped extension its own glyph and everything else the plain sheet", () => {
+    const names = [
+      "index.ts",
+      "page.tsx",
+      "next.config.js",
+      ".oxlintrc.json",
+      "package.json",
+      ".prettierrc",
+      "README.md",
+    ];
+    const { container } = render(
+      <FileTree name="my-app">
+        {names.map((name) => (
+          <FileTree.File key={name} icon={fileIcon(name)}>
+            {name}
+          </FileTree.File>
+        ))}
+      </FileTree>,
+    );
+    const [ts, tsx, js, dotJson, json, dotfile, unknown] = entries(container).map(glyphOf);
+
+    expect(new Set([ts, tsx, js, json]).size).toBe(4);
+    expect(dotJson).toBe(json);
+    expect(dotfile).toBe(unknown);
+    expect(ts).not.toBe(unknown);
+  });
+
+  it("leaves the file glyph alone unless a consumer asks for the typed one", () => {
+    const { container } = render(
+      <FileTree name="my-app">
+        <FileTree.File>index.ts</FileTree.File>
+        <FileTree.File icon={fileIcon("index.ts")}>index.ts</FileTree.File>
+      </FileTree>,
+    );
+    const [plain, typed] = entries(container).map(glyphOf);
+    expect(plain).not.toBe(typed);
   });
 
   it("merges consumer classes over the defaults instead of duplicating them", () => {

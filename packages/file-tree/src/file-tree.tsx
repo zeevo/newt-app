@@ -49,6 +49,77 @@ const FileGlyph = (
   </svg>
 );
 
+// Lettering is drawn rather than set in <text>, which would join the row's
+// textContent and put "TS" in front of every filename copied out of the tree.
+const Stroke = ({ d }: { d: string }) => (
+  <path
+    d={d}
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  />
+);
+
+const S_CURVE =
+  "M20.9 9.9c0-1.9-1.4-3-3.1-3s-3.2 1.1-3.2 2.9 1.4 2.4 3.1 2.9 3.2 1.2 3.2 3.1-1.5 3-3.2 3-3.2-1.1-3.2-3";
+
+const TypeScriptGlyph = (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <Stroke d="M3.1 6.9h7.8M7 6.9v10.9" />
+    <Stroke d={S_CURVE} />
+  </svg>
+);
+
+const JavaScriptGlyph = (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <Stroke d="M10 6.9v8a3 3 0 0 1-5.9.9" />
+    <Stroke d={S_CURVE} />
+  </svg>
+);
+
+const ReactGlyph = (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <g fill="none" stroke="currentColor" strokeWidth="1.7">
+      <ellipse cx="12" cy="12" rx="10" ry="3.8" />
+      <ellipse cx="12" cy="12" rx="10" ry="3.8" transform="rotate(60 12 12)" />
+      <ellipse cx="12" cy="12" rx="10" ry="3.8" transform="rotate(120 12 12)" />
+    </g>
+    <circle cx="12" cy="12" r="2.2" fill="currentColor" />
+  </svg>
+);
+
+const JsonGlyph = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+    <path
+      d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const EXTENSION_GLYPHS = new Map([
+  ["ts", TypeScriptGlyph],
+  ["tsx", ReactGlyph],
+  ["js", JavaScriptGlyph],
+  ["json", JsonGlyph],
+]);
+
+/** The glyph for a filename, for `FileTree.File`'s `icon`. */
+export function fileIcon(name: string): React.ReactNode {
+  const dot = name.lastIndexOf(".");
+  // A leading dot opens a dotfile, not an extension: .prettierrc is not `rc`.
+  if (dot < 1) return FileGlyph;
+  return EXTENSION_GLYPHS.get(name.slice(dot + 1).toLowerCase()) ?? FileGlyph;
+}
+
 // The elbow is two absolutely positioned rules. The vertical one runs the full
 // height of the entry so it reaches the next sibling, except on the last entry
 // where it stops at the elbow, and the DOM answers that with :last-child so no
