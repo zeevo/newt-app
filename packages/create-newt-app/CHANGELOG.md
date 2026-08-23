@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.31.1
+
+### Patch Changes
+
+- b737598: Fix `--deployment spa --linter oxc` scaffolding an app that failed `pnpm lint` out of the box. The generated `next.config.js` spread a ternary into an otherwise empty object literal, which trips `unicorn(no-useless-spread)`; the ternary is now assigned directly.
+- 8daee3d: Remove `--deployment custom-server`. The mode ran Next.js and Nest in one process behind a hand-written `apps/web/server.ts` that reached into Nest's HTTP server to re-dispatch requests, and it forced dev to depend on the api build because the bridge consumed `apps/api/dist` rather than TS source. `--deployment standalone` and `--deployment spa` remain, and `--nest-di-only` still runs Nest inside the Next.js process for anyone who wants a single process without Nest's HTTP layer.
+- b737598: Stop shipping a broken e2e suite in `--nest-di-only` apps. DI-only Nest has no controllers of its own, so `apps/api/test/app.e2e-spec.ts` could never pass there: the api package never declared supertest, and even with it installed the spec 404s because the route lives in a Next handler. The spec, its runner config, the `test:e2e` script, and the README line are now omitted in that mode. Also adds `vitest/globals` to the DI-only api tsconfig so `--nest-di-only --testing vitest` apps lint clean.
+
 ## 0.31.0
 
 ### Minor Changes
