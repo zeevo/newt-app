@@ -13,7 +13,6 @@ import typescriptConfig from "./typescript-config/index";
 import testingJest from "./testing-jest/index";
 import testingVitest from "./testing-vitest/index";
 import deploymentStandalone from "./deployment-standalone/index";
-import deploymentCustomServer from "./single-process-custom-server/index";
 import deploymentSpa from "./single-process-static-export/index";
 import nestDiOnlyModule from "./nest-di-only/index";
 import deploymentStandaloneDi from "./deployment-standalone-di/index";
@@ -53,7 +52,6 @@ export const templates = {
   testingJest,
   testingVitest,
   deploymentStandalone,
-  deploymentCustomServer,
   deploymentSpa,
   nestDiOnly: nestDiOnlyModule,
   deploymentStandaloneDi,
@@ -74,11 +72,9 @@ export function selectModules(selection: ModuleSelection): Module[] {
   const deploymentModule =
     deployment === "standalone"
       ? deploymentStandalone
-      : deployment === "custom-server"
-        ? deploymentCustomServer
-        : deployment === "spa"
-          ? deploymentSpa
-          : null;
+      : deployment === "spa"
+        ? deploymentSpa
+        : null;
 
   // In SPA mode NestJS serves Better Auth (AuthModule.forRoot); the Next.js
   // auth handler is redundant and can't be statically exported, so drop it.

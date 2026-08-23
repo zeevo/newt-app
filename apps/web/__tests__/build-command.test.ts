@@ -44,7 +44,7 @@ describe("buildCommand", () => {
     // Pinned against validateDeploymentCombo in packages/create-newt-app. The
     // reachable set below is derived from DI_ONLY_REJECTS, so without this the
     // suite would happily agree with a wrong value.
-    expect([...DI_ONLY_REJECTS].sort()).toEqual(["custom-server", "spa"]);
+    expect([...DI_ONLY_REJECTS].sort()).toEqual(["spa"]);
     expect(deploymentOptions(true)).toEqual(["none", "standalone"]);
   });
 

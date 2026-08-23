@@ -17,7 +17,7 @@ import {
 const TESTING_CHOICES = ["jest", "vitest"] as const;
 const DATABASE_CHOICES = ["sqlite", "postgres"] as const;
 const LINTER_CHOICES = ["eslint", "oxc"] as const;
-const DEPLOYMENT_CHOICES = ["none", "standalone", "custom-server", "spa"] as const;
+const DEPLOYMENT_CHOICES = ["none", "standalone", "spa"] as const;
 const EXTRAS_CHOICES = ["anti-slop"] as const satisfies readonly Extra[];
 
 type Testing = (typeof TESTING_CHOICES)[number];
@@ -146,11 +146,6 @@ export async function doInit(options: Options) {
             ...(results.nestDiOnly
               ? []
               : [
-                  {
-                    value: "custom-server" as const,
-                    label: "Custom Server",
-                    hint: "single process, single port",
-                  },
                   {
                     value: "spa" as const,
                     label: "SPA Mode",
@@ -299,7 +294,7 @@ program
   .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
   .option("--database <database>", "Database: sqlite or postgres", "sqlite")
   .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
-  .option("--deployment <strategy>", "Deployment: standalone, custom-server, spa", "none")
+  .option("--deployment <strategy>", "Deployment: standalone, spa", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
   .option("--include-example", "Include the todo example", false)
   .option("--extras <list>", "Extras, comma-separated: anti-slop", "")

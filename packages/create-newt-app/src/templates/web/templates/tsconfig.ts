@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s: Selection) => !s.nestDiOnly && s.deployment !== "custom-server",
+  when: (s: Selection) => !s.nestDiOnly,
   filename: "apps/web/tsconfig.json",
   template: `{
   "extends": "@<%= projectName %>/typescript-config/nextjs.json",

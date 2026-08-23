@@ -86,7 +86,6 @@ jobs:
           - "--deployment standalone --linter oxc --include-example"
           - "--deployment standalone --nest-di-only --include-example"
           - "--deployment spa --include-example"
-          - "--deployment custom-server --include-example"
         # Every entry above scaffolds with --no-install --no-git, so pnpmInstall,
         # pnpmFormat and initGit never run. This include matches an existing
         # combination, so it adds a flag to that job rather than adding a job.

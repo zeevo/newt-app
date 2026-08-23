@@ -9,12 +9,7 @@ export const configParsers = {
   testing: parseAsStringLiteral(["jest", "vitest"] as const).withDefault("vitest"),
   database: parseAsStringLiteral(["sqlite", "postgres"] as const).withDefault("postgres"),
   linter: parseAsStringLiteral(["eslint", "oxc"] as const).withDefault("oxc"),
-  deployment: parseAsStringLiteral([
-    "none",
-    "standalone",
-    "custom-server",
-    "spa",
-  ] as const).withDefault("none"),
+  deployment: parseAsStringLiteral(["none", "standalone", "spa"] as const).withDefault("none"),
   nestDiOnly: parseAsBoolean.withDefault(false),
   todoExample: parseAsBoolean.withDefault(true),
   antiSlop: parseAsBoolean.withDefault(false),

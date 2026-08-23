@@ -86,18 +86,6 @@ describe("validateDeploymentCombo", () => {
     expect(validateDeploymentCombo("spa", false).valid).toBe(true);
   });
 
-  it("rejects custom-server combined with nest-di-only", () => {
-    const result = validateDeploymentCombo("custom-server", true);
-    expect(result.valid).toBe(false);
-    expect(result.error).toContain(
-      "--deployment custom-server cannot be combined with --nest-di-only.",
-    );
-  });
-
-  it("accepts custom-server without nest-di-only", () => {
-    expect(validateDeploymentCombo("custom-server", false).valid).toBe(true);
-  });
-
   it("accepts nest-di-only with the deployments that support it", () => {
     expect(
       ["none", "standalone"].map((deployment) => validateDeploymentCombo(deployment, true).valid),
@@ -177,15 +165,10 @@ describe("validateFlagValue", () => {
   });
 
   it("rejects an unrecognised value and names the valid choices", () => {
-    const result = validateFlagValue("--deployment", "spaa", [
-      "none",
-      "standalone",
-      "custom-server",
-      "spa",
-    ]);
+    const result = validateFlagValue("--deployment", "spaa", ["none", "standalone", "spa"]);
     expect(result.valid).toBe(false);
     expect(result.error).toBe(
-      'Invalid value "spaa" for --deployment. Valid choices: none, standalone, custom-server, spa.',
+      'Invalid value "spaa" for --deployment. Valid choices: none, standalone, spa.',
     );
   });
 

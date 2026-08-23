@@ -4,22 +4,21 @@ export type Config = {
   testing: "jest" | "vitest";
   database: "sqlite" | "postgres";
   linter: "eslint" | "oxc";
-  deployment: "none" | "standalone" | "custom-server" | "spa";
+  deployment: "none" | "standalone" | "spa";
   nestDiOnly: boolean;
   todoExample: boolean;
   antiSlop: boolean;
 };
 
-// Both pairs are rejected by validateDeploymentCombo in create-newt-app, so the
-// builder must not offer them — the emitted command would just error.
-export const DI_ONLY_REJECTS = new Set<Config["deployment"]>(["spa", "custom-server"]);
+// Rejected by validateDeploymentCombo in create-newt-app, so the builder must
+// not offer it — the emitted command would just error.
+export const DI_ONLY_REJECTS = new Set<Config["deployment"]>(["spa"]);
 
 export const DI_ONLY_REJECTS_HINT =
-  "spa and custom-server already run Nest inside Next.js, so di-only rejects them.";
+  "spa statically exports Next.js, which cannot hold the route handlers di-only needs.";
 
 export const DEPLOYMENT_HINTS = {
   standalone: 'Next.js output: "standalone", in Docker alongside Nest.',
-  "custom-server": "A custom Node server runs Next.js and Nest together.",
   spa: "Next.js static export, served by Nest. No SSR.",
 } satisfies Record<Exclude<Config["deployment"], "none">, string>;
 
@@ -53,7 +52,6 @@ export function extrasHints(c: Config): string[] {
 const DEPLOYMENTS = [
   "none",
   "standalone",
-  "custom-server",
   "spa",
 ] as const satisfies readonly Config["deployment"][];
 
