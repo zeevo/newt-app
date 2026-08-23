@@ -30,6 +30,7 @@ export async function scaffold(
 
   const templateData: TemplateData = {
     projectName: options.name,
+    nestDiOnly: options.selection.nestDiOnly,
     testing: options.testing,
     database: options.database,
     deployment: options.deployment,

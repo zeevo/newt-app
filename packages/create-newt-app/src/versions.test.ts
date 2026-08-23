@@ -8,6 +8,7 @@ import type { Module, TemplateData } from "./types";
 
 const templateData: TemplateData = {
   projectName: "my-app",
+  nestDiOnly: false,
   testing: "jest",
   database: "sqlite",
   deployment: "none",
