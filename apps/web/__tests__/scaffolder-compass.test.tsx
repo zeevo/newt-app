@@ -38,11 +38,10 @@ describe("scaffolder compass", () => {
     );
   });
 
-  it("explains the two marker styles", () => {
+  it("plots position only, with no maintenance labelling", () => {
     render(<ScaffolderCompass />);
 
-    expect(screen.getByText("10 or more commits in 90 days")).toBeInTheDocument();
-    expect(screen.getByText("under 5 commits in 90 days")).toBeInTheDocument();
+    expect(screen.queryByText(/commits in 90 days/)).toBeNull();
   });
 
   it("is static, with nothing to hover or focus", () => {

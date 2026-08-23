@@ -3,7 +3,6 @@ type Tool = {
   name: string;
   x: number;
   y: number;
-  stalled: boolean;
   dx: number;
   dy: number;
   anchor: "start" | "middle" | "end";
@@ -15,7 +14,6 @@ const TOOLS: Tool[] = [
     name: "newt-app",
     x: -3,
     y: 8.8,
-    stalled: false,
     dx: 0,
     dy: -17,
     anchor: "middle",
@@ -25,7 +23,6 @@ const TOOLS: Tool[] = [
     name: "RedwoodSDK",
     x: 2.5,
     y: 8.6,
-    stalled: false,
     dx: 11,
     dy: 4,
     anchor: "start",
@@ -35,7 +32,6 @@ const TOOLS: Tool[] = [
     name: "Better-T-Stack",
     x: 0.5,
     y: 7.8,
-    stalled: false,
     dx: 0,
     dy: 21,
     anchor: "middle",
@@ -45,7 +41,6 @@ const TOOLS: Tool[] = [
     name: "create-vite",
     x: -9,
     y: 7.2,
-    stalled: false,
     dx: 11,
     dy: 4,
     anchor: "start",
@@ -55,7 +50,6 @@ const TOOLS: Tool[] = [
     name: "create-next-app",
     x: -7.3,
     y: 6.4,
-    stalled: false,
     dx: 11,
     dy: 4,
     anchor: "start",
@@ -65,7 +59,6 @@ const TOOLS: Tool[] = [
     name: "create-turbo",
     x: -5.5,
     y: 5.5,
-    stalled: false,
     dx: 11,
     dy: 4,
     anchor: "start",
@@ -75,7 +68,6 @@ const TOOLS: Tool[] = [
     name: "Nx",
     x: 7,
     y: 4.5,
-    stalled: false,
     dx: -11,
     dy: 4,
     anchor: "end",
@@ -85,7 +77,6 @@ const TOOLS: Tool[] = [
     name: "next-forge",
     x: 9.5,
     y: 5.2,
-    stalled: true,
     dx: -11,
     dy: -13,
     anchor: "end",
@@ -95,7 +86,6 @@ const TOOLS: Tool[] = [
     name: "epic-stack",
     x: 6,
     y: -3,
-    stalled: true,
     dx: -11,
     dy: 4,
     anchor: "end",
@@ -105,7 +95,6 @@ const TOOLS: Tool[] = [
     name: "create-t3-app",
     x: -3,
     y: -5.5,
-    stalled: true,
     dx: 11,
     dy: 4,
     anchor: "start",
@@ -115,7 +104,6 @@ const TOOLS: Tool[] = [
     name: "create-remix",
     x: -6,
     y: -7.5,
-    stalled: true,
     dx: -11,
     dy: 4,
     anchor: "end",
@@ -125,7 +113,6 @@ const TOOLS: Tool[] = [
     name: "Blitz",
     x: 3,
     y: -7.5,
-    stalled: true,
     dx: 11,
     dy: 4,
     anchor: "start",
@@ -259,14 +246,7 @@ export function ScaffolderCompass() {
                   cx={cx}
                   cy={cy}
                   r={isSelf ? 7 : 5}
-                  className={
-                    isSelf
-                      ? "fill-foreground"
-                      : tool.stalled
-                        ? "fill-card stroke-foreground/55"
-                        : "fill-foreground/55"
-                  }
-                  strokeWidth={1.8}
+                  className={isSelf ? "fill-foreground" : "fill-foreground/55"}
                 />
                 {/* the halo lets a label sit over the grid without a backing
                     rect, which would need text metrics to size */}
@@ -287,17 +267,6 @@ export function ScaffolderCompass() {
           })}
         </svg>
       </div>
-
-      <dl className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t pt-4 text-xs text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <span className="size-2.5 shrink-0 rounded-full bg-foreground" />
-          <span>10 or more commits in 90 days</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="size-2.5 shrink-0 rounded-full border-[1.5px] border-foreground" />
-          <span>under 5 commits in 90 days</span>
-        </div>
-      </dl>
     </div>
   );
 }

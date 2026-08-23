@@ -312,24 +312,12 @@ export class UserController {
       </section>
       <section className="border-t bg-background py-24">
         <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-4">
-          <div className="flex flex-col gap-4">
-            <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-              Where newt-app sits.
-            </h2>
-            <p className="max-w-2xl leading-relaxed text-muted-foreground">
-              Two questions decide whether a starter is worth adopting: is the architecture this
-              generation&apos;s, and how much do you have to understand to change it? newt-app pins
-              TypeScript 6, Next 16.3 and Nest 11, and keeps business logic in controllers and
-              services with SQL you can read.
-            </p>
-            <p className="max-w-2xl leading-relaxed text-muted-foreground">
-              Hollow markers have stopped moving: under five commits in the last ninety days. Five
-              of the twelve are hollow.
-            </p>
-          </div>
+          <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+            Where newt-app sits.
+          </h2>
           <ScaffolderCompass />
           <p className="font-mono text-xs text-muted-foreground">
-            Commit counts and version pins measured 23 August 2026.
+            Positions assessed 23 August 2026.
           </p>
         </div>
       </section>
