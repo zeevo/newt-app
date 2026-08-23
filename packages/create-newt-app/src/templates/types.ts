@@ -4,7 +4,7 @@ export type TemplateData = {
   projectName: string;
   testing: "jest" | "vitest";
   database: "sqlite" | "postgres";
-  deployment: "none" | "standalone" | "custom-server" | "spa";
+  deployment: "none" | "standalone" | "spa";
   linter: "eslint" | "oxc";
   antiSlop: boolean;
   shadcn: boolean;
@@ -14,7 +14,7 @@ export type TemplateData = {
 // Every option a template can select on. Kept separate from TemplateData
 // because these steer *which* template is used, not what it renders.
 export type Selection = {
-  deployment: "none" | "standalone" | "custom-server" | "spa";
+  deployment: "none" | "standalone" | "spa";
   nestDiOnly: boolean;
   todoExample: boolean;
   shadcn: boolean;

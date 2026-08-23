@@ -16,10 +16,9 @@ LOG_DIR="$(mktemp -d)"
 cd "$APP_DIR"
 
 case "$FLAGS" in
-  *--deployment\ spa*)          MODE=spa ;;
-  *--deployment\ custom-server*) MODE=custom-server ;;
-  *--deployment\ standalone*)   MODE=standalone ;;
-  *)                            MODE=default ;;
+  *--deployment\ spa*)        MODE=spa ;;
+  *--deployment\ standalone*) MODE=standalone ;;
+  *)                          MODE=default ;;
 esac
 
 # The todo example is opt-in, so without it the guarded route doesn't exist
@@ -101,12 +100,11 @@ else
       start web node apps/web/.next/standalone/apps/web/server.js
       ;;
     *)
-      # custom-server's `start` is its own server; everywhere else it is `next start`
       start web pnpm --filter web start
       ;;
   esac
 
-  if [ "$DI_ONLY" = yes ] || [ "$MODE" = custom-server ]; then
+  if [ "$DI_ONLY" = yes ]; then
     BASE=$WEB
     SERVER_LOG=web
   else

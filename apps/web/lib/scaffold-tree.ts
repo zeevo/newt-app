@@ -57,17 +57,6 @@ export function scaffoldTree(c: Config): TreeNode[] {
                   : []),
               ],
             },
-            ...(c.deployment === "custom-server"
-              ? [
-                  {
-                    name: "server.ts",
-                    kind: "file" as const,
-                    path: "apps/web/server.ts",
-                    annotation: "Next + Nest, one process",
-                    conditional: true,
-                  },
-                ]
-              : []),
             {
               name: "next.config.js",
               kind: "file",
@@ -135,18 +124,15 @@ export function scaffoldTree(c: Config): TreeNode[] {
                         conditional: true,
                       },
                     ]),
-                // index.ts re-exports AppModule for whoever boots Nest from
-                // outside apps/api: the Next.js route handlers under di-only,
-                // or apps/web/server.ts under custom-server.
-                ...(c.nestDiOnly || c.deployment === "custom-server"
+                // index.ts re-exports AppModule for the Next.js route handlers
+                // that boot Nest from outside apps/api under di-only.
+                ...(c.nestDiOnly
                   ? [
                       {
                         name: "index.ts",
                         kind: "file" as const,
                         path: "apps/api/src/index.ts",
-                        annotation: c.nestDiOnly
-                          ? "exports the DI context"
-                          : "AppModule for server.ts",
+                        annotation: "exports the DI context",
                         conditional: true,
                       },
                     ]

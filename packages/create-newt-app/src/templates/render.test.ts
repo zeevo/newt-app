@@ -5,7 +5,7 @@ import type { Extra, ModuleSelection, TemplateData } from "./types";
 import { versions } from "./versions";
 import { validateDeploymentCombo, validateExtrasCombo } from "../utils";
 
-const DEPLOYMENTS = ["none", "standalone", "custom-server", "spa"] as const;
+const DEPLOYMENTS = ["none", "standalone", "spa"] as const;
 const TESTING = ["jest", "vitest"] as const;
 const DATABASES = ["sqlite", "postgres"] as const;
 const LINTERS = ["eslint", "oxc"] as const;
