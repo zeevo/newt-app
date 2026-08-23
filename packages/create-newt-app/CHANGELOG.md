@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.31.2
+
+### Patch Changes
+
+- 5c1a0a1: Bump the scaffolded Next.js version from 16.3.0 to 16.3.2, and `@next/eslint-plugin-next` to match.
+
 ## 0.31.1
 
 ### Patch Changes
