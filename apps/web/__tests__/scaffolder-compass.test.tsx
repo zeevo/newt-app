@@ -4,17 +4,14 @@ import { ScaffolderCompass } from "@/components/scaffolder-compass";
 
 const NAMES = [
   "newt-app",
-  "RedwoodSDK",
   "Better-T-Stack",
   "create-vite",
   "create-next-app",
   "create-turbo",
-  "Nx",
   "next-forge",
   "epic-stack",
   "create-t3-app",
   "create-remix",
-  "Blitz",
 ];
 
 describe("scaffolder compass", () => {

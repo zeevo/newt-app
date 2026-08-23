@@ -316,9 +316,6 @@ export class UserController {
             Where newt-app sits.
           </h2>
           <ScaffolderCompass />
-          <p className="font-mono text-xs text-muted-foreground">
-            Positions assessed 23 August 2026.
-          </p>
         </div>
       </section>
     </div>

@@ -19,15 +19,6 @@ const TOOLS: Tool[] = [
     anchor: "middle",
   },
   {
-    id: "redwoodsdk",
-    name: "RedwoodSDK",
-    x: 2.5,
-    y: 8.6,
-    dx: 11,
-    dy: 4,
-    anchor: "start",
-  },
-  {
     id: "better-t-stack",
     name: "Better-T-Stack",
     x: 0.5,
@@ -62,15 +53,6 @@ const TOOLS: Tool[] = [
     dx: 11,
     dy: 4,
     anchor: "start",
-  },
-  {
-    id: "nx",
-    name: "Nx",
-    x: 7,
-    y: 4.5,
-    dx: -11,
-    dy: 4,
-    anchor: "end",
   },
   {
     id: "next-forge",
@@ -108,15 +90,6 @@ const TOOLS: Tool[] = [
     dy: 4,
     anchor: "end",
   },
-  {
-    id: "blitz",
-    name: "Blitz",
-    x: 3,
-    y: -7.5,
-    dx: 11,
-    dy: 4,
-    anchor: "start",
-  },
 ];
 
 const SIZE = 700;
@@ -135,17 +108,9 @@ export function ScaffolderCompass() {
         <svg
           viewBox={`0 0 ${SIZE} ${SIZE}`}
           role="img"
-          aria-label="Twelve TypeScript scaffolders plotted by how modern the architecture is and how complicated the result is to work in. newt-app sits in the modern and simple quadrant with Better-T-Stack, RedwoodSDK, create-turbo, create-vite and create-next-app. next-forge and Nx are modern but complicated. create-t3-app and create-remix are outdated but simple. epic-stack and Blitz are outdated and complicated."
+          aria-label="Nine TypeScript scaffolders plotted by how modern the architecture is and how complicated the result is to work in. newt-app sits in the modern and simple quadrant with Better-T-Stack, create-turbo, create-vite and create-next-app. next-forge is modern but complicated. create-t3-app and create-remix are outdated but simple. epic-stack is outdated and complicated."
           className="mx-auto h-auto w-full max-w-3xl min-w-[34rem]"
         >
-          <rect
-            x={CENTER}
-            y={CENTER}
-            width={CENTER - PAD}
-            height={CENTER - PAD}
-            className="fill-destructive/5"
-          />
-
           {TICKS.map((tick) => (
             <line
               key={`v${tick}`}
