@@ -4,6 +4,10 @@ import { ScaffolderCompass } from "@/components/scaffolder-compass";
 
 const marker = (name: string) => screen.getByRole("button", { name: new RegExp(`^${name},`) });
 
+// jsdom cannot produce the real pointer events base-ui opens a tooltip on, so
+// these drive the focus path instead. It is the same popup either way.
+const reveal = (name: string) => fireEvent.focus(marker(name));
+
 describe("scaffolder compass", () => {
   it("plots every tool", () => {
     render(<ScaffolderCompass />);
@@ -11,35 +15,34 @@ describe("scaffolder compass", () => {
     expect(screen.getAllByRole("button")).toHaveLength(12);
   });
 
-  it("opens on newt-app", () => {
+  it("names the quadrant on each marker", () => {
     render(<ScaffolderCompass />);
 
-    expect(screen.getByText("modern · simple")).toBeInTheDocument();
-    expect(screen.getByText("active")).toBeInTheDocument();
-    expect(screen.getByText("100")).toBeInTheDocument();
+    expect(marker("newt-app")).toHaveAccessibleName("newt-app, modern · simple");
+    expect(marker("next-forge")).toHaveAccessibleName("next-forge, modern · complicated");
+    expect(marker("create-t3-app")).toHaveAccessibleName("create-t3-app, outdated · simple");
+    expect(marker("epic-stack")).toHaveAccessibleName("epic-stack, outdated · complicated");
   });
 
-  it("swaps the detail panel on hover", () => {
+  it("reveals the evidence in a tooltip", async () => {
     render(<ScaffolderCompass />);
-    fireEvent.mouseEnter(marker("next-forge"));
+    reveal("next-forge");
 
-    expect(screen.getByText("modern · complicated")).toBeInTheDocument();
-    expect(screen.getByText("stopped moving")).toBeInTheDocument();
-    expect(screen.getByText(/release\.yml/)).toBeInTheDocument();
+    expect(await screen.findByText(/release\.yml/)).toBeInTheDocument();
+    expect(screen.getByText(/1 commit in 90 days/)).toBeInTheDocument();
   });
 
-  it("swaps the detail panel on keyboard focus", () => {
+  it("reports tools with no commit figure as no longer developed", async () => {
     render(<ScaffolderCompass />);
-    fireEvent.focus(marker("create-t3-app"));
+    reveal("create-remix");
 
-    expect(screen.getByText("outdated · simple")).toBeInTheDocument();
-    expect(screen.getByText(/28 Pages Router template files/)).toBeInTheDocument();
+    expect(await screen.findByText(/no longer developed/)).toBeInTheDocument();
   });
 
-  it("omits the commit count where there is no figure", () => {
+  it("keeps nothing on screen until a marker is reached", () => {
     render(<ScaffolderCompass />);
-    fireEvent.mouseEnter(marker("create-remix"));
 
-    expect(screen.queryByText("commits in 90 days")).toBeNull();
+    expect(screen.queryByText(/release\.yml/)).toBeNull();
+    expect(screen.queryByText(/28 Pages Router template files/)).toBeNull();
   });
 });

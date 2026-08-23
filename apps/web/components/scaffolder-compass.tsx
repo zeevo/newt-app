@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Badge } from "@newt-app/ui/components/badge";
-import { Separator } from "@newt-app/ui/components/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@newt-app/ui/components/tooltip";
 import { cn } from "@newt-app/ui/lib/utils";
 
 type Tool = {
@@ -176,13 +179,6 @@ const py = (v: number) => CENTER - v * UNIT;
 
 type Quadrant = `${"modern" | "outdated"} · ${"simple" | "complicated"}`;
 
-const QUADRANT_COST = {
-  "modern · simple": "Current bets, assembled from parts you already understand.",
-  "modern · complicated": "Current technology, wrapped in a lot of structure you inherit.",
-  "outdated · simple": "Previous-generation ideas, but little to inherit if you leave.",
-  "outdated · complicated": "Previous-generation ideas, and a lot of them to maintain.",
-} satisfies Record<Quadrant, string>;
-
 function quadrant(tool: Tool): Quadrant {
   const age = tool.y >= 0 ? "modern" : "outdated";
   const load = tool.x >= 0 ? "complicated" : "simple";
@@ -190,18 +186,15 @@ function quadrant(tool: Tool): Quadrant {
 }
 
 export function ScaffolderCompass() {
-  const [activeId, setActiveId] = useState("newt-app");
-  const active = TOOLS.find((tool) => tool.id === activeId) ?? TOOLS[0]!;
-
   return (
-    <div className="overflow-hidden rounded-xl border bg-card">
-      <div className="grid lg:grid-cols-[1fr_20rem]">
-        <div className="overflow-x-auto p-4 sm:p-6">
+    <div className="rounded-xl border bg-card p-4 sm:p-6">
+      <TooltipProvider delay={80}>
+        <div className="overflow-x-auto">
           <svg
             viewBox={`0 0 ${SIZE} ${SIZE}`}
             role="group"
             aria-label="Full-stack TypeScript scaffolders plotted by how modern the architecture is and how complicated the result is to work in"
-            className="h-auto w-full min-w-[36rem]"
+            className="mx-auto h-auto w-full max-w-3xl min-w-[34rem]"
           >
             <rect
               x={CENTER}
@@ -248,7 +241,7 @@ export function ScaffolderCompass() {
               y1={PAD}
               x2={CENTER}
               y2={SIZE - PAD}
-              className="stroke-muted-foreground/40"
+              className="stroke-foreground"
               strokeWidth={1.5}
             />
             <line
@@ -256,7 +249,7 @@ export function ScaffolderCompass() {
               y1={CENTER}
               x2={SIZE - PAD}
               y2={CENTER}
-              className="stroke-muted-foreground/40"
+              className="stroke-foreground"
               strokeWidth={1.5}
             />
 
@@ -302,127 +295,100 @@ export function ScaffolderCompass() {
             </g>
 
             {TOOLS.map((tool) => {
-              const isActive = tool.id === active.id;
               const isSelf = tool.id === "newt-app";
               const cx = px(tool.x);
               const cy = py(tool.y);
 
               return (
-                <g
-                  key={tool.id}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`${tool.name}, ${quadrant(tool)}`}
-                  onMouseEnter={() => setActiveId(tool.id)}
-                  onFocus={() => setActiveId(tool.id)}
-                  onClick={() => setActiveId(tool.id)}
-                  className="cursor-pointer outline-none"
-                >
-                  <circle cx={cx} cy={cy} r={18} fill="transparent" />
-                  {isSelf && (
-                    <>
-                      <circle
-                        cx={cx}
-                        cy={cy}
-                        r={16}
-                        fill="none"
-                        className="stroke-foreground/20"
-                        strokeWidth={1}
-                      />
-                      <circle
-                        cx={cx}
-                        cy={cy}
-                        r={11}
-                        fill="none"
-                        className="stroke-foreground/45"
-                        strokeWidth={1.5}
-                      />
-                    </>
-                  )}
-                  <circle
-                    cx={cx}
-                    cy={cy}
-                    r={isSelf ? 7 : 5}
-                    className={cn(
-                      "transition-all",
-                      isSelf && "fill-foreground",
-                      !isSelf && tool.stalled && "fill-card stroke-foreground/55",
-                      !isSelf && tool.stalled && isActive && "stroke-foreground",
-                      !isSelf && !tool.stalled && !isActive && "fill-foreground/55",
-                      !isSelf && !tool.stalled && isActive && "fill-foreground",
-                    )}
-                    strokeWidth={1.8}
-                  />
-                  <text
-                    x={cx + tool.dx}
-                    y={cy + tool.dy}
-                    textAnchor={tool.anchor}
-                    strokeWidth={4}
-                    style={{ paintOrder: "stroke" }}
-                    className={cn(
-                      "stroke-card font-mono text-[11px] transition-colors",
-                      isSelf && "fill-foreground font-semibold",
-                      !isSelf && isActive && "fill-foreground",
-                      !isSelf && !isActive && "fill-muted-foreground",
-                    )}
+                <Tooltip key={tool.id}>
+                  <TooltipTrigger
+                    render={<g />}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`${tool.name}, ${quadrant(tool)}`}
+                    className="group cursor-pointer outline-none"
                   >
-                    {tool.name}
-                  </text>
-                </g>
+                    <circle cx={cx} cy={cy} r={18} fill="transparent" />
+                    {isSelf && (
+                      <>
+                        <circle
+                          cx={cx}
+                          cy={cy}
+                          r={16}
+                          fill="none"
+                          className="stroke-foreground/20"
+                          strokeWidth={1}
+                        />
+                        <circle
+                          cx={cx}
+                          cy={cy}
+                          r={11}
+                          fill="none"
+                          className="stroke-foreground/45"
+                          strokeWidth={1.5}
+                        />
+                      </>
+                    )}
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r={isSelf ? 7 : 5}
+                      className={cn(
+                        "transition-all",
+                        isSelf && "fill-foreground",
+                        !isSelf &&
+                          tool.stalled &&
+                          "fill-card stroke-foreground/55 group-focus-visible:stroke-foreground group-hover:stroke-foreground",
+                        !isSelf &&
+                          !tool.stalled &&
+                          "fill-foreground/55 group-focus-visible:fill-foreground group-hover:fill-foreground",
+                      )}
+                      strokeWidth={1.8}
+                    />
+                    <text
+                      x={cx + tool.dx}
+                      y={cy + tool.dy}
+                      textAnchor={tool.anchor}
+                      strokeWidth={4}
+                      style={{ paintOrder: "stroke" }}
+                      className={cn(
+                        "stroke-card font-mono text-[11px] transition-colors",
+                        isSelf && "fill-foreground font-semibold",
+                        !isSelf &&
+                          "fill-muted-foreground group-focus-visible:fill-foreground group-hover:fill-foreground",
+                      )}
+                    >
+                      {tool.name}
+                    </text>
+                  </TooltipTrigger>
+                  <TooltipContent className="flex flex-col items-start gap-1.5 px-3 py-2">
+                    <span className="font-mono text-xs font-semibold">{tool.name}</span>
+                    <span className="font-mono text-[0.65rem] text-background/60">
+                      {quadrant(tool)}
+                      {" · "}
+                      {tool.commits === null
+                        ? "no longer developed"
+                        : `${tool.commits} commit${tool.commits === 1 ? "" : "s"} in 90 days`}
+                    </span>
+                    <p className="text-xs leading-relaxed text-background/85">{tool.note}</p>
+                  </TooltipContent>
+                </Tooltip>
               );
             })}
           </svg>
         </div>
+      </TooltipProvider>
 
-        <div className="flex flex-col gap-4 border-t p-6 lg:border-t-0 lg:border-l">
-          <div className="flex flex-col gap-2">
-            <span className="font-mono text-sm font-semibold">{active.name}</span>
-            <div className="flex flex-wrap gap-1.5">
-              <Badge variant="outline" className="font-mono">
-                {quadrant(active)}
-              </Badge>
-              <Badge variant={active.stalled ? "destructive" : "secondary"} className="font-mono">
-                {active.stalled ? "stopped moving" : "active"}
-              </Badge>
-            </div>
-          </div>
-
-          <p className="text-sm leading-relaxed text-muted-foreground">{active.note}</p>
-
-          {active.commits !== null && (
-            <div className="flex items-baseline gap-2">
-              <span className="font-mono text-2xl font-semibold tabular-nums">
-                {active.commits}
-              </span>
-              <span className="text-xs text-muted-foreground">commits in 90 days</span>
-            </div>
-          )}
-
-          <Separator />
-
-          <div className="flex flex-col gap-1.5">
-            <span className="font-mono text-[0.7rem] tracking-wider text-muted-foreground uppercase">
-              What this corner costs
-            </span>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {QUADRANT_COST[quadrant(active)]}
-            </p>
-          </div>
-
-          <Separator className="mt-auto" />
-
-          <dl className="flex flex-col gap-2 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <span className="size-2.5 shrink-0 rounded-full bg-foreground" />
-              <span>10 or more commits in 90 days</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="size-2.5 shrink-0 rounded-full border-[1.5px] border-foreground" />
-              <span>under 5 commits in 90 days</span>
-            </div>
-          </dl>
+      <dl className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t pt-4 text-xs text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <span className="size-2.5 shrink-0 rounded-full bg-foreground" />
+          <span>10 or more commits in 90 days</span>
         </div>
-      </div>
+        <div className="flex items-center gap-2">
+          <span className="size-2.5 shrink-0 rounded-full border-[1.5px] border-foreground" />
+          <span>under 5 commits in 90 days</span>
+        </div>
+      </dl>
     </div>
   );
 }
