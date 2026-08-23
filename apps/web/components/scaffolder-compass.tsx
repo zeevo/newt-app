@@ -174,14 +174,16 @@ const TICKS = [-8, -6, -4, -2, 2, 4, 6, 8];
 const px = (v: number) => CENTER + v * UNIT;
 const py = (v: number) => CENTER - v * UNIT;
 
-const QUADRANT_COST: Record<string, string> = {
+type Quadrant = `${"modern" | "outdated"} · ${"simple" | "complicated"}`;
+
+const QUADRANT_COST = {
   "modern · simple": "Current bets, assembled from parts you already understand.",
   "modern · complicated": "Current technology, wrapped in a lot of structure you inherit.",
   "outdated · simple": "Previous-generation ideas, but little to inherit if you leave.",
   "outdated · complicated": "Previous-generation ideas, and a lot of them to maintain.",
-};
+} satisfies Record<Quadrant, string>;
 
-function quadrant(tool: Tool) {
+function quadrant(tool: Tool): Quadrant {
   const age = tool.y >= 0 ? "modern" : "outdated";
   const load = tool.x >= 0 ? "complicated" : "simple";
   return `${age} · ${load}`;
