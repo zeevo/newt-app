@@ -49,13 +49,8 @@ const FileGlyph = (
   </svg>
 );
 
-// Marks for the extensions a scaffolded project is mostly made of. Drawn in
-// currentColor rather than brand colors, to sit with the folder and file
-// outlines and with the builder's logos, which are masked to the foreground.
-//
-// The lettering is drawn rather than set in <text>: an svg text node joins the
-// row's textContent, which would put "TS" in front of every filename copied out
-// of the tree, and it would also leave the shape at the mercy of a font.
+// Lettering is drawn rather than set in <text>, which would join the row's
+// textContent and put "TS" in front of every filename copied out of the tree.
 const Stroke = ({ d }: { d: string }) => (
   <path
     d={d}
@@ -67,9 +62,6 @@ const Stroke = ({ d }: { d: string }) => (
   />
 );
 
-// Without a badge behind them the letters take the whole box, which is what
-// keeps them legible once monochrome removes color as the thing telling ts
-// and js apart.
 const S_CURVE =
   "M20.9 9.9c0-1.9-1.4-3-3.1-3s-3.2 1.1-3.2 2.9 1.4 2.4 3.1 2.9 3.2 1.2 3.2 3.1-1.5 3-3.2 3-3.2-1.1-3.2-3";
 
@@ -87,8 +79,6 @@ const JavaScriptGlyph = (
   </svg>
 );
 
-// .tsx is a React component, and the atom reads at this size where a third
-// letter alongside TS would not.
 const ReactGlyph = (
   <svg viewBox="0 0 24 24" aria-hidden>
     <g fill="none" stroke="currentColor" strokeWidth="1.7">
@@ -100,7 +90,6 @@ const ReactGlyph = (
   </svg>
 );
 
-// JSON has no mark of its own, so braces carry it.
 const JsonGlyph = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
     <path
@@ -123,15 +112,10 @@ const EXTENSION_GLYPHS = new Map([
   ["json", JsonGlyph],
 ]);
 
-/**
- * The glyph for a filename, or the plain sheet when the extension has none.
- * Pass it to `FileTree.File`'s `icon`, which is left alone by default so a
- * consumer chooses whether the tree is typed or uniform.
- */
+/** The glyph for a filename, for `FileTree.File`'s `icon`. */
 export function fileIcon(name: string): React.ReactNode {
   const dot = name.lastIndexOf(".");
-  // A leading dot opens a dotfile, not an extension: .prettierrc is not `rc`,
-  // while .oxlintrc.json still resolves on its second dot.
+  // A leading dot opens a dotfile, not an extension: .prettierrc is not `rc`.
   if (dot < 1) return FileGlyph;
   return EXTENSION_GLYPHS.get(name.slice(dot + 1).toLowerCase()) ?? FileGlyph;
 }

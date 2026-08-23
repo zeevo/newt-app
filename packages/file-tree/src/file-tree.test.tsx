@@ -149,8 +149,6 @@ describe("FileTree", () => {
     const [ts, tsx, js, dotJson, json, dotfile, unknown] = entries(container).map(glyphOf);
 
     expect(new Set([ts, tsx, js, json]).size).toBe(4);
-    // a dotfile has no extension, so `.prettierrc` is not an `rc` file, while
-    // `.oxlintrc.json` still resolves on its second dot
     expect(dotJson).toBe(json);
     expect(dotfile).toBe(unknown);
     expect(ts).not.toBe(unknown);
