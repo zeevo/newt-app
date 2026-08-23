@@ -85,6 +85,7 @@ jobs:
           - "--deployment standalone --include-example"
           - "--deployment standalone --linter oxc --include-example"
           - "--deployment standalone --nest-di-only --include-example"
+          - "--deployment standalone --nest-di-only --shadcn --testing vitest --database postgres --linter oxc --extras anti-slop"
           - "--deployment spa --include-example"
         # Every entry above scaffolds with --no-install --no-git, so pnpmInstall,
         # pnpmFormat and initGit never run. This include matches an existing
