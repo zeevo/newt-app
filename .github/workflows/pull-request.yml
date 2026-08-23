@@ -77,7 +77,7 @@ jobs:
           - "--testing jest"
           - "--include-example"
           - "--shadcn --testing vitest --include-example"
-          - "--nest-di-only"
+          - "--nest-di-only --testing vitest"
           - "--database postgres --include-example"
           - "--shadcn --linter oxc --include-example"
           - "--shadcn --linter oxc --extras anti-slop --include-example"
