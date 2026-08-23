@@ -323,8 +323,8 @@ export class UserController {
               services with SQL you can read.
             </p>
             <p className="max-w-2xl leading-relaxed text-muted-foreground">
-              Hover or focus a marker for the evidence behind its position. Hollow markers have
-              stopped moving: five of the twelve are hollow.
+              Hollow markers have stopped moving: under five commits in the last ninety days. Five
+              of the twelve are hollow.
             </p>
           </div>
           <ScaffolderCompass />
