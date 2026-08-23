@@ -52,6 +52,7 @@ const label = (selection: ModuleSelection) =>
 function renderCombo(selection: ModuleSelection) {
   const data: TemplateData = {
     projectName: "my-app",
+    nestDiOnly: selection.nestDiOnly,
     testing: selection.testing,
     database: selection.database,
     deployment: selection.deployment,
@@ -96,7 +97,19 @@ function renderCombo(selection: ModuleSelection) {
       files.set(target, JSON.stringify(json, null, 2));
     });
 
-  return { files, collisions };
+  const scripts = new Map<string, Record<string, string>>();
+  modules
+    .flatMap((mod) => mod.scripts ?? [])
+    .forEach((script) => {
+      const target = `${script.module}/package.json`;
+      if (!files.has(target)) return;
+      scripts.set(target, {
+        ...scripts.get(target),
+        [script.name]: script.script,
+      });
+    });
+
+  return { files, collisions, scripts };
 }
 
 type Manifest = { name?: string } & Partial<
@@ -183,6 +196,50 @@ describe("anti-slop ships only with the extra", () => {
       expect(oxlintrc.includes('"packages/ui/src/components/**"')).toBe(
         selected && selection.shadcn,
       );
+    },
+  );
+});
+
+// A shipped e2e spec needs supertest to run and a controller to hit. DI-only
+// Nest has neither, so it ships no e2e suite at all.
+describe("the e2e suite ships only where it can pass", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const { files, scripts } = renderCombo(selection);
+      const spec = "apps/api/test/app.e2e-spec.ts";
+      const apiPkg = "apps/api/package.json";
+
+      expect(files.has(spec)).toBe(!selection.nestDiOnly);
+      expect("test:e2e" in (scripts.get(apiPkg) ?? {})).toBe(!selection.nestDiOnly);
+      expect(files.has("apps/api/test/jest-e2e.json")).toBe(
+        !selection.nestDiOnly && selection.testing === "jest",
+      );
+      expect(files.has("apps/api/vitest.config.e2e.mts")).toBe(
+        !selection.nestDiOnly && selection.testing === "vitest",
+      );
+
+      const deps: Manifest = JSON.parse(files.get(apiPkg) ?? "{}");
+      const declared = { ...deps.dependencies, ...deps.devDependencies };
+      const needed = ["supertest", "@types/supertest", "@nestjs/platform-express"];
+      expect(needed.filter((dep) => dep in declared)).toEqual(selection.nestDiOnly ? [] : needed);
+
+      const readme = files.get("apps/api/README.md") ?? "";
+      expect(readme.includes("pnpm test:e2e")).toBe(!selection.nestDiOnly);
+    },
+  );
+});
+
+// Specs are written against globals, so the test runner's types have to be in
+// scope or the api's own lint run fails on unresolved describe/it/expect.
+describe("api tsconfig types match the test runner", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const tsconfig = renderCombo(selection).files.get("apps/api/tsconfig.json") ?? "";
+      const types = JSON.parse(tsconfig).compilerOptions.types;
+
+      expect(types).toContain(selection.testing === "jest" ? "jest" : "vitest/globals");
     },
   );
 });

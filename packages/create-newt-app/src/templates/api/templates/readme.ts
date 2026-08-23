@@ -9,7 +9,7 @@ NestJS backend for the monorepo.
 \`\`\`sh
 pnpm dev          # watch mode
 pnpm build        # production build
-pnpm test         # unit tests
-pnpm test:e2e     # e2e tests
+pnpm test         # unit tests<% if (!nestDiOnly) { %>
+pnpm test:e2e     # e2e tests<% } %>
 \`\`\``,
 };

@@ -22,7 +22,7 @@ export default {
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "types": [<% if (testing === 'jest') { %>"jest", <% } %>"node"]
+    "types": [<% if (testing === 'jest') { %>"jest", <% } %><% if (testing === 'vitest') { %>"vitest/globals", <% } %>"node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

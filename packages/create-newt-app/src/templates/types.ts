@@ -2,6 +2,7 @@ import type { Versions } from "./versions";
 
 export type TemplateData = {
   projectName: string;
+  nestDiOnly: boolean;
   testing: "jest" | "vitest";
   database: "sqlite" | "postgres";
   deployment: "none" | "standalone" | "spa";
