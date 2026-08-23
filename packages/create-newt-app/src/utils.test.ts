@@ -18,6 +18,7 @@ import { versions } from "./templates/versions";
 
 const templateData: TemplateData = {
   projectName: "my-app",
+  nestDiOnly: false,
   testing: "jest",
   database: "sqlite",
   deployment: "none",

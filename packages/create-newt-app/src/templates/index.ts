@@ -63,6 +63,12 @@ export const templates = {
   todoExampleShadcn,
 };
 
+const E2E_FILES = [
+  "apps/api/test/app.e2e-spec.ts",
+  "apps/api/test/jest-e2e.json",
+  "apps/api/vitest.config.e2e.mts",
+];
+
 // The single source of truth for which modules a selection scaffolds. Kept here
 // rather than in the CLI so the render tests exercise the real selection.
 export function selectModules(selection: ModuleSelection): Module[] {
@@ -88,6 +94,17 @@ export function selectModules(selection: ModuleSelection): Module[] {
         }
       : web;
 
+  // DI-only Nest has no controllers of its own: HTTP lives in Next route
+  // handlers, so an e2e suite booting apps/api has nothing to hit.
+  const selectedTesting = testing === "vitest" ? testingVitest : testingJest;
+  const testingModule = nestDiOnly
+    ? {
+        ...selectedTesting,
+        templates: selectedTesting.templates.filter((t) => !E2E_FILES.includes(t.filename)),
+        scripts: selectedTesting.scripts?.filter((s) => s.name !== "test:e2e"),
+      }
+    : selectedTesting;
+
   return [
     root,
     webModule,
@@ -98,7 +115,7 @@ export function selectModules(selection: ModuleSelection): Module[] {
     linter === "oxc" ? oxc : eslintConfig,
     ...(extras.includes("anti-slop") ? [antiSlop] : []),
     typescriptConfig,
-    testing === "vitest" ? testingVitest : testingJest,
+    testingModule,
     ...(deploymentModule ? [deploymentModule] : []),
     ...(nestDiOnly ? [nestDiOnlyModule] : [apiControllers]),
     // nest-di-only overwrites the standalone next.config.js and leaves the
