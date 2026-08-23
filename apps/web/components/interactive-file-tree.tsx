@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { useQueryStates } from "nuqs";
-import { FileTree } from "@newt-app/file-tree";
+import { FileTree, fileIcon } from "@newt-app/file-tree";
 import Link from "next/link";
 import { CopyCommandButton } from "@/components/copy-command-button";
 import { Toggle } from "@newt-app/ui/components/toggle";
@@ -57,7 +57,12 @@ function renderNodes(nodes: TreeNode[]) {
         {node.children && renderNodes(node.children)}
       </FileTree.Folder>
     ) : (
-      <FileTree.File key={node.path} annotation={node.annotation} className={className}>
+      <FileTree.File
+        key={node.path}
+        icon={fileIcon(node.name)}
+        annotation={node.annotation}
+        className={className}
+      >
         {node.name}
       </FileTree.File>
     );

@@ -49,6 +49,93 @@ const FileGlyph = (
   </svg>
 );
 
+// Brand marks for the extensions a scaffolded project is mostly made of. The
+// icon slot tints its child with currentColor, so each mark that carries brand
+// color sets its own fill and opts out of the tint.
+//
+// The lettering is drawn rather than set in <text>: an svg text node joins the
+// row's textContent, which would put "TS" in front of every filename copied out
+// of the tree, and it would also leave the shape at the mercy of a font.
+const Lettering = ({ d, color }: { d: string; color: string }) => (
+  <path
+    d={d}
+    fill="none"
+    stroke={color}
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  />
+);
+
+const S_CURVE =
+  "M19.6 11.1c0-1.2-1.2-1.9-2.7-1.9s-2.8.7-2.8 2 1.3 1.7 2.7 2 2.8.8 2.8 2.1-1.3 2-2.8 2-2.8-.8-2.8-2";
+
+const TypeScriptGlyph = (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <rect width="24" height="24" rx="3" fill="#3178C6" />
+    <Lettering color="#FFFFFF" d="M3.6 9.4h7M7.1 9.4v8.2" />
+    <Lettering color="#FFFFFF" d={S_CURVE} />
+  </svg>
+);
+
+const JavaScriptGlyph = (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <rect width="24" height="24" rx="3" fill="#F7DF1E" />
+    <Lettering color="#000000" d="M9 9.4v5.9a2.3 2.3 0 0 1-4.5.8" />
+    <Lettering color="#000000" d={S_CURVE} />
+  </svg>
+);
+
+// .tsx is a React component, and the atom reads at this size where a third
+// letter on the TypeScript square would not.
+const ReactGlyph = (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <g fill="none" stroke="#61DAFB" strokeWidth="1.9">
+      <ellipse cx="12" cy="12" rx="10" ry="3.6" />
+      <ellipse cx="12" cy="12" rx="10" ry="3.6" transform="rotate(60 12 12)" />
+      <ellipse cx="12" cy="12" rx="10" ry="3.6" transform="rotate(120 12 12)" />
+    </g>
+    <circle cx="12" cy="12" r="2.1" fill="#61DAFB" />
+  </svg>
+);
+
+// JSON has no brand mark, so braces carry it. Left on currentColor so the many
+// package.json and tsconfig.json entries stay as quiet as the plain sheet.
+const JsonGlyph = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+    <path
+      d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const EXTENSION_GLYPHS = new Map([
+  ["ts", TypeScriptGlyph],
+  ["tsx", ReactGlyph],
+  ["js", JavaScriptGlyph],
+  ["json", JsonGlyph],
+]);
+
+/**
+ * The glyph for a filename, or the plain sheet when the extension has none.
+ * Pass it to `FileTree.File`'s `icon`, which is left alone by default so a
+ * consumer chooses whether the tree is typed or uniform.
+ */
+export function fileIcon(name: string): React.ReactNode {
+  const dot = name.lastIndexOf(".");
+  // A leading dot opens a dotfile, not an extension: .prettierrc is not `rc`,
+  // while .oxlintrc.json still resolves on its second dot.
+  if (dot < 1) return FileGlyph;
+  return EXTENSION_GLYPHS.get(name.slice(dot + 1).toLowerCase()) ?? FileGlyph;
+}
+
 // The elbow is two absolutely positioned rules. The vertical one runs the full
 // height of the entry so it reaches the next sibling, except on the last entry
 // where it stops at the elbow, and the DOM answers that with :last-child so no
