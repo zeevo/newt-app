@@ -311,11 +311,25 @@ export class UserController {
         </div>
       </section>
       <section className="border-t bg-background py-24">
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-4">
-          <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-            Where newt-app sits.
-          </h2>
-          <ScaffolderCompass />
+        <div className="mx-auto max-w-[1200px] px-4">
+          <FeatureSection split="lg">
+            <ScaffolderCompass />
+            <div className="flex flex-col justify-center gap-4">
+              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+                Where newt-app sits.
+              </h2>
+              <p className="leading-relaxed text-muted-foreground">
+                Two questions decide whether a starter is worth adopting: is the architecture this
+                generation&apos;s, and how much do you have to understand to change it?
+              </p>
+              <p className="leading-relaxed text-muted-foreground">
+                newt-app tracks the current majors: TypeScript 6, Next 16, NestJS 11. Business logic
+                lives in controllers and services, persistence is SQL through{" "}
+                <InlineCode>packages/db</InlineCode>, and there is no codegen step or inference
+                chain between the two.
+              </p>
+            </div>
+          </FeatureSection>
         </div>
       </section>
     </div>

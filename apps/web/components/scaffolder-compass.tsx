@@ -109,7 +109,7 @@ export function ScaffolderCompass() {
           viewBox={`0 0 ${SIZE} ${SIZE}`}
           role="img"
           aria-label="Nine TypeScript scaffolders plotted by how modern the architecture is and how complicated the result is to work in. newt-app sits in the modern and simple quadrant with Better-T-Stack, create-turbo, create-vite and create-next-app. next-forge is modern but complicated. create-t3-app and create-remix are outdated but simple. epic-stack is outdated and complicated."
-          className="mx-auto h-auto w-full max-w-3xl min-w-[34rem]"
+          className="h-auto w-full"
         >
           {TICKS.map((tick) => (
             <line
@@ -160,7 +160,7 @@ export function ScaffolderCompass() {
             strokeWidth={1.5}
           />
 
-          <g className="fill-muted-foreground font-mono text-[11px] tracking-[0.16em]">
+          <g className="fill-muted-foreground font-mono text-[13px] tracking-[0.16em]">
             <text x={CENTER} y={PAD - 20} textAnchor="middle">
               MODERN
             </text>
@@ -221,7 +221,7 @@ export function ScaffolderCompass() {
                   textAnchor={tool.anchor}
                   strokeWidth={4}
                   style={{ paintOrder: "stroke" }}
-                  className={`stroke-card font-mono text-[11px] ${
+                  className={`stroke-card font-mono text-[14px] ${
                     isSelf ? "fill-foreground font-semibold" : "fill-muted-foreground"
                   }`}
                 >
