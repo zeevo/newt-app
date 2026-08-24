@@ -27,8 +27,8 @@ jobs:
               - 'packages/create-newt-app/**'
               - 'pnpm-lock.yaml'
               - '.github/workflows/pull-request.yml'
-              # the scaffold job runs scripts/smoke.sh, so a change to it is
-              # only exercised if this filter lets the job run
+              # the scaffold jobs run the scripts/ smoke scripts, so a change to
+              # one is only exercised if this filter lets them run
               - 'scripts/**'
 
   build:
@@ -184,3 +184,63 @@ jobs:
       - name: Smoke test (boot + HTTP probe)
         working-directory: ${{ runner.temp }}/test-app
         run: $GITHUB_WORKSPACE/scripts/smoke.sh "${{ matrix.flags }}"
+
+  # The scaffold matrix boots the standalone build in place on the runner, where
+  # workspace packages resolve through the repo's own symlinks, so it only ever
+  # *reads* the Dockerfile and never runs it. That is how the one mode which
+  # exists to be containerized stayed broken through three separate bugs with CI
+  # green. This job builds the images and boots the compose stack for real.
+  # Image builds are slow, so it is one representative combination rather than a
+  # matrix: postgres, because that is what makes the db and migrate containers
+  # do real work.
+  scaffold-compose:
+    needs: changes
+    if: ${{ needs.changes.outputs.scaffolder == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build CLI
+        run: pnpm build --filter=create-newt-app
+
+      # Scaffolded with install, unlike the matrix above: the Dockerfile runs
+      # `pnpm install --frozen-lockfile`, so the context needs a lockfile.
+      - name: Scaffold app
+        run: |
+          cd ${{ runner.temp }}
+          node $GITHUB_WORKSPACE/packages/create-newt-app/dist/index.js test-app \
+            --deployment standalone --database postgres --include-example --no-git
+
+      - name: Build images and boot the stack
+        working-directory: ${{ runner.temp }}/test-app
+        run: |
+          docker compose up -d --build || {
+            docker compose ps -a
+            docker compose logs --tail 200
+            exit 1
+          }
+
+      - name: Probe the running stack
+        working-directory: ${{ runner.temp }}/test-app
+        run: $GITHUB_WORKSPACE/scripts/smoke-compose.sh
+
+      - name: Tear down
+        if: always()
+        working-directory: ${{ runner.temp }}/test-app
+        run: docker compose down -v
