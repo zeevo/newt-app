@@ -243,3 +243,37 @@ describe("api tsconfig types match the test runner", () => {
     },
   );
 });
+
+// pnpm only WARNs when the image's node undershoots engines.node, so a stale
+// base image builds clean and just prints the mismatch on every docker layer.
+// Nothing at build time catches the drift, which leaves this static check.
+describe("docker base image satisfies the node engine floor", () => {
+  const dockerized = combos.filter((selection) => renderCombo(selection).files.has("Dockerfile"));
+
+  it("some selection emits a Dockerfile", () => {
+    expect(dockerized.length).toBeGreaterThan(0);
+  });
+
+  it.each(dockerized.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const { files } = renderCombo(selection);
+
+      const dockerfile = files.get("Dockerfile") ?? "";
+      const image = /^FROM node:(\d+)-alpine/m.exec(dockerfile)?.[1];
+      expect(
+        image,
+        `no parseable "FROM node:<major>-alpine" line in:\n${dockerfile}`,
+      ).toBeDefined();
+
+      const range = JSON.parse(files.get("package.json") ?? "{}").engines?.node;
+      const floor = /^>=\s*(\d+)/.exec(range ?? "")?.[1];
+      expect(floor, `root package.json engines.node is not a ">=" floor: ${range}`).toBeDefined();
+
+      expect(
+        Number(image),
+        `Dockerfile builds on node ${image} but engines.node wants ${range}`,
+      ).toBeGreaterThanOrEqual(Number(floor));
+    },
+  );
+});
