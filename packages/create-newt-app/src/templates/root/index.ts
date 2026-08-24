@@ -6,6 +6,7 @@ import npmrc from "./templates/npmrc";
 import turboJson from "./templates/turbo-json";
 import pnpmWorkspace from "./templates/pnpm-workspace";
 import readme from "./templates/readme";
+import env from "./templates/env";
 import envExample from "./templates/env-example";
 import agentsMd from "./templates/agents-md";
 import claudeMd from "./templates/claude-md";
@@ -19,6 +20,7 @@ const root: Module = {
     turboJson,
     pnpmWorkspace,
     readme,
+    env,
     envExample,
     agentsMd,
     claudeMd,
