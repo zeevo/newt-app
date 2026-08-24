@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   ANTI_SLOP_HINT,
   buildCommand,
-  nameError,
+  normalizeName,
   DEPLOYMENT_HINTS,
   deploymentOptions,
   DI_ONLY_REJECTS,
@@ -115,14 +115,16 @@ describe("buildCommand", () => {
     expect(buildCommand({ ...c, name: "   " })).toContain("newt-app@latest my-app");
   });
 
-  it("flags names the CLI would reject", () => {
-    // Pinned against validateProjectName in packages/create-newt-app.
-    expect(nameError("my-app")).toBeNull();
-    expect(nameError("")).toBeNull();
-    expect(nameError("my/app")).toContain("can only contain");
-    expect(nameError("a".repeat(215))).toContain("214");
-    expect(nameError("MyApp")).toBe("Project name must be lowercase. Try: myapp");
-    expect(nameError("my app")).toBe("Project name cannot contain spaces. Try: my-app");
-    expect(["_foo", ".hidden"].map((name) => nameError(name) !== null)).toEqual([true, true]);
+  it("emits the name the CLI will scaffold under", () => {
+    // Pinned against normalizeProjectName in packages/create-newt-app.
+    const c = reachable[0]!;
+
+    expect(
+      ["my app", "MyApp", "_foo", ".hidden", "My Cool App!"].map((name) => normalizeName(name)),
+    ).toEqual(["my-app", "myapp", "foo", "hidden", "my-cool-app"]);
+    expect(normalizeName("a".repeat(215))).toBe("a".repeat(214));
+    expect(buildCommand({ ...c, name: "My App" })).toContain("newt-app@latest my-app");
+    // nothing survives normalizing, so the panel falls back to its default
+    expect(buildCommand({ ...c, name: "..." })).toContain("newt-app@latest my-app");
   });
 });

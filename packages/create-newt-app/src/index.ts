@@ -8,6 +8,7 @@ import { selectModules, type Extra, type ModuleSelection } from "./templates";
 import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 import {
   checkRequiredTools,
+  normalizeProjectName,
   validateDeploymentCombo,
   validateExtrasCombo,
   validateFlagValue,
@@ -215,7 +216,16 @@ export async function doInit(options: Options) {
 
     const allModules = selectModules(selection);
 
-    const name = answers.name ?? options.name ?? "";
+    const rawName = answers.name ?? options.name ?? "";
+
+    const nameCheck = validateProjectName(rawName);
+    if (!nameCheck.valid) {
+      throw new Error(nameCheck.error);
+    }
+
+    // Normalized here, not inside scaffold, so the directory, the package scope
+    // and the "cd" line below can never disagree.
+    const name = normalizeProjectName(rawName);
 
     const taskBuilder = new TaskBuilder();
 

@@ -59,6 +59,20 @@ export function deploymentOptions(nestDiOnly: boolean): readonly Config["deploym
   return DEPLOYMENTS.filter((deployment) => !(nestDiOnly && DI_ONLY_REJECTS.has(deployment)));
 }
 
+// Pinned against normalizeProjectName in packages/create-newt-app, so the panel
+// shows the name the CLI will actually scaffold under.
+export function normalizeName(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9\-._~]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^[-._]+/, "")
+    .replace(/-+$/, "")
+    .slice(0, 214);
+}
+
 export function buildCommand(c: Config): string {
   const flags: string[] = [];
   if (c.shadcn) flags.push("--shadcn");
@@ -73,38 +87,10 @@ export function buildCommand(c: Config): string {
   // other option here matches its default, so without this the CLI would prompt
   // and shadcn would come back on — the opposite of what the panel shows.
   if (!flags.length && !c.shadcn) flags.push("--testing jest");
-  const name = c.name.trim() || DEFAULT_NAME;
+  const name = normalizeName(c.name) || DEFAULT_NAME;
   return flags.length
     ? `npm create newt-app@latest ${name} -- ${flags.join(" ")}`
     : `npm create newt-app@latest ${name}`;
 }
 
 export const DEFAULT_NAME = "my-app";
-
-// Pinned against validateProjectName in packages/create-newt-app. The directory
-// check it also runs needs a filesystem, so the panel cannot mirror that one.
-const NAME_ALLOWED = /^[a-z0-9\-._~]+$/;
-
-function withSuggestion(error: string, name: string): string {
-  const suggestion = name
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/^[._]+/, "");
-
-  return suggestion !== name && NAME_ALLOWED.test(suggestion)
-    ? `${error} Try: ${suggestion}`
-    : error;
-}
-
-export function nameError(name: string): string | null {
-  const trimmed = name.trim();
-  if (!trimmed) return null;
-  if (trimmed.length > 214) return "npm caps package names at 214 characters.";
-  if (/[A-Z]/.test(trimmed)) return withSuggestion("Project name must be lowercase.", trimmed);
-  if (/\s/.test(trimmed)) return withSuggestion("Project name cannot contain spaces.", trimmed);
-  if (/^[._]/.test(trimmed))
-    return withSuggestion('Project name cannot start with "." or "_".', trimmed);
-  if (!NAME_ALLOWED.test(trimmed))
-    return "Project name can only contain lowercase letters, digits, and - . _ ~";
-  return null;
-}

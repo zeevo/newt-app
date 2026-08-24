@@ -256,19 +256,18 @@ export function validateNodeVersion(current: string, requirement: string): Valid
 }
 
 // The project name becomes the npm scope for every workspace package
-// (@name/db, @name/auth, @name/ui), so a name npm rejects breaks pnpm install.
-const PROJECT_NAME_ALLOWED = /^[a-z0-9\-._~]+$/;
-
-function withSuggestion(error: string, projectName: string): string {
-  const suggestion = projectName
+// (@name/db, @name/auth, @name/ui), so anything npm rejects breaks pnpm install.
+// Whatever is typed gets bent into that shape rather than refused.
+export function normalizeProjectName(projectName: string): string {
+  return projectName
     .trim()
     .toLowerCase()
     .replace(/\s+/g, "-")
-    .replace(/^[._]+/, "");
-
-  return suggestion !== projectName && PROJECT_NAME_ALLOWED.test(suggestion)
-    ? `${error} Try: ${suggestion}`
-    : error;
+    .replace(/[^a-z0-9\-._~]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^[-._]+/, "")
+    .replace(/-+$/, "")
+    .slice(0, 214);
 }
 
 export function validateProjectName(projectName: string): ValidationResult {
@@ -276,45 +275,19 @@ export function validateProjectName(projectName: string): ValidationResult {
     return { valid: false, error: "Project name is required" };
   }
 
-  if (projectName.length > 214) {
+  const normalized = normalizeProjectName(projectName);
+
+  if (!normalized) {
     return {
       valid: false,
-      error: "Project name must be 214 characters or fewer",
+      error: `"${projectName}" has nothing left after normalizing. Include a letter or a digit.`,
     };
   }
 
-  if (/[A-Z]/.test(projectName)) {
-    return {
-      valid: false,
-      error: withSuggestion("Project name must be lowercase.", projectName),
-    };
-  }
-
-  if (/\s/.test(projectName)) {
-    return {
-      valid: false,
-      error: withSuggestion("Project name cannot contain spaces.", projectName),
-    };
-  }
-
-  if (/^[._]/.test(projectName)) {
-    return {
-      valid: false,
-      error: withSuggestion('Project name cannot start with "." or "_".', projectName),
-    };
-  }
-
-  if (!PROJECT_NAME_ALLOWED.test(projectName)) {
-    return {
-      valid: false,
-      error: "Project name can only contain lowercase letters, digits, and - . _ ~",
-    };
-  }
-
-  const targetPath = path.resolve(process.cwd(), projectName);
+  const targetPath = path.resolve(process.cwd(), normalized);
 
   if (existsSync(targetPath)) {
-    return { valid: false, error: `Directory "${projectName}" already exists` };
+    return { valid: false, error: `Directory "${normalized}" already exists` };
   }
 
   return { valid: true };
