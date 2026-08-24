@@ -119,7 +119,10 @@ describe("buildCommand", () => {
     // Pinned against validateProjectName in packages/create-newt-app.
     expect(nameError("my-app")).toBeNull();
     expect(nameError("")).toBeNull();
-    expect(nameError("my/app")).toContain("cannot contain");
+    expect(nameError("my/app")).toContain("can only contain");
     expect(nameError("a".repeat(215))).toContain("214");
+    expect(nameError("MyApp")).toBe("Project name must be lowercase. Try: myapp");
+    expect(nameError("my app")).toBe("Project name cannot contain spaces. Try: my-app");
+    expect(["_foo", ".hidden"].map((name) => nameError(name) !== null)).toEqual([true, true]);
   });
 });

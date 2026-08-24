@@ -83,11 +83,28 @@ export const DEFAULT_NAME = "my-app";
 
 // Pinned against validateProjectName in packages/create-newt-app. The directory
 // check it also runs needs a filesystem, so the panel cannot mirror that one.
-const NAME_REJECTS = /[<>:"/\\|?*]/;
+const NAME_ALLOWED = /^[a-z0-9\-._~]+$/;
+
+function withSuggestion(error: string, name: string): string {
+  const suggestion = name
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/^[._]+/, "");
+
+  return suggestion !== name && NAME_ALLOWED.test(suggestion)
+    ? `${error} Try: ${suggestion}`
+    : error;
+}
 
 export function nameError(name: string): string | null {
   const trimmed = name.trim();
+  if (!trimmed) return null;
   if (trimmed.length > 214) return "npm caps package names at 214 characters.";
-  if (NAME_REJECTS.test(trimmed)) return `A directory name cannot contain < > : " / \\ | ? *`;
+  if (/[A-Z]/.test(trimmed)) return withSuggestion("Project name must be lowercase.", trimmed);
+  if (/\s/.test(trimmed)) return withSuggestion("Project name cannot contain spaces.", trimmed);
+  if (/^[._]/.test(trimmed))
+    return withSuggestion('Project name cannot start with "." or "_".', trimmed);
+  if (!NAME_ALLOWED.test(trimmed))
+    return "Project name can only contain lowercase letters, digits, and - . _ ~";
   return null;
 }

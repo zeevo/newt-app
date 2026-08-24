@@ -71,6 +71,19 @@ describe("validateProjectName", () => {
     ).toEqual([false, false, false, false]);
   });
 
+  it("rejects names npm cannot use as a package scope", () => {
+    expect(
+      ["my app", "MyApp", "_foo", ".hidden"].map((name) => validateProjectName(name).valid),
+    ).toEqual([false, false, false, false]);
+  });
+
+  it("suggests a fixed name when only case or spacing is wrong", () => {
+    expect(validateProjectName("MyApp").error).toBe("Project name must be lowercase. Try: myapp");
+    expect(validateProjectName("my app").error).toBe(
+      "Project name cannot contain spaces. Try: my-app",
+    );
+  });
+
   it("accepts a normal name that does not already exist", () => {
     expect(validateProjectName("some-fresh-app-xyz").valid).toBe(true);
   });

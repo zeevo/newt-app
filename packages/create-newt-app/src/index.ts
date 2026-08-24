@@ -12,6 +12,7 @@ import {
   validateExtrasCombo,
   validateFlagValue,
   validateNodeVersion,
+  validateProjectName,
 } from "./utils.js";
 
 const TESTING_CHOICES = ["jest", "vitest"] as const;
@@ -67,11 +68,7 @@ export async function doInit(options: Options) {
         p.text({
           message: "What is your project name?",
           placeholder: "my-newt-app",
-          validate: (value) => {
-            if (!value) return "Project name is required";
-            if (value.length > 214) return "Project name is too long";
-            if (/[<>:"/\\|?*]/.test(value)) return "Project name contains invalid characters";
-          },
+          validate: (value) => validateProjectName(value).error,
         }),
     }),
     ...(!options.nonInteractive && {

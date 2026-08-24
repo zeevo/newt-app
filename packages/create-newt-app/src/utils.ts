@@ -255,28 +255,60 @@ export function validateNodeVersion(current: string, requirement: string): Valid
   };
 }
 
+// The project name becomes the npm scope for every workspace package
+// (@name/db, @name/auth, @name/ui), so a name npm rejects breaks pnpm install.
+const PROJECT_NAME_ALLOWED = /^[a-z0-9\-._~]+$/;
+
+function withSuggestion(error: string, projectName: string): string {
+  const suggestion = projectName
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/^[._]+/, "");
+
+  return suggestion !== projectName && PROJECT_NAME_ALLOWED.test(suggestion)
+    ? `${error} Try: ${suggestion}`
+    : error;
+}
+
 export function validateProjectName(projectName: string): ValidationResult {
   if (!projectName) {
     return { valid: false, error: "Project name is required" };
   }
 
-  if (projectName.length < 1) {
-    return {
-      valid: false,
-      error: "Project name must be at least 1 character long",
-    };
-  }
-
   if (projectName.length > 214) {
     return {
       valid: false,
-      error: "Project name must be less than 214 characters",
+      error: "Project name must be 214 characters or fewer",
     };
   }
 
-  const invalidChars = /[<>:"/\\|?*]/;
-  if (invalidChars.test(projectName)) {
-    return { valid: false, error: "Project name contains invalid characters" };
+  if (/[A-Z]/.test(projectName)) {
+    return {
+      valid: false,
+      error: withSuggestion("Project name must be lowercase.", projectName),
+    };
+  }
+
+  if (/\s/.test(projectName)) {
+    return {
+      valid: false,
+      error: withSuggestion("Project name cannot contain spaces.", projectName),
+    };
+  }
+
+  if (/^[._]/.test(projectName)) {
+    return {
+      valid: false,
+      error: withSuggestion('Project name cannot start with "." or "_".', projectName),
+    };
+  }
+
+  if (!PROJECT_NAME_ALLOWED.test(projectName)) {
+    return {
+      valid: false,
+      error: "Project name can only contain lowercase letters, digits, and - . _ ~",
+    };
   }
 
   const targetPath = path.resolve(process.cwd(), projectName);
