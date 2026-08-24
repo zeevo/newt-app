@@ -8,7 +8,7 @@ export default {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "env": ["API_HOST", "DATABASE_URL"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "typecheck": {
       "dependsOn": ["^build"]

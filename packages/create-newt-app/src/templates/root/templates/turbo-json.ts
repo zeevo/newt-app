@@ -10,7 +10,7 @@ export default {
       "env": ["DATABASE_URL"],
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "typecheck": {
       "dependsOn": ["^build"]
