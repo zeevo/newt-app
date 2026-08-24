@@ -14,7 +14,6 @@ RUN pnpm install --frozen-lockfile
 ARG API_HOST=localhost
 ENV API_HOST=$API_HOST
 RUN pnpm build --filter=web --filter=api --filter=@<%= projectName %>/auth
-RUN pnpm deploy --filter=api --prod /deploy/api
 
 # --- web ---
 FROM base AS web
@@ -27,10 +26,9 @@ EXPOSE 3000
 CMD ["node", "apps/web/server.js"]
 
 # --- api ---
-FROM base AS api
+FROM build AS api
+WORKDIR /app/apps/api
 ENV NODE_ENV=production
-COPY --from=build /deploy/api /app
-WORKDIR /app
 EXPOSE 3001
 CMD ["node", "dist/main"]
 
