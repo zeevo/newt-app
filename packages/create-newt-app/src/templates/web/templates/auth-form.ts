@@ -67,6 +67,7 @@ export function AuthForm() {
                 <label className="text-sm font-medium">Name</label>
                 <input
                   type="text"
+                  autoComplete="name"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   required
@@ -83,6 +84,7 @@ export function AuthForm() {
               <label className="text-sm font-medium">Email</label>
               <input
                 type="email"
+                autoComplete="email"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
@@ -98,6 +100,9 @@ export function AuthForm() {
               <label className="text-sm font-medium">Password</label>
               <input
                 type="password"
+                autoComplete={
+                  tab === 'signin' ? 'current-password' : 'new-password'
+                }
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
