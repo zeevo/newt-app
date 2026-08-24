@@ -294,7 +294,7 @@ program
   .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
   .option("--database <database>", "Database: sqlite or postgres", "sqlite")
   .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
-  .option("--deployment <strategy>", "Deployment: standalone, spa", "none")
+  .option("--deployment <strategy>", "Deployment: none, standalone, or spa", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
   .option("--include-example", "Include the todo example", false)
   .option("--extras <list>", "Extras, comma-separated: anti-slop", "")
