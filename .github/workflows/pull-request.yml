@@ -181,6 +181,14 @@ jobs:
         run: pnpm build
         working-directory: ${{ runner.temp }}/test-app
 
+      # An --linter oxc app has a bare oxlint for lint:check, so without this
+      # nothing type checks it. Runs after the build because typecheck
+      # dependsOn ^build: those upstream builds are cache hits here instead of
+      # a second compile.
+      - name: Typecheck scaffolded app
+        run: pnpm typecheck
+        working-directory: ${{ runner.temp }}/test-app
+
       - name: Smoke test (boot + HTTP probe)
         working-directory: ${{ runner.temp }}/test-app
         run: $GITHUB_WORKSPACE/scripts/smoke.sh "${{ matrix.flags }}"
