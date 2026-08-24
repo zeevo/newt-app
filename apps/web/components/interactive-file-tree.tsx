@@ -32,7 +32,6 @@ import {
   antiSlopAvailable,
   buildCommand,
   DEFAULT_NAME,
-  nameError,
   deploymentOptions,
   DI_ONLY_HINT,
   DI_ONLY_REJECTS,
@@ -207,7 +206,6 @@ export function InteractiveFileTree({
 
   const command = useMemo(() => buildCommand(c), [c]);
   const hints = extrasHints(c);
-  const badName = nameError(c.name);
   const selected = [
     c.deployment === "none" ? null : c.deployment,
     c.todoExample ? "example app" : null,
@@ -231,7 +229,6 @@ export function InteractiveFileTree({
                   onChange={(e) => set("name", e.target.value)}
                   placeholder={DEFAULT_NAME}
                   aria-label="Project name"
-                  aria-invalid={badName !== null}
                   className="w-44 font-mono text-xs"
                 />
               </Row>
@@ -351,11 +348,6 @@ export function InteractiveFileTree({
               </Row>
               {/* the extras options are not self-describing, and a hover tooltip
                 cannot be read on a touch screen */}
-              {badName && (
-                <p aria-live="polite" className="text-xs leading-relaxed text-destructive">
-                  {badName}
-                </p>
-              )}
               {hints.map((text) => (
                 <p
                   key={text}

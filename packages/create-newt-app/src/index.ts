@@ -8,10 +8,12 @@ import { selectModules, type Extra, type ModuleSelection } from "./templates";
 import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
 import {
   checkRequiredTools,
+  normalizeProjectName,
   validateDeploymentCombo,
   validateExtrasCombo,
   validateFlagValue,
   validateNodeVersion,
+  validateProjectName,
 } from "./utils.js";
 
 const TESTING_CHOICES = ["jest", "vitest"] as const;
@@ -67,11 +69,7 @@ export async function doInit(options: Options) {
         p.text({
           message: "What is your project name?",
           placeholder: "my-newt-app",
-          validate: (value) => {
-            if (!value) return "Project name is required";
-            if (value.length > 214) return "Project name is too long";
-            if (/[<>:"/\\|?*]/.test(value)) return "Project name contains invalid characters";
-          },
+          validate: (value) => validateProjectName(value).error,
         }),
     }),
     ...(!options.nonInteractive && {
@@ -218,7 +216,16 @@ export async function doInit(options: Options) {
 
     const allModules = selectModules(selection);
 
-    const name = answers.name ?? options.name ?? "";
+    const rawName = answers.name ?? options.name ?? "";
+
+    const nameCheck = validateProjectName(rawName);
+    if (!nameCheck.valid) {
+      throw new Error(nameCheck.error);
+    }
+
+    // Normalized here, not inside scaffold, so the directory, the package scope
+    // and the "cd" line below can never disagree.
+    const name = normalizeProjectName(rawName);
 
     const taskBuilder = new TaskBuilder();
 

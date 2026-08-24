@@ -4,6 +4,7 @@ import { tmpdir } from "os";
 import path from "path";
 import {
   checkRequiredTools,
+  normalizeProjectName,
   sortPackageJsons,
   updatePackageJson,
   updateScripts,
@@ -56,23 +57,43 @@ async function readPkg(rel: string) {
   return JSON.parse(await readFile(path.join(destDir, rel, "package.json"), "utf8"));
 }
 
+describe("normalizeProjectName", () => {
+  it("bends a name into something npm accepts as a package scope", () => {
+    expect(
+      ["my app", "MyApp", "_foo", ".hidden", "My Cool App!"].map((name) =>
+        normalizeProjectName(name),
+      ),
+    ).toEqual(["my-app", "myapp", "foo", "hidden", "my-cool-app"]);
+  });
+
+  it("leaves an already valid name untouched", () => {
+    expect(normalizeProjectName("some-fresh-app-xyz")).toBe("some-fresh-app-xyz");
+  });
+
+  it("truncates to npm's 214 character limit", () => {
+    expect(normalizeProjectName("a".repeat(215))).toBe("a".repeat(214));
+  });
+
+  it("has nothing left for a name that is all punctuation", () => {
+    expect(["...", "___"].map((name) => normalizeProjectName(name))).toEqual(["", ""]);
+  });
+});
+
 describe("validateProjectName", () => {
   it("rejects an empty name", () => {
     expect(validateProjectName("").valid).toBe(false);
   });
 
-  it("rejects names longer than 214 characters", () => {
-    expect(validateProjectName("a".repeat(215)).valid).toBe(false);
+  it("rejects a name that normalizes to nothing", () => {
+    expect(["...", "___"].map((name) => validateProjectName(name).valid)).toEqual([false, false]);
   });
 
-  it("rejects names with invalid path characters", () => {
+  it("accepts anything it can normalize", () => {
     expect(
-      ["foo/bar", "a:b", "we*rd", "no?"].map((name) => validateProjectName(name).valid),
-    ).toEqual([false, false, false, false]);
-  });
-
-  it("accepts a normal name that does not already exist", () => {
-    expect(validateProjectName("some-fresh-app-xyz").valid).toBe(true);
+      ["my app", "MyApp", "_foo", ".hidden", "some-fresh-app-xyz"].map(
+        (name) => validateProjectName(name).valid,
+      ),
+    ).toEqual([true, true, true, true, true]);
   });
 });
 

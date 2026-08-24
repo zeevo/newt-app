@@ -255,34 +255,39 @@ export function validateNodeVersion(current: string, requirement: string): Valid
   };
 }
 
+// The project name becomes the npm scope for every workspace package
+// (@name/db, @name/auth, @name/ui), so anything npm rejects breaks pnpm install.
+// Whatever is typed gets bent into that shape rather than refused.
+export function normalizeProjectName(projectName: string): string {
+  return projectName
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9\-._~]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^[-._]+/, "")
+    .replace(/-+$/, "")
+    .slice(0, 214);
+}
+
 export function validateProjectName(projectName: string): ValidationResult {
   if (!projectName) {
     return { valid: false, error: "Project name is required" };
   }
 
-  if (projectName.length < 1) {
+  const normalized = normalizeProjectName(projectName);
+
+  if (!normalized) {
     return {
       valid: false,
-      error: "Project name must be at least 1 character long",
+      error: `"${projectName}" has nothing left after normalizing. Include a letter or a digit.`,
     };
   }
 
-  if (projectName.length > 214) {
-    return {
-      valid: false,
-      error: "Project name must be less than 214 characters",
-    };
-  }
-
-  const invalidChars = /[<>:"/\\|?*]/;
-  if (invalidChars.test(projectName)) {
-    return { valid: false, error: "Project name contains invalid characters" };
-  }
-
-  const targetPath = path.resolve(process.cwd(), projectName);
+  const targetPath = path.resolve(process.cwd(), normalized);
 
   if (existsSync(targetPath)) {
-    return { valid: false, error: `Directory "${projectName}" already exists` };
+    return { valid: false, error: `Directory "${normalized}" already exists` };
   }
 
   return { valid: true };
