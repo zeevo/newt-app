@@ -110,7 +110,7 @@ function Row({
             <TooltipTrigger
               type="button"
               aria-label={`About ${label}`}
-              className="text-muted-foreground/70 transition-colors hover:text-foreground"
+              className="text-muted-foreground/70 transition-colors hover:text-foreground pointer-coarse:hidden"
             >
               <Info className="size-3.5" />
             </TooltipTrigger>
@@ -118,6 +118,13 @@ function Row({
           </Tooltip>
         )}
       </span>
+      {/* a tooltip never opens without hover, so on touch the trigger is dead
+          weight and the hint is shown outright instead */}
+      {hint && (
+        <p className="hidden basis-full text-xs text-muted-foreground pointer-coarse:block">
+          {hint}
+        </p>
+      )}
       {children}
     </div>
   );
