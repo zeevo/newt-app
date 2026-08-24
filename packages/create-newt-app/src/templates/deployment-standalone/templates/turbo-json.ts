@@ -22,8 +22,7 @@ export default {
       "env": ["NODE_ENV"]
     },<% } %>
     "test": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"]
+      "dependsOn": ["^build"]
     },
     "dev": {
       "env": ["DATABASE_URL"],
