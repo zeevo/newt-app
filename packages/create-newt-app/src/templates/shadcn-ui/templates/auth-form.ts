@@ -63,6 +63,7 @@ export function AuthForm() {
                 <Input
                   id="name"
                   type="text"
+                  autoComplete="name"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   required
@@ -79,6 +80,7 @@ export function AuthForm() {
               <Input
                 id="email"
                 type="email"
+                autoComplete="email"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
@@ -94,6 +96,9 @@ export function AuthForm() {
               <Input
                 id="password"
                 type="password"
+                autoComplete={
+                  tab === 'signin' ? 'current-password' : 'new-password'
+                }
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
