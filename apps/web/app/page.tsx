@@ -17,7 +17,7 @@ const STACK = [
   {
     name: "NestJS",
     logo: "/logos/nestjs.svg",
-    role: "handles the backend. Structured, testable, scales when you need it to.",
+    role: "handles the backend.",
   },
   {
     name: "Better Auth",
@@ -224,9 +224,6 @@ export default async function Dashboard() {
                 resolve as workspace packages in both <InlineCode>apps/web</InlineCode> and{" "}
                 <InlineCode>apps/api</InlineCode>.
               </p>
-              <p className="leading-relaxed text-muted-foreground">
-                No relative path climbing, no publishing to a registry, no manual workspace links.
-              </p>
             </div>
           </FeatureSection>
         </div>
@@ -239,13 +236,8 @@ export default async function Dashboard() {
                 NestJS services in route handlers.
               </h2>
               <p className="leading-relaxed text-muted-foreground">
-                In di-only mode, route handlers resolve providers through{" "}
-                <InlineCode>inject()</InlineCode>, so business logic stays in NestJS modules and
-                services instead of the route file.
-              </p>
-              <p className="leading-relaxed text-muted-foreground">
-                The same modules run behind a standalone HTTP server if you scaffold without{" "}
-                <InlineCode>--nest-di-only</InlineCode>.
+                With <InlineCode>--nest-di-only</InlineCode>, route handlers resolve providers
+                through <InlineCode>inject()</InlineCode>, so logic stays in NestJS services.
               </p>
             </div>
             <CodeShowcase
@@ -300,10 +292,6 @@ export class UserController {
                 imported by <InlineCode>apps/web</InlineCode> and <InlineCode>apps/api</InlineCode>.
                 NestJS routes are guarded by default; opt out per route with{" "}
                 <InlineCode>@AllowAnonymous</InlineCode> or <InlineCode>@OptionalAuth</InlineCode>.
-              </p>
-              <p className="leading-relaxed text-muted-foreground">
-                Sessions, sign-up, and sign-in run on the same Kysely connection as your own tables,
-                in <InlineCode>packages/db</InlineCode>.
               </p>
             </div>
           </FeatureSection>
