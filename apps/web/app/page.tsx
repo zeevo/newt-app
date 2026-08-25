@@ -3,6 +3,7 @@ import { CopyButton } from "@/components/copy-button";
 import { FeatureSection } from "@/components/feature-section";
 import { InlineCode } from "@/components/inline-code";
 import { InteractiveFileTree } from "@/components/interactive-file-tree";
+import { Section } from "@/components/section";
 import Image from "next/image";
 import { Suspense } from "react";
 import LogoRain from "@/components/logo-rain";
@@ -177,28 +178,25 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="border-t bg-background py-24">
-        <div className="mx-auto max-w-[1200px] px-4">
-          <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {STACK.map((item) => (
-              <div key={item.name} className="flex flex-col gap-1.5 rounded-lg border p-5">
-                <dt className="flex items-center gap-2 font-mono text-sm font-medium">
-                  <StackLogo src={item.logo} />
-                  {item.name}
-                </dt>
-                <dd className="text-sm leading-relaxed text-muted-foreground">{item.role}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
-      <section className="border-t bg-background py-24">
-        <div className="mx-auto max-w-[1200px] px-4">
-          <FeatureSection>
-            <CodeShowcase
-              filename="apps/web/app/dashboard/page.tsx"
-              language="tsx"
-              code={`import { Button } from '@my-app/ui/components/button';
+      <Section>
+        <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {STACK.map((item) => (
+            <div key={item.name} className="flex flex-col gap-1.5 rounded-lg border p-5">
+              <dt className="flex items-center gap-2 font-mono text-sm font-medium">
+                <StackLogo src={item.logo} />
+                {item.name}
+              </dt>
+              <dd className="text-sm leading-relaxed text-muted-foreground">{item.role}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+      <Section>
+        <FeatureSection>
+          <CodeShowcase
+            filename="apps/web/app/dashboard/page.tsx"
+            language="tsx"
+            code={`import { Button } from '@my-app/ui/components/button';
 import { cn } from '@my-app/ui/lib/utils';
 import { auth } from '@my-app/auth';
 import { headers } from 'next/headers';
@@ -215,36 +213,34 @@ export default async function Dashboard() {
     </main>
   );
 }`}
-            />
-            <div className="flex flex-col justify-center gap-4">
-              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                Shared packages, imported by name.
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                <InlineCode>@my-app/ui</InlineCode> and <InlineCode>@my-app/auth</InlineCode>{" "}
-                resolve as workspace packages in both <InlineCode>apps/web</InlineCode> and{" "}
-                <InlineCode>apps/api</InlineCode>.
-              </p>
-            </div>
-          </FeatureSection>
-        </div>
-      </section>
-      <section className="border-t bg-background py-24">
-        <div className="mx-auto max-w-[1200px] px-4">
-          <FeatureSection>
-            <div className="flex flex-col justify-center gap-4">
-              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                NestJS services in route handlers.
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                With <InlineCode>--nest-di-only</InlineCode>, route handlers resolve providers
-                through <InlineCode>inject()</InlineCode>, so logic stays in NestJS services.
-              </p>
-            </div>
-            <CodeShowcase
-              filename="apps/web/app/api/todos/route.ts"
-              language="tsx"
-              code={`import { NextResponse } from 'next/server';
+          />
+          <div className="flex flex-col justify-center gap-4">
+            <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+              Shared packages, imported by name.
+            </h2>
+            <p className="leading-relaxed text-muted-foreground">
+              <InlineCode>@my-app/ui</InlineCode> and <InlineCode>@my-app/auth</InlineCode> resolve
+              as workspace packages in both <InlineCode>apps/web</InlineCode> and{" "}
+              <InlineCode>apps/api</InlineCode>.
+            </p>
+          </div>
+        </FeatureSection>
+      </Section>
+      <Section>
+        <FeatureSection>
+          <div className="flex flex-col justify-center gap-4">
+            <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+              NestJS services in route handlers.
+            </h2>
+            <p className="leading-relaxed text-muted-foreground">
+              With <InlineCode>--nest-di-only</InlineCode>, route handlers resolve providers through{" "}
+              <InlineCode>inject()</InlineCode>, so logic stays in NestJS services.
+            </p>
+          </div>
+          <CodeShowcase
+            filename="apps/web/app/api/todos/route.ts"
+            language="tsx"
+            code={`import { NextResponse } from 'next/server';
 import { inject } from '@/lib/nest';
 import { TodosService } from '@my-app/api';
 
@@ -258,17 +254,15 @@ export async function POST(req: Request) {
   const todos = await inject(TodosService);
   return NextResponse.json(todos.create(title), { status: 201 });
 }`}
-            />
-          </FeatureSection>
-        </div>
-      </section>
-      <section className="border-t bg-background py-24">
-        <div className="mx-auto max-w-[1200px] px-4">
-          <FeatureSection>
-            <CodeShowcase
-              filename="apps/api/src/users/users.controller.ts"
-              language="ts"
-              code={`import { Session, UserSession, AllowAnonymous } from '@thallesp/nestjs-better-auth';
+          />
+        </FeatureSection>
+      </Section>
+      <Section>
+        <FeatureSection>
+          <CodeShowcase
+            filename="apps/api/src/users/users.controller.ts"
+            language="ts"
+            code={`import { Session, UserSession, AllowAnonymous } from '@thallesp/nestjs-better-auth';
 
 @Controller('users')
 export class UserController {
@@ -283,43 +277,40 @@ export class UserController {
     return { message: 'Public route' };
   }
 }`}
-            />
-            <div className="flex flex-col justify-center gap-4">
-              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                One auth config, both apps.
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                Better Auth is configured once in <InlineCode>packages/auth</InlineCode> and
-                imported by <InlineCode>apps/web</InlineCode> and <InlineCode>apps/api</InlineCode>.
-                NestJS routes are guarded by default; opt out per route with{" "}
-                <InlineCode>@AllowAnonymous</InlineCode> or <InlineCode>@OptionalAuth</InlineCode>.
-              </p>
-            </div>
-          </FeatureSection>
-        </div>
-      </section>
-      <section className="border-t bg-background py-24">
-        <div className="mx-auto max-w-[1200px] px-4">
-          <FeatureSection split="lg">
-            <ScaffolderCompass />
-            <div className="flex flex-col justify-center gap-4">
-              <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-                Where newt-app sits.
-              </h2>
-              <p className="leading-relaxed text-muted-foreground">
-                Two questions decide whether a starter is worth adopting: is the architecture this
-                generation&apos;s, and how much do you have to understand to change it?
-              </p>
-              <p className="leading-relaxed text-muted-foreground">
-                newt-app tracks the current majors: TypeScript 6, Next 16, NestJS 11. Business logic
-                lives in controllers and services, persistence is SQL through{" "}
-                <InlineCode>packages/db</InlineCode>, and there is no codegen step or inference
-                chain between the two.
-              </p>
-            </div>
-          </FeatureSection>
-        </div>
-      </section>
+          />
+          <div className="flex flex-col justify-center gap-4">
+            <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+              One auth config, both apps.
+            </h2>
+            <p className="leading-relaxed text-muted-foreground">
+              Better Auth is configured once in <InlineCode>packages/auth</InlineCode> and imported
+              by <InlineCode>apps/web</InlineCode> and <InlineCode>apps/api</InlineCode>. NestJS
+              routes are guarded by default; opt out per route with{" "}
+              <InlineCode>@AllowAnonymous</InlineCode> or <InlineCode>@OptionalAuth</InlineCode>.
+            </p>
+          </div>
+        </FeatureSection>
+      </Section>
+      <Section>
+        <FeatureSection split="lg">
+          <ScaffolderCompass />
+          <div className="flex flex-col justify-center gap-4">
+            <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
+              Where newt-app sits.
+            </h2>
+            <p className="leading-relaxed text-muted-foreground">
+              Two questions decide whether a starter is worth adopting: is the architecture this
+              generation&apos;s, and how much do you have to understand to change it?
+            </p>
+            <p className="leading-relaxed text-muted-foreground">
+              newt-app tracks the current majors: TypeScript 6, Next 16, NestJS 11. Business logic
+              lives in controllers and services, persistence is SQL through{" "}
+              <InlineCode>packages/db</InlineCode>, and there is no codegen step or inference chain
+              between the two.
+            </p>
+          </div>
+        </FeatureSection>
+      </Section>
     </div>
   );
 }
