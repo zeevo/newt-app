@@ -11,84 +11,90 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(94.912% 0.00011 271.152);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: oklch(0.99 0.004 90);
+  --foreground: oklch(0.2 0.012 60);
+  --card: oklch(0.99 0.004 90);
+  --card-foreground: oklch(0.2 0.012 60);
+  --popover: oklch(0.99 0.004 90);
+  --popover-foreground: oklch(0.2 0.012 60);
+  --primary: oklch(0.2 0.012 60);
+  --primary-foreground: oklch(0.99 0.004 90);
+  --secondary: oklch(0.945 0.007 85);
+  --secondary-foreground: oklch(0.2 0.012 60);
+  --muted: oklch(0.96 0.006 85);
+  --muted-foreground: oklch(0.52 0.014 65);
+  --accent: oklch(0.955 0.007 85);
+  --accent-foreground: oklch(0.2 0.012 60);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.822 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.86 0.009 78);
+  --input: oklch(0.9 0.008 80);
+  --ring: oklch(0.55 0.17 42);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
+  --radius: 0.125rem;
   --sidebar: --background;
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-foreground: oklch(0.2 0.012 60);
+  --sidebar-primary: oklch(0.2 0.012 60);
+  --sidebar-primary-foreground: oklch(0.99 0.004 90);
+  --sidebar-accent: oklch(0.955 0.007 85);
+  --sidebar-accent-foreground: oklch(0.2 0.012 60);
+  --sidebar-border: oklch(0.86 0.009 78);
+  --sidebar-ring: oklch(0.55 0.17 42);
   /* other */
-  --code: oklch(0.98 0 0);
+  --brand: oklch(0.55 0.17 42);
+  --brand-foreground: oklch(0.99 0.004 90);
+  --rule: oklch(0.91 0.008 80);
+  --code: oklch(0.975 0.006 88);
   --code-foreground: var(--foreground);
-  --code-highlight: oklch(0.94 0 0);
-  --code-number: oklch(0.56 0 0);
+  --code-highlight: oklch(0.94 0.008 85);
+  --code-number: oklch(0.66 0.012 70);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: oklch(0.155 0.005 65);
+  --foreground: oklch(0.97 0.005 85);
+  --card: oklch(0.155 0.005 65);
+  --card-foreground: oklch(0.97 0.005 85);
+  --popover: oklch(0.155 0.005 65);
+  --popover-foreground: oklch(0.97 0.005 85);
+  --primary: oklch(0.97 0.005 85);
+  --primary-foreground: oklch(0.2 0.008 65);
+  --secondary: oklch(0.26 0.008 65);
+  --secondary-foreground: oklch(0.97 0.005 85);
+  --muted: oklch(0.24 0.007 65);
+  --muted-foreground: oklch(0.68 0.012 70);
+  --accent: oklch(0.26 0.008 65);
+  --accent-foreground: oklch(0.97 0.005 85);
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.469 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.556 0 0);
+  --border: oklch(0.34 0.009 68);
+  --input: oklch(0.28 0.008 65);
+  --ring: oklch(0.76 0.16 55);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: --background;
-  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.97 0.005 85);
   --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar-primary-foreground: oklch(0.97 0.005 85);
+  --sidebar-accent: oklch(0.26 0.008 65);
+  --sidebar-accent-foreground: oklch(0.97 0.005 85);
+  --sidebar-border: oklch(0.26 0.008 65);
+  --sidebar-ring: oklch(0.76 0.16 55);
   /* other */
-  --code: oklch(20% 0 0);
-  --code-foreground: oklch(0.708 0 0);
-  --code-highlight: oklch(0.22 0 0);
-  --code-number: oklch(0.5 0 0);
+  --brand: oklch(0.76 0.16 55);
+  --brand-foreground: oklch(0.155 0.005 65);
+  --rule: oklch(0.26 0.008 65);
+  --code: oklch(0.185 0.006 65);
+  --code-foreground: oklch(0.7 0.01 70);
+  --code-highlight: oklch(0.22 0.007 65);
+  --code-number: oklch(0.48 0.01 68);
 }
 
 [data-line] span {
@@ -126,10 +132,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: 0px;
+  --radius-md: var(--radius);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: var(--radius);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -141,6 +147,9 @@
 
   /* Other */
 
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-rule: var(--rule);
   --color-code: var(--code);
   --color-code-foreground: var(--code-foreground);
   --color-code-highlight: var(--code-highlight);
@@ -171,7 +180,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full;
+  @apply bg-border;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -249,46 +258,26 @@ html {
   .container {
     @apply 2xl:max-w-screen-2xl mx-auto max-w-[1400px] px-4 lg:px-8;
   }
-  .dark .dot-fade-bg::before {
+  /* a drafting grid on a 26px module with a heavier rule every fourth cell. The
+     content column is opaque, so this only shows in the margins beside the
+     rails; it fades in below the hero so it never butts the header. */
+  .grid-bg::before {
     content: "";
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(hsl(0, 0%, 10%) 1px, transparent 0);
-    background-repeat: repeat;
-    background-position: center center;
-    background-size: 24px 24px;
-    background-attachment: local;
-    background-origin: padding-box;
-    background-clip: border-box;
-    mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--dot-mask-color, var(--background)) 100%
-    );
-    -webkit-mask-image: linear-gradient(to top, transparent 0%, var(--dot-mask-color, black) 100%);
-    background-blend-mode: multiply;
-    pointer-events: none;
-    z-index: -1;
-  }
-
-  .light .dot-fade-bg::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(hsl(0, 0%, 87%) 1px, transparent 0);
-    background-repeat: repeat;
-    background-position: center center;
-    background-size: 24px 24px;
-    background-attachment: local;
-    background-origin: padding-box;
-    background-clip: border-box;
-    mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--dot-mask-color, var(--background)) 100%
-    );
-    -webkit-mask-image: linear-gradient(to top, transparent 0%, var(--dot-mask-color, black) 100%);
-    background-blend-mode: multiply;
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px),
+      linear-gradient(to right, var(--rule) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+    background-size:
+      104px 104px,
+      104px 104px,
+      26px 26px,
+      26px 26px;
+    background-position: center top;
+    mask-image: linear-gradient(to bottom, transparent 0, black 12rem);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 12rem);
     pointer-events: none;
     z-index: -1;
   }

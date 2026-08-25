@@ -193,7 +193,7 @@ export function ScaffolderCompass() {
                     cy={cy}
                     r={16}
                     fill="none"
-                    className="stroke-foreground/20"
+                    className="stroke-brand/30"
                     strokeWidth={1}
                   />
                   <circle
@@ -201,7 +201,7 @@ export function ScaffolderCompass() {
                     cy={cy}
                     r={11}
                     fill="none"
-                    className="stroke-foreground/45"
+                    className="stroke-brand/60"
                     strokeWidth={1.5}
                   />
                 </>
@@ -210,7 +210,7 @@ export function ScaffolderCompass() {
                 cx={cx}
                 cy={cy}
                 r={isSelf ? 7 : 5}
-                className={isSelf ? "fill-foreground" : "fill-foreground/55"}
+                className={isSelf ? "fill-brand" : "fill-foreground/55"}
               />
               {/* the halo lets a label sit over the grid without a backing
                     rect, which would need text metrics to size */}
@@ -221,7 +221,7 @@ export function ScaffolderCompass() {
                 strokeWidth={4}
                 style={{ paintOrder: "stroke" }}
                 className={`stroke-background font-mono text-[14px] ${
-                  isSelf ? "fill-foreground font-semibold" : "fill-muted-foreground"
+                  isSelf ? "fill-brand font-semibold" : "fill-muted-foreground"
                 }`}
               >
                 {tool.name}

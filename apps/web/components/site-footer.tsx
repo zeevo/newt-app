@@ -35,7 +35,7 @@ export function SiteFooter() {
             rel="noreferrer"
             className="flex items-center gap-2 font-mono text-xs transition-colors hover:text-foreground"
           >
-            <span className="size-1.5 rounded-full bg-green-500" />v{cliVersion}
+            <span className="size-1.5 bg-brand" />v{cliVersion}
           </a>
           <a
             href={siteConfig.links.twitter}

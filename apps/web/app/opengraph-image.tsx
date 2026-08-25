@@ -9,10 +9,11 @@ export const contentType = "image/png";
 
 // tokens from packages/ui/src/styles/globals.css, dark theme, resolved to hex
 // because satori does not understand oklch()
-const BACKGROUND = "#0a0a0a";
-const FOREGROUND = "#fafafa";
-const MUTED_FOREGROUND = "#a1a1a1";
-const BORDER = "#5a5a5a";
+const BACKGROUND = "#0e0c0a";
+const FOREGROUND = "#f7f5f1";
+const MUTED_FOREGROUND = "#9d9790";
+const BORDER = "#3b3733";
+const BRAND = "#fd923e";
 
 // same mark as app/icon.svg
 const LOGO_PATH =
@@ -79,7 +80,10 @@ export default async function Image() {
             color: MUTED_FOREGROUND,
           }}
         >
-          <div style={{ display: "flex" }}>npm create newt-app</div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", color: BRAND }}>$</div>
+            <div style={{ display: "flex" }}>npm create newt-app</div>
+          </div>
           <div style={{ display: "flex" }}>{siteConfig.url.replace("https://", "")}</div>
         </div>
       </div>
