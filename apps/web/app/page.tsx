@@ -299,14 +299,13 @@ export class UserController {
               Where newt-app sits.
             </h2>
             <p className="leading-relaxed text-muted-foreground">
-              Two questions decide whether a starter is worth adopting: is the architecture this
-              generation&apos;s, and how much do you have to understand to change it?
+              The chart plots scaffolders on two axes: how current the stack is, and how much you
+              have to learn to change it.
             </p>
             <p className="leading-relaxed text-muted-foreground">
-              newt-app tracks the current majors: TypeScript 6, Next 16, NestJS 11. Business logic
-              lives in controllers and services, persistence is SQL through{" "}
-              <InlineCode>packages/db</InlineCode>, and there is no codegen step or inference chain
-              between the two.
+              newt-app runs TypeScript 6, Next 16, and NestJS 11. Business logic lives in
+              controllers and services, persistence is SQL through{" "}
+              <InlineCode>packages/db</InlineCode>, and there is no codegen step between them.
             </p>
           </div>
         </FeatureSection>
