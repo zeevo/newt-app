@@ -192,7 +192,7 @@ export default function Home() {
         </dl>
       </Section>
       <Section>
-        <FeatureSection>
+        <FeatureSection wide="start">
           <CodeShowcase
             filename="apps/web/app/dashboard/page.tsx"
             language="tsx"
@@ -227,7 +227,7 @@ export default async function Dashboard() {
         </FeatureSection>
       </Section>
       <Section>
-        <FeatureSection>
+        <FeatureSection wide="end">
           <div className="flex flex-col justify-center gap-4">
             <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
               NestJS services in route handlers.
@@ -258,7 +258,7 @@ export async function POST(req: Request) {
         </FeatureSection>
       </Section>
       <Section>
-        <FeatureSection>
+        <FeatureSection wide="start">
           <CodeShowcase
             filename="apps/api/src/users/users.controller.ts"
             language="ts"
