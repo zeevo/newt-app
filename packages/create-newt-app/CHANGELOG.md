@@ -1,5 +1,27 @@
 # create-newt-app
 
+## 0.31.3
+
+### Patch Changes
+
+- 39db3b0: Add autocomplete attributes to the auth form inputs so password managers can fill them and Chrome stops warning. Name and email get `name` and `email`; password gets `new-password` in sign up mode and `current-password` in sign in mode. Applies to both the plain and shadcn forms.
+- 5b16f60: commit a `.env.example` so a clone can boot
+
+  The scaffolder wrote `.env`, `.gitignore` ignored it, and `initGit` committed the result, so anyone cloning a newt app got a repo with no `BETTER_AUTH_SECRET`, no `BETTER_AUTH_URL`, no `DATABASE_URL` on postgres, and nothing naming them. A `.env.example` now ships next to `.env` with the same keys and a placeholder secret instead of the generated one.
+
+  Both files also end with a newline. `.env` used to end mid-line on the secret, so appending a variable by hand ran onto that line.
+
+- 93da549: Declare `dist/**` as a `build` output in the scaffolded `turbo.json`. The task only listed the Next.js `.next` directories, so `api#build` warned about missing outputs and its cache entry restored nothing: after deleting `apps/api/dist`, a cached build left `start:prod` with no `dist/main` to run.
+- 3d7693c: list every `--deployment` choice in `--help`
+
+  The help text read `Deployment: standalone, spa`, omitting `none`, which is both a valid value and the default. It now reads `Deployment: none, standalone, or spa`, matching the other flags, which already list every choice.
+
+- b231d98: Build standalone images on `node:24-alpine` instead of `node:22-alpine`. Scaffolded apps declare `"engines": { "node": ">=24.0.0" }`, so every layer of a `--deployment standalone` build logged an unsupported-engine warning.
+- 7d40877: Remove the stale `outputs: ["coverage/**"]` key from the `test` task in the scaffolded `turbo.json`. The `test` script runs `jest` / `vitest run`, which writes no coverage (that is `test:cov`, which is not a turbo task), so turbo printed a "no output files found for task api#test" warning on every `pnpm test`.
+- 79c6dff: Scaffold on Next 16.3.3, up from 16.3.2. `@next/eslint-plugin-next` moves with it.
+- 33f1bce: Normalize the project name instead of scaffolding a broken project. The name becomes the npm scope for every workspace package (`@name/db`, `@name/auth`, `@name/ui`), so `create-newt-app "My App"` used to scaffold happily and then die at `pnpm install` with `ERR_PNPM_INVALID_DEPENDENCY_NAME`. Names are now lowercased, spaces and other characters npm rejects become hyphens, leading `.` or `_` is dropped, and the result is capped at 214 characters. `create-newt-app "My App"` now creates `my-app` with `@my-app/db`, no error and no prompt. Only an empty name, or one with nothing left after normalizing (such as `...`), is still refused.
+- 7e4e06e: Build the standalone api image from the build stage instead of `pnpm deploy`. The deploy step failed outright under pnpm 10 (`ERR_PNPM_DEPLOY_NONINJECTED_WORKSPACE`), and forcing it through left the api crashlooping: `pnpm deploy` hard-copies the source-consumed `auth` and `db` packages into `node_modules`, where Node refuses to strip types. Deriving the stage from `build` keeps them as symlinks into the workspace, which resolve fine, the same way the `migrate` stage already works.
+
 ## 0.31.2
 
 ### Patch Changes
