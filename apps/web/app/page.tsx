@@ -292,11 +292,10 @@ export class UserController {
         </FeatureSection>
       </Section>
       <Section>
-        <FeatureSection split="lg">
-          <ScaffolderCompass />
+        <FeatureSection wide="end">
           <div className="flex flex-col justify-center gap-4">
             <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-              Where newt-app sits.
+              Where <span className="whitespace-nowrap">newt-app</span> sits.
             </h2>
             <p className="leading-relaxed text-muted-foreground">
               The chart plots scaffolders on two axes: how current the stack is, and how much you
@@ -308,6 +307,7 @@ export class UserController {
               <InlineCode>packages/db</InlineCode>, and there is no codegen step between them.
             </p>
           </div>
+          <ScaffolderCompass />
         </FeatureSection>
       </Section>
     </div>
