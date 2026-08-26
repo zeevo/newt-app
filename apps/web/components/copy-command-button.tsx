@@ -31,7 +31,7 @@ export function CopyCommandButton({ value }: { value: string }) {
       data-slot="copy-command-button"
       data-copied={hasCopied}
       className={cn(
-        "h-auto min-w-28 shrink-0 px-5 transition-shadow duration-300 motion-reduce:transition-none",
+        "h-auto min-w-24 shrink-0 px-4 transition-shadow duration-300 motion-reduce:transition-none",
         GLOW,
       )}
       onClick={async () => {

@@ -221,15 +221,15 @@ export function InteractiveFileTree({
 
   return (
     <TooltipProvider>
-      <div className={cn("flex flex-col gap-4", className)}>
+      <div className={cn("flex flex-col gap-3", className)}>
         <div
           className={cn(
-            "flex flex-col gap-4 lg:flex-row",
+            "flex flex-col gap-3 lg:flex-row",
             fullscreen ? "lg:min-h-0 lg:flex-1" : "lg:items-start",
           )}
         >
           <div className="flex flex-col gap-2 lg:w-[42%] lg:shrink-0">
-            <div className="flex flex-1 flex-col gap-3 rounded-lg border p-5">
+            <div className="flex flex-1 flex-col gap-2.5 rounded-lg border p-4">
               <Row label="name">
                 <Input
                   value={c.name}
@@ -380,7 +380,7 @@ export function InteractiveFileTree({
             )}
           </div>
 
-          <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-5">
+          <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-4">
             <FileTree
               name={c.name.trim() || DEFAULT_NAME}
               className="my-0 bg-transparent p-0 dark:bg-transparent"
@@ -390,10 +390,10 @@ export function InteractiveFileTree({
           </div>
         </div>
 
-        <div className="flex items-stretch gap-3">
+        <div className="flex items-stretch gap-2">
           {/* min-w-0 lets the code scroll inside its own block instead of
               growing the row and squeezing the button */}
-          <div className="min-w-0 flex-1 rounded-lg border bg-code p-4">
+          <div className="min-w-0 flex-1 rounded-lg border bg-code px-4 py-2.5">
             <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
               <span className="text-muted-foreground select-none">$ </span>
               {command}
