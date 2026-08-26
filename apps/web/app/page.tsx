@@ -298,13 +298,12 @@ export class UserController {
               Where <span className="whitespace-nowrap">newt-app</span> sits.
             </h2>
             <p className="leading-relaxed text-muted-foreground">
-              The chart plots scaffolders on two axes: how current the stack is, and how much you
-              have to learn to change it.
+              Two axes: how current the stack is, and how much you have to learn to change it.
             </p>
             <p className="leading-relaxed text-muted-foreground">
-              newt-app runs TypeScript 6, Next 16, and NestJS 11. Business logic lives in
-              controllers and services, persistence is SQL through{" "}
-              <InlineCode>packages/db</InlineCode>, and there is no codegen step between them.
+              newt-app runs TypeScript 6, Next 16, and NestJS 11. Logic lives in controllers and
+              services, persistence is SQL through <InlineCode>packages/db</InlineCode>, and there
+              is no codegen step.
             </p>
           </div>
           <ScaffolderCompass />
