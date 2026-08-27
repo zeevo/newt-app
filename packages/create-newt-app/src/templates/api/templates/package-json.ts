@@ -5,16 +5,12 @@ export default {
   template: `{
   "name": "api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
   "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "start": "nest start",
     "dev": "nest start --watch",
-    "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main"
   },
@@ -37,8 +33,6 @@ export default {
     "@types/node": "<%= versions["@types/node"] %>",
     "@types/supertest": "<%= versions["@types/supertest"] %>",
     "supertest": "<%= versions.supertest %>",
-    "ts-node": "<%= versions["ts-node"] %>",
-    "tsconfig-paths": "<%= versions["tsconfig-paths"] %>",
     "typescript": "<%= versions.typescript %>"
   }
 }`,

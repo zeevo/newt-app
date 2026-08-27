@@ -3,10 +3,7 @@ export default {
   template: `{
   "name": "@<%= projectName %>/api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
   "private": true,
-  "license": "UNLICENSED",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -28,8 +25,6 @@ export default {
     "@nestjs/schematics": "<%= versions["@nestjs/schematics"] %>",
     "@nestjs/testing": "<%= versions["@nestjs/testing"] %>",
     "@types/node": "<%= versions["@types/node"] %>",
-    "ts-node": "<%= versions["ts-node"] %>",
-    "tsconfig-paths": "<%= versions["tsconfig-paths"] %>",
     "typescript": "<%= versions.typescript %>"
   }
 }`,
