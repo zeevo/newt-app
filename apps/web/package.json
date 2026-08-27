@@ -11,13 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@newt-app/components": "workspace:*",
     "@newt-app/file-tree": "workspace:*",
     "@newt-app/ui": "workspace:*",
-    "@radix-ui/react-slot": "^1.2.3",
-    "@radix-ui/react-tooltip": "^1.2.7",
-    "class-variance-authority": "^0.7.1",
-    "date-fns": "^4.1.0",
     "dotenv-cli": "^8.0.0",
     "lucide-react": "^0.548.0",
     "next": "^16.3.3",
@@ -36,7 +31,6 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^24.13.3",
-    "@types/pg": "^8.15.4",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/three": "^0.185.1",

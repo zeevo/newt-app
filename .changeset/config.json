@@ -2,15 +2,7 @@
   "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [
-    [
-      "create-newt-app",
-      "@newt-app/ui",
-      "@newt-app/auth",
-      "@newt-app/typescript-config",
-      "@newt-app/components"
-    ]
-  ],
+  "fixed": [["create-newt-app", "@newt-app/ui", "@newt-app/auth", "@newt-app/typescript-config"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
