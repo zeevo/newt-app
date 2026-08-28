@@ -1,0 +1,14 @@
+{
+  "name": "newt-telemetry",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "migrate": "wrangler d1 execute newt-telemetry --remote --file=./schema.sql"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260801.0",
+    "wrangler": "^4.42.0"
+  }
+}

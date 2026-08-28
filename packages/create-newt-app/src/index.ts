@@ -6,6 +6,7 @@ import { Command } from "commander";
 import * as p from "@clack/prompts";
 import { selectModules, type Extra, type ModuleSelection } from "./templates";
 import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
+import { reportRun } from "./telemetry.js";
 import {
   checkRequiredTools,
   normalizeProjectName,
@@ -52,6 +53,7 @@ type Options = {
   nestDiOnly: boolean;
   includeExample: boolean;
   extras: readonly Extra[];
+  explicitFlags: readonly string[];
 };
 
 class TaskBuilder {
@@ -282,6 +284,18 @@ export async function doInit(options: Options) {
     console.log(chalk.blue(`  cd ${name}`));
     console.log(chalk.blue(`  pnpm dev`));
     console.log();
+
+    await reportRun({
+      mode: options.nonInteractive ? "flags" : "interactive",
+      explicitFlags: options.explicitFlags,
+      selection,
+    });
+
+    // The telemetry socket is unref'd, but a DNS lookup that never answers
+    // sits on the libuv threadpool, which unref cannot reach. Exiting here
+    // keeps an unreachable endpoint from holding the process open after the
+    // user already has their project.
+    process.exit(0);
   } catch (error) {
     console.error(`Error: ${error instanceof Error ? error.message : "Unknown error"}`);
     process.exit(1);
@@ -324,20 +338,24 @@ program
     ) => {
       intro(`Create a ${chalk.blue("newt")} app.`);
 
-      // Any explicitly passed config flag skips the prompts.
-      const configFlags = [
-        "shadcn",
-        "testing",
-        "database",
-        "linter",
-        "deployment",
-        "nestDiOnly",
-        "includeExample",
-        "extras",
-      ];
-      const nonInteractive = configFlags.some(
-        (flag) => command.getOptionValueSource(flag) === "cli",
-      );
+      // Any explicitly passed config flag skips the prompts. Keyed by the option
+      // name Commander tracks, valued by the flag a user actually types.
+      const CONFIG_FLAGS = {
+        shadcn: "--shadcn",
+        testing: "--testing",
+        database: "--database",
+        linter: "--linter",
+        deployment: "--deployment",
+        nestDiOnly: "--nest-di-only",
+        includeExample: "--include-example",
+        extras: "--extras",
+      } as const;
+
+      const explicitFlags = Object.entries(CONFIG_FLAGS)
+        .filter(([option]) => command.getOptionValueSource(option) === "cli")
+        .map(([, flag]) => flag);
+
+      const nonInteractive = explicitFlags.length > 0;
 
       const extras = options.extras
         .split(",")
@@ -389,6 +407,7 @@ program
         nestDiOnly: options.nestDiOnly,
         includeExample: options.includeExample,
         extras: extras as Extra[],
+        explicitFlags,
       });
     },
   );
