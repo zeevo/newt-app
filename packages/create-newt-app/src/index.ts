@@ -291,10 +291,9 @@ export async function doInit(options: Options) {
       selection,
     });
 
-    // The telemetry socket is unref'd, but a DNS lookup that never answers
-    // sits on the libuv threadpool, which unref cannot reach. Exiting here
-    // keeps an unreachable endpoint from holding the process open after the
-    // user already has their project.
+    // A DNS lookup that never answers sits on the libuv threadpool, where
+    // unref cannot reach it, so an unreachable endpoint would otherwise hold
+    // the process open after the user already has their project.
     process.exit(0);
   } catch (error) {
     console.error(`Error: ${error instanceof Error ? error.message : "Unknown error"}`);
@@ -338,8 +337,7 @@ program
     ) => {
       intro(`Create a ${chalk.blue("newt")} app.`);
 
-      // Any explicitly passed config flag skips the prompts. Keyed by the option
-      // name Commander tracks, valued by the flag a user actually types.
+      // Any explicitly passed config flag skips the prompts.
       const CONFIG_FLAGS = {
         shadcn: "--shadcn",
         testing: "--testing",

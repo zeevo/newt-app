@@ -29,16 +29,12 @@ describe("opt out", () => {
     expect(isOptedOut(env)).toBe(expected);
   });
 
-  // DO_NOT_TRACK is checked first so it cannot be overridden by the
-  // project-specific switch.
   it("lets DO_NOT_TRACK win over NEWT_TELEMETRY=1", () => {
     const env: NodeJS.ProcessEnv = { DO_NOT_TRACK: "1", NEWT_TELEMETRY: "1" };
     expect(isOptedOut(env)).toBe(true);
   });
 });
 
-// The endpoint is injected at build time and is empty in every build a test can
-// run in, so nothing a test does can send a request.
 describe("no endpoint means no telemetry", () => {
   it("is disabled even with every switch set to on", () => {
     const env: NodeJS.ProcessEnv = { NEWT_TELEMETRY: "1" };
@@ -95,8 +91,6 @@ describe("payload", () => {
     });
   });
 
-  // Unsorted flags would make --shadcn,--linter and --linter,--shadcn two
-  // different rows for the same choice.
   it("sorts explicit flags so one set is one value", () => {
     const a = buildPayload({ mode: "flags", explicitFlags: ["--shadcn", "--linter"], selection });
     const b = buildPayload({ mode: "flags", explicitFlags: ["--linter", "--shadcn"], selection });
@@ -111,7 +105,6 @@ describe("payload", () => {
     expect(payload.mode).toBe("interactive");
   });
 
-  // Nothing that could identify a machine, a person or a project may appear.
   it("carries no project name, path or identifier", () => {
     const serialized = JSON.stringify(
       buildPayload({ mode: "interactive", explicitFlags: [], selection }),

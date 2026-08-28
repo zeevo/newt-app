@@ -5,16 +5,14 @@ import https from "node:https";
 import path from "node:path";
 import type { ModuleSelection } from "./templates";
 
-// Injected at build time by tsdown, and empty everywhere else. A local build, a
-// contributor's test run and this repo's own scaffold matrix therefore have no
-// endpoint to reach and send nothing at all, without depending on anyone
-// remembering to set a variable.
+// Inlined by tsdown, and empty in every build but a release, so nothing else
+// can report a scaffold even if the opt-out logic were wrong.
+// turbo.json must list this under the build task or turbo strips it.
 const ENDPOINT = process.env.NEWT_TELEMETRY_URL ?? "";
 
 const SEND_TIMEOUT_MS = 2000;
 
-// An airgapped or firewalled machine pays the timeout once, then skips the
-// network entirely for a month. Without this the cost repeats on every scaffold.
+// So an airgapped machine pays the timeout once rather than on every scaffold.
 const UNREACHABLE_BACKOFF_MS = 30 * 24 * 60 * 60 * 1000;
 
 const require = createRequire(import.meta.url);
@@ -35,8 +33,6 @@ type State = {
   unreachableUntil?: number;
 };
 
-// Named separately from the bare CI flag so a provider that shows up in the
-// data can be recognized, rather than every pipeline landing in one bucket.
 const CI_PROVIDERS = [
   ["GITHUB_ACTIONS", "github-actions"],
   ["GITLAB_CI", "gitlab-ci"],
@@ -56,12 +52,8 @@ export function detectCi(env: NodeJS.ProcessEnv = process.env): string {
   return env.CI ? "unknown" : "none";
 }
 
-// DO_NOT_TRACK is the cross-tool convention from consoledonottrack.com, so one
-// variable silences every tool that honours it. The project-specific switches
-// are checked after it and can only disable, never re-enable.
-//
-// Split from the endpoint check below so the opt-out rules stay testable: in
-// any build a test can run, ENDPOINT is empty and isEnabled is always false.
+// DO_NOT_TRACK is the cross-tool convention from consoledonottrack.com, and is
+// checked first so the project-specific switches cannot re-enable past it.
 export function isOptedOut(env: NodeJS.ProcessEnv = process.env): boolean {
   if (env.DO_NOT_TRACK === "1" || env.DO_NOT_TRACK?.toLowerCase() === "true") return true;
   if (env.NEWT_TELEMETRY_DISABLED === "1") return true;
@@ -101,8 +93,7 @@ async function writeState(next: State): Promise<void> {
   }
 }
 
-// Only the major: a full version string is unbounded input, and the server
-// counts these per distinct value.
+// Only the major: the server counts these per distinct value.
 export function nodeMajor(version: string = process.version): string {
   const match = /^v?(\d+)/.exec(version);
   return match ? `v${match[1]}` : "other";
@@ -116,7 +107,7 @@ export function buildPayload(report: RunReport) {
     platform: process.platform,
     mode: report.mode,
     ci: detectCi(),
-    // Sorted so the same set of flags is one value rather than one per ordering.
+    // Sorted, so one set of flags is one value and not one per ordering.
     explicitFlags: [...report.explicitFlags].sort().join(","),
     shadcn: selection.shadcn,
     testing: selection.testing,
@@ -173,12 +164,8 @@ const NOTICE = [
   "Opt out with DO_NOT_TRACK=1 or NEWT_TELEMETRY_DISABLED=1.",
 ].join("\n");
 
-/**
- * Sends one event describing a completed scaffold. Resolves once the request has
- * finished, timed out, or been skipped; never rejects, and never reports failure
- * to the user. Call it after the project exists and the next steps are printed,
- * so a cancelled run sends nothing and the latency lands where nothing is waiting.
- */
+// Never rejects. Call only after the project exists, so a cancelled run
+// reports nothing.
 export async function reportRun(report: RunReport): Promise<void> {
   if (!isEnabled()) return;
 

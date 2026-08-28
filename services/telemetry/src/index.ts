@@ -1,20 +1,13 @@
-// Ingest for create-newt-app run telemetry. Deployed separately from the
-// monorepo with `wrangler deploy`; nothing here is published to npm.
-//
-// The endpoint is unauthenticated and always will be: the CLI is public, so any
-// shared secret is one `npm pack` away from being extracted. The defence is
-// therefore cheap validation, a hard size cap, bounded cardinality on every
-// column, and a rate limiting rule in front of the Worker.
+// The endpoint cannot be authenticated: the CLI is public, so any shared secret
+// is one `npm pack` away. Defence is cheap validation, a size cap, bounded
+// cardinality per column, and a rate limiting rule in front of the Worker.
 
 type Env = { DB: D1Database };
 
-// Larger than any honest payload by an order of magnitude, small enough that a
-// flood cannot make us read megabytes before rejecting.
 const MAX_BODY_BYTES = 4 * 1024;
 
-// Every field below is a closed set. An open one would let anyone write
-// unlimited distinct values into a column we GROUP BY, which is the real abuse
-// risk here -- unbounded cardinality costs far more than request volume.
+// Closed sets, because an open column that gets GROUP BY'd is unbounded storage
+// for anyone who wants it. Cardinality is the abuse risk here, not volume.
 const ENUMS = {
   platform: [
     "aix",
@@ -61,8 +54,8 @@ const KNOWN_FLAGS = [
   "--extras",
 ];
 
-// The two fields a client can put arbitrary text in. Both collapse to "other"
-// rather than being rejected, so a malformed version still counts as a run.
+// The only two free-form fields. They collapse to "other" rather than failing
+// the row, so an unrecognized version still counts as a run.
 function normalizeCliVersion(value: unknown): string {
   const text = String(value);
   return /^\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(text) ? text : "other";
@@ -75,8 +68,6 @@ function normalizeNodeMajor(value: unknown): string {
   return major >= 18 && major <= 40 ? `v${major}` : "other";
 }
 
-// Bounded at 2^8 combinations because the set of flags is fixed. Anything
-// outside the known list is dropped rather than stored.
 function normalizeExplicitFlags(value: unknown): string | null {
   if (value === "") return "";
   if (!KNOWN_FLAGS.includes(String(value).split(",")[0] ?? "")) return null;
@@ -93,8 +84,7 @@ function enumValue<K extends keyof typeof ENUMS>(key: K, value: unknown): string
   return allowed.includes(value) ? (value as string) : null;
 }
 
-// Only real JSON booleans count. 0, "true" and null are rejected rather than
-// coerced, so a wrong type fails the row instead of silently becoming false.
+// Not coerced: a wrong type must fail the row, not silently become false.
 function bool(value: unknown): number | null {
   return value === true ? 1 : value === false ? 0 : null;
 }
@@ -156,8 +146,7 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
 
-    // content-length is attacker controlled, so it is a cheap early reject
-    // rather than the actual check.
+    // Attacker controlled, so this is a cheap early reject, not the real check.
     const declared = Number(request.headers.get("content-length"));
     if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) {
       return new Response("Payload Too Large", { status: 413 });
@@ -177,9 +166,8 @@ export default {
     const row = parse(body, Math.floor(Date.now() / 1000));
     if (!row) return new Response("Bad Request", { status: 400 });
 
-    // The client IP is visible here and is deliberately not stored. Without it
-    // there is no identifier of any kind on a row, which is what lets this be
-    // described as anonymous without qualification.
+    // The client IP is visible here and deliberately never stored: without it a
+    // row carries no identifier at all.
     try {
       await env.DB.prepare(INSERT)
         .bind(...Object.values(row))
