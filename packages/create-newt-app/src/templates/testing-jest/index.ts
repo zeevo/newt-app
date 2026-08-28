@@ -21,18 +21,6 @@ const testingJest: Module = {
       version: versions["@types/jest"],
       dev: true,
     },
-    {
-      package: "ts-loader",
-      module: "apps/api",
-      version: versions["ts-loader"],
-      dev: true,
-    },
-    {
-      package: "source-map-support",
-      module: "apps/api",
-      version: versions["source-map-support"],
-      dev: true,
-    },
   ],
   scripts: [
     { module: "apps/api", name: "test", script: "jest" },
@@ -41,8 +29,7 @@ const testingJest: Module = {
     {
       module: "apps/api",
       name: "test:debug",
-      script:
-        "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+      script: "node --inspect-brk node_modules/.bin/jest --runInBand",
     },
     {
       module: "apps/api",

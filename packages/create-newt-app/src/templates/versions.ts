@@ -4,7 +4,6 @@
 // with two versions across the rendered output.
 export const versions = {
   "@base-ui/react": "^1.6.0",
-  "@eslint/eslintrc": "^3.2.0",
   "@eslint/js": "^9.39.1",
   "@nestjs/cli": "^11.0.0",
   "@nestjs/common": "^11.0.1",
@@ -66,14 +65,10 @@ export const versions = {
   rxjs: "^7.8.1",
   shadcn: "^4.7.0",
   sonner: "^2.0.7",
-  "source-map-support": "^0.5.21",
   supertest: "^7.0.0",
   "tailwind-merge": "^3.6.0",
   tailwindcss: "^4.2.1",
   "ts-jest": "^29.2.5",
-  "ts-loader": "^9.5.2",
-  "ts-node": "^10.9.2",
-  "tsconfig-paths": "^4.2.0",
   tsx: "^4.19.4",
   turbo: "^2.8.16",
   "tw-animate-css": "^1.4.0",

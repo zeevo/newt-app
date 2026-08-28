@@ -25,12 +25,6 @@ const eslintConfig: Module = {
       dev: true,
     },
     {
-      package: "@eslint/eslintrc",
-      module: api,
-      version: versions["@eslint/eslintrc"],
-      dev: true,
-    },
-    {
       package: "@eslint/js",
       module: api,
       version: versions["@eslint/js"],
