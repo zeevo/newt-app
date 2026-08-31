@@ -5,7 +5,7 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "migrate": "wrangler d1 execute newt-telemetry --remote --file=./schema.sql"
+    "migrate": "wrangler d1 execute newt-app --remote --file=./schema.sql"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260830.1",

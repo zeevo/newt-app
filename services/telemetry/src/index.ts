@@ -2,7 +2,10 @@
 // is one `npm pack` away. Defence is cheap validation, a size cap, bounded
 // cardinality per column, and a rate limiting rule in front of the Worker.
 
-type Env = { DB: D1Database };
+type Env = {
+  DB: D1Database;
+  RATE_LIMITER: { limit(o: { key: string }): Promise<{ success: boolean }> };
+};
 
 const MAX_BODY_BYTES = 4 * 1024;
 
@@ -145,6 +148,10 @@ const INSERT = `INSERT INTO runs (
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+
+    const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
+    const { success } = await env.RATE_LIMITER.limit({ key: ip });
+    if (!success) return new Response("Too Many Requests", { status: 429 });
 
     // Attacker controlled, so this is a cheap early reject, not the real check.
     const declared = Number(request.headers.get("content-length"));
