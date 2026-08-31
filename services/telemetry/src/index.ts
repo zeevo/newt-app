@@ -9,8 +9,8 @@ type Env = {
 
 const MAX_BODY_BYTES = 4 * 1024;
 
-// Closed sets, because an open column that gets GROUP BY'd is unbounded storage
-// for anyone who wants it. Cardinality is the abuse risk here, not volume.
+// Closed sets: an open column that gets GROUP BY'd is unbounded storage for
+// anyone who wants it. Cardinality is the abuse risk here, not volume.
 const ENUMS = {
   platform: [
     "aix",
@@ -57,8 +57,7 @@ const KNOWN_FLAGS = [
   "--extras",
 ];
 
-// The only two free-form fields. They collapse to "other" rather than failing
-// the row, so an unrecognized version still counts as a run.
+// The only two free-form fields; "other" keeps an unknown version countable.
 function normalizeCliVersion(value: unknown): string {
   const text = String(value);
   return /^\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(text) ? text : "other";
@@ -81,10 +80,8 @@ function normalizeExplicitFlags(value: unknown): string | null {
 }
 
 function enumValue<K extends keyof typeof ENUMS>(key: K, value: unknown): string | null {
-  const allowed: readonly unknown[] = ENUMS[key];
-  // SAFETY: membership in a closed list of string literals is the check, so a
-  // value that passes it is one of those strings.
-  return allowed.includes(value) ? (value as string) : null;
+  const allowed: readonly string[] = ENUMS[key];
+  return allowed.find((candidate) => candidate === value) ?? null;
 }
 
 // Not coerced: a wrong type must fail the row, not silently become false.
@@ -112,9 +109,7 @@ type Row = {
 
 function parse(body: unknown, now: number): Row | null {
   if (typeof body !== "object" || body === null) return null;
-  // SAFETY: JSON.parse produced this and the check above rules out null and
-  // every primitive, so property access is defined. Each field is validated
-  // individually below; nothing here is trusted beyond being indexable.
+  // SAFETY: the check above rules out null and every primitive.
   const b = body as Record<string, unknown>;
 
   const row = {
@@ -135,8 +130,7 @@ function parse(body: unknown, now: number): Row | null {
     anti_slop: bool(b.antiSlop),
   };
 
-  // SAFETY: every field above is typed `T | null`, and this rejects the row
-  // unless all of them are non-null, which is exactly Row.
+  // SAFETY: every field is `T | null` and this returns null unless all are set.
   return Object.values(row).every((value) => value !== null) ? (row as Row) : null;
 }
 
@@ -173,8 +167,7 @@ export default {
     const row = parse(body, Math.floor(Date.now() / 1000));
     if (!row) return new Response("Bad Request", { status: 400 });
 
-    // The client IP is visible here and deliberately never stored: without it a
-    // row carries no identifier at all.
+    // The client IP is visible here and deliberately never stored.
     try {
       await env.DB.prepare(INSERT)
         .bind(...Object.values(row))

@@ -1,8 +1,8 @@
-import { createRequire } from "node:module";
 import { homedir } from "node:os";
 import { promises } from "node:fs";
 import https from "node:https";
 import path from "node:path";
+import pkg from "../package.json" with { type: "json" };
 import type { ModuleSelection } from "./templates";
 
 // Inlined by tsdown, and empty in every build but a release, so nothing else
@@ -14,11 +14,6 @@ const SEND_TIMEOUT_MS = 2000;
 
 // So an airgapped machine pays the timeout once rather than on every scaffold.
 const UNREACHABLE_BACKOFF_MS = 30 * 24 * 60 * 60 * 1000;
-
-const require = createRequire(import.meta.url);
-// SAFETY: the package manifest sits next to this source and is published with
-// it, and npm requires a version field, so the shape is fixed at build time.
-const { version: CLI_VERSION } = require("../package.json") as { version: string };
 
 export type TelemetryMode = "interactive" | "flags";
 
@@ -72,10 +67,8 @@ function statePath(): string {
 
 async function readState(): Promise<State> {
   try {
-    // SAFETY: every field on State is optional and only ever read as a number,
-    // so a corrupt or hand-edited file degrades to "notify and try again"
-    // rather than throwing. This function only ever writes it.
-    return JSON.parse(await promises.readFile(statePath(), "utf8")) as State;
+    const state: State = JSON.parse(await promises.readFile(statePath(), "utf8"));
+    return state;
   } catch {
     return {};
   }
@@ -87,13 +80,10 @@ async function writeState(next: State): Promise<void> {
     await promises.mkdir(path.dirname(file), { recursive: true });
     await promises.writeFile(file, JSON.stringify(next), "utf8");
   } catch {
-    // A read-only home directory means no backoff and no notice record. Both
-    // degrade to "ask again next time", which is worse than nothing but never
-    // a reason to fail a scaffold.
+    // A read-only home means no backoff and no notice record, never a failure.
   }
 }
 
-// Only the major: the server counts these per distinct value.
 export function nodeMajor(version: string = process.version): string {
   const match = /^v?(\d+)/.exec(version);
   return match ? `v${match[1]}` : "other";
@@ -102,7 +92,7 @@ export function nodeMajor(version: string = process.version): string {
 export function buildPayload(report: RunReport) {
   const { selection } = report;
   return {
-    cliVersion: CLI_VERSION,
+    cliVersion: pkg.version,
     nodeMajor: nodeMajor(),
     platform: process.platform,
     mode: report.mode,
@@ -136,14 +126,9 @@ function post(body: string): Promise<boolean> {
         timeout: SEND_TIMEOUT_MS,
       });
 
-      // Deliberately not unref'd. An awaited promise does not hold the event
-      // loop open by itself, so unref'ing here makes the process exit before
-      // the request completes and nothing is ever delivered. The caller's
-      // process.exit is what bounds the worst case instead.
-      // Only a 2xx counts as delivered. If the endpoint ever stops being ours
-      // and something answers 404, treating that as success would cost every
-      // user a round trip on every scaffold forever, with the backoff never
-      // arming.
+      // Never unref this socket: an awaited promise does not hold the event
+      // loop open, so the process would exit before the request completes.
+      // Only 2xx counts, or a permanent 404 would never arm the backoff.
       req.on("response", (res) => {
         res.resume();
         const status = res.statusCode ?? 0;
@@ -169,8 +154,7 @@ const NOTICE = [
   "Opt out with DO_NOT_TRACK=1 or NEWT_TELEMETRY_DISABLED=1.",
 ].join("\n");
 
-// Never rejects. Call only after the project exists, so a cancelled run
-// reports nothing.
+// Never rejects. Call only after the project exists, so a cancelled run sends nothing.
 export async function reportRun(report: RunReport): Promise<void> {
   if (!isEnabled()) return;
 
