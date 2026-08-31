@@ -8,7 +8,13 @@
     "migrate": "wrangler d1 execute newt-telemetry --remote --file=./schema.sql"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260801.0",
-    "wrangler": "^4.42.0"
+    "@cloudflare/workers-types": "^5.20260830.1",
+    "wrangler": "^4.127.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd"
+    ]
   }
 }
