@@ -1,0 +1,20 @@
+name = "newt-telemetry"
+main = "src/index.ts"
+compatibility_date = "2026-08-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "newt-app"
+database_id = "0da38479-db11-4ce2-8198-c6eeaaccab91"
+migrations_dir = "migrations"
+
+# On workers.dev a WAF rate limiting rule is not available, since that needs a
+# zone. This runs inside the Worker instead, so a blocked request still costs an
+# invocation but the database is protected.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+
+[ratelimits.simple]
+limit = 60
+period = 60

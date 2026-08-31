@@ -1,0 +1,22 @@
+{
+  "name": "newt-telemetry",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "migrate": "wrangler d1 migrations apply newt-app --remote",
+    "migrate:list": "wrangler d1 migrations list newt-app --remote",
+    "migrate:new": "wrangler d1 migrations create newt-app"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260830.1",
+    "wrangler": "^4.127.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd"
+    ]
+  }
+}
