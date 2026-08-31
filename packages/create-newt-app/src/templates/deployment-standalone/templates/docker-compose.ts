@@ -7,8 +7,9 @@ export default {
   # Better Auth trusts this origin; without it every deployment falls back to
   # localhost:3000 and rejects requests from the real one.
   BETTER_AUTH_URL: \${BETTER_AUTH_URL:-http://localhost:3000}
-  DATABASE_URL: postgresql://postgres:\${POSTGRES_PASSWORD:-postgres}@db:5432/postgres
-
+<% if (database === 'postgres') { %>  DATABASE_URL: postgresql://postgres:\${POSTGRES_PASSWORD:-postgres}@db:5432/postgres
+<% } else { %>  DATABASE_URL: /data/app.db
+<% } %>
 services:
   web:
     build:
@@ -20,6 +21,9 @@ services:
       - "3000:3000"
     environment:
       <<: *app-env
+<% if (database === 'sqlite') { %>    volumes:
+      - db_data:/data
+<% } -%>
     depends_on:
       - api
 
@@ -29,9 +33,12 @@ services:
       target: migrate
     environment:
       <<: *app-env
-    depends_on:
+<% if (database === 'postgres') { %>    depends_on:
       db:
         condition: service_healthy
+<% } else { %>    volumes:
+      - db_data:/data
+<% } -%>
     restart: "no"
 
   api:
@@ -42,13 +49,17 @@ services:
       - "3001:3001"
     environment:
       <<: *app-env
+<% if (database === 'sqlite') { %>    volumes:
+      - db_data:/data
+<% } -%>
     depends_on:
-      db:
+<% if (database === 'postgres') { %>      db:
         condition: service_healthy
+<% } -%>
       migrate:
         condition: service_completed_successfully
 
-  db:
+<% if (database === 'postgres') { %>  db:
     image: postgres:17-alpine
     ports:
       - "5432:5432"
@@ -62,6 +73,7 @@ services:
       timeout: 5s
       retries: 5
 
+<% } -%>
 volumes:
   db_data:`,
 };

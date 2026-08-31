@@ -243,3 +243,28 @@ describe("api tsconfig types match the test runner", () => {
     },
   );
 });
+
+// A sqlite app handed a Postgres URL opens it as a file path and dies on boot,
+// so the compose file has to match the database the scaffold shipped with.
+describe("the standalone compose file matches the selected database", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const compose = renderCombo(selection).files.get("docker-compose.yml");
+
+      if (selection.deployment !== "standalone") {
+        expect(compose).toBeUndefined();
+        return;
+      }
+
+      const postgres = selection.database === "postgres";
+      expect(compose).toContain(
+        postgres ? "DATABASE_URL: postgresql://" : "DATABASE_URL: /data/app.db",
+      );
+      expect(compose?.includes("image: postgres:17-alpine")).toBe(postgres);
+      expect(compose?.includes("condition: service_healthy")).toBe(postgres);
+      expect(compose?.includes("- db_data:/data\n")).toBe(!postgres);
+      expect(compose).toContain("condition: service_completed_successfully");
+    },
+  );
+});
