@@ -5,7 +5,7 @@ compatibility_date = "2026-08-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "newt-app"
-database_id = "47ca70ef-8a44-4ae8-ab3b-9277efbacdcc"
+database_id = "0da38479-db11-4ce2-8198-c6eeaaccab91"
 migrations_dir = "migrations"
 
 # On workers.dev a WAF rate limiting rule is not available, since that needs a
