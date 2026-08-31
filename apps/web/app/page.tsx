@@ -1,12 +1,8 @@
 import { CopyButton } from "@/components/copy-button";
-import { FeatureSection } from "@/components/feature-section";
-import { InlineCode } from "@/components/inline-code";
 import { InteractiveFileTree } from "@/components/interactive-file-tree";
-import { Section } from "@/components/section";
 import Image from "next/image";
 import { Suspense } from "react";
 import LogoRain from "@/components/logo-rain";
-import { ScaffolderCompass } from "@/components/scaffolder-compass";
 import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
 
 export default function Home() {
@@ -123,26 +119,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <Section>
-        <FeatureSection split="lg">
-          <ScaffolderCompass />
-          <div className="flex flex-col justify-center gap-4">
-            <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-              Where newt-app sits.
-            </h2>
-            <p className="leading-relaxed text-muted-foreground">
-              Two questions decide whether a starter is worth adopting: is the architecture this
-              generation&apos;s, and how much do you have to understand to change it?
-            </p>
-            <p className="leading-relaxed text-muted-foreground">
-              newt-app tracks the current majors: TypeScript 6, Next 16, NestJS 11. Business logic
-              lives in controllers and services, persistence is SQL through{" "}
-              <InlineCode>packages/db</InlineCode>, and there is no codegen step or inference chain
-              between the two.
-            </p>
-          </div>
-        </FeatureSection>
-      </Section>
     </div>
   );
 }
