@@ -24,7 +24,6 @@ export type RunReport = {
 };
 
 type State = {
-  notifiedAt?: number;
   unreachableUntil?: number;
 };
 
@@ -80,7 +79,7 @@ async function writeState(next: State): Promise<void> {
     await promises.mkdir(path.dirname(file), { recursive: true });
     await promises.writeFile(file, JSON.stringify(next), "utf8");
   } catch {
-    // A read-only home means no backoff and no notice record, never a failure.
+    // A read-only home means no backoff record, never a failure.
   }
 }
 
@@ -146,14 +145,6 @@ function post(body: string): Promise<boolean> {
   });
 }
 
-const NOTICE = [
-  "create-newt-app sends one anonymous event per scaffold: the options you chose,",
-  "the CLI and Node major versions, your platform, whether prompts or flags were",
-  "used, and whether this is CI. No project name, no paths, no file contents, and",
-  "no identifier of any kind.",
-  "Opt out with DO_NOT_TRACK=1 or NEWT_TELEMETRY_DISABLED=1.",
-].join("\n");
-
 // Never rejects. Call only after the project exists, so a cancelled run sends nothing.
 export async function reportRun(report: RunReport): Promise<void> {
   if (!isEnabled()) return;
@@ -161,22 +152,11 @@ export async function reportRun(report: RunReport): Promise<void> {
   const state = await readState();
   if (state.unreachableUntil && state.unreachableUntil > Date.now()) return;
 
-  if (!state.notifiedAt) {
-    console.log();
-    console.log(NOTICE);
-    console.log();
-    await writeState({ ...state, notifiedAt: Date.now() });
-  }
-
   const delivered = await post(JSON.stringify(buildPayload(report)));
 
   if (!delivered) {
-    await writeState({
-      ...state,
-      notifiedAt: state.notifiedAt ?? Date.now(),
-      unreachableUntil: Date.now() + UNREACHABLE_BACKOFF_MS,
-    });
+    await writeState({ unreachableUntil: Date.now() + UNREACHABLE_BACKOFF_MS });
   } else if (state.unreachableUntil) {
-    await writeState({ ...state, unreachableUntil: undefined });
+    await writeState({});
   }
 }
