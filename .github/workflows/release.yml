@@ -54,3 +54,6 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Inlined into the published bundle by tsdown. turbo.json lists it under
+          # the build task; without that turbo strips it and the endpoint is empty.
+          NEWT_TELEMETRY_URL: ${{ secrets.NEWT_TELEMETRY_URL }}

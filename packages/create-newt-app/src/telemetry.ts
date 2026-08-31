@@ -140,9 +140,14 @@ function post(body: string): Promise<boolean> {
       // loop open by itself, so unref'ing here makes the process exit before
       // the request completes and nothing is ever delivered. The caller's
       // process.exit is what bounds the worst case instead.
+      // Only a 2xx counts as delivered. If the endpoint ever stops being ours
+      // and something answers 404, treating that as success would cost every
+      // user a round trip on every scaffold forever, with the backoff never
+      // arming.
       req.on("response", (res) => {
         res.resume();
-        res.on("end", () => resolve(true));
+        const status = res.statusCode ?? 0;
+        res.on("end", () => resolve(status >= 200 && status < 300));
       });
       req.on("timeout", () => {
         req.destroy();
