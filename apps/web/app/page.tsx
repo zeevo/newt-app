@@ -292,23 +292,17 @@ export class UserController {
         </FeatureSection>
       </Section>
       <Section>
-        <FeatureSection split="lg">
-          <ScaffolderCompass />
+        <FeatureSection wide="end">
           <div className="flex flex-col justify-center gap-4">
             <h2 className="text-3xl leading-[1.1] font-bold tracking-tight text-balance sm:text-4xl">
-              Where newt-app sits.
+              Where <span className="whitespace-nowrap">newt-app</span> sits.
             </h2>
             <p className="leading-relaxed text-muted-foreground">
-              Two questions decide whether a starter is worth adopting: is the architecture this
-              generation&apos;s, and how much do you have to understand to change it?
-            </p>
-            <p className="leading-relaxed text-muted-foreground">
-              newt-app tracks the current majors: TypeScript 6, Next 16, NestJS 11. Business logic
-              lives in controllers and services, persistence is SQL through{" "}
-              <InlineCode>packages/db</InlineCode>, and there is no codegen step or inference chain
-              between the two.
+              newt-app runs TypeScript 6, Next 16, and NestJS 11. Controllers and services for
+              logic, SQL in <InlineCode>packages/db</InlineCode>, no codegen step.
             </p>
           </div>
+          <ScaffolderCompass />
         </FeatureSection>
       </Section>
     </div>
