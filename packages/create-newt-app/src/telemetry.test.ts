@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { buildPayload, detectCi, isEnabled, isOptedOut, nodeMajor } from "./telemetry";
+import {
+  buildPayload,
+  detectCi,
+  invocationCommand,
+  isEnabled,
+  isOptedOut,
+  nodeMajor,
+} from "./telemetry";
 import type { ModuleSelection } from "./templates";
 
 const selection: ModuleSelection = {
@@ -116,6 +123,7 @@ describe("payload", () => {
       "antiSlop",
       "ci",
       "cliVersion",
+      "command",
       "database",
       "deployment",
       "explicitFlags",
@@ -129,5 +137,46 @@ describe("payload", () => {
       "todoExample",
     ]);
     expect(serialized).not.toContain(process.cwd());
+  });
+
+  // The command is the one field that sees raw argv, so it gets its own check.
+  it("never lets a project name reach the command field", () => {
+    const command = invocationCommand([
+      "/usr/bin/node",
+      "/dist/index.js",
+      "acme-client-portal",
+      "--shadcn",
+    ]);
+    expect(command).not.toContain("acme-client-portal");
+    expect(command).toContain("<name>");
+  });
+});
+
+const argv = (...args: string[]) => ["/usr/bin/node", "/dist/index.js", ...args];
+
+describe("invocation command", () => {
+  it("redacts the project name", () => {
+    expect(invocationCommand(argv("acme-client-portal", "--shadcn"))).toBe(
+      "create-newt-app <name> --shadcn",
+    );
+  });
+
+  it("keeps flag values, which are enums the CLI already validated", () => {
+    expect(invocationCommand(argv("app", "--linter", "oxc", "--testing", "vitest"))).toBe(
+      "create-newt-app <name> --linter oxc --testing vitest",
+    );
+  });
+
+  it("redacts anything it does not recognise", () => {
+    expect(invocationCommand(argv("app", "--frobnicate"))).toBe("create-newt-app <name> <flag>");
+  });
+
+  it("handles a bare invocation", () => {
+    expect(invocationCommand(argv())).toBe("create-newt-app");
+  });
+
+  it("rides along in the payload", () => {
+    const payload = buildPayload({ mode: "flags", explicitFlags: ["--linter"], selection });
+    expect(payload.command).toMatch(/^create-newt-app/);
   });
 });

@@ -83,6 +83,43 @@ async function writeState(next: State): Promise<void> {
   }
 }
 
+const VALUE_FLAGS = new Set(["--testing", "--database", "--linter", "--deployment", "--extras"]);
+
+const BOOL_FLAGS = new Set([
+  "--shadcn",
+  "--nest-di-only",
+  "--include-example",
+  "--no-install",
+  "--no-git",
+  "-ni",
+  "-ng",
+]);
+
+const MAX_COMMAND_LENGTH = 200;
+
+// Rebuilt from argv rather than echoed: the project name is the one token that
+// identifies a user, and an unrecognized flag would put arbitrary text into a
+// column the server groups by.
+export function invocationCommand(argv: readonly string[] = process.argv): string {
+  const args = argv.slice(2);
+  const parts: string[] = [];
+
+  args.forEach((arg, index) => {
+    if (VALUE_FLAGS.has(args[index - 1] ?? "")) return;
+    if (VALUE_FLAGS.has(arg)) {
+      parts.push(arg, args[index + 1] ?? "");
+      return;
+    }
+    if (BOOL_FLAGS.has(arg)) {
+      parts.push(arg);
+      return;
+    }
+    parts.push(arg.startsWith("-") ? "<flag>" : "<name>");
+  });
+
+  return ["create-newt-app", ...parts].join(" ").slice(0, MAX_COMMAND_LENGTH).trim();
+}
+
 export function nodeMajor(version: string = process.version): string {
   const match = /^v?(\d+)/.exec(version);
   return match ? `v${match[1]}` : "other";
@@ -96,6 +133,7 @@ export function buildPayload(report: RunReport) {
     platform: process.platform,
     mode: report.mode,
     ci: detectCi(),
+    command: invocationCommand(),
     // Sorted, so one set of flags is one value and not one per ordering.
     explicitFlags: [...report.explicitFlags].sort().join(","),
     shadcn: selection.shadcn,
