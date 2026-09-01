@@ -159,7 +159,11 @@ function Segmented<T extends string>({
         }}
       >
         {options.map((opt) => (
-          <ToggleGroupItem key={opt} value={opt} className="gap-1.5 font-mono text-xs">
+          <ToggleGroupItem
+            key={opt}
+            value={opt}
+            className="gap-1.5 font-mono text-xs text-muted-foreground aria-pressed:border-ring aria-pressed:text-foreground"
+          >
             {logos?.[opt] && <Logo src={logos[opt]!} className="size-3.5" />}
             {opt}
           </ToggleGroupItem>
@@ -189,7 +193,7 @@ function BoolToggle({
       <Toggle
         variant="outline"
         size="sm"
-        className="min-w-14 font-mono text-xs"
+        className="min-w-14 font-mono text-xs text-muted-foreground aria-pressed:border-ring aria-pressed:text-foreground"
         pressed={pressed}
         onPressedChange={onChange}
         disabled={disabled}
