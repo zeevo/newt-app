@@ -8,6 +8,7 @@ export type Config = {
   nestDiOnly: boolean;
   todoExample: boolean;
   antiSlop: boolean;
+  changesets: boolean;
 };
 
 // Rejected by validateDeploymentCombo in create-newt-app, so the builder must
@@ -34,6 +35,9 @@ export const DI_ONLY_HINT =
 
 export const TODO_EXAMPLE_HINT = "Include an example to-do list feature.";
 
+export const CHANGESETS_HINT =
+  "Adds .changeset with a config, @changesets/cli, and changeset, version-packages and release scripts. Versions and changelogs across the workspace.";
+
 export const ANTI_SLOP_HINT =
   "Vendors dmmulroy/anti-slop into tools/oxlint and turns its 15 rules on as errors: no undocumented type assertions, no unknown returns, no runtime typeof narrowing.";
 
@@ -46,6 +50,7 @@ export function extrasHints(c: Config): string[] {
     deploymentHint(c),
     c.todoExample ? TODO_EXAMPLE_HINT : null,
     c.antiSlop ? ANTI_SLOP_HINT : null,
+    c.changesets ? CHANGESETS_HINT : null,
   ].filter((hint) => hint !== null);
 }
 
@@ -82,7 +87,8 @@ export function buildCommand(c: Config): string {
   if (c.deployment !== "none") flags.push(`--deployment ${c.deployment}`);
   if (c.nestDiOnly) flags.push("--nest-di-only");
   if (c.todoExample) flags.push("--include-example");
-  if (c.antiSlop) flags.push("--extras anti-slop");
+  const extras = [c.antiSlop && "anti-slop", c.changesets && "changesets"].filter(Boolean);
+  if (extras.length) flags.push(`--extras ${extras.join(",")}`);
   // Passing a config flag is what puts the CLI in non-interactive mode. Every
   // other option here matches its default, so without this the CLI would prompt
   // and shadcn would come back on — the opposite of what the panel shows.

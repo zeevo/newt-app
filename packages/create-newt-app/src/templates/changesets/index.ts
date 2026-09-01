@@ -18,6 +18,7 @@ const changesets: Module = {
   scripts: [
     { module: root, name: "changeset", script: "changeset" },
     { module: root, name: "version-packages", script: "changeset version" },
+    { module: root, name: "release", script: "turbo run build && changeset publish" },
   ],
 };
 

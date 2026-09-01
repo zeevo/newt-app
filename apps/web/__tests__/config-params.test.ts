@@ -34,6 +34,7 @@ describe("config params", () => {
       nestDiOnly: true,
       todoExample: true,
       antiSlop: true,
+      changesets: true,
     };
     expect(sanitizeConfig(base).deployment).toBe("none");
     expect(sanitizeConfig({ ...base, deployment: "standalone" }).deployment).toBe("standalone");
@@ -50,6 +51,7 @@ describe("config params", () => {
       nestDiOnly: false,
       todoExample: true,
       antiSlop: true,
+      changesets: true,
     };
     expect(sanitizeConfig(base).antiSlop).toBe(true);
     expect(sanitizeConfig({ ...base, linter: "eslint" }).antiSlop).toBe(false);

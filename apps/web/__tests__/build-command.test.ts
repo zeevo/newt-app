@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   ANTI_SLOP_HINT,
   buildCommand,
+  CHANGESETS_HINT,
   normalizeName,
   DEPLOYMENT_HINTS,
   deploymentOptions,
@@ -20,17 +21,20 @@ const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
         (["jest", "vitest"] as const).flatMap((testing) =>
           (["sqlite", "postgres"] as const).flatMap((database) =>
             (["eslint", "oxc"] as const).flatMap((linter) =>
-              (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
-                name: "my-app",
-                shadcn,
-                testing,
-                database,
-                linter,
-                deployment,
-                nestDiOnly,
-                todoExample,
-                antiSlop,
-              })),
+              (linter === "oxc" ? [true, false] : [false]).flatMap((antiSlop) =>
+                [true, false].map((changesets) => ({
+                  name: "my-app",
+                  shadcn,
+                  testing,
+                  database,
+                  linter,
+                  deployment,
+                  nestDiOnly,
+                  todoExample,
+                  antiSlop,
+                  changesets,
+                })),
+              ),
             ),
           ),
         ),
@@ -71,14 +75,21 @@ describe("buildCommand", () => {
   it("explains every extra that is switched on", () => {
     const c = reachable.find((config) => config.deployment === "spa")!;
 
-    expect(extrasHints({ ...c, todoExample: true, antiSlop: true })).toEqual([
+    expect(extrasHints({ ...c, todoExample: true, antiSlop: true, changesets: true })).toEqual([
       DEPLOYMENT_HINTS.spa,
       TODO_EXAMPLE_HINT,
       ANTI_SLOP_HINT,
+      CHANGESETS_HINT,
     ]);
-    expect(extrasHints({ ...c, deployment: "none", todoExample: false, antiSlop: false })).toEqual(
-      [],
-    );
+    expect(
+      extrasHints({
+        ...c,
+        deployment: "none",
+        todoExample: false,
+        antiSlop: false,
+        changesets: false,
+      }),
+    ).toEqual([]);
   });
 
   it("emits a config flag whenever shadcn is off, so the CLI stays non-interactive", () => {
@@ -104,6 +115,7 @@ describe("buildCommand", () => {
         nestDiOnly: false,
         todoExample: true,
         antiSlop: false,
+        changesets: false,
       }),
     ).toBe("npm create newt-app@latest my-app -- --shadcn --include-example");
   });
