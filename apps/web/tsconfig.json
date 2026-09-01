@@ -1,7 +1,6 @@
 {
   "extends": "@newt-app/typescript-config/nextjs.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
       "@newt-app/ui/*": ["../../packages/ui/src/*"]
