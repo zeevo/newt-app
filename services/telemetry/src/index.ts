@@ -70,17 +70,6 @@ function normalizeNodeMajor(value: unknown): string {
   return major >= 18 && major <= 40 ? `v${major}` : "other";
 }
 
-const MAX_COMMAND_LENGTH = 200;
-// Anything outside the CLI's own vocabulary is dropped, since this column is
-// grouped by.
-const COMMAND_PATTERN = /^[a-z0-9 @/.,<>_-]*$/i;
-
-function normalizeCommand(value: unknown): string | null {
-  if (value === undefined || value === null) return null;
-  const text = String(value).slice(0, MAX_COMMAND_LENGTH);
-  return COMMAND_PATTERN.test(text) ? text : null;
-}
-
 function normalizeExplicitFlags(value: unknown): string | null {
   if (value === "") return "";
   if (!KNOWN_FLAGS.includes(String(value).split(",")[0] ?? "")) return null;
@@ -107,7 +96,6 @@ type Row = {
   platform: string;
   mode: string;
   ci: string;
-  command: string;
   explicit_flags: string;
   shadcn: number;
   testing: string;
@@ -131,7 +119,6 @@ function parse(body: unknown, now: number): Row | null {
     platform: enumValue("platform", b.platform),
     mode: enumValue("mode", b.mode),
     ci: enumValue("ci", b.ci),
-    command: normalizeCommand(b.command),
     explicit_flags: normalizeExplicitFlags(b.explicitFlags),
     shadcn: bool(b.shadcn),
     testing: enumValue("testing", b.testing),
@@ -147,12 +134,10 @@ function parse(body: unknown, now: number): Row | null {
   return Object.values(row).every((value) => value !== null) ? (row as Row) : null;
 }
 
-// Bound positionally from Object.values(row), so this list must stay in the
-// same order as the row literal above.
 const INSERT = `INSERT INTO runs (
-  ts, cli_version, node_major, platform, mode, ci, command, explicit_flags,
+  ts, cli_version, node_major, platform, mode, ci, explicit_flags,
   shadcn, testing, database, linter, deployment, nest_di_only, todo_example, anti_slop
-) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
