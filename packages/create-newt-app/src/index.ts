@@ -21,7 +21,7 @@ const TESTING_CHOICES = ["jest", "vitest"] as const;
 const DATABASE_CHOICES = ["sqlite", "postgres"] as const;
 const LINTER_CHOICES = ["eslint", "oxc"] as const;
 const DEPLOYMENT_CHOICES = ["none", "standalone", "spa"] as const;
-const EXTRAS_CHOICES = ["anti-slop"] as const satisfies readonly Extra[];
+const EXTRAS_CHOICES = ["anti-slop", "changesets"] as const satisfies readonly Extra[];
 
 type Testing = (typeof TESTING_CHOICES)[number];
 type Database = (typeof DATABASE_CHOICES)[number];
@@ -108,19 +108,26 @@ export async function doInit(options: Options) {
           initialValue: "eslint",
         }),
       extras: ({ results }) =>
-        results.linter === "oxc"
-          ? p.multiselect<Extra>({
-              message: "Extras?",
-              options: [
-                {
-                  value: "anti-slop",
-                  label: "anti-slop",
-                  hint: "oxlint rules that reject low-evidence TypeScript",
-                },
-              ],
-              required: false,
-            })
-          : undefined,
+        p.multiselect<Extra>({
+          message: "Extras?",
+          options: [
+            ...(results.linter === "oxc"
+              ? [
+                  {
+                    value: "anti-slop" as const,
+                    label: "anti-slop",
+                    hint: "oxlint rules that reject low-evidence TypeScript",
+                  },
+                ]
+              : []),
+            {
+              value: "changesets",
+              label: "changesets",
+              hint: "versioning and changelogs across the workspace",
+            },
+          ],
+          required: false,
+        }),
       nestDiOnly: () =>
         p.confirm({
           message: "Use NestJS for dependency injection only?",
@@ -317,7 +324,7 @@ program
   .option("--deployment <strategy>", "Deployment: none, standalone, or spa", "none")
   .option("--nest-di-only", "Use NestJS for dependency injection only", false)
   .option("--include-example", "Include the todo example", false)
-  .option("--extras <list>", "Extras, comma-separated: anti-slop", "")
+  .option("--extras <list>", "Extras, comma-separated: anti-slop, changesets", "")
   .action(
     async (
       name: string,

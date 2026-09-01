@@ -4,6 +4,7 @@
 // with two versions across the rendered output.
 export const versions = {
   "@base-ui/react": "^1.6.0",
+  "@changesets/cli": "^3.0.1",
   "@eslint/js": "^9.39.1",
   "@nestjs/cli": "^11.0.0",
   "@nestjs/common": "^11.0.1",

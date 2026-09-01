@@ -30,7 +30,7 @@ export type ModuleSelection = Selection & {
   extras: readonly Extra[];
 };
 
-export type Extra = "anti-slop";
+export type Extra = "anti-slop" | "changesets";
 
 // `when` makes precedence explicit: exactly one template may claim a filename
 // for a given selection, so no template can silently overwrite another.

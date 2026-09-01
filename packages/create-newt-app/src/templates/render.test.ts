@@ -10,7 +10,12 @@ const TESTING = ["jest", "vitest"] as const;
 const DATABASES = ["sqlite", "postgres"] as const;
 const LINTERS = ["eslint", "oxc"] as const;
 const BOOLS = [true, false];
-const EXTRAS = [[], ["anti-slop"]] as const satisfies readonly (readonly Extra[])[];
+const EXTRAS = [
+  [],
+  ["anti-slop"],
+  ["changesets"],
+  ["anti-slop", "changesets"],
+] as const satisfies readonly (readonly Extra[])[];
 const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies"];
 
 // Every selection the CLI will accept. The rejected pairs are filtered with the
@@ -46,6 +51,11 @@ const label = (selection: ModuleSelection) =>
   Object.entries(selection)
     .map(([key, value]) => `${key}=${value}`)
     .join(" ");
+
+// Root modules use an empty `module`, which tasks.ts path-joins onto the
+// destination. Joining with a slash here instead produced "/package.json",
+// which matches nothing, so root deps and scripts were silently skipped.
+const manifestOf = (module: string) => (module ? `${module}/package.json` : "package.json");
 
 // Mirrors tasks.ts: render every applicable template, then apply the deps each
 // module injects into an already-rendered package.json.
@@ -85,7 +95,7 @@ function renderCombo(selection: ModuleSelection) {
   modules
     .flatMap((mod) => mod.packages ?? [])
     .forEach((pkg) => {
-      const target = `${pkg.module}/package.json`;
+      const target = manifestOf(pkg.module);
       const contents = files.get(target);
       if (!contents) return;
       const json = JSON.parse(contents);
@@ -101,7 +111,7 @@ function renderCombo(selection: ModuleSelection) {
   modules
     .flatMap((mod) => mod.scripts ?? [])
     .forEach((script) => {
-      const target = `${script.module}/package.json`;
+      const target = manifestOf(script.module);
       if (!files.has(target)) return;
       scripts.set(target, {
         ...scripts.get(target),
@@ -180,6 +190,48 @@ describe("linter config files follow the selected linter", () => {
       );
     },
   );
+});
+
+describe("changesets ships only with the extra", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const { files, scripts } = renderCombo(selection);
+      const selected = selection.extras.includes("changesets");
+      const rootPkg = "package.json";
+
+      expect(files.has(".changeset/config.json")).toBe(selected);
+      expect(files.has(".changeset/README.md")).toBe(selected);
+
+      const declared: Manifest = JSON.parse(files.get(rootPkg) ?? "{}");
+      expect("@changesets/cli" in (declared.devDependencies ?? {})).toBe(selected);
+
+      const rootScripts = scripts.get(rootPkg) ?? {};
+      expect("changeset" in rootScripts).toBe(selected);
+      expect("version-packages" in rootScripts).toBe(selected);
+    },
+  );
+
+  // A config the CLI cannot read fails on first use rather than at scaffold time.
+  it("emits a config changesets can parse", () => {
+    const { files } = renderCombo({
+      deployment: "none",
+      nestDiOnly: false,
+      todoExample: true,
+      shadcn: true,
+      database: "sqlite",
+      linter: "eslint",
+      testing: "jest",
+      extras: ["changesets"],
+    });
+    const config = JSON.parse(files.get(".changeset/config.json") ?? "{}");
+    expect(config.changelog).toBe("@changesets/cli/changelog");
+    expect(config.baseBranch).toBe("main");
+    expect(Array.isArray(config.ignore)).toBe(true);
+    // Every scaffolded package is private, and changesets skips those silently
+    // without this: no bump, no changelog, and the changeset is left unconsumed.
+    expect(config.privatePackages).toEqual({ version: true, tag: false });
+  });
 });
 
 describe("anti-slop ships only with the extra", () => {

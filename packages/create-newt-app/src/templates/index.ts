@@ -9,6 +9,7 @@ import shadcnUi from "./shadcn-ui/index";
 import eslintConfig from "./eslint-config/index";
 import oxc from "./oxc/index";
 import antiSlop from "./anti-slop/index";
+import changesets from "./changesets/index";
 import typescriptConfig from "./typescript-config/index";
 import testingJest from "./testing-jest/index";
 import testingVitest from "./testing-vitest/index";
@@ -48,6 +49,7 @@ export const templates = {
   eslintConfig,
   oxc,
   antiSlop,
+  changesets,
   typescriptConfig,
   testingJest,
   testingVitest,
@@ -114,6 +116,7 @@ export function selectModules(selection: ModuleSelection): Module[] {
     shadcn ? shadcnUi : ui,
     linter === "oxc" ? oxc : eslintConfig,
     ...(extras.includes("anti-slop") ? [antiSlop] : []),
+    ...(extras.includes("changesets") ? [changesets] : []),
     typescriptConfig,
     testingModule,
     ...(deploymentModule ? [deploymentModule] : []),
