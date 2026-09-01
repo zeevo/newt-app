@@ -35,6 +35,16 @@ export function SiteHeader() {
             >
               <Icons.gitHub />
             </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 shadow-none"
+              nativeButton={false}
+              render={<Link href={siteConfig.links.npm} target="_blank" rel="noreferrer" />}
+            >
+              <Icons.npm />
+              <span className="sr-only">npm</span>
+            </Button>
             <ModeToggle />
           </div>
         </div>
