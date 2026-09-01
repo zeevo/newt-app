@@ -1,7 +1,4 @@
-import { homedir } from "node:os";
-import { promises } from "node:fs";
 import https from "node:https";
-import path from "node:path";
 import pkg from "../package.json" with { type: "json" };
 import type { ModuleSelection } from "./templates";
 
@@ -10,10 +7,10 @@ import type { ModuleSelection } from "./templates";
 // turbo.json must list this under the build task or turbo strips it.
 const ENDPOINT = process.env.NEWT_TELEMETRY_URL ?? "";
 
-const SEND_TIMEOUT_MS = 2000;
-
-// So an airgapped machine pays the timeout once rather than on every scaffold.
-const UNREACHABLE_BACKOFF_MS = 30 * 24 * 60 * 60 * 1000;
+// A real round trip to the edge measures ~110ms, and DNS or refused failures
+// return in about that too. Only a firewall that drops packets waits out the
+// full budget, and it does so on every run, so this is deliberately tight.
+const SEND_TIMEOUT_MS = 1000;
 
 export type TelemetryMode = "interactive" | "flags";
 
@@ -21,10 +18,6 @@ export type RunReport = {
   mode: TelemetryMode;
   explicitFlags: readonly string[];
   selection: ModuleSelection;
-};
-
-type State = {
-  unreachableUntil?: number;
 };
 
 const CI_PROVIDERS = [
@@ -59,30 +52,6 @@ export function isEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
   return Boolean(ENDPOINT) && !isOptedOut(env);
 }
 
-function statePath(): string {
-  const base = process.env.XDG_STATE_HOME ?? path.join(homedir(), ".local", "state");
-  return path.join(base, "create-newt-app", "telemetry.json");
-}
-
-async function readState(): Promise<State> {
-  try {
-    const state: State = JSON.parse(await promises.readFile(statePath(), "utf8"));
-    return state;
-  } catch {
-    return {};
-  }
-}
-
-async function writeState(next: State): Promise<void> {
-  try {
-    const file = statePath();
-    await promises.mkdir(path.dirname(file), { recursive: true });
-    await promises.writeFile(file, JSON.stringify(next), "utf8");
-  } catch {
-    // A read-only home means no backoff record, never a failure.
-  }
-}
-
 export function nodeMajor(version: string = process.version): string {
   const match = /^v?(\d+)/.exec(version);
   return match ? `v${match[1]}` : "other";
@@ -113,7 +82,7 @@ export function buildPayload(report: RunReport) {
 // without pulling in undici, and its 10s default outlives an AbortSignal. On a
 // firewall that DROPs packets that leaves the CLI sitting there for nine
 // seconds after it has already printed "Next steps".
-function post(body: string): Promise<boolean> {
+function post(body: string): Promise<void> {
   return new Promise((resolve) => {
     try {
       const req = https.request(ENDPOINT, {
@@ -127,20 +96,18 @@ function post(body: string): Promise<boolean> {
 
       // Never unref this socket: an awaited promise does not hold the event
       // loop open, so the process would exit before the request completes.
-      // Only 2xx counts, or a permanent 404 would never arm the backoff.
       req.on("response", (res) => {
         res.resume();
-        const status = res.statusCode ?? 0;
-        res.on("end", () => resolve(status >= 200 && status < 300));
+        res.on("end", () => resolve());
       });
       req.on("timeout", () => {
         req.destroy();
-        resolve(false);
+        resolve();
       });
-      req.on("error", () => resolve(false));
+      req.on("error", () => resolve());
       req.end(body);
     } catch {
-      resolve(false);
+      resolve();
     }
   });
 }
@@ -148,15 +115,5 @@ function post(body: string): Promise<boolean> {
 // Never rejects. Call only after the project exists, so a cancelled run sends nothing.
 export async function reportRun(report: RunReport): Promise<void> {
   if (!isEnabled()) return;
-
-  const state = await readState();
-  if (state.unreachableUntil && state.unreachableUntil > Date.now()) return;
-
-  const delivered = await post(JSON.stringify(buildPayload(report)));
-
-  if (!delivered) {
-    await writeState({ unreachableUntil: Date.now() + UNREACHABLE_BACKOFF_MS });
-  } else if (state.unreachableUntil) {
-    await writeState({});
-  }
+  await post(JSON.stringify(buildPayload(report)));
 }
