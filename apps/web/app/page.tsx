@@ -33,9 +33,8 @@ export default function Home() {
             <span aria-hidden>→</span>
           </a>
           {/* px-4 keeps the longest wrapped line clear of the inset-5 frame */}
-          <h1 className="max-w-4xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text px-4 text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
-            A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter
-            for{" "}
+          <h1 className="max-w-4xl px-4 text-center text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
+            The TypeScript project scaffolder for {" "}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
               <span
                 title="Next.js"
