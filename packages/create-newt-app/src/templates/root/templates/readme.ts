@@ -22,8 +22,11 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Packages
 
 - **\`@<%= projectName %>/auth\`**: better-auth config
+- **\`@<%= projectName %>/db\`**: Kysely client and migrations
 - **\`@<%= projectName %>/ui\`**: shared React components
+<% if (linter === 'eslint') { -%>
 - **\`@<%= projectName %>/eslint-config\`**: shared ESLint config
+<% } -%>
 - **\`@<%= projectName %>/typescript-config\`**: shared tsconfig
 `,
 };
