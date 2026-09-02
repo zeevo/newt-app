@@ -26,14 +26,12 @@ export default function Home() {
             href="https://www.npmjs.com/package/create-newt-app"
             target="_blank"
             rel="noreferrer"
-            className="pointer-events-auto flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
+            className="pointer-events-auto font-mono text-sm text-muted-foreground transition-colors hover:text-foreground hover:underline"
           >
-            <span className="size-2 rounded-full bg-green-500" />
-            Latest update · v{cliVersion} released
-            <span aria-hidden>→</span>
+            create-newt-app v{cliVersion} on npm
           </a>
           {/* px-4 keeps the longest wrapped line clear of the inset-5 frame */}
-          <h1 className="max-w-4xl bg-linear-to-r from-foreground to-muted-foreground bg-clip-text px-4 text-center text-4xl font-semibold tracking-tight text-balance text-transparent sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
+          <h1 className="max-w-4xl px-4 text-center text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
             A production-grade, <span className="whitespace-nowrap">monorepo-first</span> starter
             for{" "}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
@@ -99,7 +97,7 @@ export default function Home() {
               </span>
             </span>
           </h1>
-          <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
+          <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-none border bg-code pr-2 pl-4 text-sm whitespace-nowrap text-foreground">
             <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
               $
             </span>
