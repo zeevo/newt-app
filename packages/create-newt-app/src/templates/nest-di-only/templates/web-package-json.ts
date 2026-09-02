@@ -9,7 +9,8 @@ export default {
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
-    "db:migrate": "better-auth migrate"
+    "db:migrate": "better-auth migrate",
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@<%= projectName %>/api": "workspace:*",
