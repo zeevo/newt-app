@@ -7,5 +7,8 @@ dist
 *.log
 .env
 .env.*
-!.env.example`,
+!.env.example
+dev.db*
+.git
+coverage`,
 };
