@@ -1,22 +1,27 @@
 "use client";
 
 import * as React from "react";
-import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Button } from "@newt-app/ui/components/button";
+import { cn } from "@newt-app/ui/lib/utils";
 
-export function ModeToggle() {
+export function ModeToggle({ className }: { className?: string }) {
   const { setTheme, resolvedTheme } = useTheme();
 
   const toggleTheme = React.useCallback(() => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   }, [resolvedTheme, setTheme]);
 
+  // the label names the scheme you switch to. Both are rendered and CSS picks
+  // one off the html class, so the server markup never depends on the theme
   return (
-    <Button variant="ghost" size="icon" className="group/toggle size-8" onClick={toggleTheme}>
-      <SunIcon className="hidden [html.dark_&]:block" />
-      <MoonIcon className="hidden [html.light_&]:block" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+    <button
+      type="button"
+      aria-label="Toggle theme"
+      onClick={toggleTheme}
+      className={cn("cursor-pointer", className)}
+    >
+      <span className="hidden [html.dark_&]:inline">light</span>
+      <span className="hidden [html.light_&]:inline">dark</span>
+    </button>
   );
 }

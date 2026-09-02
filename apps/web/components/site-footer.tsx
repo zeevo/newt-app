@@ -2,6 +2,8 @@ import { siteConfig } from "@/lib/config";
 import { Icons } from "./icons";
 import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
 
+const footerLink = "transition-colors hover:text-foreground";
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-border/60 bg-background">
@@ -14,37 +16,30 @@ export function SiteFooter() {
               href={siteConfig.links.license}
               target="_blank"
               rel="noreferrer"
-              className="transition-colors hover:text-foreground"
+              className={footerLink}
             >
               MIT
+            </a>{" "}
+            ·{" "}
+            <a href={siteConfig.links.npm} target="_blank" rel="noreferrer" className={footerLink}>
+              v{cliVersion}
             </a>
           </span>
         </div>
         <nav className="flex items-center gap-5 text-sm text-muted-foreground">
-          <a
-            href={siteConfig.links.github}
-            target="_blank"
-            rel="noreferrer"
-            className="transition-colors hover:text-foreground"
-          >
-            GitHub
+          <a href={siteConfig.links.github} target="_blank" rel="noreferrer" className={footerLink}>
+            github
           </a>
-          <a
-            href={siteConfig.links.npm}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-2 font-mono text-xs transition-colors hover:text-foreground"
-          >
-            <span className="size-1.5 rounded-full bg-green-500" />v{cliVersion}
+          <a href={siteConfig.links.npm} target="_blank" rel="noreferrer" className={footerLink}>
+            npm
           </a>
           <a
             href={siteConfig.links.twitter}
             target="_blank"
             rel="noreferrer"
-            className="transition-colors hover:text-foreground"
+            className={footerLink}
           >
-            <Icons.twitter className="size-3.5 fill-current" />
-            <span className="sr-only">Twitter</span>
+            twitter
           </a>
         </nav>
       </div>
