@@ -1,8 +1,6 @@
 import type { Module } from "../types";
 import packageJson from "./templates/package-json";
 import button from "./templates/button";
-import card from "./templates/card";
-import code from "./templates/code";
 import link from "./templates/link";
 import logo from "./templates/logo";
 import utils from "./templates/utils";
@@ -14,8 +12,6 @@ const ui: Module = {
   templates: [
     packageJson,
     button,
-    card,
-    code,
     link,
     logo,
     utils,

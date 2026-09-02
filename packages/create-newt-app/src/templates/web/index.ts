@@ -52,31 +52,6 @@ const web: Module = {
       src: "web/static/public/web-app-manifest-512x512.png",
       filename: "apps/web/public/web-app-manifest-512x512.png",
     },
-    {
-      src: "web/static/public/file-text.svg",
-      filename: "apps/web/public/file-text.svg",
-    },
-    {
-      src: "web/static/public/globe.svg",
-      filename: "apps/web/public/globe.svg",
-    },
-    { src: "web/static/public/next.svg", filename: "apps/web/public/next.svg" },
-    {
-      src: "web/static/public/turborepo-dark.svg",
-      filename: "apps/web/public/turborepo-dark.svg",
-    },
-    {
-      src: "web/static/public/turborepo-light.svg",
-      filename: "apps/web/public/turborepo-light.svg",
-    },
-    {
-      src: "web/static/public/vercel.svg",
-      filename: "apps/web/public/vercel.svg",
-    },
-    {
-      src: "web/static/public/window.svg",
-      filename: "apps/web/public/window.svg",
-    },
   ],
 };
 
