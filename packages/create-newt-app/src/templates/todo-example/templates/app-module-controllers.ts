@@ -4,9 +4,8 @@ export default {
   filename: "apps/api/src/app.module.ts",
   template: `<% if (deployment === 'spa') { %>import { join } from 'path';
 <% } %>import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 <% if (deployment === 'spa') { %>import { ServeStaticModule } from '@nestjs/serve-static';
-<% } %>import { AuthGuard, AuthModule } from '@thallesp/nestjs-better-auth';
+<% } %>import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from '@<%= projectName %>/auth';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -25,7 +24,7 @@ import { TodosModule } from './todos/todos.module';
 <% } else { %>  imports: [AuthModule.forRoot({ auth }), TodosModule],
 <% } -%>
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: AuthGuard }],
+  providers: [AppService],
 })
 export class AppModule {}`,
 };
