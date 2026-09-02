@@ -4,8 +4,8 @@ export default {
 import { resolve } from 'path';
 
 // Load root .env first, then local .env (local takes precedence)
-dotenv.config({ path: resolve(process.cwd(), '../../.env') });
-dotenv.config({ path: resolve(process.cwd(), '.env') });
+dotenv.config({ path: resolve(process.cwd(), '../../.env'), quiet: true });
+dotenv.config({ path: resolve(process.cwd(), '.env'), quiet: true });
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
