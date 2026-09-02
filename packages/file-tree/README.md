@@ -24,7 +24,9 @@ import { FileTree } from "@newt-app/file-tree";
 Tailwind v4 and the shadcn/ui design tokens. The component ships utility classes
 rather than its own stylesheet, so it inherits your theme and follows your dark
 mode, but it renders unstyled without them. It reads `--color-border`,
-`--color-foreground`, `--color-muted-foreground`, and `--color-accent`.
+`--color-foreground`, `--color-muted-foreground`, and `--color-accent`. The folder
+glyph and the typed file glyphs from `fileIcon` also use the default sky, blue and
+amber palette with `dark:` variants.
 
 Tailwind only generates classes it can see, and it does not scan `node_modules`
 by default, so point it at the package:

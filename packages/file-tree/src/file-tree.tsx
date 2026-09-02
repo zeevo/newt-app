@@ -29,8 +29,21 @@ export interface FileTreeFileProps extends Omit<EntryBase, "children"> {
   children: React.ReactNode;
 }
 
+// colour on the glyph only, by kind, the way an editor explorer does it. Names
+// and annotations stay uncoloured so the tree reads as structure first.
+const FOLDER_COLOR = "text-sky-600 dark:text-sky-400";
+const TS_COLOR = "text-blue-600 dark:text-blue-400";
+const JS_COLOR = "text-amber-600 dark:text-amber-400";
+
 const FolderGlyph = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    aria-hidden
+    className={FOLDER_COLOR}
+  >
     <path
       d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"
       strokeLinecap="round"
@@ -66,21 +79,21 @@ const S_CURVE =
   "M20.9 9.9c0-1.9-1.4-3-3.1-3s-3.2 1.1-3.2 2.9 1.4 2.4 3.1 2.9 3.2 1.2 3.2 3.1-1.5 3-3.2 3-3.2-1.1-3.2-3";
 
 const TypeScriptGlyph = (
-  <svg viewBox="0 0 24 24" aria-hidden>
+  <svg viewBox="0 0 24 24" aria-hidden className={TS_COLOR}>
     <Stroke d="M3.1 6.9h7.8M7 6.9v10.9" />
     <Stroke d={S_CURVE} />
   </svg>
 );
 
 const JavaScriptGlyph = (
-  <svg viewBox="0 0 24 24" aria-hidden>
+  <svg viewBox="0 0 24 24" aria-hidden className={JS_COLOR}>
     <Stroke d="M10 6.9v8a3 3 0 0 1-5.9.9" />
     <Stroke d={S_CURVE} />
   </svg>
 );
 
 const ReactGlyph = (
-  <svg viewBox="0 0 24 24" aria-hidden>
+  <svg viewBox="0 0 24 24" aria-hidden className={TS_COLOR}>
     <g fill="none" stroke="currentColor" strokeWidth="1.7">
       <ellipse cx="12" cy="12" rx="10" ry="3.8" />
       <ellipse cx="12" cy="12" rx="10" ry="3.8" transform="rotate(60 12 12)" />
@@ -91,7 +104,14 @@ const ReactGlyph = (
 );
 
 const JsonGlyph = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    aria-hidden
+    className={JS_COLOR}
+  >
     <path
       d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"
       strokeLinecap="round"
