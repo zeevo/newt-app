@@ -25,6 +25,7 @@ export default {
       "dependsOn": ["^build"]
     },
     "dev": {
+      "dependsOn": ["^migrate"],
       "env": ["DATABASE_URL"],
       "cache": false,
       "persistent": true
