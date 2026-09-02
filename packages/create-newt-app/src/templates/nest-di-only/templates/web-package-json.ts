@@ -8,7 +8,8 @@ export default {
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@<%= projectName %>/api": "workspace:*",
