@@ -8,8 +8,7 @@ export default {
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
-    "start": "next start",
-    "db:migrate": "better-auth migrate"
+    "start": "next start"
   },
   "dependencies": {
     "@<%= projectName %>/api": "workspace:*",
