@@ -108,14 +108,12 @@ export default function Home() {
           </div>
           {/* the column is pointer-events-none so the chips stay clickable
               through it; the builder has to opt back in */}
-          <div className="pointer-events-auto mt-16 w-full rounded-lg border bg-background p-4 shadow-lg">
-            <div className="p-4">
-              {/* nuqs reads useSearchParams, which needs a boundary on a
-                  statically rendered page */}
-              <Suspense>
-                <InteractiveFileTree />
-              </Suspense>
-            </div>
+          <div className="pointer-events-auto mt-16 w-full">
+            {/* nuqs reads useSearchParams, which needs a boundary on a
+                statically rendered page */}
+            <Suspense>
+              <InteractiveFileTree />
+            </Suspense>
           </div>
         </div>
       </section>
