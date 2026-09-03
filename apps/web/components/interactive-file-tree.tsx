@@ -101,7 +101,7 @@ function Row({
   // the controls are nowrap and won't shrink, so on a narrow screen they drop
   // to their own line rather than pushing past the panel
   return (
-    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-2">
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
       <span className="flex items-center gap-2 font-mono text-sm text-muted-foreground">
         {logo && <Logo src={logo} />}
         {label}
@@ -225,15 +225,15 @@ export function InteractiveFileTree({
 
   return (
     <TooltipProvider>
-      <div className={cn("flex flex-col rounded-none border bg-background", className)}>
+      <div className={cn("flex flex-col gap-3", className)}>
         <div
           className={cn(
-            "flex flex-col lg:flex-row",
-            fullscreen ? "lg:min-h-0 lg:flex-1" : "lg:items-stretch",
+            "flex flex-col gap-3 lg:flex-row",
+            fullscreen ? "lg:min-h-0 lg:flex-1" : "lg:items-start",
           )}
         >
-          <div className="flex flex-col lg:w-[42%] lg:shrink-0">
-            <div className="flex flex-1 flex-col divide-y">
+          <div className="flex flex-col gap-2 lg:w-[42%] lg:shrink-0">
+            <div className="flex flex-1 flex-col gap-2.5 rounded-lg border p-4">
               <Row label="name">
                 <Input
                   value={c.name}
@@ -363,28 +363,28 @@ export function InteractiveFileTree({
                 <p
                   key={text}
                   aria-live="polite"
-                  className="px-4 py-2 text-xs leading-relaxed text-muted-foreground"
+                  className="text-xs leading-relaxed text-muted-foreground"
                 >
                   {text}
                 </p>
               ))}
-              {!fullscreen && (
-                <div className="mt-auto flex justify-end px-2 py-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="font-mono text-xs text-muted-foreground"
-                    nativeButton={false}
-                    render={<Link href={builderHref("/builder", c)} role="link" />}
-                  >
-                    builder
-                  </Button>
-                </div>
-              )}
             </div>
+            {!fullscreen && (
+              <div className="flex justify-end">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="font-mono text-xs text-muted-foreground"
+                  nativeButton={false}
+                  render={<Link href={builderHref("/builder", c)} role="link" />}
+                >
+                  builder
+                </Button>
+              </div>
+            )}
           </div>
 
-          <div className="min-h-[684px] flex-1 border-t bg-code p-4 lg:border-t-0 lg:border-l">
+          <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-4">
             <FileTree
               name={c.name.trim() || DEFAULT_NAME}
               className="my-0 bg-transparent p-0 dark:bg-transparent"
@@ -394,10 +394,10 @@ export function InteractiveFileTree({
           </div>
         </div>
 
-        <div className="flex items-stretch border-t bg-code">
+        <div className="flex items-stretch gap-2">
           {/* min-w-0 lets the code scroll inside its own block instead of
               growing the row and squeezing the button */}
-          <div className="min-w-0 flex-1 px-4 py-2.5">
+          <div className="min-w-0 flex-1 rounded-lg border bg-code px-4 py-2.5">
             <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
               <span className="text-muted-foreground select-none">$ </span>
               {command}
