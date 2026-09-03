@@ -164,6 +164,7 @@ export async function doInit(options: Options) {
     // directory that the next run then refuses to overwrite.
     const preflight = [
       validateNodeVersion(process.version, pkg.engines.node),
+      ...(options.name ? [validateProjectName(options.name)] : []),
       await checkRequiredTools({ install: options.install, git: options.git }, hasCommand),
     ].find((result) => !result.valid);
 
