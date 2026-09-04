@@ -25,7 +25,7 @@ export default function Home() {
     <main className="max-w-lg mx-auto min-h-full px-4 py-8 space-y-4">
       <div className="pb-4 border-b flex items-start justify-between">
         <div>
-          <p className="font-mono text-sm text-muted-foreground">apps/web/page.tsx</p>
+          <p className="font-mono text-sm text-muted-foreground">apps/web/app/page.tsx</p>
           <p className="text-sm text-muted-foreground">Delete me to get started!</p>
         </div>
         <ModeToggle />
@@ -48,7 +48,7 @@ export default function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="font-mono text-sm text-muted-foreground">apps/web/layout.tsx</p>
+          <p className="font-mono text-sm text-muted-foreground">apps/web/app/layout.tsx</p>
           <p className="text-sm text-muted-foreground">Next.js rendering</p>
         </CardContent>
       </Card>
