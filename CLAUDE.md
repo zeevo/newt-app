@@ -47,6 +47,27 @@ chmod -R 755 /tmp/test-app && rm -rf /tmp/test-app
 
 (`chmod` first — NestJS build can create root-owned files that block `rm -rf`.)
 
+## Updating scaffold snapshots
+
+`packages/create-newt-app/snapshots/` holds the full output of five scaffolded apps, one
+directory per CLI combo. Any template edit changes them, so regenerate and review the diff
+as part of the change:
+
+```bash
+pnpm build --filter=create-newt-app        # snapshots come from dist, not src
+pnpm --filter=create-newt-app test -u
+```
+
+The test refuses to run against a `dist` older than `src`, so the rebuild is not optional.
+Snapshots keep the extension the scaffolder emitted, which means vitest, oxfmt and oxlint
+are all configured to skip that directory (`--disable-nested-config` on the root `lint` and
+`format` scripts exists because the `full` combo emits its own `.oxlintrc.json` and
+`.oxfmtrc.json`).
+
+Adding a combo needs one extra step: the scaffolded `.gitignore` ignores `.env`, and a
+nested gitignore outranks the root one, so the new combo's `.env` snapshot needs
+`git add -f packages/create-newt-app/snapshots/<combo>/.env` the first time.
+
 ## Running a newt app
 
 No database setup needed for smoke testing. Just:

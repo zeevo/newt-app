@@ -6,6 +6,7 @@
   },
   "ignorePatterns": [
     "packages/create-newt-app/src/templates/anti-slop/static/",
+    "packages/create-newt-app/snapshots/",
     "tools/oxlint/anti-slop/"
   ],
   "jsPlugins": [
