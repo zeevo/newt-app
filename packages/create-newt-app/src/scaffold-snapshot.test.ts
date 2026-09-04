@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
-import { mkdir, mkdtemp, readdir, readFile, rm, stat } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,7 +16,6 @@ import { templates } from "./templates";
 const run = promisify(execFile);
 
 const CLI = fileURLToPath(new URL("../dist/index.js", import.meta.url));
-const SRC = fileURLToPath(new URL("./", import.meta.url));
 // Snapshots keep the extension the scaffolder emitted, so they read as the
 // files they are. That makes them ordinary source files to anything walking the
 // repo, so vitest, oxfmt, oxlint and git are all told to skip this directory.
@@ -89,27 +88,16 @@ async function filesIn(dir: string): Promise<string[]> {
     .sort();
 }
 
-// Snapshots taken from a stale dist would be wrong and then committed. Turbo
-// builds first for `pnpm test`, but a bare `vitest` run bypasses it.
-async function distIsStale() {
-  const built = (await stat(CLI)).mtimeMs;
-  const entries = await readdir(SRC, { recursive: true, withFileTypes: true });
-  const sources = entries.filter((entry) => entry.isFile() && !entry.name.endsWith(".test.ts"));
-  const times = await Promise.all(
-    sources.map(async (entry) => (await stat(path.join(entry.parentPath, entry.name))).mtimeMs),
-  );
-  return times.some((time) => time > built);
-}
-
 const scaffolded = new Map<string, { dir: string; files: string[] }>();
 let root: string;
 
 beforeAll(async () => {
+  // turbo.json makes this package's test depend on its own build, so `pnpm test`
+  // and `turbo run test` are current. A bare `vitest` run is not, and there is no
+  // cheap way to tell: mtimes track git operations rather than content, and
+  // rebuilding here would race apps/web's scaffold-tree test over the same dist.
   if (!existsSync(CLI)) {
     throw new Error(`${CLI} is missing. Run \`pnpm build --filter=create-newt-app\` first.`);
-  }
-  if (await distIsStale()) {
-    throw new Error(`${CLI} is older than src. Run \`pnpm build --filter=create-newt-app\` first.`);
   }
 
   root = await mkdtemp(path.join(tmpdir(), "scaffold-snapshot-"));

@@ -58,7 +58,10 @@ pnpm build --filter=create-newt-app        # snapshots come from dist, not src
 pnpm --filter=create-newt-app test -u
 ```
 
-The test refuses to run against a `dist` older than `src`, so the rebuild is not optional.
+The rebuild is not optional and nothing checks it for you: the test drives `dist`, so a
+stale one silently writes wrong snapshots. `pnpm test` and `pnpm exec turbo run test
+--filter=create-newt-app` build first; a bare `vitest` run does not.
+
 Snapshots keep the extension the scaffolder emitted, which means vitest, oxfmt and oxlint
 are all configured to skip that directory (`--disable-nested-config` on the root `lint` and
 `format` scripts exists because the `full` combo emits its own `.oxlintrc.json` and
