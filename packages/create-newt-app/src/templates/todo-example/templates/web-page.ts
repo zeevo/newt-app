@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <main className="max-w-lg mx-auto min-h-full px-4 py-8 space-y-4">
       <div className="pb-4 border-b">
-        <p className="font-mono text-sm text-muted-foreground">apps/web/page.tsx</p>
+        <p className="font-mono text-sm text-muted-foreground">apps/web/app/page.tsx</p>
         <p className="text-sm text-muted-foreground">Delete me to get started!</p>
       </div>
 
@@ -38,7 +38,7 @@ export default function Home() {
 
       <div className="rounded-xl border p-6 space-y-1">
         <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">next.js</p>
-        <p className="font-mono text-sm text-muted-foreground">apps/web/layout.tsx</p>
+        <p className="font-mono text-sm text-muted-foreground">apps/web/app/layout.tsx</p>
         <p className="text-sm text-muted-foreground">Next.js rendering</p>
       </div>
 
