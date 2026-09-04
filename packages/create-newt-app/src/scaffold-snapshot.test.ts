@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import { templates } from "./templates";
 
 // Pins what a scaffolded app actually contains. render.test.ts checks
@@ -88,57 +88,44 @@ async function filesIn(dir: string): Promise<string[]> {
     .sort();
 }
 
-const scaffolded = new Map<string, { dir: string; files: string[] }>();
-let root: string;
+// turbo.json makes this package's test depend on its own build, so `pnpm test`
+// and `turbo run test` are current. A bare `vitest` run is not.
+if (!existsSync(CLI)) {
+  throw new Error(`${CLI} is missing. Run \`pnpm build --filter=create-newt-app\` first.`);
+}
 
-beforeAll(async () => {
-  // turbo.json makes this package's test depend on its own build, so `pnpm test`
-  // and `turbo run test` are current. A bare `vitest` run is not, and there is no
-  // cheap way to tell: mtimes track git operations rather than content, and
-  // rebuilding here would race apps/web's scaffold-tree test over the same dist.
-  if (!existsSync(CLI)) {
-    throw new Error(`${CLI} is missing. Run \`pnpm build --filter=create-newt-app\` first.`);
-  }
+const root = await mkdtemp(path.join(tmpdir(), "scaffold-snapshot-"));
 
-  root = await mkdtemp(path.join(tmpdir(), "scaffold-snapshot-"));
+// Scaffolded here rather than in beforeAll because vitest collects tests
+// synchronously, so it.each below cannot read a fixture a hook would produce.
+const scaffolded = await Promise.all(
+  COMBOS.map(async ({ name, flags }) => {
+    // Every combo scaffolds the same project name, in its own directory, so
+    // the snapshots differ by selection and not by npm scope.
+    const cwd = path.join(root, name);
+    await mkdir(cwd);
+    await run(process.execPath, [CLI, "my-app", ...flags, "--no-install", "--no-git"], {
+      cwd,
+      timeout: 120_000,
+    });
 
-  await Promise.all(
-    COMBOS.map(async ({ name, flags }) => {
-      // Every combo scaffolds the same project name, in its own directory, so
-      // the snapshots differ by selection and not by npm scope.
-      const cwd = path.join(root, name);
-      await mkdir(cwd);
-      await run(process.execPath, [CLI, "my-app", ...flags, "--no-install", "--no-git"], { cwd });
-
-      const dir = path.join(cwd, "my-app");
-      scaffolded.set(name, { dir, files: await filesIn(dir) });
-    }),
-  );
-}, 300_000);
+    const dir = path.join(cwd, "my-app");
+    return { name, dir, files: await filesIn(dir) };
+  }),
+);
 
 afterAll(async () => {
-  if (root) await rm(root, { recursive: true, force: true });
+  await rm(root, { recursive: true, force: true });
 });
 
-describe.each(COMBOS)("$name", ({ name }) => {
+describe.each(scaffolded)("$name", ({ name, dir, files }) => {
   it("emits the same files", async () => {
-    const { files } = scaffolded.get(name)!;
-
     await expect(files.join("\n") + "\n").toMatchFileSnapshot(path.join(SNAPSHOTS, name, MANIFEST));
   });
 
-  it("emits the same contents", async () => {
-    const { dir, files } = scaffolded.get(name)!;
-
-    // Soft, so one run reports every drifted file rather than only the first.
-    await Promise.all(
-      files
-        .filter((file) => !contentless(file))
-        .map(async (file) => {
-          const contents = normalize(file, await readFile(path.join(dir, file), "utf8"));
-          await expect.soft(contents).toMatchFileSnapshot(path.join(SNAPSHOTS, name, file));
-        }),
-    );
+  it.each(files.filter((file) => !contentless(file)))("%s", async (file) => {
+    const contents = normalize(file, await readFile(path.join(dir, file), "utf8"));
+    await expect(contents).toMatchFileSnapshot(path.join(SNAPSHOTS, name, file));
   });
 });
 
@@ -147,13 +134,10 @@ describe.each(COMBOS)("$name", ({ name }) => {
 // template that stops being emitted leaves its snapshot behind forever.
 it("keeps no snapshot the scaffolder no longer emits", async () => {
   const expected = new Set(
-    COMBOS.flatMap(({ name }) => {
-      const { files } = scaffolded.get(name)!;
-      return [
-        `${name}/${MANIFEST}`,
-        ...files.filter((file) => !contentless(file)).map((file) => `${name}/${file}`),
-      ];
-    }),
+    scaffolded.flatMap(({ name, files }) => [
+      `${name}/${MANIFEST}`,
+      ...files.filter((file) => !contentless(file)).map((file) => `${name}/${file}`),
+    ]),
   );
 
   const entries = await readdir(SNAPSHOTS, { recursive: true, withFileTypes: true }).catch(
