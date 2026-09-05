@@ -6,6 +6,7 @@ import { antiSlopAvailable, DEFAULT_NAME, DI_ONLY_REJECTS, type Config } from "@
 export const configParsers = {
   name: parseAsString.withDefault(DEFAULT_NAME),
   shadcn: parseAsBoolean.withDefault(true),
+  stylex: parseAsBoolean.withDefault(false),
   testing: parseAsStringLiteral(["jest", "vitest"] as const).withDefault("vitest"),
   database: parseAsStringLiteral(["sqlite", "postgres"] as const).withDefault("postgres"),
   linter: parseAsStringLiteral(["eslint", "oxc"] as const).withDefault("oxc"),
@@ -21,14 +22,16 @@ export const configUrlKeys = {
   antiSlop: "anti-slop",
 };
 
-// A hand-edited URL can pair di-only with a deployment the CLI rejects, or
-// anti-slop with eslint; the panel never renders either combo.
+// A hand-edited URL can pair di-only with a deployment the CLI rejects,
+// anti-slop with eslint, or both styling systems at once; the panel never
+// renders any of those combos.
 export function sanitizeConfig(c: Config): Config {
   const deployment = c.nestDiOnly && DI_ONLY_REJECTS.has(c.deployment) ? "none" : c.deployment;
   const antiSlop = c.antiSlop && antiSlopAvailable(c.linter);
-  return deployment === c.deployment && antiSlop === c.antiSlop
+  const stylex = c.stylex && !c.shadcn;
+  return deployment === c.deployment && antiSlop === c.antiSlop && stylex === c.stylex
     ? c
-    : { ...c, deployment, antiSlop };
+    : { ...c, deployment, antiSlop, stylex };
 }
 
 // The panel's config lives in the URL, so the link to the full-page builder

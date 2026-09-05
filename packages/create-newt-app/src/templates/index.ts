@@ -6,6 +6,7 @@ import auth from "./auth/index";
 import { dbSqlite, dbPostgres } from "./db/index";
 import ui from "./ui/index";
 import shadcnUi from "./shadcn-ui/index";
+import stylexUi from "./stylex-ui/index";
 import eslintConfig from "./eslint-config/index";
 import oxc from "./oxc/index";
 import antiSlop from "./anti-slop/index";
@@ -23,6 +24,7 @@ import {
   todoExampleDi,
   todoExampleWeb,
   todoExampleShadcn,
+  todoExampleStylex,
 } from "./todo-example/index";
 import type { Module, ModuleSelection } from "./types";
 
@@ -45,6 +47,7 @@ export const templates = {
   dbPostgres,
   ui,
   shadcnUi,
+  stylexUi,
   eslintConfig,
   oxc,
   antiSlop,
@@ -61,6 +64,7 @@ export const templates = {
   todoExampleDi,
   todoExampleWeb,
   todoExampleShadcn,
+  todoExampleStylex,
 };
 
 const E2E_FILES = [
@@ -72,7 +76,7 @@ const E2E_FILES = [
 // The single source of truth for which modules a selection scaffolds. Kept here
 // rather than in the CLI so the render tests exercise the real selection.
 export function selectModules(selection: ModuleSelection): Module[] {
-  const { deployment, nestDiOnly, todoExample, shadcn, database, linter, testing, extras } =
+  const { deployment, nestDiOnly, todoExample, shadcn, stylex, database, linter, testing, extras } =
     selection;
 
   const deploymentModule =
@@ -111,7 +115,7 @@ export function selectModules(selection: ModuleSelection): Module[] {
     api,
     database === "postgres" ? dbPostgres : dbSqlite,
     auth,
-    shadcn ? shadcnUi : ui,
+    shadcn ? shadcnUi : stylex ? stylexUi : ui,
     linter === "oxc" ? oxc : eslintConfig,
     ...(extras.includes("anti-slop") ? [antiSlop] : []),
     typescriptConfig,
@@ -125,7 +129,7 @@ export function selectModules(selection: ModuleSelection): Module[] {
       ? [
           todoExampleApi,
           ...(nestDiOnly ? [todoExampleDi] : [todoExampleControllers]),
-          shadcn ? todoExampleShadcn : todoExampleWeb,
+          shadcn ? todoExampleShadcn : stylex ? todoExampleStylex : todoExampleWeb,
         ]
       : []),
   ];

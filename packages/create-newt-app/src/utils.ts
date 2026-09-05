@@ -191,6 +191,21 @@ export function validateExtrasCombo(extras: readonly string[], linter: string): 
   return { valid: true };
 }
 
+export function validateStylingCombo(shadcn: boolean, stylex: boolean): ValidationResult {
+  if (shadcn && stylex) {
+    return {
+      valid: false,
+      error:
+        "--shadcn cannot be combined with --stylex.\n" +
+        "shadcn/ui components are written in Tailwind utility classes, which StyleX does\n" +
+        "not compile. Pick one styling system: drop --stylex for shadcn/ui, or drop\n" +
+        "--shadcn for StyleX.",
+    };
+  }
+
+  return { valid: true };
+}
+
 export function validateDeploymentCombo(deployment: string, nestDiOnly: boolean): ValidationResult {
   if (deployment === "spa" && nestDiOnly) {
     return {

@@ -88,6 +88,10 @@ jobs:
           - "--deployment standalone --nest-di-only --shadcn --testing vitest --database postgres --linter oxc --extras anti-slop"
           - "--deployment spa --include-example"
           - "--deployment spa --shadcn --testing vitest --linter oxc --extras anti-slop"
+          - "--stylex --include-example"
+          - "--stylex --nest-di-only --include-example"
+          - "--stylex --deployment standalone --linter oxc --extras anti-slop --include-example"
+          - "--stylex --deployment spa --testing vitest --database postgres"
         # Every entry above scaffolds with --no-install --no-git, so pnpmInstall,
         # pnpmFormat and initGit never run. This include matches an existing
         # combination, so it adds a flag to that job rather than adding a job.

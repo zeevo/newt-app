@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s: Selection) => !s.shadcn,
+  when: (s: Selection) => !s.shadcn && !s.stylex,
   filename: "apps/web/app/layout.tsx",
   template: `import type { Metadata } from "next";
 import localFont from "next/font/local";

@@ -1,4 +1,6 @@
+import type { Selection } from "../../types";
 export default {
+  when: (s: Selection) => !s.stylex,
   filename: "apps/web/package.json",
   template: `{
   "name": "web",

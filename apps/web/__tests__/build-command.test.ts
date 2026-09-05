@@ -11,11 +11,19 @@ import {
   type Config,
 } from "@/lib/build-command";
 
+// the panel makes shadcn and stylex mutually exclusive, so the styling axis is
+// three states, not four
+const STYLING = [
+  { shadcn: false, stylex: false },
+  { shadcn: true, stylex: false },
+  { shadcn: false, stylex: true },
+] as const;
+
 // every config the panel can reach — deployment comes from the same function
 // that renders the select, so hiding an option here means hiding it in the UI
 const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
   deploymentOptions(nestDiOnly).flatMap((deployment) =>
-    [true, false].flatMap((shadcn) =>
+    STYLING.flatMap(({ shadcn, stylex }) =>
       [true, false].flatMap((todoExample) =>
         (["jest", "vitest"] as const).flatMap((testing) =>
           (["sqlite", "postgres"] as const).flatMap((database) =>
@@ -23,6 +31,7 @@ const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
               (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
                 name: "my-app",
                 shadcn,
+                stylex,
                 testing,
                 database,
                 linter,
@@ -97,6 +106,7 @@ describe("buildCommand", () => {
       buildCommand({
         name: "my-app",
         shadcn: true,
+        stylex: false,
         testing: "jest",
         database: "sqlite",
         linter: "eslint",

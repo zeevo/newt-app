@@ -152,7 +152,11 @@ export function scaffoldTree(c: Config): TreeNode[] {
           name: "ui",
           kind: "dir",
           path: "packages/ui",
-          annotation: c.shadcn ? "shadcn/ui + 63 components" : "minimal UI package",
+          annotation: c.shadcn
+            ? "shadcn/ui + 63 components"
+            : c.stylex
+              ? "minimal UI package, StyleX"
+              : "minimal UI package",
         },
         {
           name: "auth",

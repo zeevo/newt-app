@@ -20,16 +20,25 @@ const CLI = fileURLToPath(
   new URL("../../../packages/create-newt-app/dist/index.js", import.meta.url),
 );
 
+// The panel makes shadcn and stylex mutually exclusive, so the styling axis is
+// three states, not four.
+const STYLING = [
+  { shadcn: false, stylex: false },
+  { shadcn: true, stylex: false },
+  { shadcn: false, stylex: true },
+] as const;
+
 // Only these options change which files exist. `testing` changes none of
 // them, and `database` only swaps an annotation, so both stay pinned.
 const configs: Config[] = [true, false].flatMap((nestDiOnly) =>
   deploymentOptions(nestDiOnly).flatMap((deployment) =>
-    [true, false].flatMap((shadcn) =>
+    STYLING.flatMap(({ shadcn, stylex }) =>
       [true, false].flatMap((todoExample) =>
         (["eslint", "oxc"] as const).flatMap((linter) =>
           (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
             name: "my-app",
             shadcn,
+            stylex,
             testing: "jest" as const,
             database: "sqlite" as const,
             linter,
@@ -48,7 +57,7 @@ const key = (c: Config) =>
   [
     c.nestDiOnly ? "di-only" : "nest",
     c.deployment,
-    c.shadcn ? "shadcn" : "plain",
+    c.shadcn ? "shadcn" : c.stylex ? "stylex" : "plain",
     c.linter,
     c.todoExample ? "todo" : "bare",
     c.antiSlop ? "anti-slop" : "no-anti-slop",

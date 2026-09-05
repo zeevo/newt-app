@@ -19,6 +19,7 @@ export type Selection = {
   nestDiOnly: boolean;
   todoExample: boolean;
   shadcn: boolean;
+  stylex: boolean;
   database: "sqlite" | "postgres";
 };
 

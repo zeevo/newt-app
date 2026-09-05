@@ -55,6 +55,14 @@ const COMBOS = [
   // app module and api index, the non-standalone di next config, and the
   // shadcn home page.
   { name: "di-shadcn-bare", flags: ["--shadcn", "--nest-di-only"] },
+  // StyleX swaps the whole ui package and the app's styling config, so it needs
+  // two combos the way shadcn does. This one covers the common shape: the
+  // tokens, the components, and a babel config with only the stylex plugin.
+  { name: "stylex", flags: ["--stylex", "--include-example"] },
+  // The rest of the stylex templates: the bare home page, the di-only web
+  // manifest, and the babel config that also has to compile Nest's decorators,
+  // which plain `next/babel` does not handle.
+  { name: "stylex-di-bare", flags: ["--stylex", "--nest-di-only"] },
 ];
 
 // Derived rather than matched on extension, so a binary added under a new
