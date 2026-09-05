@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.31.10
+
+### Patch Changes
+
+- a7c913c: refresh the scaffold snapshots so they match the next 16.3.4 and pnpm 11.25.0 template output
+- 063048f: pin scaffolded output with snapshot tests across five CLI combos
+
 ## 0.31.9
 
 ### Patch Changes
