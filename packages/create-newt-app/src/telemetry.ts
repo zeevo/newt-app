@@ -68,6 +68,7 @@ export function buildPayload(report: RunReport) {
     // Sorted, so one set of flags is one value and not one per ordering.
     explicitFlags: [...report.explicitFlags].sort().join(","),
     shadcn: selection.shadcn,
+    stylex: selection.stylex,
     testing: selection.testing,
     database: selection.database,
     linter: selection.linter,

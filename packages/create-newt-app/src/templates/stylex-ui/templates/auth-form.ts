@@ -1,13 +1,13 @@
-import type { Selection } from "../../types";
 export default {
-  when: (s: Selection) => !s.shadcn && !s.stylex,
   filename: "apps/web/app/auth-form.tsx",
   template: `'use client';
 
 import { useForm } from '@tanstack/react-form';
 import { useState } from 'react';
+import * as stylex from '@stylexjs/stylex';
 import { authClient } from '@/lib/auth-client';
 import { Button } from '@<%= projectName %>/ui/button';
+import { colors, radii } from '@<%= projectName %>/ui/tokens.stylex';
 
 export function AuthForm() {
   const [tab, setTab] = useState<'signin' | 'signup'>('signup');
@@ -29,25 +29,17 @@ export function AuthForm() {
 
   return (
     <>
-      <div className="flex gap-2 mb-6 text-sm">
+      <div {...stylex.props(styles.tabs)}>
         <button
           onClick={() => setTab('signup')}
-          className={
-            tab === 'signup'
-              ? 'font-semibold'
-              : 'text-muted-foreground hover:text-gray-200'
-          }
+          {...stylex.props(styles.tab, tab === 'signup' && styles.tabActive)}
         >
           Sign up
         </button>
-        <span className="text-gray-600">|</span>
+        <span {...stylex.props(styles.divider)}>|</span>
         <button
           onClick={() => setTab('signin')}
-          className={
-            tab === 'signin'
-              ? 'font-semibold'
-              : 'text-muted-foreground hover:text-gray-200'
-          }
+          {...stylex.props(styles.tab, tab === 'signin' && styles.tabActive)}
         >
           Sign in
         </button>
@@ -58,20 +50,20 @@ export function AuthForm() {
           e.preventDefault();
           form.handleSubmit();
         }}
-        className="space-y-4"
+        {...stylex.props(styles.form)}
       >
         {tab === 'signup' && (
           <form.Field name="name">
             {(field) => (
-              <div className="space-y-1">
-                <label className="text-sm font-medium">Name</label>
+              <div {...stylex.props(styles.field)}>
+                <label {...stylex.props(styles.label)}>Name</label>
                 <input
                   type="text"
                   autoComplete="name"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   required
-                  className="flex h-9 w-full rounded-md border border-neutral-700 bg-muted/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
+                  {...stylex.props(styles.input)}
                 />
               </div>
             )}
@@ -80,15 +72,15 @@ export function AuthForm() {
 
         <form.Field name="email">
           {(field) => (
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Email</label>
+            <div {...stylex.props(styles.field)}>
+              <label {...stylex.props(styles.label)}>Email</label>
               <input
                 type="email"
                 autoComplete="email"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
-                className="flex h-9 w-full rounded-md border border-neutral-700 bg-muted/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
+                {...stylex.props(styles.input)}
               />
             </div>
           )}
@@ -96,8 +88,8 @@ export function AuthForm() {
 
         <form.Field name="password">
           {(field) => (
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Password</label>
+            <div {...stylex.props(styles.field)}>
+              <label {...stylex.props(styles.label)}>Password</label>
               <input
                 type="password"
                 autoComplete={
@@ -107,17 +99,17 @@ export function AuthForm() {
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
                 minLength={8}
-                className="flex h-9 w-full rounded-md border border-neutral-700 bg-muted/50 px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-neutral-500 focus-visible:border-neutral-500 focus-visible:ring-2 focus-visible:ring-neutral-500/20"
+                {...stylex.props(styles.input)}
               />
             </div>
           )}
         </form.Field>
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && <p {...stylex.props(styles.error)}>{error}</p>}
 
         <form.Subscribe selector={(s) => s.isSubmitting}>
           {(isSubmitting) => (
-            <Button type="submit" disabled={isSubmitting} className="w-full">
+            <Button type="submit" disabled={isSubmitting} style={styles.submit}>
               {isSubmitting
                 ? 'Loading…'
                 : tab === 'signin'
@@ -129,5 +121,75 @@ export function AuthForm() {
       </form>
     </>
   );
-}`,
+}
+
+const styles = stylex.create({
+  tabs: {
+    display: 'flex',
+    gap: '0.5rem',
+    marginBottom: '1.5rem',
+    fontSize: '0.875rem',
+  },
+  tab: {
+    color: {
+      default: colors.mutedForeground,
+      ':hover': colors.foreground,
+    },
+    backgroundColor: 'transparent',
+    borderStyle: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    fontFamily: 'inherit',
+    fontSize: 'inherit',
+  },
+  tabActive: {
+    color: colors.foreground,
+    fontWeight: 600,
+  },
+  divider: {
+    color: colors.border,
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+  },
+  field: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.25rem',
+  },
+  label: {
+    fontSize: '0.875rem',
+    fontWeight: 500,
+  },
+  input: {
+    width: '100%',
+    height: 36,
+    paddingBlock: '0.25rem',
+    paddingInline: '0.75rem',
+    fontFamily: 'inherit',
+    fontSize: '0.875rem',
+    color: colors.foreground,
+    backgroundColor: 'oklch(0.269 0 0 / 0.5)',
+    borderColor: {
+      default: colors.border,
+      ':focus-visible': colors.mutedForeground,
+    },
+    borderRadius: radii.sm,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    outlineStyle: 'none',
+    transitionProperty: 'border-color',
+    transitionDuration: '150ms',
+  },
+  error: {
+    fontSize: '0.875rem',
+    color: colors.danger,
+  },
+  submit: {
+    width: '100%',
+  },
+});
+`,
 };

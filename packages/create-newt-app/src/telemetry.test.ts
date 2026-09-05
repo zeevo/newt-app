@@ -7,6 +7,7 @@ const selection: ModuleSelection = {
   nest: "on",
   todoExample: true,
   shadcn: true,
+  stylex: false,
   database: "postgres",
   linter: "oxc",
   testing: "vitest",
@@ -125,6 +126,7 @@ describe("payload", () => {
       "nodeMajor",
       "platform",
       "shadcn",
+      "stylex",
       "testing",
       "todoExample",
     ]);

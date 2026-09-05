@@ -13,6 +13,7 @@ import {
 export const configParsers = {
   name: parseAsString.withDefault(DEFAULT_NAME),
   shadcn: parseAsBoolean.withDefault(true),
+  stylex: parseAsBoolean.withDefault(false),
   testing: parseAsStringLiteral(["jest", "vitest"] as const).withDefault("vitest"),
   database: parseAsStringLiteral(["sqlite", "postgres"] as const).withDefault("postgres"),
   linter: parseAsStringLiteral(["eslint", "oxc"] as const).withDefault("oxc"),
@@ -28,14 +29,19 @@ export const configUrlKeys = {
 };
 
 // A hand-edited URL can pair a nest mode with a deployment or an example the
-// CLI rejects, or anti-slop with eslint; the panel never renders those combos.
+// CLI rejects, anti-slop with eslint, or both styling systems at once; the
+// panel never renders any of those combos.
 export function sanitizeConfig(c: Config): Config {
   const deployment = NEST_REJECTS[c.nest].has(c.deployment) ? "none" : c.deployment;
   const todoExample = c.todoExample && todoExampleAvailable(c.nest);
   const antiSlop = c.antiSlop && antiSlopAvailable(c.linter);
-  return deployment === c.deployment && todoExample === c.todoExample && antiSlop === c.antiSlop
+  const stylex = c.stylex && !c.shadcn;
+  return deployment === c.deployment &&
+    todoExample === c.todoExample &&
+    antiSlop === c.antiSlop &&
+    stylex === c.stylex
     ? c
-    : { ...c, deployment, todoExample, antiSlop };
+    : { ...c, deployment, todoExample, antiSlop, stylex };
 }
 
 // The panel's config lives in the URL, so the link to the full-page builder

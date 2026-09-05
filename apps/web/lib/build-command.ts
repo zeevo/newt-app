@@ -3,6 +3,7 @@ export type Nest = "on" | "off" | "di-only";
 export type Config = {
   name: string;
   shadcn: boolean;
+  stylex: boolean;
   testing: "jest" | "vitest";
   database: "sqlite" | "postgres";
   linter: "eslint" | "oxc";
@@ -104,6 +105,7 @@ export function normalizeName(name: string): string {
 export function buildCommand(c: Config): string {
   const flags: string[] = [];
   if (c.shadcn) flags.push("--shadcn");
+  if (c.stylex) flags.push("--stylex");
   if (c.testing !== "jest" && testingAvailable(c.nest)) flags.push("--testing vitest");
   if (c.database !== "sqlite") flags.push("--database postgres");
   if (c.linter !== "eslint") flags.push("--linter oxc");

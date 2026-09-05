@@ -3,6 +3,8 @@
 // entries read it directly. versions.test.ts fails if a package ever ends up
 // with two versions across the rendered output.
 export const versions = {
+  "@babel/plugin-proposal-decorators": "^8.0.2",
+  "@babel/plugin-transform-class-properties": "^8.0.1",
   "@base-ui/react": "^1.6.0",
   "@eslint/js": "^9.39.1",
   "@nestjs/cli": "^11.0.0",
@@ -15,6 +17,9 @@ export const versions = {
   "@next/eslint-plugin-next": "^16.3.4",
   "@oxlint/plugins": "^1.74.0",
   "@shadcn/react": "^0.2.1",
+  "@stylexjs/babel-plugin": "0.19.0",
+  "@stylexjs/postcss-plugin": "0.19.0",
+  "@stylexjs/stylex": "0.19.0",
   "@swc/core": "^1.10.0",
   "@tailwindcss/postcss": "^4.2.1",
   "@tanstack/react-form": "^1.28.5",
@@ -30,6 +35,7 @@ export const versions = {
   "@types/supertest": "^6.0.2",
   "@vitest/coverage-v8": "^4.1.10",
   auth: "^1.5.5",
+  "babel-plugin-transform-typescript-metadata": "^0.4.0",
   "better-auth": "^1.2.8",
   "better-sqlite3": "^12.11.1",
   "class-variance-authority": "^0.7.1",
