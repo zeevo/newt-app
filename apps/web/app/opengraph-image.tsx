@@ -9,10 +9,10 @@ export const contentType = "image/png";
 
 // tokens from packages/ui/src/styles/globals.css, dark theme, resolved to hex
 // because satori does not understand oklch()
-const BACKGROUND = "#0a0a0a";
-const FOREGROUND = "#fafafa";
-const MUTED_FOREGROUND = "#a1a1a1";
-const BORDER = "#5a5a5a";
+const BACKGROUND = "#0c1421";
+const FOREGROUND = "#f2eee6";
+const MUTED_FOREGROUND = "#a1abbe";
+const BORDER = "#515e75";
 
 // same mark as app/icon.svg
 const LOGO_PATH =
