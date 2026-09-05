@@ -15,7 +15,7 @@
     "@newt-app/ui": "workspace:*",
     "dotenv-cli": "^8.0.0",
     "lucide-react": "^0.548.0",
-    "next": "^16.3.3",
+    "next": "^16.3.4",
     "next-themes": "^0.4.6",
     "nuqs": "^2.9.5",
     "react": "^19.2.4",
