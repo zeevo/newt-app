@@ -1,0 +1,42 @@
+{
+  "name": "@my-app/api",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "nest build",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "lint:check": "eslint \"src/**/*.ts\" --max-warnings 0",
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@my-app/auth": "workspace:*",
+    "@my-app/db": "workspace:*",
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
+    "@thallesp/nestjs-better-auth": "^2.5.1",
+    "dotenv": "^17.3.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@nestjs/testing": "^11.0.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.13.3",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.1",
+    "globals": "^16.5.0",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "6.0.2",
+    "typescript-eslint": "^8.50.0"
+  }
+}
