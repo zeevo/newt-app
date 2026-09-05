@@ -12,6 +12,7 @@ import {
   normalizeProjectName,
   validateDeploymentCombo,
   validateExtrasCombo,
+  validateStylingCombo,
   validateFlagValue,
   validateNodeVersion,
   validateProjectName,
@@ -31,6 +32,7 @@ type Deployment = (typeof DEPLOYMENT_CHOICES)[number];
 type Answers = {
   name?: string;
   shadcn?: boolean;
+  stylex?: boolean;
   testing?: Testing;
   database?: Database;
   linter?: Linter;
@@ -46,6 +48,7 @@ type Options = {
   git: boolean;
   nonInteractive: boolean;
   shadcn: boolean;
+  stylex: boolean;
   testing: Testing;
   database: Database;
   linter: Linter;
@@ -80,6 +83,13 @@ export async function doInit(options: Options) {
           message: "Use shadcn/ui?",
           initialValue: true,
         }),
+      stylex: ({ results }) =>
+        results.shadcn
+          ? undefined
+          : p.confirm({
+              message: "Use StyleX instead of Tailwind?",
+              initialValue: false,
+            }),
       testing: () =>
         p.select<Testing>({
           message: "Testing framework?",
@@ -180,6 +190,7 @@ export async function doInit(options: Options) {
     });
 
     const useShadcn = options.nonInteractive ? options.shadcn : (answers.shadcn ?? true);
+    const useStylex = options.nonInteractive ? options.stylex : (answers.stylex ?? false);
     const testing: Testing = options.nonInteractive ? options.testing : (answers.testing ?? "jest");
     const database: Database = options.nonInteractive
       ? options.database
@@ -196,6 +207,11 @@ export async function doInit(options: Options) {
       ? options.extras
       : (answers.extras ?? []);
 
+    const stylingCombo = validateStylingCombo(useShadcn, useStylex);
+    if (!stylingCombo.valid) {
+      throw new Error(stylingCombo.error);
+    }
+
     const deploymentCombo = validateDeploymentCombo(deployment, nestDiOnly);
     if (!deploymentCombo.valid) {
       throw new Error(deploymentCombo.error);
@@ -211,6 +227,7 @@ export async function doInit(options: Options) {
       nestDiOnly,
       todoExample,
       shadcn: useShadcn,
+      stylex: useStylex,
       database,
       linter,
       testing,
@@ -312,6 +329,7 @@ program
   .option("-ni, --no-install", "Skip pnpm install", true)
   .option("-ng, --no-git", "Skip git initialization", true)
   .option("--shadcn", "Include shadcn/ui", false)
+  .option("--stylex", "Use StyleX instead of Tailwind", false)
   .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
   .option("--database <database>", "Database: sqlite or postgres", "sqlite")
   .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
@@ -326,6 +344,7 @@ program
         install: boolean;
         git: boolean;
         shadcn: boolean;
+        stylex: boolean;
         testing: string;
         database: string;
         linter: string;
@@ -341,6 +360,7 @@ program
       // Any explicitly passed config flag skips the prompts.
       const CONFIG_FLAGS = {
         shadcn: "--shadcn",
+        stylex: "--stylex",
         testing: "--testing",
         database: "--database",
         linter: "--linter",
@@ -399,6 +419,7 @@ program
         git: options.git,
         nonInteractive,
         shadcn: options.shadcn,
+        stylex: options.stylex,
         testing: options.testing as Testing,
         database: options.database as Database,
         linter: options.linter as Linter,

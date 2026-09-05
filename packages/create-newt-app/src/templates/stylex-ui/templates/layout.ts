@@ -1,10 +1,10 @@
-import type { Selection } from "../../types";
 export default {
-  when: (s: Selection) => !s.shadcn && !s.stylex,
   filename: "apps/web/app/layout.tsx",
   template: `import type { Metadata } from "next";
 import localFont from "next/font/local";
+import * as stylex from "@stylexjs/stylex";
 import Providers from "@/app/providers";
+import { colors, fonts } from "@<%= projectName %>/ui/tokens.stylex";
 import "@<%= projectName %>/ui/globals.css";
 
 const geistSans = localFont({
@@ -34,11 +34,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={\`\${geistSans.variable} \${geistMono.variable} h-full\`}>
+    <html lang="en" className={\`\${geistSans.variable} \${geistMono.variable}\`}>
+      <body {...stylex.props(styles.body)}>
         <Providers>{children}</Providers>
       </body>
     </html>
   );
-}`,
+}
+
+const styles = stylex.create({
+  body: {
+    backgroundColor: colors.background,
+    color: colors.foreground,
+    fontFamily: fonts.sans,
+  },
+});
+`,
 };

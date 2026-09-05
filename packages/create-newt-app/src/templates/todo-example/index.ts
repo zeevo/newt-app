@@ -16,6 +16,8 @@ import webTodoList from "./templates/web-todo-list";
 import webPage from "./templates/web-page";
 import shadcnTodoList from "./templates/shadcn-todo-list";
 import shadcnPage from "./templates/shadcn-page";
+import stylexTodoList from "./templates/stylex-todo-list";
+import stylexPage from "./templates/stylex-page";
 
 // Shared by every mode: the Kysely-backed todos service, its Nest module, and
 // the db schema + migration for the todo table.
@@ -40,4 +42,8 @@ export const todoExampleWeb: Module = {
 
 export const todoExampleShadcn: Module = {
   templates: [shadcnTodoList, shadcnPage],
+};
+
+export const todoExampleStylex: Module = {
+  templates: [stylexTodoList, stylexPage],
 };

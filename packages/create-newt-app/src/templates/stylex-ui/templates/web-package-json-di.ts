@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s: Selection) => !s.stylex,
+  when: (s: Selection) => s.nestDiOnly,
   filename: "apps/web/package.json",
   template: `{
   "name": "web",
@@ -21,18 +21,22 @@ export default {
     "@nestjs/common": "<%= versions["@nestjs/common"] %>",
     "@nestjs/core": "<%= versions["@nestjs/core"] %>",
     "reflect-metadata": "<%= versions["reflect-metadata"] %>",
-    "@tailwindcss/postcss": "<%= versions["@tailwindcss/postcss"] %>",
+    "@stylexjs/stylex": "<%= versions["@stylexjs/stylex"] %>",
     "dotenv": "<%= versions.dotenv %>",
     "@tanstack/react-form": "<%= versions["@tanstack/react-form"] %>",
     "@tanstack/react-query": "<%= versions["@tanstack/react-query"] %>",
     "better-auth": "<%= versions["better-auth"] %>",
     "next": "<%= versions.next %>",
     "react": "<%= versions.react %>",
-    "react-dom": "<%= versions["react-dom"] %>",
-    "tailwindcss": "<%= versions.tailwindcss %>"
+    "react-dom": "<%= versions["react-dom"] %>"
   },
   "devDependencies": {
     "@<%= projectName %>/typescript-config": "workspace:*",
+    "@babel/plugin-proposal-decorators": "<%= versions["@babel/plugin-proposal-decorators"] %>",
+    "@babel/plugin-transform-class-properties": "<%= versions["@babel/plugin-transform-class-properties"] %>",
+    "babel-plugin-transform-typescript-metadata": "<%= versions["babel-plugin-transform-typescript-metadata"] %>",
+    "@stylexjs/babel-plugin": "<%= versions["@stylexjs/babel-plugin"] %>",
+    "@stylexjs/postcss-plugin": "<%= versions["@stylexjs/postcss-plugin"] %>",
     "@types/node": "<%= versions["@types/node"] %>",
     "@types/react": "<%= versions["@types/react"] %>",
     "@types/react-dom": "<%= versions["@types/react-dom"] %>",
