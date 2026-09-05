@@ -1,5 +1,20 @@
 # create-newt-app
 
+## 0.31.9
+
+### Patch Changes
+
+- c772c20: scaffold on Next 16.3.4, up from 16.3.3. `@next/eslint-plugin-next` moves with it.
+- 93a611a: scaffold on pnpm 11.25.0, up from 10.34.5. pnpm 11 stopped reading the `pnpm` field in package.json, so build approvals move to `allowBuilds` in `pnpm-workspace.yaml`, and `@parcel/watcher` and `@swc/core` join the list: pnpm 11 fails the install on an unapproved build script instead of warning.
+- fa60b30: check the target directory before the prompts when the name is passed as an argument
+- feab636: delete seven template files no module renders
+- a9c83fc: drop the APP_GUARD provider the nest better-auth module already registers
+- 499ebbe: drop the unreferenced public svgs and the unused plain-ui card and code components
+- b9d02dd: show the real file paths on the landing page
+- 041ed74: keep dev.db, .git and coverage out of docker build contexts
+- 95d660d: list the db package in the readme and drop eslint-config from it in oxc mode
+- 9580561: add the issuer column better-auth creates on the account table to the kysely types
+
 ## 0.31.8
 
 ### Patch Changes
