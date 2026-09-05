@@ -16,10 +16,10 @@ export default function Home() {
             the section grows to hold the builder, and letting the tank grow
             with it would drag its floor, and the chips resting on it, below the
             fold. The builder is meant to hang out of the tank's bottom edge. */}
-        <div className="pointer-events-none absolute inset-x-5 top-5 z-0 h-[calc(100svh_-_var(--header-height)_-_2.5rem)] overflow-hidden rounded-lg border">
+        <div className="pointer-events-none absolute inset-x-2 top-2 z-0 h-[calc(100svh_-_var(--header-height)_-_1rem)] overflow-hidden rounded-lg border">
           <LogoRain />
         </div>
-        {/* px-6 clears the tank's inset-5 walls, so the card lands on the tank
+        {/* px-6 clears the tank's inset-2 walls, so the card lands on the tank
             rather than poking out past it on narrow screens */}
         <div className="pointer-events-none relative z-10 flex w-full max-w-[1200px] flex-col items-center gap-5 px-6">
           <a
@@ -32,7 +32,7 @@ export default function Home() {
             Latest update · v{cliVersion} released
             <span aria-hidden>→</span>
           </a>
-          {/* px-4 keeps the longest wrapped line clear of the inset-5 frame */}
+          {/* px-4 keeps the longest wrapped line clear of the inset-2 frame */}
           <h1 className="max-w-4xl px-4 text-center text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
             The TypeScript project scaffolder for{" "}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
