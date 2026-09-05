@@ -299,12 +299,16 @@ export function InteractiveFileTree({
                 label="shadcn/ui"
                 logo="/logos/shadcn.svg"
                 pressed={c.shadcn}
-                onChange={(v) => setC((prev) => ({ ...prev, shadcn: v, stylex: v ? false : prev.stylex }))}
+                onChange={(v) =>
+                  setC((prev) => ({ ...prev, shadcn: v, stylex: v ? false : prev.stylex }))
+                }
               />
               <BoolToggle
                 label="stylex"
                 pressed={c.stylex}
-                onChange={(v) => setC((prev) => ({ ...prev, stylex: v, shadcn: v ? false : prev.shadcn }))}
+                onChange={(v) =>
+                  setC((prev) => ({ ...prev, stylex: v, shadcn: v ? false : prev.shadcn }))
+                }
               />
               <Row label="extras">
                 <DropdownMenu>
