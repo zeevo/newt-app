@@ -353,6 +353,13 @@ export function InteractiveFileTree({
                           anti-slop
                         </DropdownMenuCheckboxItem>
                       )}
+                      <DropdownMenuCheckboxItem
+                        checked={c.changesets}
+                        onCheckedChange={(v) => set("changesets", v)}
+                        className="font-mono text-xs"
+                      >
+                        changesets
+                      </DropdownMenuCheckboxItem>
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>

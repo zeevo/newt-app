@@ -1,0 +1,15 @@
+export default {
+  filename: ".changeset/config.json",
+  template: `{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "restricted",
+  "privatePackages": { "version": true, "tag": false },
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}`,
+};

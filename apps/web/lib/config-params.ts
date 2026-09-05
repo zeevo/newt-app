@@ -13,6 +13,7 @@ export const configParsers = {
   nestDiOnly: parseAsBoolean.withDefault(false),
   todoExample: parseAsBoolean.withDefault(true),
   antiSlop: parseAsBoolean.withDefault(false),
+  changesets: parseAsBoolean.withDefault(false),
 };
 
 export const configUrlKeys = {

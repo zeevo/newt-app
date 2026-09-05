@@ -22,22 +22,26 @@ const CLI = fileURLToPath(
 
 // Only these options change which files exist. `testing` changes none of
 // them, and `database` only swaps an annotation, so both stay pinned.
+// `changesets` writes .changeset, so it is an axis rather than a pin.
 const configs: Config[] = [true, false].flatMap((nestDiOnly) =>
   deploymentOptions(nestDiOnly).flatMap((deployment) =>
     [true, false].flatMap((shadcn) =>
       [true, false].flatMap((todoExample) =>
         (["eslint", "oxc"] as const).flatMap((linter) =>
-          (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
-            name: "my-app",
-            shadcn,
-            testing: "jest" as const,
-            database: "sqlite" as const,
-            linter,
-            deployment,
-            nestDiOnly,
-            todoExample,
-            antiSlop,
-          })),
+          (linter === "oxc" ? [true, false] : [false]).flatMap((antiSlop) =>
+            [true, false].map((changesets) => ({
+              name: "my-app",
+              shadcn,
+              testing: "jest" as const,
+              database: "sqlite" as const,
+              linter,
+              deployment,
+              nestDiOnly,
+              todoExample,
+              antiSlop,
+              changesets,
+            })),
+          ),
         ),
       ),
     ),
@@ -52,6 +56,7 @@ const key = (c: Config) =>
     c.linter,
     c.todoExample ? "todo" : "bare",
     c.antiSlop ? "anti-slop" : "no-anti-slop",
+    c.changesets ? "changesets" : "no-changesets",
   ].join(" ");
 
 // The builder hands users this exact command, so drive the CLI with the flags

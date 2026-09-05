@@ -185,6 +185,17 @@ export function scaffoldTree(c: Config): TreeNode[] {
         },
       ],
     },
+    ...(c.changesets
+      ? [
+          {
+            name: ".changeset",
+            kind: "dir" as const,
+            path: ".changeset",
+            conditional: true,
+            annotation: "versioning and changelogs",
+          },
+        ]
+      : []),
     ...(c.antiSlop
       ? [
           {
