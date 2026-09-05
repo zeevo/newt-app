@@ -18,10 +18,7 @@ export default {
     "turbo": "<%= versions.turbo %>",
     "typescript": "<%= versions.typescript %>"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": ["better-sqlite3", "esbuild", "sharp", "unrs-resolver"]
-  },
-  "packageManager": "pnpm@10.34.5",
+  "packageManager": "pnpm@11.25.0",
   "engines": {
     "node": ">=24.0.0"
   }

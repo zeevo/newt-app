@@ -2,5 +2,13 @@ export default {
   filename: "pnpm-workspace.yaml",
   template: `packages:
   - "apps/*"
-  - "packages/*"`,
+  - "packages/*"
+
+allowBuilds:
+  "@parcel/watcher": true
+  "@swc/core": true
+  better-sqlite3: true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true`,
 };
