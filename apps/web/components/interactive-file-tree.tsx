@@ -305,6 +305,7 @@ export function InteractiveFileTree({
               />
               <BoolToggle
                 label="stylex"
+                logo="/logos/stylex.svg"
                 pressed={c.stylex}
                 onChange={(v) =>
                   setC((prev) => ({ ...prev, stylex: v, shadcn: v ? false : prev.shadcn }))
