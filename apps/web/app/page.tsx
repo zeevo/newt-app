@@ -16,7 +16,7 @@ export default function Home() {
             the section grows to hold the builder, and letting the tank grow
             with it would drag its floor, and the chips resting on it, below the
             fold. The builder is meant to hang out of the tank's bottom edge. */}
-        <div className="pointer-events-none absolute inset-x-5 top-5 z-0 h-[calc(100svh_-_var(--header-height)_-_2.5rem)] overflow-hidden border">
+        <div className="pointer-events-none absolute inset-x-5 top-5 z-0 h-[calc(100svh_-_var(--header-height)_-_2.5rem)] overflow-hidden rounded-lg border">
           <LogoRain />
         </div>
         {/* px-6 clears the tank's inset-5 walls, so the card lands on the tank
