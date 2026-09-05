@@ -1,0 +1,27 @@
+{
+  "name": "my-app",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "db:generate": "turbo run generate",
+    "db:make": "pnpm --filter @my-app/db run make",
+    "db:migrate": "turbo run migrate",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "lint": "turbo run lint",
+    "lint:check": "turbo run lint:check",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "prettier": "^3.7.4",
+    "turbo": "^2.8.16",
+    "typescript": "6.0.2"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}
