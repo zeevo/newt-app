@@ -1,0 +1,37 @@
+{
+  "name": "my-app",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "db:generate": "turbo run generate",
+    "db:make": "pnpm --filter @my-app/db run make",
+    "db:migrate": "turbo run migrate",
+    "dev": "turbo run dev",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint --fix",
+    "lint:check": "oxlint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "^1.74.0",
+    "@types/node": "^24.13.3",
+    "oxfmt": "^0.59.0",
+    "oxlint": "^1.74.0",
+    "turbo": "^2.8.16",
+    "typescript": "6.0.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}
