@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { deploymentOptions, type Config } from "@/lib/build-command";
+import { deploymentOptions, NEST_MODES, type Config } from "@/lib/build-command";
 import { configParsers, sanitizeConfig } from "@/lib/config-params";
 
 describe("config params", () => {
@@ -8,7 +8,8 @@ describe("config params", () => {
       ["testing", ["jest", "vitest"]],
       ["database", ["sqlite", "postgres"]],
       ["linter", ["eslint", "oxc"]],
-      ["deployment", deploymentOptions(false)],
+      ["deployment", deploymentOptions("on")],
+      ["nest", NEST_MODES],
     ] as const;
 
     accepted.forEach(([key, values]) => {
@@ -21,9 +22,10 @@ describe("config params", () => {
   it("rejects unknown values so hand-edited urls fall back to the default", () => {
     expect(configParsers.testing.parse("mocha")).toBeNull();
     expect(configParsers.deployment.parse("docker")).toBeNull();
+    expect(configParsers.nest.parse("di")).toBeNull();
   });
 
-  it("drops a deployment the CLI rejects with di-only", () => {
+  it("drops a deployment the CLI rejects for the selected nest mode", () => {
     const base: Config = {
       name: "my-app",
       shadcn: true,
@@ -31,13 +33,30 @@ describe("config params", () => {
       database: "postgres",
       linter: "oxc",
       deployment: "spa",
-      nestDiOnly: true,
+      nest: "di-only",
       todoExample: true,
       antiSlop: true,
     };
     expect(sanitizeConfig(base).deployment).toBe("none");
+    expect(sanitizeConfig({ ...base, nest: "off" }).deployment).toBe("none");
     expect(sanitizeConfig({ ...base, deployment: "standalone" }).deployment).toBe("standalone");
-    expect(sanitizeConfig({ ...base, nestDiOnly: false }).deployment).toBe("spa");
+    expect(sanitizeConfig({ ...base, nest: "on" }).deployment).toBe("spa");
+  });
+
+  it("drops the todo example when nest is off", () => {
+    const base: Config = {
+      name: "my-app",
+      shadcn: true,
+      testing: "vitest",
+      database: "postgres",
+      linter: "oxc",
+      deployment: "none",
+      nest: "off",
+      todoExample: true,
+      antiSlop: false,
+    };
+    expect(sanitizeConfig(base).todoExample).toBe(false);
+    expect(sanitizeConfig({ ...base, nest: "di-only" }).todoExample).toBe(true);
   });
   it("drops anti-slop when the linter cannot run it", () => {
     const base: Config = {
@@ -47,7 +66,7 @@ describe("config params", () => {
       database: "postgres",
       linter: "oxc",
       deployment: "none",
-      nestDiOnly: false,
+      nest: "on",
       todoExample: true,
       antiSlop: true,
     };

@@ -9,6 +9,7 @@ import {
   updatePackageJson,
   updateScripts,
   validateDeploymentCombo,
+  validateExampleCombo,
   validateExtrasCombo,
   validateFlagValue,
   validateNodeVersion,
@@ -19,7 +20,7 @@ import { versions } from "./templates/versions";
 
 const templateData: TemplateData = {
   projectName: "my-app",
-  nestDiOnly: false,
+  nest: "on",
   testing: "jest",
   database: "sqlite",
   deployment: "none",
@@ -98,20 +99,47 @@ describe("validateProjectName", () => {
 });
 
 describe("validateDeploymentCombo", () => {
-  it("rejects spa combined with nest-di-only", () => {
-    const result = validateDeploymentCombo("spa", true);
-    expect(result.valid).toBe(false);
-    expect(result.error).toContain("--deployment spa cannot be combined with --nest-di-only.");
-  });
-
-  it("accepts spa without nest-di-only", () => {
-    expect(validateDeploymentCombo("spa", false).valid).toBe(true);
-  });
-
-  it("accepts nest-di-only with the deployments that support it", () => {
+  it("rejects spa for the nest modes with no HTTP server to serve it", () => {
     expect(
-      ["none", "standalone"].map((deployment) => validateDeploymentCombo(deployment, true).valid),
-    ).toEqual([true, true]);
+      ["di-only", "off"].map((nest) => {
+        const result = validateDeploymentCombo("spa", nest);
+        return [result.valid, result.error?.includes(`--nest ${nest}`)];
+      }),
+    ).toEqual([
+      [false, true],
+      [false, true],
+    ]);
+  });
+
+  it("accepts spa with nest on", () => {
+    expect(validateDeploymentCombo("spa", "on").valid).toBe(true);
+  });
+
+  it("accepts every nest mode with the deployments that support it", () => {
+    expect(
+      ["none", "standalone"].flatMap((deployment) =>
+        ["on", "off", "di-only"].map((nest) => validateDeploymentCombo(deployment, nest).valid),
+      ),
+    ).toEqual([true, true, true, true, true, true]);
+  });
+});
+
+describe("validateExampleCombo", () => {
+  it("rejects the todo example with nest off", () => {
+    const result = validateExampleCombo(true, "off");
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("--include-example cannot be combined with --nest off.");
+  });
+
+  it("accepts the todo example with the nest modes that can run it", () => {
+    expect(["on", "di-only"].map((nest) => validateExampleCombo(true, nest).valid)).toEqual([
+      true,
+      true,
+    ]);
+  });
+
+  it("accepts nest off without the example", () => {
+    expect(validateExampleCombo(false, "off").valid).toBe(true);
   });
 });
 

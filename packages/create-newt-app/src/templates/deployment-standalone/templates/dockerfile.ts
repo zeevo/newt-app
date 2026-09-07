@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s: Selection) => !s.nestDiOnly,
+  when: (s: Selection) => s.nest === "on",
   filename: "Dockerfile",
   template: `FROM node:24-alpine AS base
 ENV PNPM_HOME="/pnpm"

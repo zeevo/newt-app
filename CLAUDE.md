@@ -49,7 +49,7 @@ chmod -R 755 /tmp/test-app && rm -rf /tmp/test-app
 
 ## Updating scaffold snapshots
 
-`packages/create-newt-app/snapshots/` holds the full output of five scaffolded apps, one
+`packages/create-newt-app/snapshots/` holds the full output of seven scaffolded apps, one
 directory per CLI combo. Any template edit changes them, so regenerate and review the diff
 as part of the change:
 

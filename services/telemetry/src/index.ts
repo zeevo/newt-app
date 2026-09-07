@@ -30,6 +30,7 @@ const ENUMS = {
   database: ["sqlite", "postgres"],
   linter: ["eslint", "oxc"],
   deployment: ["none", "standalone", "spa"],
+  nest: ["on", "off", "di-only"],
   ci: [
     "none",
     "unknown",
@@ -52,7 +53,7 @@ const KNOWN_FLAGS = [
   "--database",
   "--linter",
   "--deployment",
-  "--nest-di-only",
+  "--nest",
   "--include-example",
   "--extras",
 ];
@@ -102,7 +103,7 @@ type Row = {
   database: string;
   linter: string;
   deployment: string;
-  nest_di_only: number;
+  nest: string;
   todo_example: number;
   anti_slop: number;
 };
@@ -125,7 +126,7 @@ function parse(body: unknown, now: number): Row | null {
     database: enumValue("database", b.database),
     linter: enumValue("linter", b.linter),
     deployment: enumValue("deployment", b.deployment),
-    nest_di_only: bool(b.nestDiOnly),
+    nest: enumValue("nest", b.nest),
     todo_example: bool(b.todoExample),
     anti_slop: bool(b.antiSlop),
   };
@@ -136,7 +137,7 @@ function parse(body: unknown, now: number): Row | null {
 
 const INSERT = `INSERT INTO runs (
   ts, cli_version, node_major, platform, mode, ci, explicit_flags,
-  shadcn, testing, database, linter, deployment, nest_di_only, todo_example, anti_slop
+  shadcn, testing, database, linter, deployment, nest, todo_example, anti_slop
 ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
 export default {

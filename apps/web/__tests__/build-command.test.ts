@@ -5,18 +5,20 @@ import {
   normalizeName,
   DEPLOYMENT_HINTS,
   deploymentOptions,
-  DI_ONLY_REJECTS,
   extrasHints,
+  NEST_MODES,
+  NEST_REJECTS,
+  todoExampleAvailable,
   TODO_EXAMPLE_HINT,
   type Config,
 } from "@/lib/build-command";
 
 // every config the panel can reach — deployment comes from the same function
 // that renders the select, so hiding an option here means hiding it in the UI
-const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
-  deploymentOptions(nestDiOnly).flatMap((deployment) =>
+const reachable: Config[] = NEST_MODES.flatMap((nest) =>
+  deploymentOptions(nest).flatMap((deployment) =>
     [true, false].flatMap((shadcn) =>
-      [true, false].flatMap((todoExample) =>
+      (todoExampleAvailable(nest) ? [true, false] : [false]).flatMap((todoExample) =>
         (["jest", "vitest"] as const).flatMap((testing) =>
           (["sqlite", "postgres"] as const).flatMap((database) =>
             (["eslint", "oxc"] as const).flatMap((linter) =>
@@ -27,7 +29,7 @@ const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
                 database,
                 linter,
                 deployment,
-                nestDiOnly,
+                nest,
                 todoExample,
                 antiSlop,
               })),
@@ -40,22 +42,39 @@ const reachable: Config[] = [true, false].flatMap((nestDiOnly) =>
 );
 
 describe("buildCommand", () => {
-  it("hides exactly the deployments the CLI rejects with di-only", () => {
+  it("hides exactly the deployments the CLI rejects per nest mode", () => {
     // Pinned against validateDeploymentCombo in packages/create-newt-app. The
-    // reachable set below is derived from DI_ONLY_REJECTS, so without this the
+    // reachable set below is derived from NEST_REJECTS, so without this the
     // suite would happily agree with a wrong value.
-    expect([...DI_ONLY_REJECTS].sort()).toEqual(["spa"]);
-    expect(deploymentOptions(true)).toEqual(["none", "standalone"]);
+    expect(NEST_MODES.map((nest) => [nest, [...NEST_REJECTS[nest]].sort()])).toEqual([
+      ["on", []],
+      ["off", ["spa"]],
+      ["di-only", ["spa"]],
+    ]);
+    expect(deploymentOptions("off")).toEqual(["none", "standalone"]);
+    expect(deploymentOptions("di-only")).toEqual(["none", "standalone"]);
+    expect(deploymentOptions("on")).toEqual(["none", "standalone", "spa"]);
   });
 
-  it("never pairs --nest-di-only with a deployment the CLI rejects", () => {
+  it("never pairs a nest mode with a deployment the CLI rejects", () => {
     const invalid = reachable
       .map(buildCommand)
-      .filter(
-        (command) =>
-          command.includes("--nest-di-only") &&
-          [...DI_ONLY_REJECTS].some((mode) => command.includes(`--deployment ${mode}`)),
+      .filter((command) =>
+        NEST_MODES.some(
+          (nest) =>
+            command.includes(`--nest ${nest}`) &&
+            [...NEST_REJECTS[nest]].some((mode) => command.includes(`--deployment ${mode}`)),
+        ),
       );
+
+    expect(invalid).toEqual([]);
+  });
+
+  // validateExampleCombo rejects the pair: the example is a Nest module.
+  it("never pairs --nest off with --include-example", () => {
+    const invalid = reachable
+      .map(buildCommand)
+      .filter((command) => command.includes("--nest off") && command.includes("--include-example"));
 
     expect(invalid).toEqual([]);
   });
@@ -101,7 +120,7 @@ describe("buildCommand", () => {
         database: "sqlite",
         linter: "eslint",
         deployment: "none",
-        nestDiOnly: false,
+        nest: "on",
         todoExample: true,
         antiSlop: false,
       }),

@@ -1,11 +1,12 @@
 import ejs from "ejs";
 import { describe, expect, it } from "vitest";
 import { selectModules } from "./index";
-import type { Extra, ModuleSelection, TemplateData } from "./types";
+import type { Extra, ModuleSelection, Nest, TemplateData } from "./types";
 import { versions } from "./versions";
-import { validateDeploymentCombo, validateExtrasCombo } from "../utils";
+import { validateDeploymentCombo, validateExampleCombo, validateExtrasCombo } from "../utils";
 
 const DEPLOYMENTS = ["none", "standalone", "spa"] as const;
+const NEST = ["on", "off", "di-only"] as const satisfies readonly Nest[];
 const TESTING = ["jest", "vitest"] as const;
 const DATABASES = ["sqlite", "postgres"] as const;
 const LINTERS = ["eslint", "oxc"] as const;
@@ -16,7 +17,7 @@ const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies"];
 // Every selection the CLI will accept. The rejected pairs are filtered with the
 // same validator the CLI uses, so a change there changes the matrix here too.
 const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
-  BOOLS.flatMap((nestDiOnly) =>
+  NEST.flatMap((nest) =>
     BOOLS.flatMap((shadcn) =>
       TESTING.flatMap((testing) =>
         DATABASES.flatMap((database) =>
@@ -24,7 +25,7 @@ const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
             BOOLS.flatMap((todoExample) =>
               EXTRAS.map((extras) => ({
                 deployment,
-                nestDiOnly,
+                nest,
                 shadcn,
                 testing,
                 database,
@@ -39,7 +40,8 @@ const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
     ),
   ),
 )
-  .filter(({ deployment, nestDiOnly }) => validateDeploymentCombo(deployment, nestDiOnly).valid)
+  .filter(({ deployment, nest }) => validateDeploymentCombo(deployment, nest).valid)
+  .filter(({ todoExample, nest }) => validateExampleCombo(todoExample, nest).valid)
   .filter(({ extras, linter }) => validateExtrasCombo(extras, linter).valid);
 
 const label = (selection: ModuleSelection) =>
@@ -52,7 +54,7 @@ const label = (selection: ModuleSelection) =>
 function renderCombo(selection: ModuleSelection) {
   const data: TemplateData = {
     projectName: "my-app",
-    nestDiOnly: selection.nestDiOnly,
+    nest: selection.nest,
     testing: selection.testing,
     database: selection.database,
     deployment: selection.deployment,
@@ -201,7 +203,8 @@ describe("anti-slop ships only with the extra", () => {
 });
 
 // A shipped e2e spec needs supertest to run and a controller to hit. DI-only
-// Nest has neither, so it ships no e2e suite at all.
+// Nest has neither, so it ships no e2e suite at all, and `off` has no apps/api
+// to put one in.
 describe("the e2e suite ships only where it can pass", () => {
   it.each(combos.map((selection) => [label(selection), selection] as const))(
     "%s",
@@ -209,23 +212,22 @@ describe("the e2e suite ships only where it can pass", () => {
       const { files, scripts } = renderCombo(selection);
       const spec = "apps/api/test/app.e2e-spec.ts";
       const apiPkg = "apps/api/package.json";
+      const e2e = selection.nest === "on";
 
-      expect(files.has(spec)).toBe(!selection.nestDiOnly);
-      expect("test:e2e" in (scripts.get(apiPkg) ?? {})).toBe(!selection.nestDiOnly);
-      expect(files.has("apps/api/test/jest-e2e.json")).toBe(
-        !selection.nestDiOnly && selection.testing === "jest",
-      );
+      expect(files.has(spec)).toBe(e2e);
+      expect("test:e2e" in (scripts.get(apiPkg) ?? {})).toBe(e2e);
+      expect(files.has("apps/api/test/jest-e2e.json")).toBe(e2e && selection.testing === "jest");
       expect(files.has("apps/api/vitest.config.e2e.mts")).toBe(
-        !selection.nestDiOnly && selection.testing === "vitest",
+        e2e && selection.testing === "vitest",
       );
 
       const deps: Manifest = JSON.parse(files.get(apiPkg) ?? "{}");
       const declared = { ...deps.dependencies, ...deps.devDependencies };
       const needed = ["supertest", "@types/supertest", "@nestjs/platform-express"];
-      expect(needed.filter((dep) => dep in declared)).toEqual(selection.nestDiOnly ? [] : needed);
+      expect(needed.filter((dep) => dep in declared)).toEqual(e2e ? needed : []);
 
       const readme = files.get("apps/api/README.md") ?? "";
-      expect(readme.includes("pnpm test:e2e")).toBe(!selection.nestDiOnly);
+      expect(readme.includes("pnpm test:e2e")).toBe(e2e);
     },
   );
 });
@@ -233,15 +235,45 @@ describe("the e2e suite ships only where it can pass", () => {
 // Specs are written against globals, so the test runner's types have to be in
 // scope or the api's own lint run fails on unresolved describe/it/expect.
 describe("api tsconfig types match the test runner", () => {
-  it.each(combos.map((selection) => [label(selection), selection] as const))(
-    "%s",
-    (_name, selection) => {
-      const tsconfig = renderCombo(selection).files.get("apps/api/tsconfig.json") ?? "";
-      const types = JSON.parse(tsconfig).compilerOptions.types;
+  it.each(
+    combos
+      .filter((selection) => selection.nest !== "off")
+      .map((selection) => [label(selection), selection] as const),
+  )("%s", (_name, selection) => {
+    const tsconfig = renderCombo(selection).files.get("apps/api/tsconfig.json") ?? "";
+    const types = JSON.parse(tsconfig).compilerOptions.types;
 
-      expect(types).toContain(selection.testing === "jest" ? "jest" : "vitest/globals");
-    },
-  );
+    expect(types).toContain(selection.testing === "jest" ? "jest" : "vitest/globals");
+  });
+});
+
+// `off` is the whole point of the mode: no apps/api, and nothing anywhere that
+// would drag @nestjs back in through a dependency.
+describe("nest off scaffolds no Nest at all", () => {
+  it.each(
+    combos
+      .filter((selection) => selection.nest === "off")
+      .map((selection) => [label(selection), selection] as const),
+  )("%s", (_name, selection) => {
+    const { files } = renderCombo(selection);
+
+    expect([...files.keys()].filter((filename) => filename.startsWith("apps/api/"))).toEqual([]);
+
+    const nestDeps = packageJsons(files).flatMap(([filename, contents]) => {
+      const json: Manifest = JSON.parse(contents);
+      return DEP_FIELDS.flatMap((field) =>
+        Object.keys(json[field] ?? {})
+          .filter((dep) => dep.startsWith("@nestjs/") || dep.includes("nestjs-better-auth"))
+          .map((dep) => `${filename} ${field}.${dep}`),
+      );
+    });
+    expect(nestDeps).toEqual([]);
+
+    // The handler the /api rewrite used to reach on port 3001, now served in
+    // process by the only app there is.
+    expect(files.has("apps/web/app/api/hello/route.ts")).toBe(true);
+    expect(files.get("apps/web/next.config.js")).not.toContain("localhost:3001");
+  });
 });
 
 // A sqlite app handed a Postgres URL opens it as a file path and dies on boot,

@@ -1,6 +1,6 @@
 import type { Selection } from "../../types";
 export default {
-  when: (s: Selection) => !s.nestDiOnly && s.deployment !== "spa",
+  when: (s: Selection) => s.nest === "on" && s.deployment !== "spa",
   filename: "apps/api/package.json",
   template: `{
   "name": "api",

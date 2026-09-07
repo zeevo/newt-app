@@ -1,0 +1,34 @@
+x-app-env: &app-env
+  BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+  # Better Auth trusts this origin; without it every deployment falls back to
+  # localhost:3000 and rejects requests from the real one.
+  BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
+  DATABASE_URL: /data/app.db
+
+services:
+  web:
+    build:
+      context: .
+      target: web
+    ports:
+      - "3000:3000"
+    environment:
+      <<: *app-env
+    volumes:
+      - db_data:/data
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  migrate:
+    build:
+      context: .
+      target: migrate
+    environment:
+      <<: *app-env
+    volumes:
+      - db_data:/data
+    restart: "no"
+
+volumes:
+  db_data:
