@@ -23,13 +23,18 @@ esac
 
 # The todo example is opt-in, so without it the guarded route doesn't exist
 case "$FLAGS" in *--include-example*) TODOS=yes ;; *) TODOS=no ;; esac
-# DI-only runs Nest inside Next: no api process, so /api is served on the web port
-case "$FLAGS" in *--nest-di-only*) DI_ONLY=yes ;; *) DI_ONLY=no ;; esac
+# Only --nest on has an api process. di-only runs Nest inside Next and off has
+# no Nest at all, so both serve /api on the web port.
+case "$FLAGS" in
+  *--nest\ off*)     NEST=off ;;
+  *--nest\ di-only*) NEST=di-only ;;
+  *)                 NEST=on ;;
+esac
 # SQLite needs no server, so the signup flow below can migrate and use a real
 # database. Postgres would need one this script does not start.
 case "$FLAGS" in *--database\ postgres*) DB=postgres ;; *) DB=sqlite ;; esac
 
-echo "smoke: mode=$MODE di-only=$DI_ONLY db=$DB flags=${FLAGS:-none}"
+echo "smoke: mode=$MODE nest=$NEST db=$DB flags=${FLAGS:-none}"
 
 # Processes started through pnpm pick up .env via next.config/dotenv, but the
 # standalone bundle does not — in production those vars come from the container
@@ -104,12 +109,12 @@ else
       ;;
   esac
 
-  if [ "$DI_ONLY" = yes ]; then
-    BASE=$WEB
-    SERVER_LOG=web
-  else
+  if [ "$NEST" = on ]; then
     start api pnpm --filter api start:prod
     BASE=http://localhost:3001
+  else
+    BASE=$WEB
+    SERVER_LOG=web
   fi
 fi
 
@@ -129,8 +134,10 @@ probe "auth is mounted"           "$BASE/api/auth/get-session"  200
 probe "unknown api route 404s"    "$BASE/api/__nope__"          404
 [ "$TODOS" = yes ] && probe "auth guard rejects anonymous" "$BASE/api/todos" 401
 
+# With nest off the handler is a plain Next route, and says so.
+if [ "$NEST" = off ]; then HELLO="Hello from Next"; else HELLO="Hello from Nest"; fi
 body=$(curl -sf "$BASE/api/hello")
-echo "$body" | grep -q "Hello from Nest" || fail "unexpected /api/hello body: $body"
+echo "$body" | grep -q "$HELLO" || fail "unexpected /api/hello body: $body"
 echo "  ok  /api/hello body: $body"
 
 # Status codes cannot tell you that sessions broke: a dependency bump can leave
@@ -202,7 +209,8 @@ if [ "$MODE" = standalone ] && [ -f Dockerfile ]; then
 
   # A --filter naming a package that doesn't exist fails the image build before
   # anything is copied, so the artifact check above can't see it. Package names
-  # differ by mode: DI-only scopes the api as @<project>/api, plain api is "api".
+  # differ by mode: di-only scopes the api as @<project>/api, plain api is
+  # "api", and off has none to filter for.
   node -e '
     const { readFileSync, readdirSync, existsSync } = require("fs");
     const names = ["apps", "packages"]
