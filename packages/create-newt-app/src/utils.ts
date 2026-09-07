@@ -191,15 +191,40 @@ export function validateExtrasCombo(extras: readonly string[], linter: string): 
   return { valid: true };
 }
 
-export function validateDeploymentCombo(deployment: string, nestDiOnly: boolean): ValidationResult {
-  if (deployment === "spa" && nestDiOnly) {
+export function validateDeploymentCombo(deployment: string, nest: string): ValidationResult {
+  if (deployment === "spa" && nest === "di-only") {
     return {
       valid: false,
       error:
-        "--deployment spa cannot be combined with --nest-di-only.\n" +
+        "--deployment spa cannot be combined with --nest di-only.\n" +
         "SPA mode statically exports Next.js (output: 'export'), which cannot include the\n" +
-        "API route handlers that DI-only mode depends on. Pick one: drop --nest-di-only to\n" +
-        "get SPA mode with NestJS controllers, or drop --deployment spa.",
+        "API route handlers that di-only mode depends on. Pick one: --nest on to get SPA\n" +
+        "mode with NestJS controllers, or drop --deployment spa.",
+    };
+  }
+
+  if (deployment === "spa" && nest === "off") {
+    return {
+      valid: false,
+      error:
+        "--deployment spa cannot be combined with --nest off.\n" +
+        "SPA mode statically exports Next.js and hands the output to NestJS to serve, so\n" +
+        "there is nothing left to serve it. Pick one: --nest on, or drop --deployment spa.",
+    };
+  }
+
+  return { valid: true };
+}
+
+export function validateExampleCombo(todoExample: boolean, nest: string): ValidationResult {
+  if (todoExample && nest === "off") {
+    return {
+      valid: false,
+      error:
+        "--include-example cannot be combined with --nest off.\n" +
+        "The todo example is a Nest module: an @Injectable service plus either a controller\n" +
+        "or a Next.js route handler that resolves it. Pick one: --nest on or --nest di-only,\n" +
+        "or drop --include-example.",
     };
   }
 

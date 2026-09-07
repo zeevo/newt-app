@@ -48,13 +48,20 @@ const COMBOS = [
   },
   {
     name: "standalone-di",
-    flags: ["--nest-di-only", "--deployment", "standalone", "--include-example"],
+    flags: ["--nest", "di-only", "--deployment", "standalone", "--include-example"],
   },
   { name: "spa", flags: ["--deployment", "spa", "--shadcn", "--include-example"] },
   // The only combo reaching the templates gated on no todo example: the di-only
   // app module and api index, the non-standalone di next config, and the
   // shadcn home page.
-  { name: "di-shadcn-bare", flags: ["--shadcn", "--nest-di-only"] },
+  { name: "di-shadcn-bare", flags: ["--shadcn", "--nest", "di-only"] },
+  // No apps/api at all, so this is the only combo covering the Next-owned
+  // /api/hello handler, the rewrite-free next.config, and a scaffold with no
+  // test runner anywhere.
+  { name: "nest-off", flags: ["--nest", "off"] },
+  // The other next.config and Dockerfile `off` reaches: one web image, no api
+  // stage, and no serverExternalPackages to keep Nest out of the bundle.
+  { name: "nest-off-standalone", flags: ["--nest", "off", "--deployment", "standalone"] },
 ];
 
 // Derived rather than matched on extension, so a binary added under a new

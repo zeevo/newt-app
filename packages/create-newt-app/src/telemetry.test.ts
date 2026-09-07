@@ -4,7 +4,7 @@ import type { ModuleSelection } from "./templates";
 
 const selection: ModuleSelection = {
   deployment: "standalone",
-  nestDiOnly: false,
+  nest: "on",
   todoExample: true,
   shadcn: true,
   database: "postgres",
@@ -85,7 +85,7 @@ describe("payload", () => {
       database: "postgres",
       linter: "oxc",
       deployment: "standalone",
-      nestDiOnly: false,
+      nest: "on",
       todoExample: true,
       antiSlop: true,
     });
@@ -121,7 +121,7 @@ describe("payload", () => {
       "explicitFlags",
       "linter",
       "mode",
-      "nestDiOnly",
+      "nest",
       "nodeMajor",
       "platform",
       "shadcn",

@@ -33,9 +33,12 @@ import {
   buildCommand,
   DEFAULT_NAME,
   deploymentOptions,
-  DI_ONLY_HINT,
-  DI_ONLY_REJECTS,
   extrasHints,
+  NEST_HINTS,
+  NEST_MODES,
+  NEST_REJECTS,
+  testingAvailable,
+  todoExampleAvailable,
   type Config,
 } from "@/lib/build-command";
 import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
@@ -138,6 +141,7 @@ function Segmented<T extends string>({
   options,
   onChange,
   logos,
+  disabled,
 }: {
   label: string;
   hint?: string;
@@ -146,12 +150,14 @@ function Segmented<T extends string>({
   options: readonly T[];
   onChange: (v: T) => void;
   logos?: Partial<Record<T, string>>;
+  disabled?: boolean;
 }) {
   return (
     <Row label={label} hint={hint} logo={logo}>
       <ToggleGroup
         variant="outline"
         size="sm"
+        disabled={disabled}
         value={[value]}
         onValueChange={(v) => {
           const picked = options.find((option) => option === v[0]);
@@ -247,21 +253,16 @@ export function InteractiveFileTree({
               <Segmented
                 label="NestJS"
                 logo="/logos/nestjs.svg"
-                hint={c.nestDiOnly ? DI_ONLY_HINT : undefined}
-                value={c.nestDiOnly ? "di-only" : "on"}
-                options={["on", "di-only"] as const}
-                onChange={(v) =>
-                  setC((prev) => {
-                    const nestDiOnly = v === "di-only";
-                    return {
-                      ...prev,
-                      nestDiOnly,
-                      deployment:
-                        nestDiOnly && DI_ONLY_REJECTS.has(prev.deployment)
-                          ? "none"
-                          : prev.deployment,
-                    };
-                  })
+                hint={NEST_HINTS[c.nest]}
+                value={c.nest}
+                options={NEST_MODES}
+                onChange={(nest) =>
+                  setC((prev) => ({
+                    ...prev,
+                    nest,
+                    deployment: NEST_REJECTS[nest].has(prev.deployment) ? "none" : prev.deployment,
+                    todoExample: prev.todoExample && todoExampleAvailable(nest),
+                  }))
                 }
               />
               <BoolToggle label="Better Auth" logo="/logos/better-auth.svg" pressed disabled />
@@ -281,6 +282,12 @@ export function InteractiveFileTree({
                 options={["jest", "vitest"] as const}
                 onChange={(v) => set("testing", v)}
                 logos={{ jest: "/logos/jest.svg", vitest: "/logos/vitest.svg" }}
+                disabled={!testingAvailable(c.nest)}
+                hint={
+                  testingAvailable(c.nest)
+                    ? undefined
+                    : "The test setup lives in apps/api, which nest off never scaffolds."
+                }
               />
               <Segmented
                 label="linter"
@@ -317,14 +324,12 @@ export function InteractiveFileTree({
                     <DropdownMenuRadioGroup
                       value={c.deployment}
                       onValueChange={(v) => {
-                        const picked = deploymentOptions(c.nestDiOnly).find(
-                          (option) => option === v,
-                        );
+                        const picked = deploymentOptions(c.nest).find((option) => option === v);
                         if (picked) set("deployment", picked);
                       }}
                     >
                       <DropdownMenuLabel>Deployment Add-ons</DropdownMenuLabel>
-                      {deploymentOptions(c.nestDiOnly).map((option) => (
+                      {deploymentOptions(c.nest).map((option) => (
                         <DropdownMenuRadioItem
                           key={option}
                           value={option}
@@ -340,6 +345,7 @@ export function InteractiveFileTree({
                       <DropdownMenuCheckboxItem
                         checked={c.todoExample}
                         onCheckedChange={(v) => set("todoExample", v)}
+                        disabled={!todoExampleAvailable(c.nest)}
                         className="font-mono text-xs"
                       >
                         example app

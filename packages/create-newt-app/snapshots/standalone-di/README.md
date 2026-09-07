@@ -14,7 +14,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Apps
 
 - **web**: Next.js frontend (port 3000)
-- **api**: NestJS backend (port 3001)
+- **api**: NestJS providers, resolved from the web process (no HTTP server)
 
 ## Packages
 

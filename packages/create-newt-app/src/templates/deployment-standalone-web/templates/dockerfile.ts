@@ -9,11 +9,11 @@ FROM base AS build
 WORKDIR /app
 COPY . .
 RUN pnpm install --frozen-lockfile
-RUN pnpm build --filter=web --filter=@<%= projectName %>/api --filter=@<%= projectName %>/auth
+RUN pnpm build --filter=web<% if (nest === 'di-only') { %> --filter=@<%= projectName %>/api<% } %> --filter=@<%= projectName %>/auth
 
 # --- web ---
-# DI-only has no api entrypoint: Nest is wired into this image through the
-# Next.js server, so there is no separate api stage.
+# One image: <% if (nest === 'di-only') { %>Nest is wired into the Next.js server rather than bootstrapped
+# on its own port<% } else { %>Next.js serves /api itself<% } %>, so there is no separate api stage.
 FROM base AS web
 WORKDIR /app
 ENV NODE_ENV=production

@@ -72,7 +72,7 @@ export function buildPayload(report: RunReport) {
     database: selection.database,
     linter: selection.linter,
     deployment: selection.deployment,
-    nestDiOnly: selection.nestDiOnly,
+    nest: selection.nest,
     todoExample: selection.todoExample,
     antiSlop: selection.extras.includes("anti-slop"),
   };

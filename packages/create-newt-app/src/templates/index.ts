@@ -15,7 +15,8 @@ import testingVitest from "./testing-vitest/index";
 import deploymentStandalone from "./deployment-standalone/index";
 import deploymentSpa from "./single-process-static-export/index";
 import nestDiOnlyModule from "./nest-di-only/index";
-import deploymentStandaloneDi from "./deployment-standalone-di/index";
+import nestOff from "./nest-off/index";
+import deploymentStandaloneWeb from "./deployment-standalone-web/index";
 import apiControllers from "./api-controllers/index";
 import {
   todoExampleApi,
@@ -54,7 +55,8 @@ export const templates = {
   deploymentStandalone,
   deploymentSpa,
   nestDiOnly: nestDiOnlyModule,
-  deploymentStandaloneDi,
+  nestOff,
+  deploymentStandaloneWeb,
   apiControllers,
   todoExampleApi,
   todoExampleControllers,
@@ -72,8 +74,7 @@ const E2E_FILES = [
 // The single source of truth for which modules a selection scaffolds. Kept here
 // rather than in the CLI so the render tests exercise the real selection.
 export function selectModules(selection: ModuleSelection): Module[] {
-  const { deployment, nestDiOnly, todoExample, shadcn, database, linter, testing, extras } =
-    selection;
+  const { deployment, nest, todoExample, shadcn, database, linter, testing, extras } = selection;
 
   const deploymentModule =
     deployment === "standalone"
@@ -94,37 +95,45 @@ export function selectModules(selection: ModuleSelection): Module[] {
         }
       : web;
 
-  // DI-only Nest has no controllers of its own: HTTP lives in Next route
-  // handlers, so an e2e suite booting apps/api has nothing to hit.
+  // Every testing config, script and dev dependency targets apps/api, so `off`
+  // gets none of them. DI-only keeps the unit suite but drops the e2e one: its
+  // Nest has no controllers of its own, so a suite booting apps/api has
+  // nothing to hit.
   const selectedTesting = testing === "vitest" ? testingVitest : testingJest;
-  const testingModule = nestDiOnly
-    ? {
-        ...selectedTesting,
-        templates: selectedTesting.templates.filter((t) => !E2E_FILES.includes(t.filename)),
-        scripts: selectedTesting.scripts?.filter((s) => s.name !== "test:e2e"),
-      }
-    : selectedTesting;
+  const testingModule =
+    nest === "off"
+      ? null
+      : nest === "di-only"
+        ? {
+            ...selectedTesting,
+            templates: selectedTesting.templates.filter((t) => !E2E_FILES.includes(t.filename)),
+            scripts: selectedTesting.scripts?.filter((s) => s.name !== "test:e2e"),
+          }
+        : selectedTesting;
+
+  const nestModule =
+    nest === "di-only" ? nestDiOnlyModule : nest === "off" ? nestOff : apiControllers;
 
   return [
     root,
     webModule,
-    api,
+    ...(nest === "off" ? [] : [api]),
     database === "postgres" ? dbPostgres : dbSqlite,
     auth,
     shadcn ? shadcnUi : ui,
     linter === "oxc" ? oxc : eslintConfig,
     ...(extras.includes("anti-slop") ? [antiSlop] : []),
     typescriptConfig,
-    testingModule,
+    ...(testingModule ? [testingModule] : []),
     ...(deploymentModule ? [deploymentModule] : []),
-    ...(nestDiOnly ? [nestDiOnlyModule] : [apiControllers]),
-    // nest-di-only overwrites the standalone next.config.js and leaves the
-    // Dockerfile pointing at an api entrypoint DI-only never emits
-    ...(nestDiOnly && deployment === "standalone" ? [deploymentStandaloneDi] : []),
+    nestModule,
+    // nest-di-only and nest-off both overwrite the standalone next.config.js
+    // and leave the Dockerfile pointing at an api entrypoint neither emits
+    ...(nest !== "on" && deployment === "standalone" ? [deploymentStandaloneWeb] : []),
     ...(todoExample
       ? [
           todoExampleApi,
-          ...(nestDiOnly ? [todoExampleDi] : [todoExampleControllers]),
+          ...(nest === "di-only" ? [todoExampleDi] : [todoExampleControllers]),
           shadcn ? todoExampleShadcn : todoExampleWeb,
         ]
       : []),

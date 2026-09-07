@@ -10,8 +10,8 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm build --filter=web --filter=@my-app/api --filter=@my-app/auth
 
 # --- web ---
-# DI-only has no api entrypoint: Nest is wired into this image through the
-# Next.js server, so there is no separate api stage.
+# One image: Nest is wired into the Next.js server rather than bootstrapped
+# on its own port, so there is no separate api stage.
 FROM base AS web
 WORKDIR /app
 ENV NODE_ENV=production

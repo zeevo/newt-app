@@ -1,8 +1,12 @@
 import type { Versions } from "./versions";
 
+// "on" is a standalone Nest HTTP server on :3001, "di-only" is Nest as an
+// injector inside the Next.js process, "off" ships no Nest at all.
+export type Nest = "on" | "off" | "di-only";
+
 export type TemplateData = {
   projectName: string;
-  nestDiOnly: boolean;
+  nest: Nest;
   testing: "jest" | "vitest";
   database: "sqlite" | "postgres";
   deployment: "none" | "standalone" | "spa";
@@ -16,7 +20,7 @@ export type TemplateData = {
 // because these steer *which* template is used, not what it renders.
 export type Selection = {
   deployment: "none" | "standalone" | "spa";
-  nestDiOnly: boolean;
+  nest: Nest;
   todoExample: boolean;
   shadcn: boolean;
   database: "sqlite" | "postgres";

@@ -7,11 +7,11 @@ import { resolve } from 'path';
 dotenv.config({ path: resolve(process.cwd(), '../../.env') });
 dotenv.config({ path: resolve(process.cwd(), '.env') });
 
-// No /api rewrite: DI-only runs Nest inside this process, so Next serves
-// /api itself and there is no separate api container to proxy to.
+// No /api rewrite: Next serves /api itself, so there is no api container to
+// proxy to.
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
+  output: "standalone",<% if (nest === 'di-only') { %>
   serverExternalPackages: [
     '@<%= projectName %>/api',
     '@<%= projectName %>/db',
@@ -22,7 +22,7 @@ const nextConfig = {
     '@thallesp/nestjs-better-auth',
     'reflect-metadata',
     'express',
-  ],
+  ],<% } %>
 };
 
 export default nextConfig;`,
