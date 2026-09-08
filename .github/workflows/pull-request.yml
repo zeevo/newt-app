@@ -70,9 +70,6 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.scaffolder == 'true' }}
     runs-on: ubuntu-latest
-    # Only the --database postgres combos connect, but services are per job, not
-    # per matrix entry. The scaffolded .env points at postgres:postgres@localhost
-    # :5432/postgres, which is what this image serves with no extra config.
     services:
       postgres:
         image: postgres:17-alpine
