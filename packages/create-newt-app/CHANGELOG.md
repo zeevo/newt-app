@@ -1,5 +1,18 @@
 # create-newt-app
 
+## 0.32.0
+
+### Minor Changes
+
+- f383d52: Replace `--nest-di-only` with `--nest on|off|di-only`.
+
+  `on` and `di-only` scaffold what the old default and `--nest-di-only` did. `off` is new: no `apps/api`, no `@nestjs/*` anywhere, and Next.js route handlers own the backend. It rejects `--deployment spa` (nothing left to serve the static export) and `--include-example` (the todo example is a Nest module), and scaffolds no test runner, since every testing config targeted `apps/api`.
+
+### Patch Changes
+
+- c798235: refresh the scaffold snapshots so they match the template output after the db:migrate removal
+- 3b70d0d: remove the dead db:migrate script from apps/web
+
 ## 0.31.10
 
 ### Patch Changes
