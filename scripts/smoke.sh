@@ -7,7 +7,9 @@
 #
 # Run it against an app that has already been installed and built. Deployment
 # modes differ in what to start and which port ends up serving, so the flags
-# string picks the shape; everything else is probed the same way.
+# string picks the shape; everything else is probed the same way. A
+# --database postgres app needs a server reachable at DATABASE_URL; CI starts
+# one as a service container.
 set -euo pipefail
 
 FLAGS="${1:-}"
@@ -30,8 +32,9 @@ case "$FLAGS" in
   *--nest\ di-only*) NEST=di-only ;;
   *)                 NEST=on ;;
 esac
-# SQLite needs no server, so the signup flow below can migrate and use a real
-# database. Postgres would need one this script does not start.
+# SQLite needs no server, so the signup flow below can use a real database
+# anywhere. Postgres has one only where something started it, so that flow stays
+# sqlite-only even though the probes above now cover both.
 case "$FLAGS" in *--database\ postgres*) DB=postgres ;; *) DB=sqlite ;; esac
 
 echo "smoke: mode=$MODE nest=$NEST db=$DB flags=${FLAGS:-none}"
@@ -79,13 +82,13 @@ probe() { # description, url, expected-status
   echo "  ok  [$got] $1"
 }
 
-# `pnpm build` never migrates, so the database the flow at the bottom signs up
-# against has no tables yet. Kysely applies the todo migration, and the
-# better-auth CLI creates the user/session/account tables.
-if [ "$DB" = sqlite ]; then
-  pnpm db:migrate > "$LOG_DIR/migrate.log" 2>&1 || fail "db:migrate failed" migrate
-  echo "  ok  migrations applied"
-fi
+# `pnpm build` never migrates, so the database has no tables yet. Kysely applies
+# the todo migration, and the better-auth CLI creates the user/session/account
+# tables. Every database needs this, not just the one the signup flow uses:
+# better-auth validates the schema on each request, so an unmigrated database
+# turns the get-session probe below into a 500.
+pnpm db:migrate > "$LOG_DIR/migrate.log" 2>&1 || fail "db:migrate failed" migrate
+echo "  ok  migrations applied"
 
 WEB=http://localhost:3000
 
