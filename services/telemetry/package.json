@@ -13,10 +13,5 @@
     "@cloudflare/workers-types": "^5.20260830.1",
     "wrangler": "^4.127.1"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "workerd"
-    ]
-  }
+  "packageManager": "pnpm@11.25.0"
 }
