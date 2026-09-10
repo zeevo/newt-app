@@ -1,0 +1,57 @@
+name: Telemetry Migrations
+
+# services/telemetry sits outside the pnpm workspace, so ci.yml never touches
+# it. Its D1 migrations were applied by hand until now; this applies them from
+# main so a merged migration and the live database cannot drift apart.
+#
+# Needs a CLOUDFLARE_API_TOKEN secret with D1 edit permission. The worker itself
+# is still deployed by hand with `pnpm deploy`.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "services/telemetry/migrations/**"
+      - ".github/workflows/telemetry-migrate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: telemetry-migrate
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    name: migrate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: "11.25.0"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: services/telemetry/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: services/telemetry
+        run: pnpm install --frozen-lockfile
+
+      # Non-interactive wrangler skips its confirmation prompt and applies every
+      # migration the d1_migrations table has not recorded, so a run with
+      # nothing new to do is a no-op.
+      - name: Apply migrations
+        working-directory: services/telemetry
+        run: pnpm migrate
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -1,0 +1,6 @@
+# pnpm 11 stopped reading the "pnpm" field in package.json. wrangler is unusable
+# without workerd and esbuild running their install scripts, so the allowlist
+# has to live here.
+allowBuilds:
+  esbuild: true
+  workerd: true
