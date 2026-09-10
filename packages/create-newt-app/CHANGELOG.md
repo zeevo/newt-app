@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.32.1
+
+### Patch Changes
+
+- 2801f13: enable erasableSyntaxOnly in packages/db and packages/auth, which node loads as raw typescript
+
 ## 0.32.0
 
 ### Minor Changes
