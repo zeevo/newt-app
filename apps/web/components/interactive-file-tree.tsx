@@ -46,21 +46,23 @@ import { builderHref, configParsers, configUrlKeys, sanitizeConfig } from "@/lib
 
 const grow = "animate-in fade-in slide-in-from-left-1 duration-300";
 
-const FLAG = "text-sky-700 dark:text-sky-400";
+const VALUE = "text-sky-700 dark:text-sky-400";
 
-// only the --flags take colour. Everything else stays a direct text node of the
+// only flag values take colour. Everything else stays a direct text node of the
 // <code>, so the line still reads as one string to a text lookup
-function flagged(command: string) {
-  return command.split(" ").map((token, i) =>
-    token.startsWith("--") && token.length > 2 ? (
+function coloured(command: string) {
+  const tokens = command.split(" ");
+  return tokens.map((token, i) => {
+    const prev = tokens[i - 1] ?? "";
+    return prev.startsWith("--") && prev.length > 2 && !token.startsWith("-") ? (
       <Fragment key={i}>
         {" "}
-        <span className={FLAG}>{token}</span>
+        <span className={VALUE}>{token}</span>
       </Fragment>
     ) : (
       `${i ? " " : ""}${token}`
-    ),
-  );
+    );
+  });
 }
 
 function renderNodes(nodes: TreeNode[]) {
@@ -433,7 +435,7 @@ export function InteractiveFileTree({
           <div className="min-w-0 flex-1 rounded-lg border bg-code px-3 py-2">
             <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
               <span className="text-green-700 select-none dark:text-green-400">$ </span>
-              {flagged(command)}
+              {coloured(command)}
             </code>
           </div>
           <CopyCommandButton value={command} />
