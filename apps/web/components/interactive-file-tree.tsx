@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { useQueryStates } from "nuqs";
 import { FileTree, fileIcon } from "@newt-app/file-tree";
 import Link from "next/link";
@@ -45,6 +45,25 @@ import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
 import { builderHref, configParsers, configUrlKeys, sanitizeConfig } from "@/lib/config-params";
 
 const grow = "animate-in fade-in slide-in-from-left-1 duration-300";
+
+const VALUE = "text-sky-700 dark:text-sky-400";
+
+// only flag values take colour. Everything else stays a direct text node of the
+// <code>, so the line still reads as one string to a text lookup
+function coloured(command: string) {
+  const tokens = command.split(" ");
+  return tokens.map((token, i) => {
+    const prev = tokens[i - 1] ?? "";
+    return prev.startsWith("--") && prev.length > 2 && !token.startsWith("-") ? (
+      <Fragment key={i}>
+        {" "}
+        <span className={VALUE}>{token}</span>
+      </Fragment>
+    ) : (
+      `${i ? " " : ""}${token}`
+    );
+  });
+}
 
 function renderNodes(nodes: TreeNode[]) {
   return nodes.map((node) => {
@@ -415,8 +434,8 @@ export function InteractiveFileTree({
               growing the row and squeezing the button */}
           <div className="min-w-0 flex-1 rounded-lg border bg-code px-3 py-2">
             <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
-              <span className="text-muted-foreground select-none">$ </span>
-              {command}
+              <span className="text-green-700 select-none dark:text-green-400">$ </span>
+              {coloured(command)}
             </code>
           </div>
           <CopyCommandButton value={command} />
