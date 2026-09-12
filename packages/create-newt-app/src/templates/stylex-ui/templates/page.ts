@@ -17,7 +17,7 @@ export default function Home() {
   const { data: session, isPending } = authClient.useSession();
 
   const { data: hello } = useQuery({
-    queryKey: ['hello'],
+    queryKey: ['hello', session?.user.id],
     queryFn: () => fetch('/api/hello').then((r) => r.json()),
   });
 
