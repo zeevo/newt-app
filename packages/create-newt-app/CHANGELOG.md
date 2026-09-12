@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.33.0
+
+### Minor Changes
+
+- 8f0a305: add `--stylex` to scaffold with StyleX instead of Tailwind
+
+### Patch Changes
+
+- f1ede3f: refresh the scaffold snapshots so they match the template output after the erasableSyntaxOnly addition
+
 ## 0.32.1
 
 ### Patch Changes
