@@ -16,7 +16,7 @@ import { TodosModule } from './todos/todos.module';
     // serves apps/web's static export; the api runs from apps/api
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), '../web/out'),
-      exclude: ['/api/{*splat}'],
+      exclude: ['/api/{*splat}', '/{*path}.:ext'],
     }),
     AuthModule.forRoot({ auth }),
     TodosModule,
