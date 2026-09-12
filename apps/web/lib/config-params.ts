@@ -21,11 +21,13 @@ export const configParsers = {
   nest: parseAsStringLiteral(NEST_MODES).withDefault("on"),
   todoExample: parseAsBoolean.withDefault(true),
   antiSlop: parseAsBoolean.withDefault(false),
+  agentsMd: parseAsBoolean.withDefault(true),
 };
 
 export const configUrlKeys = {
   todoExample: "todo-example",
   antiSlop: "anti-slop",
+  agentsMd: "agents-md",
 };
 
 // A hand-edited URL can pair a nest mode with a deployment or an example the

@@ -41,18 +41,21 @@ const configs: Config[] = NEST_MODES.flatMap((nest) =>
     STYLING.flatMap(({ shadcn, stylex }) =>
       (todoExampleAvailable(nest) ? [true, false] : [false]).flatMap((todoExample) =>
         (["eslint", "oxc"] as const).flatMap((linter) =>
-          (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
-            name: "my-app",
-            shadcn,
-            stylex,
-            testing: "jest" as const,
-            database: "sqlite" as const,
-            linter,
-            deployment,
-            nest,
-            todoExample,
-            antiSlop,
-          })),
+          (linter === "oxc" ? [true, false] : [false]).flatMap((antiSlop) =>
+            [true, false].map((agentsMd) => ({
+              name: "my-app",
+              shadcn,
+              stylex,
+              testing: "jest" as const,
+              database: "sqlite" as const,
+              linter,
+              deployment,
+              nest,
+              todoExample,
+              antiSlop,
+              agentsMd,
+            })),
+          ),
         ),
       ),
     ),
@@ -67,6 +70,7 @@ const key = (c: Config) =>
     c.linter,
     c.todoExample ? "todo" : "bare",
     c.antiSlop ? "anti-slop" : "no-anti-slop",
+    c.agentsMd ? "agents-md" : "no-agents-md",
   ].join(" ");
 
 // The builder hands users this exact command, so drive the CLI with the flags

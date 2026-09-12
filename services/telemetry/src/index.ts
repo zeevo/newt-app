@@ -57,6 +57,7 @@ const KNOWN_FLAGS = [
   "--nest",
   "--include-example",
   "--extras",
+  "--no-agents-md",
 ];
 
 // The only two free-form fields; "other" keeps an unknown version countable.

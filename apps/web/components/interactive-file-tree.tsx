@@ -227,6 +227,7 @@ export function InteractiveFileTree({
     c.deployment === "none" ? null : c.deployment,
     c.todoExample ? "example app" : null,
     c.antiSlop ? "anti-slop" : null,
+    c.agentsMd ? "AGENTS.md" : null,
   ].filter((extra) => extra !== null);
 
   return (
@@ -369,6 +370,13 @@ export function InteractiveFileTree({
                           anti-slop
                         </DropdownMenuCheckboxItem>
                       )}
+                      <DropdownMenuCheckboxItem
+                        checked={c.agentsMd}
+                        onCheckedChange={(v) => set("agentsMd", v)}
+                        className="font-mono text-xs"
+                      >
+                        AGENTS.md
+                      </DropdownMenuCheckboxItem>
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>

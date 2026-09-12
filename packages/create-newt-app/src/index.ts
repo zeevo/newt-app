@@ -42,6 +42,7 @@ type Answers = {
   nest?: Nest;
   todoExample?: boolean;
   extras?: Extra[];
+  agentsMd?: boolean;
 };
 
 type Options = {
@@ -58,6 +59,7 @@ type Options = {
   nest: Nest;
   includeExample: boolean;
   extras: readonly Extra[];
+  agentsMd: boolean;
   explicitFlags: readonly string[];
 };
 
@@ -184,6 +186,11 @@ export async function doInit(options: Options) {
           ],
           initialValue: "none",
         }),
+      agentsMd: () =>
+        p.confirm({
+          message: "Include CLAUDE.md/AGENTS.md file?",
+          initialValue: true,
+        }),
     }),
   };
 
@@ -225,6 +232,7 @@ export async function doInit(options: Options) {
     const extras: readonly Extra[] = options.nonInteractive
       ? options.extras
       : (answers.extras ?? []);
+    const agentsMd = options.nonInteractive ? options.agentsMd : (answers.agentsMd ?? true);
 
     const stylingCombo = validateStylingCombo(useShadcn, useStylex);
     if (!stylingCombo.valid) {
@@ -256,6 +264,7 @@ export async function doInit(options: Options) {
       linter,
       testing,
       extras,
+      agentsMd,
     };
 
     const allModules = selectModules(selection);
@@ -361,6 +370,7 @@ program
   .option("--nest <mode>", "NestJS: on, off, or di-only", "on")
   .option("--include-example", "Include the todo example", false)
   .option("--extras <list>", "Extras, comma-separated: anti-slop", "")
+  .option("--no-agents-md", "Skip CLAUDE.md and AGENTS.md", true)
   .action(
     async (
       name: string,
@@ -376,6 +386,7 @@ program
         nest: string;
         includeExample: boolean;
         extras: string;
+        agentsMd: boolean;
       },
       command: Command,
     ) => {
@@ -392,6 +403,7 @@ program
         nest: "--nest",
         includeExample: "--include-example",
         extras: "--extras",
+        agentsMd: "--no-agents-md",
       } as const;
 
       const explicitFlags = Object.entries(CONFIG_FLAGS)
@@ -452,6 +464,7 @@ program
         nest: options.nest as Nest,
         includeExample: options.includeExample,
         extras: extras as Extra[],
+        agentsMd: options.agentsMd,
         explicitFlags,
       });
     },

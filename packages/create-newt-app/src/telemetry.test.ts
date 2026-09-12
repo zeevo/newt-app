@@ -12,6 +12,7 @@ const selection: ModuleSelection = {
   linter: "oxc",
   testing: "vitest",
   extras: ["anti-slop"],
+  agentsMd: true,
 };
 
 const OPT_OUT_CASES: [NodeJS.ProcessEnv, boolean][] = [

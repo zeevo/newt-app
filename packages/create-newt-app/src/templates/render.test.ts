@@ -35,17 +35,20 @@ const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
         DATABASES.flatMap((database) =>
           LINTERS.flatMap((linter) =>
             BOOLS.flatMap((todoExample) =>
-              EXTRAS.map((extras) => ({
-                deployment,
-                nest,
-                shadcn,
-                stylex,
-                testing,
-                database,
-                linter,
-                todoExample,
-                extras,
-              })),
+              EXTRAS.flatMap((extras) =>
+                BOOLS.map((agentsMd) => ({
+                  deployment,
+                  nest,
+                  shadcn,
+                  stylex,
+                  testing,
+                  database,
+                  linter,
+                  todoExample,
+                  extras,
+                  agentsMd,
+                })),
+              ),
             ),
           ),
         ),
@@ -212,6 +215,19 @@ describe("anti-slop ships only with the extra", () => {
       expect(oxlintrc.includes('"packages/ui/src/components/**"')).toBe(
         selected && selection.shadcn,
       );
+    },
+  );
+});
+
+// CLAUDE.md only imports AGENTS.md, so the two ship together or not at all.
+describe("CLAUDE.md and AGENTS.md ship only when asked for", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const { files } = renderCombo(selection);
+
+      expect(files.has("AGENTS.md")).toBe(selection.agentsMd);
+      expect(files.get("CLAUDE.md")).toBe(selection.agentsMd ? "@AGENTS.md" : undefined);
     },
   );
 });

@@ -25,6 +25,7 @@ export type Selection = {
   shadcn: boolean;
   stylex: boolean;
   database: "sqlite" | "postgres";
+  agentsMd: boolean;
 };
 
 // Everything `selectModules` reads: `Selection` plus the options that only ever
