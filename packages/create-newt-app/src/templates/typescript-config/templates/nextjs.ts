@@ -9,7 +9,9 @@ export default {
     "moduleResolution": "Bundler",
     "allowJs": true,
     "jsx": "preserve",
-    "noEmit": true
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false
   }
 }`,
 };
