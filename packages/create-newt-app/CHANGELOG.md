@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.33.1
+
+### Patch Changes
+
+- b92a1d0: mark packages/db as an es module so node stops warning about a typeless package.json when the api starts
+- 5253aa2: in spa mode, a missing file such as a stale `/_next` chunk now 404s instead of falling back to `index.html`
+
 ## 0.33.0
 
 ### Minor Changes
