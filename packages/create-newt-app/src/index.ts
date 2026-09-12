@@ -6,7 +6,7 @@ import { Command } from "commander";
 import * as p from "@clack/prompts";
 import { selectModules, type Extra, type ModuleSelection, type Nest } from "./templates";
 import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.js";
-import { reportRun } from "./telemetry.js";
+import { isEnabled, reportRun } from "./telemetry.js";
 import {
   checkRequiredTools,
   normalizeProjectName,
@@ -327,6 +327,13 @@ export async function doInit(options: Options) {
     console.log(chalk.blue(`  pnpm dev`));
     console.log();
 
+    if (isEnabled()) {
+      console.log(
+        chalk.dim("Sending anonymous usage data (see --help). Set DO_NOT_TRACK=1 to opt out."),
+      );
+      console.log();
+    }
+
     await reportRun({
       mode: options.nonInteractive ? "flags" : "interactive",
       explicitFlags: options.explicitFlags,
@@ -361,6 +368,15 @@ program
   .option("--nest <mode>", "NestJS: on, off, or di-only", "on")
   .option("--include-example", "Include the todo example", false)
   .option("--extras <list>", "Extras, comma-separated: anti-slop", "")
+  .addHelpText(
+    "after",
+    `
+Telemetry:
+  Each scaffold sends one anonymous event: the options you picked, the CLI
+  and Node versions, the OS, and the CI provider if any. No project names,
+  paths or IP addresses are stored. Set DO_NOT_TRACK=1 or
+  NEWT_TELEMETRY_DISABLED=1 to turn it off.`,
+  )
   .action(
     async (
       name: string,
