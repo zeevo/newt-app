@@ -13,6 +13,7 @@ export type TemplateData = {
   linter: "eslint" | "oxc";
   antiSlop: boolean;
   shadcn: boolean;
+  agentsMd: boolean;
   authSecret: string;
   versions: Versions;
 };
@@ -25,6 +26,7 @@ export type Selection = {
   shadcn: boolean;
   stylex: boolean;
   database: "sqlite" | "postgres";
+  agentsMd: boolean;
 };
 
 // Everything `selectModules` reads: `Selection` plus the options that only ever

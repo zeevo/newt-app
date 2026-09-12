@@ -15,7 +15,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 /** @type {import('next').NextConfig} */
 const nextConfig = isProduction
   ? { output: 'export' }
-  : {
+  : {<% if (!agentsMd) { %>
+      agentRules: false,<% } %>
       async rewrites() {
         return [
           {

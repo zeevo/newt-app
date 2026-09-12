@@ -10,7 +10,8 @@ dotenv.config({ path: resolve(process.cwd(), '.env') });
 // No /api rewrite: Next serves /api itself, so there is no api container to
 // proxy to.
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = {<% if (!agentsMd) { %>
+  agentRules: false,<% } %>
   output: "standalone",<% if (nest === 'di-only') { %>
   serverExternalPackages: [
     '@<%= projectName %>/api',

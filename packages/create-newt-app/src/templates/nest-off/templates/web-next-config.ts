@@ -11,7 +11,9 @@ dotenv.config({ path: resolve(process.cwd(), '.env') });
 
 // No /api rewrite: there is no second process, so Next serves /api itself.
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {<% if (!agentsMd) { %>
+  agentRules: false,
+<% } %>};
 
 export default nextConfig;`,
 };

@@ -12,6 +12,7 @@ const selection: ModuleSelection = {
   linter: "oxc",
   testing: "vitest",
   extras: ["anti-slop"],
+  agentsMd: true,
 };
 
 const OPT_OUT_CASES: [NodeJS.ProcessEnv, boolean][] = [
@@ -89,6 +90,7 @@ describe("payload", () => {
       nest: "on",
       todoExample: true,
       antiSlop: true,
+      agentsMd: true,
     });
   });
 
@@ -114,6 +116,7 @@ describe("payload", () => {
     expect(
       Object.keys(buildPayload({ mode: "interactive", explicitFlags: [], selection })).sort(),
     ).toEqual([
+      "agentsMd",
       "antiSlop",
       "ci",
       "cliVersion",
