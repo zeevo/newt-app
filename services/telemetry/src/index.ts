@@ -109,6 +109,7 @@ type Row = {
   nest: string;
   todo_example: number;
   anti_slop: number;
+  agents_md: number;
 };
 
 function parse(body: unknown, now: number): Row | null {
@@ -135,6 +136,9 @@ function parse(body: unknown, now: number): Row | null {
     nest: enumValue("nest", b.nest),
     todo_example: bool(b.todoExample),
     anti_slop: bool(b.antiSlop),
+    // Absent from every CLI that predates --no-agents-md, and each of those
+    // runs scaffolded both files, so missing is a real true.
+    agents_md: b.agentsMd === undefined ? 1 : bool(b.agentsMd),
   };
 
   // SAFETY: every field is `T | null` and this returns null unless all are set.
@@ -143,8 +147,8 @@ function parse(body: unknown, now: number): Row | null {
 
 const INSERT = `INSERT INTO runs (
   ts, cli_version, node_major, platform, mode, ci, explicit_flags,
-  shadcn, stylex, testing, database, linter, deployment, nest, todo_example, anti_slop
-) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+  shadcn, stylex, testing, database, linter, deployment, nest, todo_example, anti_slop, agents_md
+) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
