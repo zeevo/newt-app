@@ -27,6 +27,7 @@ const templateData: TemplateData = {
   linter: "eslint",
   antiSlop: false,
   shadcn: false,
+  agentsMd: true,
   authSecret: "secret",
   versions,
 };

@@ -9,7 +9,8 @@ dotenv.config({ path: resolve(process.cwd(), '../../.env') });
 dotenv.config({ path: resolve(process.cwd(), '.env') });
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = {<% if (!agentsMd) { %>
+  agentRules: false,<% } %>
   serverExternalPackages: [
     '@<%= projectName %>/api',
     '@<%= projectName %>/db',

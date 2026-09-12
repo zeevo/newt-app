@@ -13,6 +13,7 @@ export type TemplateData = {
   linter: "eslint" | "oxc";
   antiSlop: boolean;
   shadcn: boolean;
+  agentsMd: boolean;
   authSecret: string;
   versions: Versions;
 };

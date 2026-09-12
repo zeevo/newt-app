@@ -78,6 +78,7 @@ function renderCombo(selection: ModuleSelection) {
     linter: selection.linter,
     antiSlop: selection.extras.includes("anti-slop"),
     shadcn: selection.shadcn,
+    agentsMd: selection.agentsMd,
     authSecret: "test-secret",
     versions,
   };
@@ -220,6 +221,8 @@ describe("anti-slop ships only with the extra", () => {
 });
 
 // CLAUDE.md only imports AGENTS.md, so the two ship together or not at all.
+// Opting out also turns off agentRules, or next dev would write its own pair
+// into apps/web.
 describe("CLAUDE.md and AGENTS.md ship only when asked for", () => {
   it.each(combos.map((selection) => [label(selection), selection] as const))(
     "%s",
@@ -228,6 +231,9 @@ describe("CLAUDE.md and AGENTS.md ship only when asked for", () => {
 
       expect(files.has("AGENTS.md")).toBe(selection.agentsMd);
       expect(files.get("CLAUDE.md")).toBe(selection.agentsMd ? "@AGENTS.md" : undefined);
+      expect(files.get("apps/web/next.config.js")?.includes("agentRules: false")).toBe(
+        !selection.agentsMd,
+      );
     },
   );
 });
