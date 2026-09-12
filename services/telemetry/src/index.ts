@@ -49,6 +49,7 @@ const ENUMS = {
 
 const KNOWN_FLAGS = [
   "--shadcn",
+  "--stylex",
   "--testing",
   "--database",
   "--linter",
@@ -99,6 +100,7 @@ type Row = {
   ci: string;
   explicit_flags: string;
   shadcn: number;
+  stylex: number;
   testing: string;
   database: string;
   linter: string;
@@ -122,6 +124,9 @@ function parse(body: unknown, now: number): Row | null {
     ci: enumValue("ci", b.ci),
     explicit_flags: normalizeExplicitFlags(b.explicitFlags),
     shadcn: bool(b.shadcn),
+    // Absent from every CLI that predates --stylex, and each of those runs is
+    // a non-StyleX one, so missing is a real false rather than a coerced one.
+    stylex: b.stylex === undefined ? 0 : bool(b.stylex),
     testing: enumValue("testing", b.testing),
     database: enumValue("database", b.database),
     linter: enumValue("linter", b.linter),
@@ -137,8 +142,8 @@ function parse(body: unknown, now: number): Row | null {
 
 const INSERT = `INSERT INTO runs (
   ts, cli_version, node_major, platform, mode, ci, explicit_flags,
-  shadcn, testing, database, linter, deployment, nest, todo_example, anti_slop
-) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+  shadcn, stylex, testing, database, linter, deployment, nest, todo_example, anti_slop
+) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
