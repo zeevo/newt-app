@@ -5,7 +5,9 @@ export default {
   rootDir: 'src',
   testRegex: '.*\\.spec\\.ts$',
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    // Under nodenext ts-jest follows each package's "type", so it would emit
+    // packages/db as ESM, which jest's CommonJS runtime can't require
+    '^.+\\.(t|j)s$': ['ts-jest', { tsconfig: { module: 'commonjs' } }],
   },
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: '../coverage',
