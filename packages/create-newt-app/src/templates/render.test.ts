@@ -3,7 +3,12 @@ import { describe, expect, it } from "vitest";
 import { selectModules } from "./index";
 import type { Extra, ModuleSelection, Nest, TemplateData } from "./types";
 import { versions } from "./versions";
-import { validateDeploymentCombo, validateExampleCombo, validateExtrasCombo } from "../utils";
+import {
+  validateDeploymentCombo,
+  validateExampleCombo,
+  validateExtrasCombo,
+  validateStylingCombo,
+} from "../utils";
 
 const DEPLOYMENTS = ["none", "standalone", "spa"] as const;
 const NEST = ["on", "off", "di-only"] as const satisfies readonly Nest[];
@@ -12,13 +17,20 @@ const DATABASES = ["sqlite", "postgres"] as const;
 const LINTERS = ["eslint", "oxc"] as const;
 const BOOLS = [true, false];
 const EXTRAS = [[], ["anti-slop"]] as const satisfies readonly (readonly Extra[])[];
+// The styling axis is three-way, but shadcn and stylex are mutually exclusive,
+// so it rides along as two booleans the validator then prunes.
+const STYLING = [
+  { shadcn: false, stylex: false },
+  { shadcn: true, stylex: false },
+  { shadcn: false, stylex: true },
+] as const;
 const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies"];
 
 // Every selection the CLI will accept. The rejected pairs are filtered with the
 // same validator the CLI uses, so a change there changes the matrix here too.
 const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
   NEST.flatMap((nest) =>
-    BOOLS.flatMap((shadcn) =>
+    STYLING.flatMap(({ shadcn, stylex }) =>
       TESTING.flatMap((testing) =>
         DATABASES.flatMap((database) =>
           LINTERS.flatMap((linter) =>
@@ -27,6 +39,7 @@ const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
                 deployment,
                 nest,
                 shadcn,
+                stylex,
                 testing,
                 database,
                 linter,
@@ -42,7 +55,8 @@ const combos: ModuleSelection[] = DEPLOYMENTS.flatMap((deployment) =>
 )
   .filter(({ deployment, nest }) => validateDeploymentCombo(deployment, nest).valid)
   .filter(({ todoExample, nest }) => validateExampleCombo(todoExample, nest).valid)
-  .filter(({ extras, linter }) => validateExtrasCombo(extras, linter).valid);
+  .filter(({ extras, linter }) => validateExtrasCombo(extras, linter).valid)
+  .filter(({ shadcn, stylex }) => validateStylingCombo(shadcn, stylex).valid);
 
 const label = (selection: ModuleSelection) =>
   Object.entries(selection)
@@ -198,6 +212,35 @@ describe("anti-slop ships only with the extra", () => {
       expect(oxlintrc.includes('"packages/ui/src/components/**"')).toBe(
         selected && selection.shadcn,
       );
+    },
+  );
+});
+
+// StyleX compiles at build time, so a scaffold either gets the whole toolchain
+// (babel config, app-owned postcss config, tokens) or none of it. The decorator
+// plugins ride along only in DI-only mode, where Next's babel pass has to
+// compile Nest's decorated source.
+describe("the stylex toolchain ships as a unit", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const { files } = renderCombo(selection);
+      const babelConfig = files.get("apps/web/babel.config.js") ?? "";
+      const postcssConfig = files.get("apps/web/postcss.config.mjs") ?? "";
+
+      expect(files.has("apps/web/babel.config.js")).toBe(selection.stylex);
+      expect(files.has("packages/ui/src/tokens.stylex.ts")).toBe(selection.stylex);
+      expect(babelConfig.includes("@stylexjs/babel-plugin")).toBe(selection.stylex);
+      expect(postcssConfig.includes("@stylexjs/postcss-plugin")).toBe(selection.stylex);
+
+      expect(babelConfig.includes("@babel/plugin-proposal-decorators")).toBe(
+        selection.stylex && selection.nest === "di-only",
+      );
+
+      const webPkg = JSON.parse(files.get("apps/web/package.json") ?? "{}");
+      const webDeps = { ...webPkg.dependencies, ...webPkg.devDependencies };
+      expect("tailwindcss" in webDeps).toBe(!selection.stylex);
+      expect("@stylexjs/stylex" in webDeps).toBe(selection.stylex);
     },
   );
 });

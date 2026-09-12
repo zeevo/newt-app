@@ -23,6 +23,7 @@ export type Selection = {
   nest: Nest;
   todoExample: boolean;
   shadcn: boolean;
+  stylex: boolean;
   database: "sqlite" | "postgres";
 };
 

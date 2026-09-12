@@ -29,6 +29,7 @@ describe("config params", () => {
     const base: Config = {
       name: "my-app",
       shadcn: true,
+      stylex: false,
       testing: "vitest",
       database: "postgres",
       linter: "oxc",
@@ -47,6 +48,7 @@ describe("config params", () => {
     const base: Config = {
       name: "my-app",
       shadcn: true,
+      stylex: false,
       testing: "vitest",
       database: "postgres",
       linter: "oxc",
@@ -62,6 +64,7 @@ describe("config params", () => {
     const base: Config = {
       name: "my-app",
       shadcn: true,
+      stylex: false,
       testing: "vitest",
       database: "postgres",
       linter: "oxc",
