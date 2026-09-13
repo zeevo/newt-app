@@ -17,10 +17,8 @@ export default {
     "outDir": "./dist",
     "rootDir": "./src",
     "skipLibCheck": true,
-    "strictNullChecks": true,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "types": [<% if (testing === 'jest') { %>"jest", <% } %><% if (testing === 'vitest') { %>"vitest/globals", <% } %>"node"]
   },
