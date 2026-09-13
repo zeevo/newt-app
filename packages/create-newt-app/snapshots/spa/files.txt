@@ -3,6 +3,7 @@
 .env.example
 .gitignore
 .npmrc
+.prettierignore
 .prettierrc
 AGENTS.md
 CLAUDE.md

@@ -8,6 +8,7 @@ import webConfig from "../web/templates/eslint-config";
 import apiConfig from "../api/templates/eslint-config";
 import uiConfig from "../ui/templates/eslint-config";
 import prettierrc from "../root/templates/prettierrc";
+import prettierignore from "../root/templates/prettierignore";
 
 const web = "apps/web";
 const api = "apps/api";
@@ -15,7 +16,17 @@ const ui = "packages/ui";
 const root = "";
 
 const eslintConfig: Module = {
-  templates: [packageJson, base, next, reactInternal, webConfig, apiConfig, uiConfig, prettierrc],
+  templates: [
+    packageJson,
+    base,
+    next,
+    reactInternal,
+    webConfig,
+    apiConfig,
+    uiConfig,
+    prettierrc,
+    prettierignore,
+  ],
   packages: [
     { package: "eslint", module: web, version: versions.eslint, dev: true },
     {
