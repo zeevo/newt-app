@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.33.2
+
+### Patch Changes
+
+- 85e7770: with `--no-install`, the next steps now list `pnpm install` and `pnpm format`, so the project passes `format:check` once installed
+
 ## 0.33.1
 
 ### Patch Changes
