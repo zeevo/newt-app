@@ -1,8 +1,7 @@
 export default {
   filename: "packages/ui/src/components/slider.tsx",
   template: `import { Slider as SliderPrimitive } from "@base-ui/react/slider"
-
-import { cn } from "@<%= projectName %>/ui/lib/utils"
+import { cn } from "cn"
 
 function Slider({
   className,

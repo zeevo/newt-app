@@ -1,6 +1,6 @@
 export default {
   filename: "packages/ui/src/components/skeleton.tsx",
-  template: `import { cn } from "@<%= projectName %>/ui/lib/utils"
+  template: `import { cn } from "cn"
 
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (

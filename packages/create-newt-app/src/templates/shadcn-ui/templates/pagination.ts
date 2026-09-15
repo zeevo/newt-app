@@ -1,8 +1,8 @@
 export default {
   filename: "packages/ui/src/components/pagination.tsx",
   template: `import * as React from "react"
+import { cn } from "cn"
 
-import { cn } from "@<%= projectName %>/ui/lib/utils"
 import { Button } from "@<%= projectName %>/ui/components/button"
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react"
 

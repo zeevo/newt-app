@@ -3,8 +3,8 @@ export default {
   template: `import { mergeProps } from "@base-ui/react/merge-props"
 import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "cn"
 
-import { cn } from "@<%= projectName %>/ui/lib/utils"
 import { Separator } from "@<%= projectName %>/ui/components/separator"
 
 const buttonGroupVariants = cva(

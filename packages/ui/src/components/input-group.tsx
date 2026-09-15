@@ -2,8 +2,8 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "cn"
 
-import { cn } from "@newt-app/ui/lib/utils"
 import { Button } from "@newt-app/ui/components/button"
 import { Input } from "@newt-app/ui/components/input"
 import { Textarea } from "@newt-app/ui/components/textarea"

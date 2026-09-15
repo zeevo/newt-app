@@ -1,8 +1,7 @@
 export default {
   filename: "packages/ui/src/components/card.tsx",
   template: `import * as React from "react"
-
-import { cn } from "@<%= projectName %>/ui/lib/utils"
+import { cn } from "cn"
 
 function Card({
   className,
