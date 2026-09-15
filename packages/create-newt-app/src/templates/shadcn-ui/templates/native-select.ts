@@ -1,8 +1,7 @@
 export default {
   filename: "packages/ui/src/components/native-select.tsx",
   template: `import * as React from "react"
-
-import { cn } from "@<%= projectName %>/ui/lib/utils"
+import { cn } from "cn"
 import { ChevronDownIcon } from "lucide-react"
 
 type NativeSelectProps = Omit<React.ComponentProps<"select">, "size"> & {

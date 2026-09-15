@@ -4,8 +4,8 @@ export default {
 
 import * as React from "react"
 import { Command as CommandPrimitive } from "cmdk"
+import { cn } from "cn"
 
-import { cn } from "@<%= projectName %>/ui/lib/utils"
 import {
   Dialog,
   DialogContent,

@@ -3,6 +3,7 @@ export default {
   template: `"use client"
 
 import * as React from "react"
+import { cn } from "cn"
 import {
   DayPicker,
   getDefaultClassNames,
@@ -10,7 +11,6 @@ import {
   type Locale,
 } from "react-day-picker"
 
-import { cn } from "@<%= projectName %>/ui/lib/utils"
 import { Button, buttonVariants } from "@<%= projectName %>/ui/components/button"
 import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react"
 

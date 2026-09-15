@@ -41,6 +41,7 @@ export const versions = {
   "class-variance-authority": "^0.7.1",
   clsx: "^2.1.1",
   cmdk: "^1.1.1",
+  cn: "^0.3.0",
   "date-fns": "^4.2.1",
   dotenv: "^17.3.1",
   "dotenv-cli": "^11.0.0",

@@ -4,8 +4,8 @@ export default {
 
 import * as React from "react"
 import { Combobox as ComboboxPrimitive } from "@base-ui/react"
+import { cn } from "cn"
 
-import { cn } from "@<%= projectName %>/ui/lib/utils"
 import { Button } from "@<%= projectName %>/ui/components/button"
 import {
   InputGroup,

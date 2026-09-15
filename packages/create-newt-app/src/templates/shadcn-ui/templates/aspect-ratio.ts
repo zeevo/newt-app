@@ -1,6 +1,6 @@
 export default {
   filename: "packages/ui/src/components/aspect-ratio.tsx",
-  template: `import { cn } from "@<%= projectName %>/ui/lib/utils"
+  template: `import { cn } from "cn"
 
 function AspectRatio({
   ratio,

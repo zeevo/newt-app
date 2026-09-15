@@ -1,8 +1,7 @@
 export default {
   filename: "packages/ui/src/components/empty.tsx",
   template: `import { cva, type VariantProps } from "class-variance-authority"
-
-import { cn } from "@<%= projectName %>/ui/lib/utils"
+import { cn } from "cn"
 
 function Empty({ className, ...props }: React.ComponentProps<"div">) {
   return (
