@@ -12,7 +12,8 @@ export default {
   },
   "devDependencies": {
     "@eslint/js": "<%= versions["@eslint/js"] %>",
-    "@next/eslint-plugin-next": "<%= versions["@next/eslint-plugin-next"] %>",
+    "@next/eslint-plugin-next": "<%= versions["@next/eslint-plugin-next"] %>",<% if (shadcn) { %>
+    "@shadcn/lint": "<%= versions["@shadcn/lint"] %>",<% } %>
     "eslint": "<%= versions.eslint %>",
     "eslint-config-prettier": "<%= versions["eslint-config-prettier"] %>",
     "eslint-plugin-only-warn": "<%= versions["eslint-plugin-only-warn"] %>",

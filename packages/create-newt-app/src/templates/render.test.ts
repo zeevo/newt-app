@@ -207,11 +207,39 @@ describe("anti-slop ships only with the extra", () => {
       const oxlintrc = files.get(".oxlintrc.json") ?? "";
 
       expect(files.has("tools/oxlint/anti-slop/package.json")).toBe(selected);
-      expect(oxlintrc.includes('"jsPlugins"')).toBe(selected);
+      expect(oxlintrc.includes('"name": "anti-slop"')).toBe(selected);
       expect(oxlintrc.includes('"anti-slop/no-runtime-typeof": "error"')).toBe(selected);
-      expect(oxlintrc.includes('"packages/ui/src/components/**"')).toBe(
+      expect(oxlintrc.includes('"anti-slop/no-runtime-typeof": "off"')).toBe(
         selected && selection.shadcn,
       );
+    },
+  );
+});
+
+// @shadcn/lint registers with whichever linter the scaffold uses, and only
+// when there are shadcn components for it to check.
+describe("@shadcn/lint ships with the shadcn option", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const { files } = renderCombo(selection);
+      const mentions = [...files.entries()]
+        .filter(([, contents]) => contents.includes("@shadcn/lint"))
+        .map(([filename]) => filename)
+        .sort();
+
+      expect(mentions).toEqual(
+        !selection.shadcn
+          ? []
+          : selection.linter === "oxc"
+            ? [".oxlintrc.json", "package.json"]
+            : [
+                "packages/eslint-config/next.js",
+                "packages/eslint-config/package.json",
+                "packages/eslint-config/react-internal.js",
+              ],
+      );
+      expect((files.get("AGENTS.md") ?? "").includes("pnpm lint:check")).toBe(selection.shadcn);
     },
   );
 });
