@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.33.3
+
+### Patch Changes
+
+- 242ea85: turn on `strict` in `apps/api`, the one package that still had `noImplicitAny` and `strictBindCallApply` off
+
 ## 0.33.2
 
 ### Patch Changes

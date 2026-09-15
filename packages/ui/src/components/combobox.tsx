@@ -2,8 +2,8 @@
 
 import * as React from "react"
 import { Combobox as ComboboxPrimitive } from "@base-ui/react"
+import { cn } from "cn"
 
-import { cn } from "@newt-app/ui/lib/utils"
 import { Button } from "@newt-app/ui/components/button"
 import {
   InputGroup,

@@ -4,8 +4,8 @@ export default {
 
 import { useMemo } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "cn"
 
-import { cn } from "@<%= projectName %>/ui/lib/utils"
 import { Label } from "@<%= projectName %>/ui/components/label"
 import { Separator } from "@<%= projectName %>/ui/components/separator"
 

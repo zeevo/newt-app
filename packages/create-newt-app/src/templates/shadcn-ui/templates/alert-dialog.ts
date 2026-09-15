@@ -4,8 +4,8 @@ export default {
 
 import * as React from "react"
 import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog"
+import { cn } from "cn"
 
-import { cn } from "@<%= projectName %>/ui/lib/utils"
 import { Button } from "@<%= projectName %>/ui/components/button"
 
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {

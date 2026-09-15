@@ -2,8 +2,7 @@ export default {
   filename: "packages/ui/src/components/input.tsx",
   template: `import * as React from "react"
 import { Input as InputPrimitive } from "@base-ui/react/input"
-
-import { cn } from "@<%= projectName %>/ui/lib/utils"
+import { cn } from "cn"
 
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (

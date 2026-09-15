@@ -4,8 +4,8 @@ export default {
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "cn"
 
-import { cn } from "@<%= projectName %>/ui/lib/utils"
 import { Button } from "@<%= projectName %>/ui/components/button"
 import { Input } from "@<%= projectName %>/ui/components/input"
 import { Textarea } from "@<%= projectName %>/ui/components/textarea"

@@ -21,8 +21,8 @@ export default {
     "@shadcn/react": "<%= versions["@shadcn/react"] %>",
     "shadcn": "<%= versions.shadcn %>",
     "class-variance-authority": "<%= versions["class-variance-authority"] %>",
-    "clsx": "<%= versions.clsx %>",
     "cmdk": "<%= versions.cmdk %>",
+    "cn": "<%= versions.cn %>",
     "date-fns": "<%= versions["date-fns"] %>",
     "embla-carousel-react": "<%= versions["embla-carousel-react"] %>",
     "input-otp": "<%= versions["input-otp"] %>",
@@ -32,7 +32,6 @@ export default {
     "react-resizable-panels": "<%= versions["react-resizable-panels"] %>",
     "recharts": "<%= versions.recharts %>",
     "sonner": "<%= versions.sonner %>",
-    "tailwind-merge": "<%= versions["tailwind-merge"] %>",
     "tw-animate-css": "<%= versions["tw-animate-css"] %>"
   },
   "peerDependencies": {
