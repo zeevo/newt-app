@@ -30,18 +30,21 @@ const reachable: Config[] = NEST_MODES.flatMap((nest) =>
         (["jest", "vitest"] as const).flatMap((testing) =>
           (["sqlite", "postgres"] as const).flatMap((database) =>
             (["eslint", "oxc"] as const).flatMap((linter) =>
-              (linter === "oxc" ? [true, false] : [false]).map((antiSlop) => ({
-                name: "my-app",
-                shadcn,
-                stylex,
-                testing,
-                database,
-                linter,
-                deployment,
-                nest,
-                todoExample,
-                antiSlop,
-              })),
+              (linter === "oxc" ? [true, false] : [false]).flatMap((antiSlop) =>
+                [true, false].map((agentsMd) => ({
+                  name: "my-app",
+                  shadcn,
+                  stylex,
+                  testing,
+                  database,
+                  linter,
+                  deployment,
+                  nest,
+                  todoExample,
+                  antiSlop,
+                  agentsMd,
+                })),
+              ),
             ),
           ),
         ),
@@ -133,6 +136,7 @@ describe("buildCommand", () => {
         nest: "on",
         todoExample: true,
         antiSlop: false,
+        agentsMd: true,
       }),
     ).toBe("npm create newt-app@latest my-app -- --shadcn --include-example");
   });

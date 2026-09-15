@@ -76,6 +76,7 @@ export function buildPayload(report: RunReport) {
     nest: selection.nest,
     todoExample: selection.todoExample,
     antiSlop: selection.extras.includes("anti-slop"),
+    agentsMd: selection.agentsMd,
   };
 }
 

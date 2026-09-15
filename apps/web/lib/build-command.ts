@@ -11,6 +11,7 @@ export type Config = {
   nest: Nest;
   todoExample: boolean;
   antiSlop: boolean;
+  agentsMd: boolean;
 };
 
 export const NEST_MODES = ["on", "off", "di-only"] as const satisfies readonly Nest[];
@@ -113,6 +114,7 @@ export function buildCommand(c: Config): string {
   if (c.nest !== "on") flags.push(`--nest ${c.nest}`);
   if (c.todoExample) flags.push("--include-example");
   if (c.antiSlop) flags.push("--extras anti-slop");
+  if (!c.agentsMd) flags.push("--no-agents-md");
   // Passing a config flag is what puts the CLI in non-interactive mode. Every
   // other option here matches its default, so without this the CLI would prompt
   // and shadcn would come back on — the opposite of what the panel shows.

@@ -37,6 +37,7 @@ describe("config params", () => {
       nest: "di-only",
       todoExample: true,
       antiSlop: true,
+      agentsMd: true,
     };
     expect(sanitizeConfig(base).deployment).toBe("none");
     expect(sanitizeConfig({ ...base, nest: "off" }).deployment).toBe("none");
@@ -56,6 +57,7 @@ describe("config params", () => {
       nest: "off",
       todoExample: true,
       antiSlop: false,
+      agentsMd: true,
     };
     expect(sanitizeConfig(base).todoExample).toBe(false);
     expect(sanitizeConfig({ ...base, nest: "di-only" }).todoExample).toBe(true);
@@ -72,6 +74,7 @@ describe("config params", () => {
       nest: "on",
       todoExample: true,
       antiSlop: true,
+      agentsMd: true,
     };
     expect(sanitizeConfig(base).antiSlop).toBe(true);
     expect(sanitizeConfig({ ...base, linter: "eslint" }).antiSlop).toBe(false);

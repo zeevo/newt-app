@@ -281,5 +281,23 @@ export function scaffoldTree(c: Config): TreeNode[] {
             conditional: true,
           },
         ]),
+    ...(c.agentsMd
+      ? [
+          {
+            name: "AGENTS.md",
+            kind: "file" as const,
+            path: "AGENTS.md",
+            annotation: "agent rules",
+            conditional: true,
+          },
+          {
+            name: "CLAUDE.md",
+            kind: "file" as const,
+            path: "CLAUDE.md",
+            annotation: "imports AGENTS.md",
+            conditional: true,
+          },
+        ]
+      : []),
   ];
 }

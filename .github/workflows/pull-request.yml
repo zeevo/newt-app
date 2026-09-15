@@ -94,7 +94,7 @@ jobs:
           - "--shadcn --linter oxc --include-example"
           - "--shadcn --linter oxc --extras anti-slop --include-example"
           - "--shadcn --nest di-only --include-example"
-          - "--nest off --shadcn"
+          - "--nest off --shadcn --no-agents-md"
           - "--deployment standalone --include-example"
           - "--deployment standalone --linter oxc --include-example"
           - "--deployment standalone --nest di-only --include-example"
