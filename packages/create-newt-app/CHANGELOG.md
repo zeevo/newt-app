@@ -1,5 +1,17 @@
 # create-newt-app
 
+## 0.34.0
+
+### Minor Changes
+
+- f047051: `--shadcn` scaffolds register `@shadcn/lint` with the selected linter and enable `no-restyle`, `no-raw-colors`, `no-arbitrary-values` and `require-static-classes`; the example pages no longer restyle design-system components
+- 426bae4: vendored shadcn components import `cn` from the `cn` package, replacing `clsx` and `tailwind-merge` in `packages/ui`, matching what `shadcn add` now emits
+
+### Patch Changes
+
+- f41f315: ship a `.prettierignore` for `pnpm-lock.yaml` in eslint mode, so prettier no longer restyles the lockfile and `format:check` passes after a dependency change
+- 1b1c032: refetch the home page /api/hello card when the session changes, so it greets the user right after sign-in
+
 ## 0.33.3
 
 ### Patch Changes
