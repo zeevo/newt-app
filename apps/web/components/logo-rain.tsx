@@ -87,16 +87,15 @@ function cssColor(css: string): THREE.Color {
   return new THREE.Color().setRGB(r! / 255, g! / 255, b! / 255, THREE.SRGBColorSpace);
 }
 
-// theme colors matching the SVG version: fill-background circles,
-// stroke-primary/15 rings, and black (light) / white (dark) silhouettes
+// theme colors matching the SVG version: fill-background circles, rings in
+// --border like the app's own borders, and black (light) / white (dark)
+// silhouettes
 function readTheme() {
   const probe = document.createElement("div");
-  probe.className = "bg-background text-primary";
+  probe.className = "bg-background";
   probe.style.display = "none";
   document.body.appendChild(probe);
-  const styles = getComputedStyle(probe);
-  const background = cssColor(styles.backgroundColor);
-  const primary = cssColor(styles.color);
+  const background = cssColor(getComputedStyle(probe).backgroundColor);
   probe.remove();
   const dark = document.documentElement.classList.contains("dark");
   const border = cssColor(
@@ -104,7 +103,6 @@ function readTheme() {
   );
   return {
     background,
-    primary,
     border,
     silhouette: new THREE.Color(dark ? 0xffffff : 0x000000),
     logoAlpha: dark ? 0.35 : 0.3,
@@ -328,9 +326,9 @@ export default function LogoRain({
         depthWrite: false,
       });
       const ringMaterial = new THREE.MeshBasicMaterial({
-        color: theme.primary,
+        color: theme.border,
         transparent: true,
-        opacity: 0.15,
+        opacity: 1,
         depthWrite: false,
       });
       const logoMaterial = new THREE.MeshBasicMaterial({
@@ -401,8 +399,8 @@ export default function LogoRain({
         m.opacity = 1;
       });
       ringMaterials.forEach((m) => {
-        m.color.copy(theme.primary);
-        m.opacity = 0.15;
+        m.color.copy(theme.border);
+        m.opacity = 1;
       });
       logoMaterials.forEach((m) => {
         m.color.copy(theme.silhouette);
