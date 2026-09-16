@@ -125,9 +125,8 @@ export function TodoList({
               </span>
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon-sm"
                 onClick={() => deleteMutation.mutate(todo.id)}
-                className="text-muted-foreground hover:text-destructive h-7 w-7 p-0"
               >
                 ×
               </Button>

@@ -5,9 +5,9 @@ export default {
   "categories": {
     "correctness": "error"
   }<% if (antiSlop) { %>,
-  "ignorePatterns": ["tools/oxlint/anti-slop/**"],
-  "jsPlugins": [{ "name": "anti-slop", "specifier": "./tools/oxlint/anti-slop/index.ts" }],
-  "rules": {
+  "ignorePatterns": ["tools/oxlint/anti-slop/**"]<% } %><% if (antiSlop || shadcn) { %>,
+  "jsPlugins": [<% if (antiSlop) { %>{ "name": "anti-slop", "specifier": "./tools/oxlint/anti-slop/index.ts" }<% } %><% if (antiSlop && shadcn) { %>, <% } %><% if (shadcn) { %>"@shadcn/lint"<% } %>],
+  "rules": {<% if (antiSlop) { %>
     "anti-slop/no-chained-type-assertions": "error",
     "anti-slop/no-conditional-empty-object-spread": "error",
     "anti-slop/no-known-value-widening": "error",
@@ -22,12 +22,16 @@ export default {
     "anti-slop/no-unknown-type-aliases": "error",
     "anti-slop/no-unsafe-dictionary-type": "error",
     "anti-slop/no-widen-then-assert": "error",
-    "anti-slop/require-safety-comment-for-type-assertion": "error"
-  }<% if (shadcn) { %>,
+    "anti-slop/require-safety-comment-for-type-assertion": "error"<% if (shadcn) { %>,<% } %><% } %><% if (shadcn) { %>
+    "shadcn/no-restyle": ["error", { "allow": ["layout"] }],
+    "shadcn/no-raw-colors": "error",
+    "shadcn/no-arbitrary-values": ["error", { "allow": ["layout"] }],
+    "shadcn/require-static-classes": "error"<% } %>
+  }<% } %><% if (shadcn) { %>,
   "overrides": [
     {
       "files": ["packages/ui/src/components/**"],
-      "rules": {
+      "rules": {<% if (antiSlop) { %>
         "anti-slop/no-chained-type-assertions": "off",
         "anti-slop/no-conditional-empty-object-spread": "off",
         "anti-slop/no-known-value-widening": "off",
@@ -42,9 +46,12 @@ export default {
         "anti-slop/no-unknown-type-aliases": "off",
         "anti-slop/no-unsafe-dictionary-type": "off",
         "anti-slop/no-widen-then-assert": "off",
-        "anti-slop/require-safety-comment-for-type-assertion": "off"
+        "anti-slop/require-safety-comment-for-type-assertion": "off",<% } %>
+        "shadcn/no-restyle": "off",
+        "shadcn/no-arbitrary-values": "off",
+        "shadcn/require-static-classes": "off"
       }
     }
-  ]<% } %><% } %>
+  ]<% } %>
 }`,
 };

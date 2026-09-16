@@ -16,9 +16,10 @@
   },
   "devDependencies": {
     "@oxlint/plugins": "^1.74.0",
+    "@shadcn/lint": "^0.1.0",
     "@types/node": "^24.13.3",
     "oxfmt": "^0.59.0",
-    "oxlint": "^1.74.0",
+    "oxlint": "^1.80.0",
     "turbo": "^2.8.16",
     "typescript": "6.0.2"
   },

@@ -7,6 +7,7 @@ import pluginReact from "eslint-plugin-react";
 import globals from "globals";
 import pluginNext from "@next/eslint-plugin-next";
 import { config as baseConfig } from "./base.js";
+import { plugin as shadcn } from "@shadcn/lint";
 
 /**
  * A custom ESLint configuration for libraries that use Next.js.
@@ -53,6 +54,15 @@ export const nextJsConfig = [
       ...pluginReactHooks.configs.recommended.rules,
       // React scope no longer necessary with new JSX transform.
       "react/react-in-jsx-scope": "off",
+    },
+  },
+  {
+    plugins: { shadcn },
+    rules: {
+      "shadcn/no-restyle": ["error", { allow: ["layout"] }],
+      "shadcn/no-raw-colors": "error",
+      "shadcn/no-arbitrary-values": ["error", { allow: ["layout"] }],
+      "shadcn/require-static-classes": "error",
     },
   },
 ];

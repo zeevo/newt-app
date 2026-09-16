@@ -11,7 +11,7 @@ import { Button } from '@<%= projectName %>/ui/button';
 import { Link } from '@<%= projectName %>/ui/link';
 import { Logo } from '@<%= projectName %>/ui/logo';
 import { ModeToggle } from '@<%= projectName %>/ui/mode-toggle';
-import { Card, CardContent, CardHeader, CardTitle } from '@<%= projectName %>/ui/card';
+import { Card, CardContent, CardHeader } from '@<%= projectName %>/ui/card';
 
 export default function Home() {
   const { data: session, isPending } = authClient.useSession();
@@ -32,7 +32,7 @@ export default function Home() {
       </div>
 
       <div className="flex items-center gap-3 py-2">
-        <Logo className="w-10 h-auto text-foreground" />
+        <Logo className="w-10 h-auto" />
         <div>
           <h1 className="text-4xl font-black tracking-tight"><%= projectName %></h1>
           <p className="text-sm text-muted-foreground tracking-widest uppercase">
@@ -43,9 +43,9 @@ export default function Home() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+          <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
             next.js
-          </CardTitle>
+          </p>
         </CardHeader>
         <CardContent>
           <p className="font-mono text-sm text-muted-foreground">apps/web/app/layout.tsx</p>
@@ -55,9 +55,9 @@ export default function Home() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+          <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
             nest.js
-          </CardTitle>
+          </p>
         </CardHeader>
         <CardContent>
           <p className="font-mono text-sm text-muted-foreground">GET /api/hello</p>
@@ -69,9 +69,9 @@ export default function Home() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+          <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
             better-auth
-          </CardTitle>
+          </p>
         </CardHeader>
         <CardContent>
           {isPending ? (

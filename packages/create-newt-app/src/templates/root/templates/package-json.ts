@@ -13,7 +13,8 @@ export default {
     "db:migrate": "turbo run migrate",
     "db:generate": "turbo run generate"
   },
-  "devDependencies": {
+  "devDependencies": {<% if (shadcn && linter === "oxc") { %>
+    "@shadcn/lint": "<%= versions["@shadcn/lint"] %>",<% } %>
     "@types/node": "<%= versions["@types/node"] %>",
     "turbo": "<%= versions.turbo %>",
     "typescript": "<%= versions.typescript %>"
