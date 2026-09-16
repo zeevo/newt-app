@@ -43,6 +43,9 @@ const MAX_SPIN = 2.5;
 
 const TEX_SIZE = 256;
 
+// chip outlines are drawn at the same 1px as every border in the app
+const BORDER_PX = 1;
+
 // the floor: a 19px dot lattice in --border, faded out from under the headline,
 // drawn under the chips in the same scene so it can react to them. Chips shove
 // nearby lattice points outward, PUSH as a fraction of chip radius, out to WAKE
@@ -245,6 +248,10 @@ export default function LogoRain({
     const floorMat = floorMaterial(chipCount);
     const floorUniforms = floorMat.uniforms;
 
+    // css pixels per view unit, so an outline can be sized in view units and
+    // still land on one css pixel whatever the tank is scaled to
+    let viewScale = 1;
+
     // cover the container like preserveAspectRatio="xMidYMid slice"
     function fit() {
       const cw = container.clientWidth || 1;
@@ -252,6 +259,7 @@ export default function LogoRain({
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(cw, ch, false);
       const scale = Math.max(cw / VIEW_W, ch / VIEW_H);
+      viewScale = scale;
       const visW = cw / scale;
       const visH = ch / scale;
       camera.left = VIEW_W / 2 - visW / 2;
@@ -271,14 +279,19 @@ export default function LogoRain({
     scene.add(floor);
 
     const circleGeometry = new THREE.CircleGeometry(1, 64);
-    const ringGeometry = new THREE.RingGeometry(0.985, 1, 64);
     const planeGeometry = new THREE.PlaneGeometry(1.2, 1.2);
+
+    // a chip is drawn in a group scaled to its size, so the outline's pixel
+    // width converts to view units and then back out of that scale
+    const ringGeometry = (size: number) =>
+      new THREE.RingGeometry(1 - BORDER_PX / viewScale / size, 1, 64);
 
     let theme = readTheme();
     floorUniforms.uColor!.value.copy(theme.border);
     const circleMaterials: THREE.MeshBasicMaterial[] = [];
     const ringMaterials: THREE.MeshBasicMaterial[] = [];
     const logoMaterials: THREE.MeshBasicMaterial[] = [];
+    const ringMeshes: THREE.Mesh[] = [];
 
     const meanSize = (MIN_SIZE + MAX_SIZE) / 2;
     const stars: Star[] = [];
@@ -335,8 +348,9 @@ export default function LogoRain({
       const order = size * 10;
       const circle = new THREE.Mesh(circleGeometry, circleMaterial);
       circle.renderOrder = order;
-      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+      const ring = new THREE.Mesh(ringGeometry(size), ringMaterial);
       ring.renderOrder = order + 1;
+      ringMeshes.push(ring);
       const logo = new THREE.Mesh(planeGeometry, logoMaterial);
       logo.renderOrder = order + 2;
       group.add(circle, ring, logo);
@@ -406,6 +420,11 @@ export default function LogoRain({
 
     const resizeObserver = new ResizeObserver(() => {
       fit();
+      // a css pixel is worth a different number of view units at the new scale
+      ringMeshes.forEach((ring, i) => {
+        ring.geometry.dispose();
+        ring.geometry = ringGeometry(stars[i]!.size);
+      });
       renderer.render(scene, camera);
     });
     resizeObserver.observe(container);
@@ -550,7 +569,7 @@ export default function LogoRain({
       themeObserver.disconnect();
       resizeObserver.disconnect();
       circleGeometry.dispose();
-      ringGeometry.dispose();
+      ringMeshes.forEach((ring) => ring.geometry.dispose());
       planeGeometry.dispose();
       floorGeometry.dispose();
       floorMat.dispose();
