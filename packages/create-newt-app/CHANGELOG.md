@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.34.1
+
+### Patch Changes
+
+- ec55827: drop the plugin-less type annotation on `authClient`, so better-auth client plugins show up on it, and turn off declarations in the Next.js tsconfig, which never emits them and otherwise rejects the inferred type
+
 ## 0.34.0
 
 ### Minor Changes
