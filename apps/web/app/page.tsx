@@ -18,9 +18,7 @@ export default function Home() {
             fold. The builder is meant to hang out of the tank's bottom edge. */}
         {/* the header's container, so the tank's walls line up with the navbar */}
         <div className="pointer-events-none absolute inset-x-0 top-2 z-0 container h-[calc(100svh_-_var(--header-height)_-_1rem)]">
-          <div className="h-full overflow-hidden rounded-lg border">
-            <LogoRain />
-          </div>
+          <LogoRain />
         </div>
         {/* two steps past the container's padding clears the tank's walls, so
             the card lands on the tank rather than poking out past it; from xl
