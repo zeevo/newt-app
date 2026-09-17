@@ -24,8 +24,8 @@ export default function Home() {
         </div>
         {/* two steps past the container's padding clears the tank's walls, so
             the card lands on the tank rather than poking out past it; from xl
-            the 1200px cap keeps it inside on its own */}
-        <div className="pointer-events-none relative z-10 flex w-full max-w-[1200px] flex-col items-center gap-5 px-6 lg:px-10 xl:px-6">
+            the 1100px cap keeps it inside on its own */}
+        <div className="pointer-events-none relative z-10 flex w-full max-w-[1100px] flex-col items-center gap-5 px-6 lg:px-10 xl:px-6">
           <a
             href="https://www.npmjs.com/package/create-newt-app"
             target="_blank"
