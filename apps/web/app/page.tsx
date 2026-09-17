@@ -16,12 +16,16 @@ export default function Home() {
             the section grows to hold the builder, and letting the tank grow
             with it would drag its floor, and the chips resting on it, below the
             fold. The builder is meant to hang out of the tank's bottom edge. */}
-        <div className="pointer-events-none absolute inset-x-2 top-2 z-0 h-[calc(100svh_-_var(--header-height)_-_1rem)] overflow-hidden rounded-lg border">
-          <LogoRain />
+        {/* the header's container, so the tank's walls line up with the navbar */}
+        <div className="pointer-events-none absolute inset-x-0 top-2 z-0 container h-[calc(100svh_-_var(--header-height)_-_1rem)]">
+          <div className="h-full overflow-hidden rounded-lg border">
+            <LogoRain />
+          </div>
         </div>
-        {/* px-6 clears the tank's inset-2 walls, so the card lands on the tank
-            rather than poking out past it on narrow screens */}
-        <div className="pointer-events-none relative z-10 flex w-full max-w-[1200px] flex-col items-center gap-5 px-6">
+        {/* two steps past the container's padding clears the tank's walls, so
+            the card lands on the tank rather than poking out past it; from xl
+            the 1200px cap keeps it inside on its own */}
+        <div className="pointer-events-none relative z-10 flex w-full max-w-[1200px] flex-col items-center gap-5 px-6 lg:px-10 xl:px-6">
           <a
             href="https://www.npmjs.com/package/create-newt-app"
             target="_blank"
@@ -32,7 +36,7 @@ export default function Home() {
             Latest update · v{cliVersion} released
             <span aria-hidden>→</span>
           </a>
-          {/* px-4 keeps the longest wrapped line clear of the inset-2 frame */}
+          {/* px-4 keeps the longest wrapped line clear of the frame */}
           <h1 className="max-w-4xl px-4 text-center text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
             The TypeScript project scaffolder for{" "}
             <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
