@@ -41,6 +41,23 @@ const SPIN_GRIP = 0.4;
 const SPIN_DAMP = 0.15;
 const MAX_SPIN = 2.5;
 
+// the tank's walls are elastic: a chip sinks into a wall on a soft spring
+// (WALL_SPRING, acceleration per view unit of depth) until it hits a hard stop
+// MAX_BEND_PX past it. Each wall is a damped string pinned at the corners that
+// hugs the chip while it presses and wobbles back once it leaves; the canvas
+// bleeds past the tank so the bulge has room to draw.
+const WALL_SPRING = 6;
+const MAX_BEND_PX = 8;
+const BEND_SPACING = 12;
+const BEND_TENSION = 2.72e6;
+const BEND_STIFF = 900;
+const BEND_DAMP = 12;
+// the string is stepped at a fixed rate: its tension is too stiff for one step
+// per frame
+const BEND_RATE = 240;
+const BLEED_PX = MAX_BEND_PX + 2;
+const CORNER_SEGMENTS = 8;
+
 const TEX_SIZE = 256;
 
 // chip outlines are drawn at the same 1px as every border in the app
@@ -74,6 +91,21 @@ type Star = {
   size: number;
   speed: number;
   group: THREE.Group;
+};
+
+type Wall = {
+  // outward normal; the wall runs clockwise, along (-ny, nx)
+  nx: number;
+  ny: number;
+  // the straight run between the corners, and the chips' side of it along the
+  // normal
+  x0: number;
+  y0: number;
+  length: number;
+  rest: number;
+  // outward displacement and velocity at evenly spaced nodes along the run
+  bend: Float32Array;
+  vel: Float32Array;
 };
 
 // normalize any CSS color (oklch, var-resolved, named) to a THREE.Color
@@ -118,6 +150,7 @@ function floorMaterial(chipCount: number) {
       uColor: { value: new THREE.Color() },
       uViewMin: { value: new THREE.Vector2() },
       uViewMax: { value: new THREE.Vector2() },
+      uRadius: { value: 0 },
       uChips: {
         value: Array.from({ length: chipCount }, () => new THREE.Vector2()),
       },
@@ -136,6 +169,7 @@ function floorMaterial(chipCount: number) {
       uniform vec3 uColor;
       uniform vec2 uViewMin;
       uniform vec2 uViewMax;
+      uniform float uRadius;
       uniform vec2 uChips[CHIP_COUNT];
       uniform float uChipR[CHIP_COUNT];
       varying vec2 vView;
@@ -171,7 +205,12 @@ function floorMaterial(chipCount: number) {
           ${FLOOR_FADE_MIN.toFixed(2)}, 1.0,
           clamp(t / ${FLOOR_FADE_EDGE.toFixed(1)}, 0.0, 1.0));
 
-        float a = mark * fade;
+        // the canvas bleeds past the walls, so clip to inside them by hand
+        vec2 q = abs(vView - (uViewMin + uViewMax) * 0.5)
+          - ((uViewMax - uViewMin) * 0.5 - uRadius);
+        float inside = step(length(max(q, 0.0)) + min(max(q.x, q.y), 0.0), uRadius);
+
+        float a = mark * fade * inside;
         if (a <= 0.002) discard;
         gl_FragColor = vec4(uColor, a);
         // uColor is in the linear working space, like every other material's;
@@ -249,26 +288,130 @@ export default function LogoRain({
     // css pixels per view unit, so an outline can be sized in view units and
     // still land on one css pixel whatever the tank is scaled to
     let viewScale = 1;
+    // radius of the walls' inner corners, in view units
+    let corner = 0;
 
-    // cover the container like preserveAspectRatio="xMidYMid slice"
+    const walls: Wall[] = [
+      [0, -1],
+      [1, 0],
+      [0, 1],
+      [-1, 0],
+    ].map(([nx, ny]) => ({
+      nx: nx!,
+      ny: ny!,
+      x0: 0,
+      y0: 0,
+      length: 0,
+      rest: 0,
+      bend: new Float32Array(2),
+      vel: new Float32Array(2),
+    }));
+
+    const wallMaterial = new THREE.MeshBasicMaterial({
+      transparent: true,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    });
+    const wall = new THREE.Mesh(new THREE.BufferGeometry(), wallMaterial);
+    let wallPosition = new THREE.BufferAttribute(new Float32Array(0), 3);
+    wall.renderOrder = MAX_SIZE * 10 + 3;
+    scene.add(wall);
+
+    // the walls' inner edge covers the view like preserveAspectRatio="xMidYMid
+    // slice", and the camera reaches past it over the border and the bleed
     function fit() {
       const cw = container.clientWidth || 1;
       const ch = container.clientHeight || 1;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(cw, ch, false);
-      const scale = Math.max(cw / VIEW_W, ch / VIEW_H);
+      renderer.setSize(cw + 2 * BLEED_PX, ch + 2 * BLEED_PX, false);
+      const iw = Math.max(cw - 2 * BORDER_PX, 1);
+      const ih = Math.max(ch - 2 * BORDER_PX, 1);
+      const scale = Math.max(iw / VIEW_W, ih / VIEW_H);
       viewScale = scale;
-      const visW = cw / scale;
-      const visH = ch / scale;
-      camera.left = VIEW_W / 2 - visW / 2;
-      camera.right = VIEW_W / 2 + visW / 2;
-      camera.top = -VIEW_H / 2 + visH / 2;
-      camera.bottom = -VIEW_H / 2 - visH / 2;
+      const visW = iw / scale;
+      const visH = ih / scale;
+      const pad = (BORDER_PX + BLEED_PX) / scale;
+      camera.left = VIEW_W / 2 - visW / 2 - pad;
+      camera.right = VIEW_W / 2 + visW / 2 + pad;
+      camera.top = -VIEW_H / 2 + visH / 2 + pad;
+      camera.bottom = -VIEW_H / 2 - visH / 2 - pad;
       camera.updateProjectionMatrix();
-      floorUniforms.uViewMin!.value.set(camera.left, -camera.top);
-      floorUniforms.uViewMax!.value.set(camera.right, -camera.bottom);
+      // the container carries rounded-lg for this
+      corner =
+        Math.max(parseFloat(getComputedStyle(container).borderTopLeftRadius) - BORDER_PX, 0) /
+        scale;
+      floorUniforms.uViewMin!.value.set(VIEW_W / 2 - visW / 2, VIEW_H / 2 - visH / 2);
+      floorUniforms.uViewMax!.value.set(VIEW_W / 2 + visW / 2, VIEW_H / 2 + visH / 2);
+      floorUniforms.uRadius!.value = corner;
+
+      walls.forEach((w) => {
+        const midX = VIEW_W / 2 + (w.nx * visW) / 2;
+        const midY = VIEW_H / 2 + (w.ny * visH) / 2;
+        w.length = Math.max((w.ny ? visW : visH) - 2 * corner, 0);
+        w.rest = midX * w.nx + midY * w.ny;
+        w.x0 = midX + (w.ny * w.length) / 2;
+        w.y0 = midY - (w.nx * w.length) / 2;
+        const nodes = Math.max(Math.round(w.length / BEND_SPACING), 1) + 1;
+        w.bend = new Float32Array(nodes);
+        w.vel = new Float32Array(nodes);
+      });
+
+      // a ribbon of two vertices per point: every node, then each corner's arc
+      const points = walls.reduce((n, w) => n + w.bend.length + CORNER_SEGMENTS - 1, 0);
+      wallPosition = new THREE.BufferAttribute(new Float32Array(points * 6), 3).setUsage(
+        THREE.DynamicDrawUsage,
+      );
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", wallPosition);
+      geometry.setIndex(
+        Array.from({ length: points }, (_, p) => {
+          const q = (p + 1) % points;
+          return [2 * p, 2 * p + 1, 2 * q, 2 * p + 1, 2 * q + 1, 2 * q];
+        }).flat(),
+      );
+      wall.geometry.dispose();
+      wall.geometry = geometry;
     }
     fit();
+
+    // lay the border along the bent walls and the rigid corners, growing
+    // outward from the inner edge like a css border
+    function drawWall() {
+      const out = wallPosition.array;
+      const width = BORDER_PX / viewScale;
+      let k = 0;
+      const put = (x: number, y: number, mx: number, my: number) => {
+        out[k++] = x;
+        out[k++] = -y;
+        out[k++] = 0;
+        out[k++] = x + mx * width;
+        out[k++] = -(y + my * width);
+        out[k++] = 0;
+      };
+      walls.forEach(({ nx, ny, x0, y0, length, bend }) => {
+        const step = length / (bend.length - 1);
+        bend.forEach((u, j) =>
+          put(x0 - ny * step * j + nx * u, y0 + nx * step * j + ny * u, nx, ny),
+        );
+        const cx = x0 - ny * length - nx * corner;
+        const cy = y0 + nx * length - ny * corner;
+        const from = Math.atan2(ny, nx);
+        Array.from(
+          { length: CORNER_SEGMENTS - 1 },
+          (_, i) => from + ((Math.PI / 2) * (i + 1)) / CORNER_SEGMENTS,
+        ).forEach((a) => {
+          const mx = Math.cos(a);
+          const my = Math.sin(a);
+          put(cx + mx * corner, cy + my * corner, mx, my);
+        });
+      });
+      wallPosition.needsUpdate = true;
+    }
+
+    function render() {
+      drawWall();
+      renderer.render(scene, camera);
+    }
 
     const floorGeometry = new THREE.PlaneGeometry(VIEW_W, VIEW_H);
     const floor = new THREE.Mesh(floorGeometry, floorMat);
@@ -286,6 +429,7 @@ export default function LogoRain({
 
     let theme = readTheme();
     floorUniforms.uColor!.value.copy(theme.border);
+    wallMaterial.color.copy(theme.border);
     const circleMaterials: THREE.MeshBasicMaterial[] = [];
     const ringMaterials: THREE.MeshBasicMaterial[] = [];
     const logoMaterials: THREE.MeshBasicMaterial[] = [];
@@ -295,11 +439,13 @@ export default function LogoRain({
     const stars: Star[] = [];
     Array.from({ length: chipCount }).forEach(() => {
       const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
-      // seed across the whole view so it starts populated; a few best-candidate
-      // samples gently discourage clumping without looking gridded
+      // seed inside the walls so no chip starts out pressed into one; a few
+      // best-candidate samples gently discourage clumping without looking gridded
+      const min = floorUniforms.uViewMin!.value;
+      const max = floorUniforms.uViewMax!.value;
       const { x, y } = Array.from({ length: 4 }, () => ({
-        x: Math.random() * VIEW_W,
-        y: Math.random() * VIEW_H,
+        x: min.x + size + Math.random() * Math.max(max.x - min.x - 2 * size, 0),
+        y: min.y + size + Math.random() * Math.max(max.y - min.y - 2 * size, 0),
       })).reduce<{ x: number; y: number; dist: number }>(
         (best, candidate) => {
           const dist = stars.length
@@ -388,7 +534,7 @@ export default function LogoRain({
         logoMaterials[i]!.map = texture;
         logoMaterials[i]!.visible = true;
         logoMaterials[i]!.needsUpdate = true;
-        renderer.render(scene, camera);
+        render();
       });
     });
 
@@ -407,7 +553,8 @@ export default function LogoRain({
         m.opacity = theme.logoAlpha;
       });
       floorUniforms.uColor!.value.copy(theme.border);
-      renderer.render(scene, camera);
+      wallMaterial.color.copy(theme.border);
+      render();
     }
 
     const themeObserver = new MutationObserver(applyTheme);
@@ -423,7 +570,7 @@ export default function LogoRain({
         ring.geometry.dispose();
         ring.geometry = ringGeometry(stars[i]!.size);
       });
-      renderer.render(scene, camera);
+      render();
     });
     resizeObserver.observe(container);
 
@@ -454,15 +601,17 @@ export default function LogoRain({
     };
 
     if (reduceMotion) {
-      renderer.render(scene, camera);
+      render();
     } else {
       canvas.addEventListener("pointermove", onPointerMove);
       canvas.addEventListener("pointerdown", onPointerDown);
       let last = performance.now();
       renderer.setAnimationLoop((now) => {
-        const dt = (now - last) / 1000;
+        // a long stall (a background tab) would fling chips deep into the walls
+        const dt = Math.min((now - last) / 1000, 0.1);
         last = now;
         const relax = 1 - Math.exp(-CRUISE_RELAX * dt);
+        const maxBend = MAX_BEND_PX / viewScale;
         stars.forEach((s) => {
           // renormalize speed toward cruise, keeping direction
           const spd = Math.hypot(s.vx, s.vy) || 1;
@@ -473,38 +622,26 @@ export default function LogoRain({
           s.y += s.vy * dt;
           s.angVel = Math.max(-MAX_SPIN, Math.min(MAX_SPIN, s.angVel * Math.exp(-SPIN_DAMP * dt)));
           s.angle += s.angVel * dt;
-          // bounce off the visible walls (camera bounds track the container);
-          // sliding along a wall rubs the chip into rotation
-          const minX = camera.left + s.size;
-          const maxX = camera.right - s.size;
-          const minY = -camera.top + s.size;
-          const maxY = -camera.bottom - s.size;
-          if (s.x < minX) {
-            s.x = minX;
-            s.vx = Math.abs(s.vx);
-            const slip = s.vy - s.angVel * s.size;
-            s.vy -= SPIN_GRIP * slip;
+          // sink into the walls, which spring back; turning around against
+          // one rubs the chip into rotation
+          walls.forEach(({ nx, ny, rest }) => {
+            const depth = s.x * nx + s.y * ny + s.size - rest;
+            if (depth <= 0) return;
+            const vn = s.vx * nx + s.vy * ny;
+            let turned = vn - WALL_SPRING * depth * dt;
+            if (depth > maxBend) {
+              s.x -= nx * (depth - maxBend);
+              s.y -= ny * (depth - maxBend);
+              turned = -Math.abs(vn);
+            }
+            s.vx += (turned - vn) * nx;
+            s.vy += (turned - vn) * ny;
+            if (vn <= 0 || turned > 0) return;
+            const slip = s.vx * ny - s.vy * nx - s.angVel * s.size;
+            s.vx -= SPIN_GRIP * slip * ny;
+            s.vy += SPIN_GRIP * slip * nx;
             s.angVel += (2 * SPIN_GRIP * slip) / s.size;
-          } else if (s.x > maxX) {
-            s.x = maxX;
-            s.vx = -Math.abs(s.vx);
-            const slip = -s.vy - s.angVel * s.size;
-            s.vy += SPIN_GRIP * slip;
-            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
-          }
-          if (s.y < minY) {
-            s.y = minY;
-            s.vy = Math.abs(s.vy);
-            const slip = -s.vx - s.angVel * s.size;
-            s.vx += SPIN_GRIP * slip;
-            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
-          } else if (s.y > maxY) {
-            s.y = maxY;
-            s.vy = -Math.abs(s.vy);
-            const slip = s.vx - s.angVel * s.size;
-            s.vx -= SPIN_GRIP * slip;
-            s.angVel += (2 * SPIN_GRIP * slip) / s.size;
-          }
+          });
         });
 
         // elastic circle collisions
@@ -550,12 +687,46 @@ export default function LogoRain({
           });
         });
 
+        // step the walls' strings, pinning each back out to the surface of any
+        // chip still pressing into it
+        const steps = Math.ceil(dt * BEND_RATE);
+        const h = dt / steps;
+        Array.from({ length: steps }).forEach(() => {
+          walls.forEach((w) => {
+            const { bend, vel } = w;
+            const last = bend.length - 1;
+            const spacing = w.length / last;
+            const tension = BEND_TENSION / (spacing * spacing);
+            vel.forEach((v, j) => {
+              if (j === 0 || j === last) return;
+              const pull = tension * (bend[j - 1]! - 2 * bend[j]! + bend[j + 1]!);
+              vel[j] = v + (pull - BEND_STIFF * bend[j]! - BEND_DAMP * v) * h;
+            });
+            bend.forEach((u, j) => {
+              bend[j] = u + vel[j]! * h;
+            });
+            stars.forEach((s) => {
+              const depth = s.x * w.nx + s.y * w.ny + s.size - w.rest;
+              if (depth <= 0) return;
+              const along = (w.x0 - s.x) * w.ny + (s.y - w.y0) * w.nx;
+              bend.forEach((u, j) => {
+                const off = j * spacing - along;
+                if (j === 0 || j === last || Math.abs(off) >= s.size) return;
+                const surface = depth - s.size + Math.sqrt(s.size * s.size - off * off);
+                if (surface <= u) return;
+                bend[j] = surface;
+                vel[j] = Math.max(vel[j]!, 0);
+              });
+            });
+          });
+        });
+
         stars.forEach((s, i) => {
           s.group.position.set(s.x, -s.y, 0);
           s.group.rotation.z = -s.angle;
           chipPositions[i]!.set(s.x, s.y);
         });
-        renderer.render(scene, camera);
+        render();
       });
     }
 
@@ -571,6 +742,8 @@ export default function LogoRain({
       planeGeometry.dispose();
       floorGeometry.dispose();
       floorMat.dispose();
+      wall.geometry.dispose();
+      wallMaterial.dispose();
       [...circleMaterials, ...ringMaterials, ...logoMaterials].forEach((m) => m.dispose());
       textures.forEach((t) => t.dispose());
       renderer.dispose();
@@ -578,12 +751,18 @@ export default function LogoRain({
   }, [density, speedFactor]);
 
   return (
-    <div className="h-full w-full text-foreground">
+    <div className="relative h-full w-full rounded-lg text-foreground">
       <canvas
         ref={canvasRef}
         aria-label="Floating logos visualization"
         role="img"
-        className="pointer-events-auto block h-full w-full"
+        className="pointer-events-auto absolute block"
+        // a positioned canvas takes its drawing buffer's size unless told otherwise
+        style={{
+          inset: -BLEED_PX,
+          width: `calc(100% + ${2 * BLEED_PX}px)`,
+          height: `calc(100% + ${2 * BLEED_PX}px)`,
+        }}
       />
     </div>
   );
