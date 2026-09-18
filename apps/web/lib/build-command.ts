@@ -24,20 +24,36 @@ export const NEST_REJECTS = {
   "di-only": new Set<Config["deployment"]>(["spa"]),
 } satisfies Record<Nest, ReadonlySet<Config["deployment"]>>;
 
+// Shown next to the deployment the user did pick, so it has to name the one
+// that is missing from the list rather than just describe it.
 export const NEST_REJECTS_HINT = {
   on: "",
-  off: "spa hands a static export to Nest to serve, and off ships no Nest.",
-  "di-only": "spa statically exports Next.js, which cannot hold the route handlers di-only needs.",
+  off: "No spa deployment: spa serves its static export from Nest, and off has none.",
+  "di-only":
+    "No spa deployment: spa statically exports Next.js, which cannot hold the route handlers di-only runs on.",
 } satisfies Record<Nest, string>;
 
 export const DEPLOYMENT_HINTS = {
-  standalone: 'Next.js output: "standalone", in Docker alongside Nest.',
+  // Only a Nest with its own HTTP server gets a container of its own, so the
+  // compose file is one service short in the other two modes.
+  standalone: {
+    on: 'Next.js output: "standalone", in Docker: a web container on 3000 and a Nest api container on 3001.',
+    off: 'Next.js output: "standalone", in Docker: one web container on 3000, since off scaffolds no apps/api.',
+    "di-only":
+      'Next.js output: "standalone", in Docker: one web container on 3000, with Nest inside the Next.js process.',
+  },
+  // spa only pairs with nest on, so its Nest always has an HTTP server.
   spa: "Next.js static export, served by Nest. No SSR.",
-} satisfies Record<Exclude<Config["deployment"], "none">, string>;
+} satisfies Record<Exclude<Config["deployment"], "none">, string | Record<Nest, string>>;
 
 // "none" adds no deployment files, so there is nothing to describe.
 export function deploymentHint(c: Config): string | null {
-  const base = c.deployment === "none" ? null : DEPLOYMENT_HINTS[c.deployment];
+  const base =
+    c.deployment === "none"
+      ? null
+      : c.deployment === "spa"
+        ? DEPLOYMENT_HINTS.spa
+        : DEPLOYMENT_HINTS.standalone[c.nest];
   if (c.nest === "on") return base;
   const rejects = NEST_REJECTS_HINT[c.nest];
   return base ? `${base} ${rejects}` : rejects;
