@@ -46,10 +46,10 @@ const MAX_SPIN = 2.5;
 // MAX_BEND_PX past it. Each wall is a damped string pinned at the corners that
 // hugs the chip while it presses and wobbles back once it leaves; the canvas
 // bleeds past the tank so the bulge has room to draw.
-const WALL_SPRING = 9;
-const MAX_BEND_PX = 6;
+const WALL_SPRING = 6;
+const MAX_BEND_PX = 8;
 const BEND_SPACING = 12;
-const BEND_TENSION = 1.44e6;
+const BEND_TENSION = 2.72e6;
 const BEND_STIFF = 900;
 const BEND_DAMP = 12;
 // the string is stepped at a fixed rate: its tension is too stiff for one step
