@@ -45,18 +45,24 @@ import { builderHref, configParsers, configUrlKeys, sanitizeConfig } from "@/lib
 
 const grow = "animate-in fade-in slide-in-from-left-1 duration-300";
 
-const VALUE = "text-sky-700 dark:text-sky-400";
+const CHOICE = "text-sky-700 dark:text-sky-400";
 
-// only flag values take colour. Everything else stays a direct text node of the
-// <code>, so the line still reads as one string to a text lookup
+const isFlag = (token: string) => token.startsWith("--") && token.length > 2;
+
+// colour the token carrying the choice: a flag's value, or the flag itself when
+// it is boolean and there is no value to carry it. Everything else stays a
+// direct text node of the <code>, so the line still reads as one string to a
+// text lookup
 function coloured(command: string) {
   const tokens = command.split(" ");
   return tokens.map((token, i) => {
-    const prev = tokens[i - 1] ?? "";
-    return prev.startsWith("--") && prev.length > 2 && !token.startsWith("-") ? (
+    const next = tokens[i + 1];
+    const isValue = isFlag(tokens[i - 1] ?? "") && !token.startsWith("-");
+    const isBooleanFlag = isFlag(token) && (next === undefined || next.startsWith("-"));
+    return isValue || isBooleanFlag ? (
       <Fragment key={i}>
         {" "}
-        <span className={VALUE}>{token}</span>
+        <span className={CHOICE}>{token}</span>
       </Fragment>
     ) : (
       `${i ? " " : ""}${token}`
