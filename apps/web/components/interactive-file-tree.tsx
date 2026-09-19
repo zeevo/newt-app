@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { useQueryStates } from "nuqs";
 import { FileTree, fileIcon } from "@newt-app/file-tree";
 import Link from "next/link";
@@ -44,6 +44,31 @@ import { scaffoldTree, type TreeNode } from "@/lib/scaffold-tree";
 import { builderHref, configParsers, configUrlKeys, sanitizeConfig } from "@/lib/config-params";
 
 const grow = "animate-in fade-in slide-in-from-left-1 duration-300";
+
+const CHOICE = "text-sky-700 dark:text-sky-400";
+
+const isFlag = (token: string) => token.startsWith("--") && token.length > 2;
+
+// colour the token carrying the choice: a flag's value, or the flag itself when
+// it is boolean and there is no value to carry it. Everything else stays a
+// direct text node of the <code>, so the line still reads as one string to a
+// text lookup
+function coloured(command: string) {
+  const tokens = command.split(" ");
+  return tokens.map((token, i) => {
+    const next = tokens[i + 1];
+    const isValue = isFlag(tokens[i - 1] ?? "") && !token.startsWith("-");
+    const isBooleanFlag = isFlag(token) && (next === undefined || next.startsWith("-"));
+    return isValue || isBooleanFlag ? (
+      <Fragment key={i}>
+        {" "}
+        <span className={CHOICE}>{token}</span>
+      </Fragment>
+    ) : (
+      `${i ? " " : ""}${token}`
+    );
+  });
+}
 
 function renderNodes(nodes: TreeNode[]) {
   return nodes.map((node) => {
@@ -402,8 +427,8 @@ export function InteractiveFileTree({
               growing the row and squeezing the button */}
           <div className="min-w-0 flex-1 rounded-lg border bg-code px-3 py-2">
             <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
-              <span className="text-muted-foreground select-none">$ </span>
-              {command}
+              <span className="text-green-800 select-none dark:text-green-400">$ </span>
+              {coloured(command)}
             </code>
           </div>
           <CopyCommandButton value={command} />
