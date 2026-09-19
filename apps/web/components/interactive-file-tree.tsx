@@ -33,7 +33,6 @@ import {
   buildCommand,
   DEFAULT_NAME,
   deploymentOptions,
-  extrasHints,
   NEST_HINTS,
   NEST_MODES,
   NEST_REJECTS,
@@ -222,7 +221,6 @@ export function InteractiveFileTree({
   const set = <K extends keyof Config>(key: K, value: Config[K]) => setC({ [key]: value });
 
   const command = useMemo(() => buildCommand(c), [c]);
-  const hints = extrasHints(c);
   const selected = [
     c.deployment === "none" ? null : c.deployment,
     c.todoExample ? "example app" : null,
@@ -373,17 +371,6 @@ export function InteractiveFileTree({
                   </DropdownMenuContent>
                 </DropdownMenu>
               </Row>
-              {/* the extras options are not self-describing, and a hover tooltip
-                cannot be read on a touch screen */}
-              {hints.map((text) => (
-                <p
-                  key={text}
-                  aria-live="polite"
-                  className="text-xs leading-relaxed text-muted-foreground"
-                >
-                  {text}
-                </p>
-              ))}
             </div>
             {!fullscreen && (
               <div className="flex justify-end">

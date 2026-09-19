@@ -1,15 +1,11 @@
 import { describe, it, expect } from "vitest";
 import {
-  ANTI_SLOP_HINT,
   buildCommand,
   normalizeName,
-  DEPLOYMENT_HINTS,
   deploymentOptions,
-  extrasHints,
   NEST_MODES,
   NEST_REJECTS,
   todoExampleAvailable,
-  TODO_EXAMPLE_HINT,
   type Config,
 } from "@/lib/build-command";
 
@@ -94,19 +90,6 @@ describe("buildCommand", () => {
       .filter((command) => command.includes("--extras anti-slop") && !command.includes("oxc"));
 
     expect(invalid).toEqual([]);
-  });
-
-  it("explains every extra that is switched on", () => {
-    const c = reachable.find((config) => config.deployment === "spa")!;
-
-    expect(extrasHints({ ...c, todoExample: true, antiSlop: true })).toEqual([
-      DEPLOYMENT_HINTS.spa,
-      TODO_EXAMPLE_HINT,
-      ANTI_SLOP_HINT,
-    ]);
-    expect(extrasHints({ ...c, deployment: "none", todoExample: false, antiSlop: false })).toEqual(
-      [],
-    );
   });
 
   it("emits a config flag whenever shadcn is off, so the CLI stays non-interactive", () => {
