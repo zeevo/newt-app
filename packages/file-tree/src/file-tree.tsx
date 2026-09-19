@@ -33,7 +33,7 @@ export interface FileTreeFileProps extends Omit<EntryBase, "children"> {
 // and annotations stay uncoloured so the tree reads as structure first.
 const FOLDER_COLOR = "text-sky-600 dark:text-sky-400";
 const TS_COLOR = "text-blue-600 dark:text-blue-400";
-const JS_COLOR = "text-amber-600 dark:text-amber-400";
+const JS_COLOR = "text-amber-700 dark:text-amber-400";
 
 const FolderGlyph = (
   <svg
