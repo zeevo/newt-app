@@ -24,25 +24,6 @@ export const NEST_REJECTS = {
   "di-only": new Set<Config["deployment"]>(["spa"]),
 } satisfies Record<Nest, ReadonlySet<Config["deployment"]>>;
 
-export const NEST_REJECTS_HINT = {
-  on: "",
-  off: "spa hands a static export to Nest to serve, and off ships no Nest.",
-  "di-only": "spa statically exports Next.js, which cannot hold the route handlers di-only needs.",
-} satisfies Record<Nest, string>;
-
-export const DEPLOYMENT_HINTS = {
-  standalone: 'Next.js output: "standalone", in Docker alongside Nest.',
-  spa: "Next.js static export, served by Nest. No SSR.",
-} satisfies Record<Exclude<Config["deployment"], "none">, string>;
-
-// "none" adds no deployment files, so there is nothing to describe.
-export function deploymentHint(c: Config): string | null {
-  const base = c.deployment === "none" ? null : DEPLOYMENT_HINTS[c.deployment];
-  if (c.nest === "on") return base;
-  const rejects = NEST_REJECTS_HINT[c.nest];
-  return base ? `${base} ${rejects}` : rejects;
-}
-
 export const NEST_HINTS = {
   on: undefined,
   off: "No apps/api: Next.js route handlers own the backend, and nothing scaffolds @nestjs.",
@@ -61,21 +42,8 @@ export function testingAvailable(nest: Nest): boolean {
   return nest !== "off";
 }
 
-export const TODO_EXAMPLE_HINT = "Include an example to-do list feature.";
-
-export const ANTI_SLOP_HINT =
-  "Vendors dmmulroy/anti-slop into tools/oxlint and turns its 15 rules on as errors: no undocumented type assertions, no unknown returns, no runtime typeof narrowing.";
-
 export function antiSlopAvailable(linter: Config["linter"]): boolean {
   return linter === "oxc";
-}
-
-export function extrasHints(c: Config): string[] {
-  return [
-    deploymentHint(c),
-    c.todoExample ? TODO_EXAMPLE_HINT : null,
-    c.antiSlop ? ANTI_SLOP_HINT : null,
-  ].filter((hint) => hint !== null);
 }
 
 const DEPLOYMENTS = [
