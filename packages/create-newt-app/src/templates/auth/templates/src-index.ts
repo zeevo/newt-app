@@ -9,7 +9,7 @@ export const auth = betterAuth({
   database: driver,
   emailAndPassword: { enabled: true },
   trustedOrigins: [process.env.BETTER_AUTH_URL ?? "http://localhost:3000"],
-  logger: migrating ? { disabled: true } : undefined,
+  advanced: { database: { validateSchema: !migrating } },
 });
 
 export type Auth = typeof auth;`,
