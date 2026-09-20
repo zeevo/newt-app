@@ -2,4 +2,4 @@
 "create-newt-app": patch
 ---
 
-Silence the Better Auth schema-mismatch error on the first `pnpm dev`. The `auth migrate` CLI constructs the auth instance to read its config, so better-auth validated the schema against the still-empty database and logged a red error immediately before the migration that fixed it. The generated config now turns `advanced.database.validateSchema` off for the migrate process only, so the runtime check still guards the app.
+Silence the Better Auth schema-mismatch error on the first `pnpm dev`. The `auth migrate` CLI constructs the auth instance to read its config, so better-auth validated the schema against the still-empty database and logged a red error immediately before the migration that fixed it. The generated config now sets `advanced.database.validateSchema` to false.
