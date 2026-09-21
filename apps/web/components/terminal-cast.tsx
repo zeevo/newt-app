@@ -36,17 +36,6 @@ const STEPS: readonly Step[] = [
     cmd: "curl -s localhost:3000/api/hello",
     out: ['{"message":"Hello from Nest"}'],
   },
-  {
-    cmd: "cat apps/web/next.config.js",
-    out: [
-      "  async rewrites() {",
-      "    return [",
-      "      { source: '/api/:path*',",
-      "        destination: 'http://localhost:3001/api/:path*' },",
-      "    ];",
-      "  },",
-    ],
-  },
 ];
 
 const TRANSCRIPT: Line[] = STEPS.flatMap((step) => [
