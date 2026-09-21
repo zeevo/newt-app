@@ -139,7 +139,7 @@ export function TerminalCast({ className }: { className?: string }) {
   return (
     <Window
       label="my-app"
-      className={cn("terminal-surface", className)}
+      className={className}
       action={
         animated && (
           <button
@@ -164,7 +164,7 @@ export function TerminalCast({ className }: { className?: string }) {
             <span key={i} className="block">
               {line.kind === "cmd" ? (
                 <>
-                  <span className="text-emerald-400 select-none">$ </span>
+                  <span className="text-green-800 select-none dark:text-green-400">$ </span>
                   <span className="font-semibold text-foreground">{line.text}</span>
                 </>
               ) : (
@@ -175,7 +175,7 @@ export function TerminalCast({ className }: { className?: string }) {
           ))}
           {animated && lines.length === 0 && (
             <span className="block">
-              <span className="text-emerald-400 select-none">$ </span>
+              <span className="text-green-800 select-none dark:text-green-400">$ </span>
               <Caret paused={paused} />
             </span>
           )}
