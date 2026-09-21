@@ -1,5 +1,6 @@
 import { siteConfig } from "@/lib/config";
 import { Icons } from "./icons";
+import LogoRain from "./logo-rain";
 import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
 
 // the band keeps the dark theme's navy in both schemes, so the page ends on a
@@ -8,8 +9,19 @@ const BAND = "bg-[oklch(0.19_0.03_262)] text-[oklch(0.95_0.012_85)]";
 
 export function SiteFooter() {
   return (
-    <footer className={`${BAND} mt-0`}>
-      <div className="container flex flex-col gap-5 py-7 sm:flex-row sm:items-center sm:justify-between">
+    <footer
+      className={`${BAND} relative flex min-h-[20rem] flex-col justify-end overflow-hidden sm:min-h-[26rem]`}
+    >
+      {/* the tank fills the band; its own canvas opts pointer events back in,
+          so the chips stay clickable through this layer */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <LogoRain density={1.6} chipScale={0.48} />
+      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 bg-gradient-to-t from-[oklch(0.19_0.03_262)] via-[oklch(0.19_0.03_262/0.85)] to-transparent"
+      />
+      <div className="relative z-20 container flex flex-col gap-5 py-7 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2.5">
           <Icons.logo className="size-5 opacity-90" />
           <span className="text-base font-semibold tracking-wide">{siteConfig.title}</span>

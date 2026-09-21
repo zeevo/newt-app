@@ -11,9 +11,5 @@ export const siteConfig = {
     npm: "https://www.npmjs.com/package/create-newt-app",
     license: "https://github.com/zeevo/newt-app/blob/main/LICENSE",
   },
-  navItems: [
-    { href: "/#stack", label: "Stack" },
-    { href: "/#flow", label: "Request flow" },
-    { href: "/#builder", label: "Builder" },
-  ],
+  navItems: [],
 };
