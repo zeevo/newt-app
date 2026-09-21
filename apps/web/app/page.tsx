@@ -25,20 +25,17 @@ export default function Home() {
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
             >
-              <span className="size-2 rounded-full bg-green-500" />
-              create-newt-app v{cliVersion} on npm
+              <span className="size-2 rounded-full bg-green-500" />v{cliVersion} on npm
               <span aria-hidden>→</span>
             </a>
             <h1 className="mt-6 text-4xl leading-[1.12] font-semibold tracking-tight text-balance sm:text-5xl xl:text-[2.85rem]">
-              One command writes the workspace.{" "}
+              One command.{" "}
               <span className="text-sky-700 dark:text-sky-400">
                 Next.js on :3000, NestJS on :3001.
               </span>
             </h1>
             <p className="mt-5 max-w-[56ch] text-base leading-relaxed text-muted-foreground lg:text-lg">
-              create-newt-app writes a pnpm workspace with a Next.js frontend, a NestJS backend,
-              Better Auth shared by both, and a typed Kysely database layer. They are configured
-              against each other before you open the editor.
+              A pnpm workspace with Next.js, NestJS, Better Auth and Kysely, wired together.
             </p>
             <div className="mt-7 flex h-11 w-fit items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap shadow-sm">
               <span className="shrink-0 text-muted-foreground select-none">$</span>
@@ -59,7 +56,7 @@ export default function Home() {
                 className={`${PILL} border bg-background hover:bg-muted`}
               >
                 <Icons.gitHub className="size-4" />
-                View on GitHub
+                GitHub
               </a>
             </div>
           </div>
@@ -70,14 +67,13 @@ export default function Home() {
       <section id="builder" className="scroll-mt-(--header-height) border-b">
         <div className="container py-14 sm:py-20">
           <p className="mb-3 font-mono text-xs font-semibold tracking-[0.18em] text-sky-700 uppercase dark:text-sky-400">
-            Command builder
+            Builder
           </p>
           <h2 className="max-w-[30ch] text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-            Pick the stack, copy the command.
+            Pick the stack.
           </h2>
           <p className="mt-4 max-w-[62ch] text-lg text-muted-foreground">
-            Every prompt the CLI asks is also a flag. Toggle the options and the tree shows the
-            files create-newt-app writes for that answer set.
+            Every prompt is also a flag. The tree shows what gets written.
           </p>
           <div className="mt-10 rounded-xl border bg-card p-2 shadow-lg">
             {/* nuqs reads useSearchParams, which needs a boundary on a

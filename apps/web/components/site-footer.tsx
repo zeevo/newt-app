@@ -52,7 +52,7 @@ export function SiteFooter() {
             rel="noreferrer"
             className="opacity-75 transition-opacity hover:opacity-100"
           >
-            MIT License
+            MIT
           </a>
           <a
             href={siteConfig.links.twitter}
