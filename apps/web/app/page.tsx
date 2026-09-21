@@ -1,123 +1,240 @@
-import { CopyButton } from "@/components/copy-button";
-import { InteractiveFileTree } from "@/components/interactive-file-tree";
-import Image from "next/image";
+import Link from "next/link";
 import { Suspense } from "react";
+import { CopyButton } from "@/components/copy-button";
+import { Icons } from "@/components/icons";
+import { InteractiveFileTree } from "@/components/interactive-file-tree";
 import LogoRain from "@/components/logo-rain";
+import { Section } from "@/components/section";
+import { TerminalCast } from "@/components/terminal-cast";
+import { siteConfig } from "@/lib/config";
 import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
+
+const INSTALL = "npm create newt-app";
+
+const PILL =
+  "inline-flex h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold transition-colors";
+
+const WORKSPACES = [
+  {
+    path: "apps/web",
+    title: "Next.js frontend",
+    body: (
+      <>
+        App Router on port 3000. <C>next.config.js</C> rewrites <C>/api/:path*</C> to{" "}
+        <C>http://localhost:3001</C>, so the browser only ever talks to one origin.
+      </>
+    ),
+  },
+  {
+    path: "apps/api",
+    title: "NestJS backend",
+    body: (
+      <>
+        Bootstraps with <C>setGlobalPrefix(&apos;api&apos;)</C> and listens on 3001. Controllers,
+        providers, and a test suite on Jest or Vitest.
+      </>
+    ),
+  },
+  {
+    path: "packages/auth",
+    title: "Better Auth",
+    body: (
+      <>
+        One <C>betterAuth()</C> call with email and password enabled, exported as <C>auth</C> and
+        imported by both apps.
+      </>
+    ),
+  },
+  {
+    path: "packages/db",
+    title: "Kysely and migrations",
+    body: (
+      <>
+        A typed <C>Kysely&lt;DB&gt;</C> client over SQLite or Postgres, with <C>src/schema.ts</C>{" "}
+        and a migration runner.
+      </>
+    ),
+  },
+];
+
+const FLOW = [
+  {
+    title: "Browser to Next.js",
+    body: (
+      <>
+        <C>fetch(&apos;/api/hello&apos;)</C> hits Next on 3000. The rewrite forwards it to Nest
+        server-side, so there is no preflight and no second origin to configure.
+      </>
+    ),
+  },
+  {
+    title: "Nest to the session",
+    body: (
+      <>
+        <C>AuthModule.forRoot({"{ auth }"})</C> guards every route. <C>@AllowAnonymous()</C> opens
+        one back up; everything else resolves a <C>UserSession</C>.
+      </>
+    ),
+  },
+  {
+    title: "Session to the database",
+    body: (
+      <>
+        Better Auth is handed the same driver the app queries through, so the session table and your
+        tables live in one database with one migration history.
+      </>
+    ),
+  },
+];
+
+function C({ children }: { children: React.ReactNode }) {
+  return (
+    <code className="rounded bg-foreground/[0.06] px-1 py-0.5 font-mono text-[0.85em] whitespace-nowrap text-foreground dark:bg-foreground/10">
+      {children}
+    </code>
+  );
+}
 
 export default function Home() {
   return (
-    <div>
-      {/* the tank fills the screen below the header and grows past it when the
-          builder needs the room, so the card sits on the tank rather than being
-          pulled onto it by a negative margin */}
-      <section className="relative flex min-h-[calc(100svh_-_var(--header-height))] items-start justify-center overflow-hidden border-b bg-background pt-12 pb-16 sm:pt-24">
-        {/* the tank is exactly the screen below the header, never the section:
-            the section grows to hold the builder, and letting the tank grow
-            with it would drag its floor, and the chips resting on it, below the
-            fold. The builder is meant to hang out of the tank's bottom edge. */}
-        {/* the header's container, so the tank's walls line up with the navbar */}
-        <div className="pointer-events-none absolute inset-x-0 top-2 z-0 container h-[calc(100svh_-_var(--header-height)_-_1rem)]">
-          <LogoRain />
-        </div>
-        {/* two steps past the container's padding clears the tank's walls, so
-            the card lands on the tank rather than poking out past it; from xl
-            the 1100px cap keeps it inside on its own */}
-        <div className="pointer-events-none relative z-10 flex w-full max-w-[1100px] flex-col items-center gap-5 px-6 lg:px-10 xl:px-6">
-          <a
-            href="https://www.npmjs.com/package/create-newt-app"
-            target="_blank"
-            rel="noreferrer"
-            className="pointer-events-auto flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
-          >
-            <span className="size-2 rounded-full bg-green-500" />
-            Latest update · v{cliVersion} released
-            <span aria-hidden>→</span>
-          </a>
-          {/* px-4 keeps the longest wrapped line clear of the frame */}
-          <h1 className="max-w-4xl px-4 text-center text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl lg:leading-[1.1] xl:text-7xl xl:tracking-tighter">
-            The TypeScript project scaffolder for{" "}
-            <span className="inline-flex items-center -space-x-2.5 align-middle xl:-space-x-4">
-              <span
-                title="Next.js"
-                className="z-[0] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  role="img"
-                  aria-label="Next.js"
-                  className="size-3/5 text-background"
-                >
-                  <path d="M18.665 21.978C16.758 23.255 14.465 24 12 24 5.377 24 0 18.623 0 12S5.377 0 12 0s12 5.377 12 12c0 3.583-1.574 6.801-4.067 9.001L9.219 7.2H7.2v9.596h1.615V9.251l9.85 12.727Zm-3.332-8.533 1.6 2.061V7.2h-1.6v6.245Z" />
-                </svg>
+    <>
+      <section className="relative overflow-hidden border-b">
+        <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
+        <div className="container grid items-center gap-10 py-12 lg:grid-cols-[1fr_1.12fr] lg:gap-14 lg:py-16">
+          <div>
+            <a
+              href={siteConfig.links.npm}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
+            >
+              <span className="size-2 rounded-full bg-green-500" />
+              create-newt-app v{cliVersion} on npm
+              <span aria-hidden>→</span>
+            </a>
+            <h1 className="mt-6 text-4xl leading-[1.12] font-semibold tracking-tight text-balance sm:text-5xl xl:text-[2.85rem]">
+              One command writes the workspace.{" "}
+              <span className="text-sky-700 dark:text-sky-400">
+                Next.js on :3000, NestJS on :3001.
               </span>
-              <span
-                title="NestJS"
-                className="z-[1] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+            </h1>
+            <p className="mt-5 max-w-[56ch] text-base leading-relaxed text-muted-foreground lg:text-lg">
+              create-newt-app writes a pnpm workspace with a Next.js frontend, a NestJS backend,
+              Better Auth shared by both, and a typed Kysely database layer. They are configured
+              against each other before you open the editor.
+            </p>
+            <div className="mt-7 flex h-11 w-fit items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap shadow-sm">
+              <span className="shrink-0 text-muted-foreground select-none">$</span>
+              <span className="font-mono">{INSTALL}</span>
+              <CopyButton value={INSTALL} className="static shrink-0" />
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <Link
+                href="/builder"
+                className={`${PILL} bg-gradient-to-br from-sky-600 to-sky-800 text-white shadow-[0_6px_18px_-6px_oklch(0.5_0.13_245/0.6)] hover:from-sky-500 hover:to-sky-700`}
               >
-                <Image
-                  src="/logos/nestjs.svg"
-                  alt="NestJS"
-                  width={32}
-                  height={32}
-                  className="size-3/5"
-                />
-              </span>
-              <span
-                title="Better Auth"
-                className="z-[2] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
+                Build a command
+              </Link>
+              <a
+                href={siteConfig.links.github}
+                target="_blank"
+                rel="noreferrer"
+                className={`${PILL} border bg-background hover:bg-muted`}
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  role="img"
-                  aria-label="Better Auth"
-                  className="size-3/5 text-background"
-                >
-                  <path d="M0 3.39v17.22h5.783V15.06h6.434V8.939H5.783V3.39ZM12.217 8.94h5.638v6.122h-5.638v5.548H24V3.391H12.217Z" />
-                </svg>
-              </span>
-              <span
-                title="shadcn/ui"
-                className="z-[3] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  role="img"
-                  aria-label="shadcn/ui"
-                  className="size-3/5 text-background"
-                >
-                  <path d="M22.219 11.784 11.784 22.219c-.407.407-.407 1.068 0 1.476.407.407 1.068.407 1.476 0L23.695 13.26c.407-.408.407-1.069 0-1.476-.408-.407-1.069-.407-1.476 0ZM20.132.305.305 20.132c-.407.407-.407 1.068 0 1.476.408.407 1.069.407 1.476 0L21.608 1.781c.407-.407.407-1.068 0-1.476-.408-.407-1.069-.407-1.476 0Z" />
-                </svg>
-              </span>
-              <span
-                title="oxc"
-                className="z-[4] inline-flex size-10 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-12 xl:size-16"
-              >
-                <Image src="/logos/oxc.svg" alt="oxc" width={32} height={32} className="size-3/5" />
-              </span>
-            </span>
-          </h1>
-          <div className="pointer-events-auto flex h-11 items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap text-foreground shadow-sm">
-            <span className="pointer-events-none shrink-0 text-muted-foreground select-none">
-              $
-            </span>
-            <span className="font-mono">npm create newt-app</span>
-            <CopyButton value={"npm create newt-app"} className="static shrink-0" />
+                <Icons.gitHub className="size-4" />
+                View on GitHub
+              </a>
+            </div>
           </div>
-          {/* the column is pointer-events-none so the chips stay clickable
-              through it; the builder has to opt back in */}
-          <div className="pointer-events-auto mt-16 w-full rounded-lg border bg-background p-2 shadow-lg">
-            {/* nuqs reads useSearchParams, which needs a boundary on a
-                statically rendered page */}
-            <Suspense>
-              <InteractiveFileTree />
-            </Suspense>
-          </div>
+          <TerminalCast className="min-w-0" />
         </div>
       </section>
-    </div>
+
+      <Section
+        id="stack"
+        eyebrow="What it writes"
+        title="Four workspaces, already wired together."
+        lede="The scaffolder does not hand you an empty monorepo. The proxy between the two apps, the auth config, and the database client are configured against each other in the files it writes."
+      >
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {WORKSPACES.map((item) => (
+            <div key={item.path} className="rounded-xl border bg-card p-5">
+              <span className="inline-block rounded-full border bg-muted px-2.5 py-0.5 font-mono text-xs text-muted-foreground">
+                {item.path}
+              </span>
+              <h3 className="mt-4 text-base font-semibold">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        eyebrow="Dependencies"
+        title="One lockfile, one install."
+        lede="pnpm workspaces and Turborepo hold the versions, and CI scaffolds ten flag combinations on every change to check that they still install, lint, build and boot. Give a chip a click."
+      >
+        <div className="mt-10 h-[20rem] sm:h-[26rem]">
+          <LogoRain density={2} />
+        </div>
+      </Section>
+
+      <Section
+        id="flow"
+        eyebrow="Request flow"
+        title="One origin in development."
+        lede="Two dev servers run, but the browser only sees one of them."
+        tinted
+      >
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {FLOW.map((item) => (
+            <div
+              key={item.title}
+              className="rounded-xl border border-sky-200 bg-card p-6 shadow-[0_10px_28px_-14px_oklch(0.5_0.12_245/0.35)] dark:border-sky-900"
+            >
+              <strong className="block text-lg leading-snug font-semibold text-sky-800 dark:text-sky-300">
+                {item.title}
+              </strong>
+              <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        id="builder"
+        eyebrow="Command builder"
+        title="Pick the stack, copy the command."
+        lede="Every prompt the CLI asks is also a flag. Toggle the options and the tree shows the files create-newt-app writes for that answer set."
+      >
+        <div className="mt-10 rounded-xl border bg-card p-2 shadow-lg">
+          {/* nuqs reads useSearchParams, which needs a boundary on a
+              statically rendered page */}
+          <Suspense>
+            <InteractiveFileTree />
+          </Suspense>
+        </div>
+      </Section>
+
+      <Section
+        eyebrow="About"
+        title="A scaffolder, not a template repository."
+        lede={
+          <>
+            A template repository has one shape. This one has an answer for each of nine questions,
+            and the files change with them: <C>--nest off</C> writes no <C>apps/api</C> at all and
+            moves the backend into Next.js route handlers, <C>--deployment spa</C> hands a static
+            export to Nest to serve, and <C>--database postgres</C> swaps the Kysely dialect and the
+            migration runner.
+          </>
+        }
+      >
+        <p className="mt-4 max-w-[62ch] text-lg text-muted-foreground">
+          Combinations the CLI cannot honour are rejected before anything is written rather than
+          scaffolded broken. The rest are checked in CI, which scaffolds them, installs, lints,
+          builds, boots the result and probes its routes.
+        </p>
+      </Section>
+    </>
   );
 }
