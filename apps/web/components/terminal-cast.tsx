@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PauseIcon, PlayIcon } from "lucide-react";
 import { cn } from "@newt-app/ui/lib/utils";
 import { Window } from "@/components/window";
 
@@ -29,7 +28,6 @@ const FRAME_MS = 80;
 
 const CHAR_MS = 26;
 const LOOP_MS = 4200;
-const TICK_MS = 60;
 
 const TONES = {
   prompt: "text-green-800 select-none dark:text-green-400",
@@ -104,11 +102,7 @@ export function TerminalCast({ className }: { className?: string }) {
   // without JavaScript; the cast clears it on mount and replays it
   const [lines, setLines] = useState<Line[]>(TRANSCRIPT);
   const [animated, setAnimated] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const pausedRef = useRef(false);
   const viewRef = useRef<HTMLPreElement>(null);
-
-  pausedRef.current = paused;
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -116,18 +110,10 @@ export function TerminalCast({ className }: { className?: string }) {
 
     let cancelled = false;
 
-    // the clock only advances while playing, so Pause holds the caret where it
-    // is instead of queueing the backlog up and flushing it on resume
-    const sleep = async (ms: number) => {
-      let left = ms;
-      while (left > 0 && !cancelled) {
-        await new Promise((resolve) => setTimeout(resolve, Math.min(left, TICK_MS)));
-        if (!pausedRef.current) left -= TICK_MS;
-      }
-    };
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-    // once cancelled, the pending sleeps resolve at once and the rest of the
-    // run drains through here without writing over the replacement's lines
+    // a cancelled run still walks its remaining sleeps; dropping its writes
+    // here keeps it off the replacement's lines
     const push = (...next: Line[]) => {
       if (!cancelled) setLines((prev) => [...prev, ...next]);
     };
@@ -184,23 +170,7 @@ export function TerminalCast({ className }: { className?: string }) {
   }, [lines]);
 
   return (
-    <Window
-      label="my-app"
-      className={className}
-      action={
-        animated && (
-          <button
-            type="button"
-            onClick={() => setPaused((value) => !value)}
-            aria-label={paused ? "Resume the terminal session" : "Pause the terminal session"}
-            className="flex items-center gap-1 rounded border border-border/70 px-1.5 py-0.5 font-mono text-[0.7rem] text-muted-foreground transition-colors hover:border-border hover:text-foreground"
-          >
-            {paused ? <PlayIcon className="size-3" /> : <PauseIcon className="size-3" />}
-            {paused ? "play" : "pause"}
-          </button>
-        )
-      }
-    >
+    <Window label="my-app" className={className}>
       <pre
         ref={viewRef}
         aria-live="off"
@@ -214,7 +184,7 @@ export function TerminalCast({ className }: { className?: string }) {
                   {segment.text}
                 </span>
               ))}
-              {i === lines.length - 1 && atPrompt(line) && <Caret blink={animated && !paused} />}
+              {i === lines.length - 1 && atPrompt(line) && <Caret blink={animated} />}
             </span>
           ))}
         </code>
