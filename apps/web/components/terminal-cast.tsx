@@ -5,49 +5,80 @@ import { PauseIcon, PlayIcon } from "lucide-react";
 import { cn } from "@newt-app/ui/lib/utils";
 import { Window } from "@/components/window";
 
-type Line = { kind: "cmd" | "out"; text: string };
+type Tone = "prompt" | "cmd" | "gray" | "green" | "magenta" | "blue";
+type Segment = { text: string; tone?: Tone };
+type Line = Segment[];
+type Task = { title: string; done: string; ms: number };
 
-type Step = { cmd: string; out: readonly string[] };
+const CMD = "npm create newt-app@latest my-app -- --shadcn --database postgres";
 
-const STEPS: readonly Step[] = [
-  {
-    cmd: "npm create newt-app@latest my-app -- --shadcn --database postgres",
-    out: [
-      "│  Scaffolding project",
-      "│  Scaffolded.",
-      "│  Installing with pnpm",
-      "│  Installed.",
-      "│  Formatting",
-      "│  Formatted.",
-      "│  Initializing git",
-      "│  Initialized git.",
-      "└  Done!",
-    ],
-  },
-  {
-    cmd: "cd my-app && pnpm dev",
-    out: [
-      "web:dev: ▲ Next.js ready on http://localhost:3000",
-      "api:dev: [Nest] LOG [RoutesResolver] AppController {/api}:",
-      "api:dev: [Nest] LOG [NestApplication] successfully started",
-    ],
-  },
-  {
-    cmd: "curl -s localhost:3000/api/hello",
-    out: ['{"message":"Hello from Nest"}'],
-  },
+// the scaffolder's p.tasks() entries: clack spins the title, then replaces it
+// with the result. The durations are a real run, compressed
+const TASKS: readonly Task[] = [
+  { title: "Scaffolding project", done: "Scaffolded", ms: 240 },
+  { title: "Installing with pnpm", done: "Installed", ms: 3200 },
+  { title: "Formatting", done: "Formatted", ms: 1000 },
+  { title: "Initializing git", done: "Initialized git", ms: 320 },
 ];
 
-const TRANSCRIPT: Line[] = STEPS.flatMap((step) => [
-  { kind: "cmd" as const, text: step.cmd },
-  ...step.out.map((text) => ({ kind: "out" as const, text })),
-]);
+const NEXT_STEPS = ["cd my-app", "pnpm dev"];
+
+// clack's spinner: a new frame every 80ms, one more dot every 8 frames
+const FRAMES = ["◒", "◐", "◓", "◑"];
+const FRAME_MS = 80;
 
 const CHAR_MS = 26;
-const LINE_MS = 95;
-const STEP_MS = 700;
 const LOOP_MS = 4200;
 const TICK_MS = 60;
+
+const TONES = {
+  prompt: "text-green-800 select-none dark:text-green-400",
+  cmd: "font-semibold text-foreground",
+  gray: "text-muted-foreground",
+  green: "text-green-800 dark:text-green-400",
+  magenta: "text-fuchsia-700 dark:text-fuchsia-400",
+  blue: "text-sky-700 dark:text-sky-400",
+} satisfies Record<Tone, string>;
+
+const prompt = (typed = ""): Line => [
+  { text: "$ ", tone: "prompt" },
+  { text: typed, tone: "cmd" },
+];
+const bar: Line = [{ text: "│", tone: "gray" }];
+const blank: Line = [{ text: " " }];
+const step = (text: string): Line => [{ text: "◇", tone: "green" }, { text: `  ${text}` }];
+const spinner = (title: string, tick: number): Line => [
+  { text: FRAMES[tick % FRAMES.length] ?? "", tone: "magenta" },
+  { text: `  ${title}${".".repeat(Math.floor((tick % 32) / 8))}` },
+];
+
+const INTRO: Line = [
+  { text: "┌", tone: "gray" },
+  { text: "  Create a " },
+  { text: "newt", tone: "blue" },
+  { text: " app." },
+];
+
+const OUTRO: Line[] = [
+  bar,
+  [{ text: "└", tone: "gray" }, { text: "  Done!" }],
+  blank,
+  [{ text: "Next steps:" }],
+  blank,
+  ...NEXT_STEPS.map((text): Line => [{ text: `  ${text}`, tone: "blue" }]),
+  blank,
+];
+
+const TRANSCRIPT: Line[] = [
+  prompt(CMD),
+  INTRO,
+  ...TASKS.flatMap((task) => [bar, step(task.done)]),
+  ...OUTRO,
+  prompt(),
+];
+
+// the shell cursor only shows at a prompt: clack hides it while the CLI runs
+const atPrompt = (line: Line) => line[0]?.tone === "prompt";
 
 function series<T>(items: readonly T[], run: (item: T) => Promise<void>) {
   return items.reduce<Promise<void>>(
@@ -56,13 +87,13 @@ function series<T>(items: readonly T[], run: (item: T) => Promise<void>) {
   );
 }
 
-function Caret({ paused }: { paused: boolean }) {
+function Caret({ blink }: { blink: boolean }) {
   return (
     <span
       aria-hidden
       className={cn(
         "ml-px inline-block h-[1em] w-[0.55em] translate-y-[0.15em] bg-foreground/70",
-        !paused && "caret-blink",
+        blink && "caret-blink",
       )}
     />
   );
@@ -95,32 +126,48 @@ export function TerminalCast({ className }: { className?: string }) {
       }
     };
 
+    // once cancelled, the pending sleeps resolve at once and the rest of the
+    // run drains through here without writing over the replacement's lines
+    const push = (...next: Line[]) => {
+      if (!cancelled) setLines((prev) => [...prev, ...next]);
+    };
+    const replaceLast = (line: Line) => {
+      if (!cancelled) setLines((prev) => [...prev.slice(0, -1), line]);
+    };
+
     const type = async (cmd: string) => {
-      setLines((prev) => [...prev, { kind: "cmd", text: "" }]);
-      await series([...cmd], async (char) => {
-        setLines((prev) =>
-          prev.map((line, i) =>
-            i === prev.length - 1 ? { ...line, text: line.text + char } : line,
-          ),
-        );
-        await sleep(char === " " ? CHAR_MS * 2 : CHAR_MS);
-      });
+      push(prompt());
+      await series(
+        [...cmd].map((_, i) => cmd.slice(0, i + 1)),
+        async (typed) => {
+          replaceLast(prompt(typed));
+          await sleep(typed.endsWith(" ") ? CHAR_MS * 2 : CHAR_MS);
+        },
+      );
       await sleep(340);
+    };
+
+    const run = async (task: Task) => {
+      push(bar, spinner(task.title, 0));
+      await series(
+        Array.from({ length: Math.round(task.ms / FRAME_MS) }, (_, tick) => tick),
+        async (tick) => {
+          replaceLast(spinner(task.title, tick));
+          await sleep(FRAME_MS);
+        },
+      );
+      replaceLast(step(task.done));
     };
 
     const play = async () => {
       while (!cancelled) {
         setLines([]);
-        await series(STEPS, async (step) => {
-          if (cancelled) return;
-          await type(step.cmd);
-          await series(step.out, async (text) => {
-            if (cancelled) return;
-            setLines((prev) => [...prev, { kind: "out", text }]);
-            await sleep(LINE_MS);
-          });
-          await sleep(STEP_MS);
-        });
+        await type(CMD);
+        // npm resolving the package before the CLI starts
+        await sleep(400);
+        push(INTRO);
+        await series(TASKS, run);
+        push(...OUTRO, prompt());
         await sleep(LOOP_MS);
       }
     };
@@ -162,23 +209,14 @@ export function TerminalCast({ className }: { className?: string }) {
         <code>
           {lines.map((line, i) => (
             <span key={i} className="block">
-              {line.kind === "cmd" ? (
-                <>
-                  <span className="text-green-800 select-none dark:text-green-400">$ </span>
-                  <span className="font-semibold text-foreground">{line.text}</span>
-                </>
-              ) : (
-                <span className="text-muted-foreground">{line.text || " "}</span>
-              )}
-              {animated && i === lines.length - 1 && <Caret paused={paused} />}
+              {line.map((segment, j) => (
+                <span key={j} className={segment.tone && TONES[segment.tone]}>
+                  {segment.text}
+                </span>
+              ))}
+              {i === lines.length - 1 && atPrompt(line) && <Caret blink={animated && !paused} />}
             </span>
           ))}
-          {animated && lines.length === 0 && (
-            <span className="block">
-              <span className="text-green-800 select-none dark:text-green-400">$ </span>
-              <Caret paused={paused} />
-            </span>
-          )}
         </code>
       </pre>
     </Window>
