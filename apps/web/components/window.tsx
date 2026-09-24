@@ -2,13 +2,11 @@ import { cn } from "@newt-app/ui/lib/utils";
 
 export function Window({
   label,
-  action,
   className,
   barClassName,
   children,
 }: {
   label?: string;
-  action?: React.ReactNode;
   className?: string;
   barClassName?: string;
   children: React.ReactNode;
@@ -34,7 +32,6 @@ export function Window({
             {label}
           </span>
         )}
-        {action && <span className={cn(label ? "pl-2" : "ml-auto pl-3")}>{action}</span>}
       </div>
       {children}
     </div>
