@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+import { Button } from "@newt-app/ui/components/button";
 import { CopyButton } from "@/components/copy-button";
 import { Icons } from "@/components/icons";
 import { InteractiveFileTree } from "@/components/interactive-file-tree";
@@ -9,9 +10,6 @@ import { siteConfig } from "@/lib/config";
 import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
 
 const INSTALL = "npm create newt-app";
-
-const PILL =
-  "inline-flex h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold transition-colors";
 
 export default function Home() {
   return (
@@ -109,21 +107,24 @@ export default function Home() {
               <CopyButton value={INSTALL} className="static shrink-0" />
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              <Link
-                href="/builder"
-                className={`${PILL} bg-gradient-to-br from-sky-600 to-sky-800 text-white shadow-[0_6px_18px_-6px_oklch(0.5_0.13_245/0.6)] hover:from-sky-500 hover:to-sky-700`}
+              <Button
+                size="lg"
+                className="h-11 rounded-full px-5"
+                nativeButton={false}
+                render={<Link href="/builder" />}
               >
                 Build a command
-              </Link>
-              <a
-                href={siteConfig.links.github}
-                target="_blank"
-                rel="noreferrer"
-                className={`${PILL} border bg-background hover:bg-muted`}
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="h-11 rounded-full px-5"
+                nativeButton={false}
+                render={<Link href={siteConfig.links.github} target="_blank" rel="noreferrer" />}
               >
-                <Icons.gitHub className="size-4" />
+                <Icons.gitHub />
                 GitHub
-              </a>
+              </Button>
             </div>
           </div>
           <TerminalCast className="min-w-0" />
