@@ -1,10 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 import { Button } from "@newt-app/ui/components/button";
 import { CopyButton } from "@/components/copy-button";
 import { Icons } from "@/components/icons";
-import { InteractiveFileTree } from "@/components/interactive-file-tree";
 import { TerminalCast } from "@/components/terminal-cast";
 import { siteConfig } from "@/lib/config";
 import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
@@ -14,7 +12,7 @@ const INSTALL = "npm create newt-app";
 export default function Home() {
   return (
     <>
-      <section className="relative overflow-hidden border-b">
+      <section className="relative overflow-hidden">
         <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
         <div className="container grid items-center gap-10 py-12 lg:grid-cols-[1fr_1.12fr] lg:gap-14 lg:py-16">
           <div>
@@ -128,21 +126,6 @@ export default function Home() {
             </div>
           </div>
           <TerminalCast className="min-w-0" />
-        </div>
-      </section>
-
-      <section id="builder" className="scroll-mt-(--header-height)">
-        <div className="container py-14 sm:py-20">
-          <h2 className="max-w-[30ch] text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-            Pick the stack.
-          </h2>
-          <div className="mt-10 rounded-xl border bg-card p-2 shadow-lg">
-            {/* nuqs reads useSearchParams, which needs a boundary on a
-                statically rendered page */}
-            <Suspense>
-              <InteractiveFileTree />
-            </Suspense>
-          </div>
         </div>
       </section>
     </>
