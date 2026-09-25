@@ -258,10 +258,13 @@ export default function LogoRain({
   // chip radii are in view units, so a short tank needs them scaled down or a
   // single chip fills half its height
   chipScale = 1,
+  // the 1px wall drawn along the tank's inside edge
+  border = true,
 }: {
   density?: number;
   speedFactor?: number;
   chipScale?: number;
+  border?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -321,7 +324,7 @@ export default function LogoRain({
     const wall = new THREE.Mesh(new THREE.BufferGeometry(), wallMaterial);
     let wallPosition = new THREE.BufferAttribute(new Float32Array(0), 3);
     wall.renderOrder = MAX_SIZE * 10 + 3;
-    scene.add(wall);
+    if (border) scene.add(wall);
 
     // the walls' inner edge covers the view like preserveAspectRatio="xMidYMid
     // slice", and the camera reaches past it over the border and the bleed
@@ -756,7 +759,7 @@ export default function LogoRain({
       textures.forEach((t) => t.dispose());
       renderer.dispose();
     };
-  }, [density, speedFactor, chipScale]);
+  }, [density, speedFactor, chipScale, border]);
 
   return (
     <div className="relative h-full w-full rounded-lg text-foreground">

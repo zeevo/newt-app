@@ -131,7 +131,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="builder" className="scroll-mt-(--header-height) border-b">
+      <section id="builder" className="scroll-mt-(--header-height)">
         <div className="container py-14 sm:py-20">
           <h2 className="max-w-[30ch] text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
             Pick the stack.
