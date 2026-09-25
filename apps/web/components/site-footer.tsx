@@ -10,12 +10,12 @@ const BAND = "bg-[oklch(0.19_0.03_262)] text-[oklch(0.95_0.012_85)]";
 export function SiteFooter() {
   return (
     <footer
-      className={`${BAND} relative flex min-h-[20rem] flex-col justify-end overflow-hidden sm:min-h-[26rem]`}
+      className={`${BAND} relative flex min-h-[20rem] flex-col justify-end overflow-hidden border-t sm:min-h-[26rem]`}
     >
       {/* the tank fills the band; its own canvas opts pointer events back in,
           so the chips stay clickable through this layer */}
       <div className="pointer-events-none absolute inset-0 z-0">
-        <LogoRain density={1.6} chipScale={0.48} />
+        <LogoRain density={1.6} chipScale={0.48} border={false} />
       </div>
       <div
         aria-hidden
