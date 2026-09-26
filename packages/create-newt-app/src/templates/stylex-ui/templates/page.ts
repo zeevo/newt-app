@@ -72,7 +72,7 @@ export default function Home() {
         <p {...stylex.props(styles.muted)}>Learn more</p>
         <ul {...stylex.props(styles.list)}>
           <li>
-            <Link href="https://newt-app.com">Documentation</Link>
+            <Link href="https://newt-app.com">newt-app</Link>
           </li>
           <li>
             <Link href="https://github.com/zeevo/newt-app">GitHub</Link>
