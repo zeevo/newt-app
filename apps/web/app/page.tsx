@@ -12,9 +12,9 @@ const INSTALL = "npm create newt-app";
 export default function Home() {
   return (
     <>
-      <section className="relative overflow-hidden">
+      <section className="relative flex min-h-[calc(100svh-var(--header-height))] items-center overflow-hidden">
         <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
-        <div className="container grid items-center gap-10 py-12 lg:grid-cols-[1fr_1.12fr] lg:gap-14 lg:py-16">
+        <div className="container grid w-full items-center gap-10 py-12 lg:grid-cols-[1fr_1.12fr] lg:gap-14 lg:py-16">
           <div>
             <a
               href={siteConfig.links.npm}

@@ -12,18 +12,21 @@ html {
   filter: brightness(0) invert(1) opacity(0.35);
 }
 
+/* the glows stay far enough inside the hero that each fades to fully
+   transparent before the section's edge, so the wash never hard-clips into a
+   visible line where the hero meets the footer */
 .hero-wash {
   background:
-    radial-gradient(55% 55% at 88% 6%, oklch(0.68 0.12 245 / 0.16), transparent 70%),
-    radial-gradient(45% 45% at 62% 104%, oklch(0.75 0.11 165 / 0.16), transparent 70%),
-    radial-gradient(40% 40% at 0% 86%, oklch(0.72 0.14 40 / 0.12), transparent 70%);
+    radial-gradient(36% 36% at 70% 30%, oklch(0.68 0.12 245 / 0.16), transparent 70%),
+    radial-gradient(40% 40% at 55% 68%, oklch(0.75 0.11 165 / 0.16), transparent 70%),
+    radial-gradient(36% 36% at 28% 70%, oklch(0.72 0.14 40 / 0.12), transparent 70%);
 }
 
 .dark .hero-wash {
   background:
-    radial-gradient(55% 55% at 88% 6%, oklch(0.55 0.14 250 / 0.3), transparent 70%),
-    radial-gradient(45% 45% at 62% 104%, oklch(0.55 0.1 175 / 0.22), transparent 70%),
-    radial-gradient(40% 40% at 0% 86%, oklch(0.55 0.14 25 / 0.18), transparent 70%);
+    radial-gradient(36% 36% at 70% 30%, oklch(0.55 0.14 250 / 0.3), transparent 70%),
+    radial-gradient(40% 40% at 55% 68%, oklch(0.55 0.1 175 / 0.22), transparent 70%),
+    radial-gradient(36% 36% at 28% 70%, oklch(0.55 0.14 25 / 0.18), transparent 70%);
 }
 
 @keyframes caret-blink {
