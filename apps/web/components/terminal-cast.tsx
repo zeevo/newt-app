@@ -174,7 +174,7 @@ export function TerminalCast({ className }: { className?: string }) {
       <pre
         ref={viewRef}
         aria-live="off"
-        className="h-[22rem] overflow-auto px-4 py-3.5 font-mono text-[0.78rem] leading-relaxed whitespace-pre-wrap sm:h-[26rem] sm:text-[0.82rem]"
+        className="h-[15rem] overflow-auto px-3.5 py-2.5 font-mono text-[0.68rem] leading-relaxed whitespace-pre-wrap sm:h-[24rem] sm:text-[0.72rem]"
       >
         <code>
           {lines.map((line, i) => (
