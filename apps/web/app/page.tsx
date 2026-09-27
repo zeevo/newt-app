@@ -14,23 +14,23 @@ export default function Home() {
     <>
       <section className="relative flex min-h-[calc(100svh-var(--header-height))] items-center overflow-hidden">
         <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
-        <div className="container grid w-full items-center gap-10 py-12 lg:grid-cols-[1fr_1.12fr] lg:gap-14 lg:py-16">
+        <div className="container grid w-full items-center gap-8 py-10 lg:grid-cols-[1fr_1.12fr] lg:gap-12 lg:py-12">
           <div>
             <a
               href={siteConfig.links.npm}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border bg-background/80 py-1.5 pr-3 pl-4 text-sm text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-2 rounded-full border bg-background/80 py-1 pr-2.5 pl-3.5 text-xs text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
             >
-              <span className="size-2 rounded-full bg-green-500" />v{cliVersion} on npm
+              <span className="size-1.5 rounded-full bg-green-500" />v{cliVersion} on npm
               <span aria-hidden>→</span>
             </a>
-            <h1 className="mt-6 text-4xl leading-[1.12] font-semibold tracking-tight text-balance sm:text-5xl">
+            <h1 className="mt-5 text-3xl leading-[1.12] font-semibold tracking-tight text-balance sm:text-4xl">
               The TypeScript project scaffolder for{" "}
-              <span className="inline-flex items-center -space-x-2 align-middle sm:-space-x-2.5">
+              <span className="inline-flex items-center -space-x-1.5 align-middle sm:-space-x-2">
                 <span
                   title="Next.js"
-                  className="z-[0] inline-flex size-9 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
+                  className="z-[0] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -44,7 +44,7 @@ export default function Home() {
                 </span>
                 <span
                   title="NestJS"
-                  className="z-[1] inline-flex size-9 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
+                  className="z-[1] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
                 >
                   <Image
                     src="/logos/nestjs.svg"
@@ -56,7 +56,7 @@ export default function Home() {
                 </span>
                 <span
                   title="Better Auth"
-                  className="z-[2] inline-flex size-9 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
+                  className="z-[2] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -70,7 +70,7 @@ export default function Home() {
                 </span>
                 <span
                   title="shadcn/ui"
-                  className="z-[3] inline-flex size-9 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
+                  className="z-[3] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -84,7 +84,7 @@ export default function Home() {
                 </span>
                 <span
                   title="oxc"
-                  className="z-[4] inline-flex size-9 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
+                  className="z-[4] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
                 >
                   <Image
                     src="/logos/oxc.svg"
@@ -96,18 +96,18 @@ export default function Home() {
                 </span>
               </span>
             </h1>
-            <p className="mt-5 max-w-[56ch] text-base leading-relaxed text-muted-foreground lg:text-lg">
+            <p className="mt-4 max-w-[56ch] text-sm leading-relaxed text-muted-foreground lg:text-base">
               A pnpm workspace with Next.js, NestJS, Better Auth and Kysely, wired together.
             </p>
-            <div className="mt-7 flex h-11 w-fit items-center gap-2 rounded-full border bg-background pr-2 pl-5 text-sm whitespace-nowrap shadow-sm">
+            <div className="mt-6 flex h-9 w-fit items-center gap-2 rounded-full border bg-background pr-1.5 pl-4 text-sm whitespace-nowrap shadow-sm">
               <span className="shrink-0 text-muted-foreground select-none">$</span>
               <span className="font-mono">{INSTALL}</span>
               <CopyButton value={INSTALL} className="static shrink-0" />
             </div>
-            <div className="mt-3 flex flex-wrap items-center gap-3">
+            <div className="mt-3 flex flex-wrap items-center gap-2.5">
               <Button
                 size="lg"
-                className="h-11 rounded-full px-5"
+                className="h-9 rounded-full px-4"
                 nativeButton={false}
                 render={<Link href="/builder" />}
               >
@@ -116,7 +116,7 @@ export default function Home() {
               <Button
                 variant="outline"
                 size="lg"
-                className="h-11 rounded-full px-5"
+                className="h-9 rounded-full px-4"
                 nativeButton={false}
                 render={<Link href={siteConfig.links.github} target="_blank" rel="noreferrer" />}
               >
