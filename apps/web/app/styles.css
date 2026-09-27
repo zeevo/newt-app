@@ -1,7 +1,9 @@
-/* Iosevka is narrow, so it reads a size down from a proportional face. A
-   percentage rather than a px value, so a reader's own default still scales. */
+/* Iosevka is narrow, so it reads a size down from a proportional face. The
+   floor is the old 112.5%, so nothing under 1440px moves; past that the page
+   scales with the viewport. rem inside the clamp resolves against the reader's
+   own default, so their font preference still scales the site. */
 html {
-  font-size: 112.5%;
+  font-size: clamp(1.125rem, 0.81rem + 0.35vw, 1.5625rem);
 }
 
 .logo-rain-logo {

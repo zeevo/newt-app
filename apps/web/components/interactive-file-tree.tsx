@@ -412,7 +412,7 @@ export function InteractiveFileTree({
             )}
           </div>
 
-          <div className="min-h-[684px] flex-1 rounded-lg border bg-code p-3">
+          <div className="min-h-[38rem] flex-1 rounded-lg border bg-code p-3">
             <FileTree
               name={c.name.trim() || DEFAULT_NAME}
               className="my-0 bg-transparent p-0 dark:bg-transparent"
