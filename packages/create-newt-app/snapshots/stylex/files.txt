@@ -54,7 +54,9 @@ apps/web/public/web-app-manifest-512x512.png
 apps/web/tsconfig.json
 package.json
 packages/auth/package.json
+packages/auth/src/cli.ts
 packages/auth/src/index.ts
+packages/auth/src/options.ts
 packages/auth/tsconfig.json
 packages/db/package.json
 packages/db/scripts/new-migration.ts
