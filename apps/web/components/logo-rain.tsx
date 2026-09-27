@@ -255,9 +255,16 @@ async function loadSilhouette(url: string): Promise<THREE.CanvasTexture> {
 export default function LogoRain({
   density = 1,
   speedFactor = 0.09,
+  // chip radii are in view units, so a short tank needs them scaled down or a
+  // single chip fills half its height
+  chipScale = 1,
+  // the 1px wall drawn along the tank's inside edge
+  border = true,
 }: {
   density?: number;
   speedFactor?: number;
+  chipScale?: number;
+  border?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -281,7 +288,9 @@ export default function LogoRain({
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(0, VIEW_W, 0, -VIEW_H, -10, 10);
 
-    const chipCount = logos.length * density;
+    // CHIP_COUNT is interpolated into the floor shader as a GLSL array size,
+    // which has to be a whole number
+    const chipCount = Math.round(logos.length * density);
     const floorMat = floorMaterial(chipCount);
     const floorUniforms = floorMat.uniforms;
 
@@ -315,7 +324,7 @@ export default function LogoRain({
     const wall = new THREE.Mesh(new THREE.BufferGeometry(), wallMaterial);
     let wallPosition = new THREE.BufferAttribute(new Float32Array(0), 3);
     wall.renderOrder = MAX_SIZE * 10 + 3;
-    scene.add(wall);
+    if (border) scene.add(wall);
 
     // the walls' inner edge covers the view like preserveAspectRatio="xMidYMid
     // slice", and the camera reaches past it over the border and the bleed
@@ -435,10 +444,12 @@ export default function LogoRain({
     const logoMaterials: THREE.MeshBasicMaterial[] = [];
     const ringMeshes: THREE.Mesh[] = [];
 
-    const meanSize = (MIN_SIZE + MAX_SIZE) / 2;
+    const minSize = MIN_SIZE * chipScale;
+    const maxSize = MAX_SIZE * chipScale;
+    const meanSize = (minSize + maxSize) / 2;
     const stars: Star[] = [];
     Array.from({ length: chipCount }).forEach(() => {
-      const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
+      const size = minSize + Math.random() * (maxSize - minSize);
       // seed inside the walls so no chip starts out pressed into one; a few
       // best-candidate samples gently discourage clumping without looking gridded
       const min = floorUniforms.uViewMin!.value;
@@ -459,7 +470,7 @@ export default function LogoRain({
       );
 
       // size drives cruise speed only; opacity is uniform across chips
-      const t = (size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE);
+      const t = (size - minSize) / (maxSize - minSize);
 
       const group = new THREE.Group();
       group.scale.setScalar(size);
@@ -748,7 +759,7 @@ export default function LogoRain({
       textures.forEach((t) => t.dispose());
       renderer.dispose();
     };
-  }, [density, speedFactor]);
+  }, [density, speedFactor, chipScale, border]);
 
   return (
     <div className="relative h-full w-full rounded-lg text-foreground">

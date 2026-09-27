@@ -48,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${appFont.variable} overscroll-none font-sans text-base text-foreground antialiased [--footer-height:calc(var(--spacing)*18)] [--header-height:calc(var(--spacing)*14)]`}
+        className={`${appFont.variable} overscroll-none font-sans text-base text-foreground antialiased [--header-height:calc(var(--spacing)*14)]`}
       >
         <NuqsAdapter>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
