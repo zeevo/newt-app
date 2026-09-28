@@ -1,6 +1,6 @@
 # my-app
 
-Full-stack monorepo: Next.js 16 + NestJS 11 + better-auth + Postgres.
+Full-stack monorepo: Next.js 16 + NestJS 12 + better-auth + Postgres.
 
 ## Quick start
 
