@@ -3,14 +3,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@my-app/api';
 import type { INestApplicationContext, Type, Abstract } from '@nestjs/common';
 
-let context: INestApplicationContext | null = null;
+let context: Promise<INestApplicationContext> | null = null;
 
-export async function getContext(): Promise<INestApplicationContext> {
-  if (!context) {
-    context = await NestFactory.createApplicationContext(AppModule, {
-      logger: false,
-    });
-  }
+export function getContext(): Promise<INestApplicationContext> {
+  context ??= NestFactory.createApplicationContext(AppModule, {
+    logger: false,
+  });
   return context;
 }
 
