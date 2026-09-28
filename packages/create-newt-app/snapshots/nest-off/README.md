@@ -22,3 +22,7 @@ Open [http://localhost:3000](http://localhost:3000).
 - **`@my-app/ui`**: shared React components
 - **`@my-app/eslint-config`**: shared ESLint config
 - **`@my-app/typescript-config`**: shared tsconfig
+
+## Formatting
+
+`pnpm format` checks without modifying files and fails if any file is unformatted; `pnpm format:fix` applies formatting.
