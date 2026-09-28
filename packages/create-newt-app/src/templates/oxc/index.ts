@@ -14,8 +14,8 @@ const oxc: Module = {
     { package: "oxfmt", module: root, version: versions.oxfmt, dev: true },
   ],
   scripts: [
-    { module: root, name: "lint", script: "oxlint --fix" },
-    { module: root, name: "lint:check", script: "oxlint" },
+    { module: root, name: "lint", script: "oxlint" },
+    { module: root, name: "lint:fix", script: "oxlint --fix" },
     { module: root, name: "format", script: "oxfmt" },
     { module: root, name: "format:check", script: "oxfmt --check" },
   ],

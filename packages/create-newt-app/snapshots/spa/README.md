@@ -11,6 +11,10 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Linting
+
+`pnpm lint` checks without modifying files and fails on any warning; `pnpm lint:fix` applies automatic fixes.
+
 ## Apps
 
 - **web**: Next.js frontend (port 3000)

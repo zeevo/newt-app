@@ -239,7 +239,7 @@ describe("@shadcn/lint ships with the shadcn option", () => {
                 "packages/eslint-config/react-internal.js",
               ],
       );
-      expect((files.get("AGENTS.md") ?? "").includes("pnpm lint:check")).toBe(selection.shadcn);
+      expect((files.get("AGENTS.md") ?? "").includes("run `pnpm lint`")).toBe(selection.shadcn);
     },
   );
 });

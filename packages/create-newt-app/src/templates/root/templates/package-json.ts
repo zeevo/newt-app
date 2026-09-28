@@ -7,6 +7,7 @@ export default {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "db:make": "pnpm --filter @<%= projectName %>/db run make",

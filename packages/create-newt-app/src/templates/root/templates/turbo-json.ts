@@ -19,8 +19,8 @@ export default {
       "dependsOn": ["^lint"],
       "env": ["NODE_ENV"]
     },
-    "lint:check": {
-      "dependsOn": ["^lint:check"],
+    "lint:fix": {
+      "dependsOn": ["^lint:fix"],
       "env": ["NODE_ENV"]
     },<% } %>
     "test": {

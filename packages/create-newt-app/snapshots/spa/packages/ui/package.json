@@ -12,8 +12,8 @@
     "./*": "./src/components/*.tsx"
   },
   "scripts": {
-    "lint": "eslint . --fix",
-    "lint:check": "eslint . --max-warnings 0",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
