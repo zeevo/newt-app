@@ -1,5 +1,17 @@
 # create-newt-app
 
+## 0.35.0
+
+### Minor Changes
+
+- 06b3f7a: Split formatting into a check and a fix: `pnpm format` now checks without modifying files, and a new `pnpm format:fix` applies formatting. The scaffolder's own post-install format step now calls `format:fix`.
+- c7f2d3a: Scaffold NestJS 12 (`@nestjs/*` ^12, `@nestjs/serve-static` ^12, `@thallesp/nestjs-better-auth` ^2.8.0). Nest 12 ships as ESM only, so the jest api scripts now run with `--experimental-vm-modules`, as Nest's own starter does.
+
+### Patch Changes
+
+- 28340bf: Finish scaffolding when git has no identity configured, and print the `git commit` step instead of crashing
+- 397b8bc: Relabel the first "Learn more" link on the generated landing page from "Documentation" to "newt-app". The site has had no docs since the docs section was removed, so the label promised something that does not exist; the link still points at newt-app.com, and the label now matches its siblings, which are all names rather than descriptions.
+
 ## 0.34.1
 
 ### Patch Changes
