@@ -307,12 +307,14 @@ export async function doInit(options: Options) {
       });
     }
 
+    let committed = true;
+
     if (options.git) {
       taskBuilder.add({
         title: "Initializing git",
         task: async () => {
-          await initGit(name);
-          return "Initialized git.";
+          committed = await initGit(name);
+          return committed ? "Initialized git." : "Initialized git, but could not commit.";
         },
       });
     }
@@ -327,6 +329,9 @@ export async function doInit(options: Options) {
     if (!options.install) {
       console.log(chalk.blue(`  pnpm install`));
       console.log(chalk.blue(`  pnpm format`));
+    }
+    if (!committed) {
+      console.log(chalk.blue(`  git commit -m "Initial commit"`));
     }
     console.log(chalk.blue(`  pnpm dev`));
     console.log();

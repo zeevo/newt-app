@@ -96,7 +96,14 @@ export async function initGit(cwd: string) {
     cwd,
   });
 
-  await execa("git", ["commit", "-m", "Initial commit"], {
-    cwd,
-  });
+  // Fails without a git identity; the repo is still usable, so leave the
+  // commit to the user instead of crashing after everything else succeeded.
+  try {
+    await execa("git", ["commit", "-m", "Initial commit"], {
+      cwd,
+    });
+    return true;
+  } catch {
+    return false;
+  }
 }
