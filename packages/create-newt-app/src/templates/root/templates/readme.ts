@@ -2,7 +2,7 @@ export default {
   filename: "README.md",
   template: `# <%= projectName %>
 
-Full-stack monorepo: Next.js 16<% if (nest !== 'off') { %> + NestJS 11<% } %> + better-auth + <%= database === 'postgres' ? 'Postgres' : 'SQLite' %>.
+Full-stack monorepo: Next.js 16<% if (nest !== 'off') { %> + NestJS 12<% } %> + better-auth + <%= database === 'postgres' ? 'Postgres' : 'SQLite' %>.
 
 ## Quick start
 

@@ -23,13 +23,25 @@ const testingJest: Module = {
     },
   ],
   scripts: [
-    { module: "apps/api", name: "test", script: "jest" },
-    { module: "apps/api", name: "test:watch", script: "jest --watch" },
-    { module: "apps/api", name: "test:cov", script: "jest --coverage" },
+    {
+      module: "apps/api",
+      name: "test",
+      script: "NODE_OPTIONS=--experimental-vm-modules jest",
+    },
+    {
+      module: "apps/api",
+      name: "test:watch",
+      script: "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    },
+    {
+      module: "apps/api",
+      name: "test:cov",
+      script: "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    },
     {
       module: "apps/api",
       name: "test:debug",
-      script: "node --inspect-brk node_modules/.bin/jest --runInBand",
+      script: "node --inspect-brk --experimental-vm-modules node_modules/.bin/jest --runInBand",
     },
     {
       module: "apps/api",
