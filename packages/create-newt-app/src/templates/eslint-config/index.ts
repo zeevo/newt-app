@@ -88,12 +88,12 @@ const eslintConfig: Module = {
     {
       module: root,
       name: "format",
-      script: `prettier --write "**/*.{ts,tsx,js,jsx,json,md,yaml,yml}"`,
+      script: `prettier --check "**/*.{ts,tsx,js,jsx,json,md,yaml,yml}"`,
     },
     {
       module: root,
-      name: "format:check",
-      script: `prettier --check "**/*.{ts,tsx,js,jsx,json,md,yaml,yml}"`,
+      name: "format:fix",
+      script: `prettier --write "**/*.{ts,tsx,js,jsx,json,md,yaml,yml}"`,
     },
   ],
 };

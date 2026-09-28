@@ -32,5 +32,9 @@ Open [http://localhost:3000](http://localhost:3000).
 - **\`@<%= projectName %>/eslint-config\`**: shared ESLint config
 <% } -%>
 - **\`@<%= projectName %>/typescript-config\`**: shared tsconfig
+
+## Formatting
+
+\`pnpm format\` checks without modifying files and fails if any file is unformatted; \`pnpm format:fix\` applies formatting.
 `,
 };
