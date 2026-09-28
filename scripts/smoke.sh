@@ -193,6 +193,12 @@ if [ "$DB" = sqlite ]; then
 
     request GET "$BASE/api/todos"
     expect "the created todo reads back" 200 "$TITLE"
+
+    # di-only serves todos from a Next route handler, where Nest's pipes never run
+    if [ "$NEST" = on ]; then
+      request POST "$BASE/api/todos" '{"title":"  "}'
+      expect "a blank todo title is rejected" 400 "Bad Request"
+    fi
   else
     echo "  --  todo flow skipped: no --include-example, so no todo example"
   fi

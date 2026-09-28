@@ -84,6 +84,7 @@ export const versions = {
   "typescript-eslint": "^8.50.0",
   "unplugin-swc": "^1.5.9",
   vitest: "^4.1.10",
+  zod: "^4.6.5",
 } as const;
 
 export type Versions = typeof versions;

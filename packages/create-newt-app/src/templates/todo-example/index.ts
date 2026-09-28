@@ -18,6 +18,7 @@ import shadcnTodoList from "./templates/shadcn-todo-list";
 import shadcnPage from "./templates/shadcn-page";
 import stylexTodoList from "./templates/stylex-todo-list";
 import stylexPage from "./templates/stylex-page";
+import { versions } from "../versions";
 
 // Shared by every mode: the Kysely-backed todos service, its Nest module, and
 // the db schema + migration for the todo table.
@@ -28,6 +29,7 @@ export const todoExampleApi: Module = {
 // api-controllers mode: REST controller plus app.module wired with TodosModule.
 export const todoExampleControllers: Module = {
   templates: [todosController, todosModuleControllers, appModuleControllers],
+  packages: [{ package: "zod", module: "apps/api", version: versions.zod }],
 };
 
 // nest-di-only mode: Next.js route handlers plus app.module wired with TodosModule.
