@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@newt-app/ui/components/button";
 import { CopyButton } from "@/components/copy-button";
 import { Icons } from "@/components/icons";
+import LogoRain from "@/components/logo-rain";
 import { TerminalCast } from "@/components/terminal-cast";
 import { siteConfig } from "@/lib/config";
 import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
@@ -14,7 +15,12 @@ export default function Home() {
     <>
       <section className="relative flex min-h-[calc(100svh-var(--header-height))] items-center overflow-hidden">
         <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
-        <div className="container grid w-full items-center gap-8 py-10 lg:grid-cols-[1fr_1.12fr] lg:gap-12 lg:py-12">
+        {/* the tank's own canvas opts pointer events back in, so the chips stay
+            clickable wherever the content leaves them uncovered */}
+        <div className="pointer-events-none absolute inset-0">
+          <LogoRain border={false} />
+        </div>
+        <div className="pointer-events-none relative container grid w-full items-center gap-8 py-10 lg:grid-cols-[1fr_1.12fr] lg:gap-12 lg:py-12 *:pointer-events-auto">
           <div>
             <a
               href={siteConfig.links.npm}
