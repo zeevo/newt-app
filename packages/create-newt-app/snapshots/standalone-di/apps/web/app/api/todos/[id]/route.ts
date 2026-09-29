@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { HttpException } from '@nestjs/common';
 import { headers } from 'next/headers';
 import { inject } from '@/lib/nest';
 import { auth } from '@my-app/auth';
@@ -9,6 +10,13 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   if (!session) return new NextResponse('Unauthorized', { status: 401 });
   const { id } = await params;
   const todos = await inject(TodosService);
-  await todos.remove(session.user.id, id);
-  return new NextResponse(null, { status: 204 });
+  try {
+    await todos.remove(session.user.id, id);
+    return new NextResponse(null, { status: 204 });
+  } catch (err) {
+    if (err instanceof HttpException) {
+      return NextResponse.json(err.getResponse(), { status: err.getStatus() });
+    }
+    throw err;
+  }
 }

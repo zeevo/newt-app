@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { HttpException } from '@nestjs/common';
 import { headers } from 'next/headers';
 import { inject } from '@/lib/nest';
 import { auth } from '@my-app/auth';
@@ -9,5 +10,12 @@ export async function PATCH(_req: Request, { params }: { params: Promise<{ id: s
   if (!session) return new NextResponse('Unauthorized', { status: 401 });
   const { id } = await params;
   const todos = await inject(TodosService);
-  return NextResponse.json(await todos.toggle(session.user.id, id));
+  try {
+    return NextResponse.json(await todos.toggle(session.user.id, id));
+  } catch (err) {
+    if (err instanceof HttpException) {
+      return NextResponse.json(err.getResponse(), { status: err.getStatus() });
+    }
+    throw err;
+  }
 }
