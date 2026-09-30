@@ -72,9 +72,9 @@ describe("normalizeProjectName", () => {
   });
 
   it("transliterates accented letters instead of dropping them", () => {
-    expect(
-      ["émoji-app", "café", "Crème Brûlée"].map((name) => normalizeProjectName(name)),
-    ).toEqual(["emoji-app", "cafe", "creme-brulee"]);
+    expect(["émoji-app", "café", "Crème Brûlée"].map((name) => normalizeProjectName(name))).toEqual(
+      ["emoji-app", "cafe", "creme-brulee"],
+    );
   });
 
   it("truncates to npm's 214 character limit", () => {
