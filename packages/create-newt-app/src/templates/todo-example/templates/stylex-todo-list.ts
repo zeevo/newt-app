@@ -14,6 +14,8 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init);
   if (!res.ok) throw new Error('Request failed with status ' + res.status);
   const text = await res.text();
+  // SAFETY: T is the response shape the api wrapper promises for each
+  // endpoint, and every success path returns a JSON body.
   return (text ? JSON.parse(text) : undefined) as T;
 }
 
