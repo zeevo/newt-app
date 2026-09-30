@@ -328,7 +328,7 @@ export async function doInit(options: Options) {
     console.log(chalk.blue(`  cd ${name}`));
     if (!options.install) {
       console.log(chalk.blue(`  pnpm install`));
-      console.log(chalk.blue(`  pnpm format`));
+      console.log(chalk.blue(`  pnpm format:fix`));
     }
     if (!committed) {
       console.log(chalk.blue(`  git commit -m "Initial commit"`));
