@@ -83,8 +83,11 @@ const FLOOR_FADE_MIN = 0.15;
 
 // the eclipse: the occluder (the headline column) is a pane of dark glass over
 // the tank. Whatever part of a chip sits behind it is tinted toward black, with
-// a hard edge right at the occluder's border box, so the text over it reads
-// clean.
+// a hard edge, so the text over it reads clean. The pane is the occluder's
+// border box grown by ECLIPSE_PAD with ECLIPSE_RADIUS corners, both in css
+// pixels.
+const ECLIPSE_PAD = 16;
+const ECLIPSE_RADIUS = 16;
 
 type Star = {
   x: number;
@@ -151,6 +154,7 @@ function readTheme() {
 type EclipseUniforms = {
   uEclipseMin: { value: THREE.Vector2 };
   uEclipseMax: { value: THREE.Vector2 };
+  uEclipseRadius: { value: number };
   uEclipseShade: { value: number };
 };
 
@@ -170,6 +174,7 @@ function eclipsed(material: THREE.MeshBasicMaterial, uniforms: EclipseUniforms) 
         "void main() {",
         `uniform vec2 uEclipseMin;
 uniform vec2 uEclipseMax;
+uniform float uEclipseRadius;
 uniform float uEclipseShade;
 varying vec2 vEclipseView;
 void main() {`,
@@ -178,8 +183,9 @@ void main() {`,
         "#include <opaque_fragment>",
         `#include <opaque_fragment>
 vec2 eclipseQ = abs(vEclipseView - (uEclipseMin + uEclipseMax) * 0.5)
-  - (uEclipseMax - uEclipseMin) * 0.5;
-float eclipseD = max(eclipseQ.x, eclipseQ.y);
+  - (uEclipseMax - uEclipseMin) * 0.5 + uEclipseRadius;
+float eclipseD = length(max(eclipseQ, 0.0)) + min(max(eclipseQ.x, eclipseQ.y), 0.0)
+  - uEclipseRadius;
 float eclipseAA = fwidth(eclipseD) * 0.5;
 float eclipse = 1.0 - smoothstep(-eclipseAA, eclipseAA, eclipseD);
 gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), eclipse * uEclipseShade);`,
@@ -348,6 +354,7 @@ export default function LogoRain({
     const eclipseUniforms: EclipseUniforms = {
       uEclipseMin: { value: new THREE.Vector2(-1e5, -1e5) },
       uEclipseMax: { value: new THREE.Vector2(-1e5, -1e5) },
+      uEclipseRadius: { value: 0 },
       uEclipseShade: { value: 0 },
     };
     const occluderEl = occluder ? document.querySelector(occluder) : null;
@@ -417,8 +424,12 @@ export default function LogoRain({
         const r = occluderEl.getBoundingClientRect();
         const toX = (px: number) => camera.left + (px - box.left + BLEED_PX) / scale;
         const toY = (px: number) => -camera.top + (px - box.top + BLEED_PX) / scale;
-        eclipseUniforms.uEclipseMin.value.set(toX(r.left), toY(r.top));
-        eclipseUniforms.uEclipseMax.value.set(toX(r.right), toY(r.bottom));
+        eclipseUniforms.uEclipseMin.value.set(toX(r.left - ECLIPSE_PAD), toY(r.top - ECLIPSE_PAD));
+        eclipseUniforms.uEclipseMax.value.set(
+          toX(r.right + ECLIPSE_PAD),
+          toY(r.bottom + ECLIPSE_PAD),
+        );
+        eclipseUniforms.uEclipseRadius.value = ECLIPSE_RADIUS / scale;
       }
 
       walls.forEach((w) => {
