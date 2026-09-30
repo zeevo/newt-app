@@ -113,7 +113,7 @@ export function TodoList({
       {isPending ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
       ) : isError ? (
-        <p className="text-sm text-red-400">Couldn't load todos.</p>
+        <p className="text-sm text-red-400">Couldn&apos;t load todos.</p>
       ) : (
         <ul className="divide-y divide-neutral-700">
           {todos.map((todo) => (

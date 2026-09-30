@@ -115,7 +115,7 @@ export function TodoList({
       {isPending ? (
         <p {...stylex.props(styles.muted)}>Loading…</p>
       ) : isError ? (
-        <p {...stylex.props(styles.error)}>Couldn't load todos.</p>
+        <p {...stylex.props(styles.error)}>Couldn&apos;t load todos.</p>
       ) : (
         <ul {...stylex.props(styles.list)}>
           {todos.map((todo) => (
