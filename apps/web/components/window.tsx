@@ -1,12 +1,10 @@
 import { cn } from "@newt-app/ui/lib/utils";
 
 export function Window({
-  label,
   className,
   barClassName,
   children,
 }: {
-  label?: string;
   className?: string;
   barClassName?: string;
   children: React.ReactNode;
@@ -27,11 +25,6 @@ export function Window({
         <span aria-hidden className="size-2.5 rounded-full bg-rose-400/80" />
         <span aria-hidden className="size-2.5 rounded-full bg-amber-400/80" />
         <span aria-hidden className="size-2.5 rounded-full bg-emerald-400/80" />
-        {label && (
-          <span className="ml-auto truncate pl-3 font-mono text-xs text-muted-foreground">
-            {label}
-          </span>
-        )}
       </div>
       {children}
     </div>

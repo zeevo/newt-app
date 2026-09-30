@@ -170,7 +170,7 @@ export function TerminalCast({ className }: { className?: string }) {
   }, [lines]);
 
   return (
-    <Window label="my-app" className={className}>
+    <Window className={className}>
       <pre
         ref={viewRef}
         aria-live="off"
