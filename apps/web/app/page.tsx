@@ -18,10 +18,10 @@ export default function Home() {
         {/* the tank's own canvas opts pointer events back in, so the chips stay
             clickable wherever the content leaves them uncovered */}
         <div className="pointer-events-none absolute inset-0">
-          <LogoRain border={false} />
+          <LogoRain border={false} occluder="[data-eclipse]" />
         </div>
         <div className="pointer-events-none relative container grid w-full items-center gap-8 py-10 lg:grid-cols-[1fr_1.12fr] lg:gap-12 lg:py-12 *:pointer-events-auto">
-          <div>
+          <div data-eclipse>
             <a
               href={siteConfig.links.npm}
               target="_blank"

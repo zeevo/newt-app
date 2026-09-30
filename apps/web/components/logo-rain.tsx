@@ -81,6 +81,14 @@ const FLOOR_WAKE = 1.5;
 const FLOOR_FADE_EDGE = 0.8;
 const FLOOR_FADE_MIN = 0.15;
 
+// the eclipse: the occluder (the headline column) is a pane of dark glass over
+// the tank. Whatever part of a chip sits behind it is tinted toward black, with
+// a hard edge, so the text over it reads clean. The pane is the occluder's
+// border box grown by ECLIPSE_PAD with ECLIPSE_RADIUS corners, both in css
+// pixels.
+const ECLIPSE_PAD = 16;
+const ECLIPSE_RADIUS = 16;
+
 type Star = {
   x: number;
   y: number;
@@ -138,7 +146,52 @@ function readTheme() {
     border,
     silhouette: new THREE.Color(dark ? 0xffffff : 0x000000),
     logoAlpha: dark ? 0.35 : 0.3,
+    // how far a chip behind the glass falls toward black
+    eclipseShade: dark ? 0.75 : 0.2,
   };
+}
+
+type EclipseUniforms = {
+  uEclipseMin: { value: THREE.Vector2 };
+  uEclipseMax: { value: THREE.Vector2 };
+  uEclipseRadius: { value: number };
+  uEclipseShade: { value: number };
+};
+
+// patch a basic material to darken behind the glass, per fragment, so the
+// glass's edge cuts straight across a chip
+function eclipsed(material: THREE.MeshBasicMaterial, uniforms: EclipseUniforms) {
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+    shader.vertexShader = shader.vertexShader
+      .replace("void main() {", "varying vec2 vEclipseView;\nvoid main() {")
+      .replace(
+        "#include <project_vertex>",
+        "#include <project_vertex>\nvEclipseView = (modelMatrix * vec4(transformed, 1.0)).xy * vec2(1.0, -1.0);",
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "void main() {",
+        `uniform vec2 uEclipseMin;
+uniform vec2 uEclipseMax;
+uniform float uEclipseRadius;
+uniform float uEclipseShade;
+varying vec2 vEclipseView;
+void main() {`,
+      )
+      .replace(
+        "#include <opaque_fragment>",
+        `#include <opaque_fragment>
+vec2 eclipseQ = abs(vEclipseView - (uEclipseMin + uEclipseMax) * 0.5)
+  - (uEclipseMax - uEclipseMin) * 0.5 + uEclipseRadius;
+float eclipseD = length(max(eclipseQ, 0.0)) + min(max(eclipseQ.x, eclipseQ.y), 0.0)
+  - uEclipseRadius;
+float eclipseAA = fwidth(eclipseD) * 0.5;
+float eclipse = 1.0 - smoothstep(-eclipseAA, eclipseAA, eclipseD);
+gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), eclipse * uEclipseShade);`,
+      );
+  };
+  material.customProgramCacheKey = () => "eclipse";
 }
 
 // dot lattice in view coordinates, displaced and lit by the chips above it
@@ -260,11 +313,14 @@ export default function LogoRain({
   chipScale = 1,
   // the 1px wall drawn along the tank's inside edge
   border = true,
+  // selector for the element that eclipses the chips passing under it
+  occluder,
 }: {
   density?: number;
   speedFactor?: number;
   chipScale?: number;
   border?: boolean;
+  occluder?: string;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -293,6 +349,15 @@ export default function LogoRain({
     const chipCount = Math.round(logos.length * density);
     const floorMat = floorMaterial(chipCount);
     const floorUniforms = floorMat.uniforms;
+
+    // no occluder parks the shadow far off the tank
+    const eclipseUniforms: EclipseUniforms = {
+      uEclipseMin: { value: new THREE.Vector2(-1e5, -1e5) },
+      uEclipseMax: { value: new THREE.Vector2(-1e5, -1e5) },
+      uEclipseRadius: { value: 0 },
+      uEclipseShade: { value: 0 },
+    };
+    const occluderEl = occluder ? document.querySelector(occluder) : null;
 
     // css pixels per view unit, so an outline can be sized in view units and
     // still land on one css pixel whatever the tank is scaled to
@@ -352,6 +417,20 @@ export default function LogoRain({
       floorUniforms.uViewMin!.value.set(VIEW_W / 2 - visW / 2, VIEW_H / 2 - visH / 2);
       floorUniforms.uViewMax!.value.set(VIEW_W / 2 + visW / 2, VIEW_H / 2 + visH / 2);
       floorUniforms.uRadius!.value = corner;
+
+      // the canvas reaches BLEED_PX past the container, at scale css px per view unit
+      if (occluderEl) {
+        const box = container.getBoundingClientRect();
+        const r = occluderEl.getBoundingClientRect();
+        const toX = (px: number) => camera.left + (px - box.left + BLEED_PX) / scale;
+        const toY = (px: number) => -camera.top + (px - box.top + BLEED_PX) / scale;
+        eclipseUniforms.uEclipseMin.value.set(toX(r.left - ECLIPSE_PAD), toY(r.top - ECLIPSE_PAD));
+        eclipseUniforms.uEclipseMax.value.set(
+          toX(r.right + ECLIPSE_PAD),
+          toY(r.bottom + ECLIPSE_PAD),
+        );
+        eclipseUniforms.uEclipseRadius.value = ECLIPSE_RADIUS / scale;
+      }
 
       walls.forEach((w) => {
         const midX = VIEW_W / 2 + (w.nx * visW) / 2;
@@ -439,6 +518,7 @@ export default function LogoRain({
     let theme = readTheme();
     floorUniforms.uColor!.value.copy(theme.border);
     wallMaterial.color.copy(theme.border);
+    eclipseUniforms.uEclipseShade.value = theme.eclipseShade;
     const circleMaterials: THREE.MeshBasicMaterial[] = [];
     const ringMaterials: THREE.MeshBasicMaterial[] = [];
     const logoMaterials: THREE.MeshBasicMaterial[] = [];
@@ -495,6 +575,9 @@ export default function LogoRain({
         depthWrite: false,
       });
       logoMaterial.visible = false; // until its texture loads
+      eclipsed(circleMaterial, eclipseUniforms);
+      eclipsed(ringMaterial, eclipseUniforms);
+      eclipsed(logoMaterial, eclipseUniforms);
       circleMaterials.push(circleMaterial);
       ringMaterials.push(ringMaterial);
       logoMaterials.push(logoMaterial);
@@ -565,6 +648,7 @@ export default function LogoRain({
       });
       floorUniforms.uColor!.value.copy(theme.border);
       wallMaterial.color.copy(theme.border);
+      eclipseUniforms.uEclipseShade.value = theme.eclipseShade;
       render();
     }
 
@@ -584,6 +668,7 @@ export default function LogoRain({
       render();
     });
     resizeObserver.observe(container);
+    if (occluderEl) resizeObserver.observe(occluderEl);
 
     const reduceMotion =
       window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -759,7 +844,7 @@ export default function LogoRain({
       textures.forEach((t) => t.dispose());
       renderer.dispose();
     };
-  }, [density, speedFactor, chipScale, border]);
+  }, [density, speedFactor, chipScale, border, occluder]);
 
   return (
     <div className="relative h-full w-full rounded-lg text-foreground">
