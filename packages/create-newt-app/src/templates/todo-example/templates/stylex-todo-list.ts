@@ -8,25 +8,26 @@ import * as stylex from '@stylexjs/stylex';
 import { authClient } from '@/lib/auth-client';
 import { Button } from '@<%= projectName %>/ui/button';
 import { colors, radii } from '@<%= projectName %>/ui/tokens.stylex';
+import type { Todo } from '@<%= projectName %>/db';
 
-interface Todo {
-  id: string;
-  title: string;
-  done: boolean;
+async function request<T>(url: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(url, init);
+  if (!res.ok) throw new Error('Request failed with status ' + res.status);
+  const text = await res.text();
+  return (text ? JSON.parse(text) : undefined) as T;
 }
 
 const api = {
-  getTodos: (): Promise<Todo[]> => fetch('/api/todos').then((r) => r.json()),
-  createTodo: (title: string): Promise<Todo> =>
-    fetch('/api/todos', {
+  getTodos: () => request<Todo[]>('/api/todos'),
+  createTodo: (title: string) =>
+    request<Todo>('/api/todos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title }),
-    }).then((r) => r.json()),
-  toggleTodo: (id: string): Promise<Todo> =>
-    fetch(\`/api/todos/\${id}/toggle\`, { method: 'PATCH' }).then((r) => r.json()),
-  deleteTodo: (id: string): Promise<void> =>
-    fetch(\`/api/todos/\${id}\`, { method: 'DELETE' }).then(() => undefined),
+    }),
+  toggleTodo: (id: string) =>
+    request<Todo>(\`/api/todos/\${id}/toggle\`, { method: 'PATCH' }),
+  deleteTodo: (id: string) => request<void>(\`/api/todos/\${id}\`, { method: 'DELETE' }),
 };
 
 export function TodoList({
@@ -36,7 +37,7 @@ export function TodoList({
 }) {
   const queryClient = useQueryClient();
 
-  const { data: todos = [], isPending } = useQuery({
+  const { data: todos = [], isPending, isError } = useQuery({
     queryKey: ['todos'],
     queryFn: api.getTodos,
   });
@@ -107,8 +108,14 @@ export function TodoList({
         </form.Subscribe>
       </form>
 
+      {(createMutation.isError || toggleMutation.isError || deleteMutation.isError) && (
+        <p {...stylex.props(styles.error)}>Something went wrong. Try again.</p>
+      )}
+
       {isPending ? (
         <p {...stylex.props(styles.muted)}>Loading…</p>
+      ) : isError ? (
+        <p {...stylex.props(styles.error)}>Couldn't load todos.</p>
       ) : (
         <ul {...stylex.props(styles.list)}>
           {todos.map((todo) => (
@@ -232,6 +239,11 @@ const styles = stylex.create({
   muted: {
     fontSize: '0.875rem',
     color: colors.mutedForeground,
+  },
+  error: {
+    fontSize: '0.875rem',
+    color: colors.danger,
+    marginBottom: '1rem',
   },
 });
 `,

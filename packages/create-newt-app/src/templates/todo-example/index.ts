@@ -37,15 +37,21 @@ export const todoExampleDi: Module = {
   templates: [webTodosRoute, webTodosIdRoute, webTodosToggleRoute, appModuleDi, apiIndex],
 };
 
-// Web UI: TodoList component and the homepage that renders it.
+// Web UI: TodoList component and the homepage that renders it. The db
+// dependency backs the type-only Todo import, so tsc can resolve it.
+const webDbPackage = { package: "@<%= projectName %>/db", module: "apps/web", version: "workspace:*" };
+
 export const todoExampleWeb: Module = {
   templates: [webTodoList, webPage],
+  packages: [webDbPackage],
 };
 
 export const todoExampleShadcn: Module = {
   templates: [shadcnTodoList, shadcnPage],
+  packages: [webDbPackage],
 };
 
 export const todoExampleStylex: Module = {
   templates: [stylexTodoList, stylexPage],
+  packages: [webDbPackage],
 };

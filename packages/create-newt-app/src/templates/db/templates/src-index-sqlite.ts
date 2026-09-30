@@ -24,5 +24,7 @@ export const db = new Kysely<DB>({
   dialect: new SqliteDialect({ database: driver }),
 });
 
-export type Database = Kysely<DB>;`,
+export type Database = Kysely<DB>;
+
+export type * from "./schema.js";`,
 };

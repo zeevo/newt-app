@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@my-app/auth": "workspace:*",
+    "@my-app/db": "workspace:*",
     "@my-app/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.2.1",
     "@tanstack/react-form": "^1.28.5",

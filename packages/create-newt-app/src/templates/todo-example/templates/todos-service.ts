@@ -2,14 +2,7 @@ export default {
   filename: "apps/api/src/todos/todos.service.ts",
   template: `import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { db } from '@<%= projectName %>/db';
-
-export interface Todo {
-  id: string;
-  title: string;
-  done: boolean;
-  createdAt: string;
-}
+import { db, type Todo } from '@<%= projectName %>/db';
 
 const columns = ['id', 'title', 'done', 'createdAt'] as const;
 
