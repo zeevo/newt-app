@@ -81,13 +81,10 @@ const FLOOR_WAKE = 1.5;
 const FLOOR_FADE_EDGE = 0.8;
 const FLOOR_FADE_MIN = 0.15;
 
-// the eclipse: the occluder (the headline column) casts a shadow over the tank.
-// A chip sliding under it darkens, its logo goes out and its rim lights up like
-// a corona, so the text over it reads clean. The shadow is the occluder's box
-// grown by ECLIPSE_PAD, with a soft ECLIPSE_PENUMBRA edge, both in css pixels.
-const ECLIPSE_PAD = 24;
-const ECLIPSE_PENUMBRA = 96;
-const ECLIPSE_LOGO = 0.9;
+// the eclipse: the occluder (the headline column) is a pane of dark glass over
+// the tank. Whatever part of a chip sits behind it is tinted toward black, with
+// a hard edge right at the occluder's border box, so the text over it reads
+// clean.
 
 type Star = {
   x: number;
@@ -146,35 +143,20 @@ function readTheme() {
     border,
     silhouette: new THREE.Color(dark ? 0xffffff : 0x000000),
     logoAlpha: dark ? 0.35 : 0.3,
-    // how far an eclipsed chip's fill falls toward black, and its rim toward
-    // the silhouette color
-    eclipseShade: dark ? 0.55 : 0.08,
-    eclipseCorona: dark ? 0.7 : 0.3,
+    // how far a chip behind the glass falls toward black
+    eclipseShade: dark ? 0.75 : 0.2,
   };
 }
 
 type EclipseUniforms = {
   uEclipseMin: { value: THREE.Vector2 };
   uEclipseMax: { value: THREE.Vector2 };
-  uEclipsePenumbra: { value: number };
   uEclipseShade: { value: number };
-  uEclipseCorona: { value: THREE.Color };
 };
 
-// how the shadow lands on each part of a chip, applied to the lit fragment
-const ECLIPSE_EFFECT = {
-  fill: "gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), eclipse * uEclipseShade);",
-  ring: "gl_FragColor.rgb = mix(gl_FragColor.rgb, uEclipseCorona, eclipse);",
-  logo: `gl_FragColor.a *= 1.0 - eclipse * ${ECLIPSE_LOGO.toFixed(2)};`,
-};
-
-// patch a basic material so it falls into the eclipse's shadow, which is
-// measured per fragment so the shadow's edge sweeps across a chip
-function eclipsed(
-  material: THREE.MeshBasicMaterial,
-  uniforms: EclipseUniforms,
-  part: keyof typeof ECLIPSE_EFFECT,
-) {
+// patch a basic material to darken behind the glass, per fragment, so the
+// glass's edge cuts straight across a chip
+function eclipsed(material: THREE.MeshBasicMaterial, uniforms: EclipseUniforms) {
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.vertexShader = shader.vertexShader
@@ -188,9 +170,7 @@ function eclipsed(
         "void main() {",
         `uniform vec2 uEclipseMin;
 uniform vec2 uEclipseMax;
-uniform float uEclipsePenumbra;
 uniform float uEclipseShade;
-uniform vec3 uEclipseCorona;
 varying vec2 vEclipseView;
 void main() {`,
       )
@@ -199,12 +179,13 @@ void main() {`,
         `#include <opaque_fragment>
 vec2 eclipseQ = abs(vEclipseView - (uEclipseMin + uEclipseMax) * 0.5)
   - (uEclipseMax - uEclipseMin) * 0.5;
-float eclipseD = length(max(eclipseQ, 0.0)) + min(max(eclipseQ.x, eclipseQ.y), 0.0);
-float eclipse = 1.0 - smoothstep(-uEclipsePenumbra * 0.25, uEclipsePenumbra, eclipseD);
-${ECLIPSE_EFFECT[part]}`,
+float eclipseD = max(eclipseQ.x, eclipseQ.y);
+float eclipseAA = fwidth(eclipseD) * 0.5;
+float eclipse = 1.0 - smoothstep(-eclipseAA, eclipseAA, eclipseD);
+gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), eclipse * uEclipseShade);`,
       );
   };
-  material.customProgramCacheKey = () => `eclipse-${part}`;
+  material.customProgramCacheKey = () => "eclipse";
 }
 
 // dot lattice in view coordinates, displaced and lit by the chips above it
@@ -367,9 +348,7 @@ export default function LogoRain({
     const eclipseUniforms: EclipseUniforms = {
       uEclipseMin: { value: new THREE.Vector2(-1e5, -1e5) },
       uEclipseMax: { value: new THREE.Vector2(-1e5, -1e5) },
-      uEclipsePenumbra: { value: 1 },
       uEclipseShade: { value: 0 },
-      uEclipseCorona: { value: new THREE.Color() },
     };
     const occluderEl = occluder ? document.querySelector(occluder) : null;
 
@@ -438,12 +417,8 @@ export default function LogoRain({
         const r = occluderEl.getBoundingClientRect();
         const toX = (px: number) => camera.left + (px - box.left + BLEED_PX) / scale;
         const toY = (px: number) => -camera.top + (px - box.top + BLEED_PX) / scale;
-        eclipseUniforms.uEclipseMin.value.set(toX(r.left - ECLIPSE_PAD), toY(r.top - ECLIPSE_PAD));
-        eclipseUniforms.uEclipseMax.value.set(
-          toX(r.right + ECLIPSE_PAD),
-          toY(r.bottom + ECLIPSE_PAD),
-        );
-        eclipseUniforms.uEclipsePenumbra.value = ECLIPSE_PENUMBRA / scale;
+        eclipseUniforms.uEclipseMin.value.set(toX(r.left), toY(r.top));
+        eclipseUniforms.uEclipseMax.value.set(toX(r.right), toY(r.bottom));
       }
 
       walls.forEach((w) => {
@@ -533,9 +508,6 @@ export default function LogoRain({
     floorUniforms.uColor!.value.copy(theme.border);
     wallMaterial.color.copy(theme.border);
     eclipseUniforms.uEclipseShade.value = theme.eclipseShade;
-    eclipseUniforms.uEclipseCorona.value
-      .copy(theme.border)
-      .lerp(theme.silhouette, theme.eclipseCorona);
     const circleMaterials: THREE.MeshBasicMaterial[] = [];
     const ringMaterials: THREE.MeshBasicMaterial[] = [];
     const logoMaterials: THREE.MeshBasicMaterial[] = [];
@@ -592,9 +564,9 @@ export default function LogoRain({
         depthWrite: false,
       });
       logoMaterial.visible = false; // until its texture loads
-      eclipsed(circleMaterial, eclipseUniforms, "fill");
-      eclipsed(ringMaterial, eclipseUniforms, "ring");
-      eclipsed(logoMaterial, eclipseUniforms, "logo");
+      eclipsed(circleMaterial, eclipseUniforms);
+      eclipsed(ringMaterial, eclipseUniforms);
+      eclipsed(logoMaterial, eclipseUniforms);
       circleMaterials.push(circleMaterial);
       ringMaterials.push(ringMaterial);
       logoMaterials.push(logoMaterial);
@@ -666,9 +638,6 @@ export default function LogoRain({
       floorUniforms.uColor!.value.copy(theme.border);
       wallMaterial.color.copy(theme.border);
       eclipseUniforms.uEclipseShade.value = theme.eclipseShade;
-      eclipseUniforms.uEclipseCorona.value
-        .copy(theme.border)
-        .lerp(theme.silhouette, theme.eclipseCorona);
       render();
     }
 
