@@ -81,6 +81,14 @@ const FLOOR_WAKE = 1.5;
 const FLOOR_FADE_EDGE = 0.8;
 const FLOOR_FADE_MIN = 0.15;
 
+// the eclipse: the occluder (the headline column) casts a shadow over the tank.
+// A chip sliding under it darkens, its logo goes out and its rim lights up like
+// a corona, so the text over it reads clean. The shadow is the occluder's box
+// grown by ECLIPSE_PAD, with a soft ECLIPSE_PENUMBRA edge, both in css pixels.
+const ECLIPSE_PAD = 24;
+const ECLIPSE_PENUMBRA = 96;
+const ECLIPSE_LOGO = 0.9;
+
 type Star = {
   x: number;
   y: number;
@@ -138,7 +146,65 @@ function readTheme() {
     border,
     silhouette: new THREE.Color(dark ? 0xffffff : 0x000000),
     logoAlpha: dark ? 0.35 : 0.3,
+    // how far an eclipsed chip's fill falls toward black, and its rim toward
+    // the silhouette color
+    eclipseShade: dark ? 0.55 : 0.08,
+    eclipseCorona: dark ? 0.7 : 0.3,
   };
+}
+
+type EclipseUniforms = {
+  uEclipseMin: { value: THREE.Vector2 };
+  uEclipseMax: { value: THREE.Vector2 };
+  uEclipsePenumbra: { value: number };
+  uEclipseShade: { value: number };
+  uEclipseCorona: { value: THREE.Color };
+};
+
+// how the shadow lands on each part of a chip, applied to the lit fragment
+const ECLIPSE_EFFECT = {
+  fill: "gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), eclipse * uEclipseShade);",
+  ring: "gl_FragColor.rgb = mix(gl_FragColor.rgb, uEclipseCorona, eclipse);",
+  logo: `gl_FragColor.a *= 1.0 - eclipse * ${ECLIPSE_LOGO.toFixed(2)};`,
+};
+
+// patch a basic material so it falls into the eclipse's shadow, which is
+// measured per fragment so the shadow's edge sweeps across a chip
+function eclipsed(
+  material: THREE.MeshBasicMaterial,
+  uniforms: EclipseUniforms,
+  part: keyof typeof ECLIPSE_EFFECT,
+) {
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+    shader.vertexShader = shader.vertexShader
+      .replace("void main() {", "varying vec2 vEclipseView;\nvoid main() {")
+      .replace(
+        "#include <project_vertex>",
+        "#include <project_vertex>\nvEclipseView = (modelMatrix * vec4(transformed, 1.0)).xy * vec2(1.0, -1.0);",
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "void main() {",
+        `uniform vec2 uEclipseMin;
+uniform vec2 uEclipseMax;
+uniform float uEclipsePenumbra;
+uniform float uEclipseShade;
+uniform vec3 uEclipseCorona;
+varying vec2 vEclipseView;
+void main() {`,
+      )
+      .replace(
+        "#include <opaque_fragment>",
+        `#include <opaque_fragment>
+vec2 eclipseQ = abs(vEclipseView - (uEclipseMin + uEclipseMax) * 0.5)
+  - (uEclipseMax - uEclipseMin) * 0.5;
+float eclipseD = length(max(eclipseQ, 0.0)) + min(max(eclipseQ.x, eclipseQ.y), 0.0);
+float eclipse = 1.0 - smoothstep(-uEclipsePenumbra * 0.25, uEclipsePenumbra, eclipseD);
+${ECLIPSE_EFFECT[part]}`,
+      );
+  };
+  material.customProgramCacheKey = () => `eclipse-${part}`;
 }
 
 // dot lattice in view coordinates, displaced and lit by the chips above it
@@ -260,11 +326,14 @@ export default function LogoRain({
   chipScale = 1,
   // the 1px wall drawn along the tank's inside edge
   border = true,
+  // selector for the element that eclipses the chips passing under it
+  occluder,
 }: {
   density?: number;
   speedFactor?: number;
   chipScale?: number;
   border?: boolean;
+  occluder?: string;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -293,6 +362,16 @@ export default function LogoRain({
     const chipCount = Math.round(logos.length * density);
     const floorMat = floorMaterial(chipCount);
     const floorUniforms = floorMat.uniforms;
+
+    // no occluder parks the shadow far off the tank
+    const eclipseUniforms: EclipseUniforms = {
+      uEclipseMin: { value: new THREE.Vector2(-1e5, -1e5) },
+      uEclipseMax: { value: new THREE.Vector2(-1e5, -1e5) },
+      uEclipsePenumbra: { value: 1 },
+      uEclipseShade: { value: 0 },
+      uEclipseCorona: { value: new THREE.Color() },
+    };
+    const occluderEl = occluder ? document.querySelector(occluder) : null;
 
     // css pixels per view unit, so an outline can be sized in view units and
     // still land on one css pixel whatever the tank is scaled to
@@ -352,6 +431,20 @@ export default function LogoRain({
       floorUniforms.uViewMin!.value.set(VIEW_W / 2 - visW / 2, VIEW_H / 2 - visH / 2);
       floorUniforms.uViewMax!.value.set(VIEW_W / 2 + visW / 2, VIEW_H / 2 + visH / 2);
       floorUniforms.uRadius!.value = corner;
+
+      // the canvas reaches BLEED_PX past the container, at scale css px per view unit
+      if (occluderEl) {
+        const box = container.getBoundingClientRect();
+        const r = occluderEl.getBoundingClientRect();
+        const toX = (px: number) => camera.left + (px - box.left + BLEED_PX) / scale;
+        const toY = (px: number) => -camera.top + (px - box.top + BLEED_PX) / scale;
+        eclipseUniforms.uEclipseMin.value.set(toX(r.left - ECLIPSE_PAD), toY(r.top - ECLIPSE_PAD));
+        eclipseUniforms.uEclipseMax.value.set(
+          toX(r.right + ECLIPSE_PAD),
+          toY(r.bottom + ECLIPSE_PAD),
+        );
+        eclipseUniforms.uEclipsePenumbra.value = ECLIPSE_PENUMBRA / scale;
+      }
 
       walls.forEach((w) => {
         const midX = VIEW_W / 2 + (w.nx * visW) / 2;
@@ -439,6 +532,10 @@ export default function LogoRain({
     let theme = readTheme();
     floorUniforms.uColor!.value.copy(theme.border);
     wallMaterial.color.copy(theme.border);
+    eclipseUniforms.uEclipseShade.value = theme.eclipseShade;
+    eclipseUniforms.uEclipseCorona.value
+      .copy(theme.border)
+      .lerp(theme.silhouette, theme.eclipseCorona);
     const circleMaterials: THREE.MeshBasicMaterial[] = [];
     const ringMaterials: THREE.MeshBasicMaterial[] = [];
     const logoMaterials: THREE.MeshBasicMaterial[] = [];
@@ -495,6 +592,9 @@ export default function LogoRain({
         depthWrite: false,
       });
       logoMaterial.visible = false; // until its texture loads
+      eclipsed(circleMaterial, eclipseUniforms, "fill");
+      eclipsed(ringMaterial, eclipseUniforms, "ring");
+      eclipsed(logoMaterial, eclipseUniforms, "logo");
       circleMaterials.push(circleMaterial);
       ringMaterials.push(ringMaterial);
       logoMaterials.push(logoMaterial);
@@ -565,6 +665,10 @@ export default function LogoRain({
       });
       floorUniforms.uColor!.value.copy(theme.border);
       wallMaterial.color.copy(theme.border);
+      eclipseUniforms.uEclipseShade.value = theme.eclipseShade;
+      eclipseUniforms.uEclipseCorona.value
+        .copy(theme.border)
+        .lerp(theme.silhouette, theme.eclipseCorona);
       render();
     }
 
@@ -584,6 +688,7 @@ export default function LogoRain({
       render();
     });
     resizeObserver.observe(container);
+    if (occluderEl) resizeObserver.observe(occluderEl);
 
     const reduceMotion =
       window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -759,7 +864,7 @@ export default function LogoRain({
       textures.forEach((t) => t.dispose());
       renderer.dispose();
     };
-  }, [density, speedFactor, chipScale, border]);
+  }, [density, speedFactor, chipScale, border, occluder]);
 
   return (
     <div className="relative h-full w-full rounded-lg text-foreground">
