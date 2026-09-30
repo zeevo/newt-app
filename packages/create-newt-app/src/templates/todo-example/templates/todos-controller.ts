@@ -11,6 +11,7 @@ export default {
 } from '@nestjs/common';
 import { Session } from '@thallesp/nestjs-better-auth';
 import type { UserSession } from '@thallesp/nestjs-better-auth';
+import { z } from 'zod';
 import { TodosService } from './todos.service';
 
 @Controller('todos')
@@ -23,7 +24,10 @@ export class TodosController {
   }
 
   @Post()
-  create(@Session() session: UserSession, @Body('title') title: string) {
+  create(
+    @Session() session: UserSession,
+    @Body('title', { schema: z.string().trim().min(1) }) title: string,
+  ) {
     return this.todosService.create(session.user.id, title);
   }
 
