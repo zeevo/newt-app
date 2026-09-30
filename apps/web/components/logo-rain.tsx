@@ -432,10 +432,14 @@ export default function LogoRain({
         eclipseUniforms.uEclipseRadius.value = ECLIPSE_RADIUS / scale;
       }
 
+      // with no border to show the bend, the walls stand in by the deepest a chip
+      // can press, so a pressed chip still ends at the container's edge instead
+      // of slipping under the header or off the screen
+      const inset = border ? 0 : MAX_BEND_PX / scale;
       walls.forEach((w) => {
-        const midX = VIEW_W / 2 + (w.nx * visW) / 2;
-        const midY = VIEW_H / 2 + (w.ny * visH) / 2;
-        w.length = Math.max((w.ny ? visW : visH) - 2 * corner, 0);
+        const midX = VIEW_W / 2 + w.nx * (visW / 2 - inset);
+        const midY = VIEW_H / 2 + w.ny * (visH / 2 - inset);
+        w.length = Math.max((w.ny ? visW : visH) - 2 * corner - 2 * inset, 0);
         w.rest = midX * w.nx + midY * w.ny;
         w.x0 = midX + (w.ny * w.length) / 2;
         w.y0 = midY - (w.nx * w.length) / 2;
