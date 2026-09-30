@@ -298,9 +298,12 @@ export function validateNodeVersion(current: string, requirement: string): Valid
 // The project name becomes the npm scope for every workspace package
 // (@name/db, @name/auth, @name/ui), so anything npm rejects breaks pnpm install.
 // Whatever is typed gets bent into that shape rather than refused.
+// Accented letters are transliterated (é -> e) instead of dropped.
 export function normalizeProjectName(projectName: string): string {
   return projectName
     .trim()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9\-._~]/g, "-")
