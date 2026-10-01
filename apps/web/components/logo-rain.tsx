@@ -17,6 +17,9 @@ const VIEW_H = 775;
 
 const MIN_SIZE = 60;
 const MAX_SIZE = 110;
+// chips shrink with the tank below this many view units across, so a phone's
+// narrow tank isn't packed with desktop-sized chips
+const CHIP_FULL_W = 960;
 
 // cruise-speed multipliers by size: small chips move fast, the largest slowest
 const SPEED_SMALL = 1.4;
@@ -96,6 +99,7 @@ type Star = {
   vy: number;
   angle: number;
   angVel: number;
+  base: number;
   size: number;
   speed: number;
   group: THREE.Group;
@@ -364,6 +368,7 @@ export default function LogoRain({
     let viewScale = 1;
     // radius of the walls' inner corners, in view units
     let corner = 0;
+    let widthScale = 1;
 
     const walls: Wall[] = [
       [0, -1],
@@ -404,6 +409,7 @@ export default function LogoRain({
       viewScale = scale;
       const visW = iw / scale;
       const visH = ih / scale;
+      widthScale = Math.min(visW / CHIP_FULL_W, 1);
       const pad = (BORDER_PX + BLEED_PX) / scale;
       camera.left = VIEW_W / 2 - visW / 2 - pad;
       camera.right = VIEW_W / 2 + visW / 2 + pad;
@@ -533,7 +539,8 @@ export default function LogoRain({
     const meanSize = (minSize + maxSize) / 2;
     const stars: Star[] = [];
     Array.from({ length: chipCount }).forEach(() => {
-      const size = minSize + Math.random() * (maxSize - minSize);
+      const base = minSize + Math.random() * (maxSize - minSize);
+      const size = base * widthScale;
       // seed inside the walls so no chip starts out pressed into one; a few
       // best-candidate samples gently discourage clumping without looking gridded
       const min = floorUniforms.uViewMin!.value;
@@ -554,7 +561,7 @@ export default function LogoRain({
       );
 
       // size drives cruise speed only; opacity is uniform across chips
-      const t = (size - minSize) / (maxSize - minSize);
+      const t = (base - minSize) / (maxSize - minSize);
 
       const group = new THREE.Group();
       group.scale.setScalar(size);
@@ -587,7 +594,7 @@ export default function LogoRain({
       logoMaterials.push(logoMaterial);
 
       // larger chips draw on top so the quick small ones pass behind them
-      const order = size * 10;
+      const order = base * 10;
       const circle = new THREE.Mesh(circleGeometry, circleMaterial);
       circle.renderOrder = order;
       const ring = new THREE.Mesh(ringGeometry(size), ringMaterial);
@@ -608,6 +615,7 @@ export default function LogoRain({
         vy: Math.sin(heading) * speed,
         angle: 0,
         angVel: (Math.random() * 2 - 1) * 0.3,
+        base,
         size,
         speed,
         group,
@@ -665,9 +673,12 @@ export default function LogoRain({
     const resizeObserver = new ResizeObserver(() => {
       fit();
       // a css pixel is worth a different number of view units at the new scale
-      ringMeshes.forEach((ring, i) => {
-        ring.geometry.dispose();
-        ring.geometry = ringGeometry(stars[i]!.size);
+      stars.forEach((s, i) => {
+        s.size = s.base * widthScale;
+        s.group.scale.setScalar(s.size);
+        chipRadii[i] = s.size;
+        ringMeshes[i]!.geometry.dispose();
+        ringMeshes[i]!.geometry = ringGeometry(s.size);
       });
       render();
     });
