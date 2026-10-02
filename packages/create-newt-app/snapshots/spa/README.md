@@ -11,6 +11,19 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Production build
+
+NestJS serves the static export and the API from one origin, so point `BETTER_AUTH_URL` at it:
+
+```sh
+pnpm db:migrate
+pnpm build
+cd apps/api
+BETTER_AUTH_URL=http://localhost:3001 pnpm start:prod
+```
+
+Open [http://localhost:3001](http://localhost:3001). In a real deployment, set `BETTER_AUTH_URL` to the public URL.
+
 ## Apps
 
 - **web**: Next.js frontend (port 3000)

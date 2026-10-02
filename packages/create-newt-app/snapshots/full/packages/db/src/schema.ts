@@ -31,7 +31,6 @@ export interface SessionTable {
 
 export interface AccountTable {
   id: string;
-  issuer: string;
   accountId: string;
   providerId: string;
   userId: string;
