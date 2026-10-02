@@ -4,6 +4,7 @@ export default {
   "name": "@<%= projectName %>/auth",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "exports": {
     ".": "./src/index.ts"
   },
