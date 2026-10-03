@@ -20,7 +20,7 @@ export class TodosService {
       .selectFrom('todo')
       .select(columns)
       .where('userId', '=', userId)
-      .orderBy('createdAt desc')
+      .orderBy('createdAt', 'desc')
       .execute();
     return rows.map((row) => ({ ...row, done: Boolean(row.done) }));
   }
