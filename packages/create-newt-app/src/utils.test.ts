@@ -1,10 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "fs/promises";
 import { tmpdir } from "os";
 import path from "path";
 import {
   checkRequiredTools,
   normalizeProjectName,
+  projectTarget,
   sortPackageJsons,
   updatePackageJson,
   updateScripts,
@@ -101,6 +102,40 @@ describe("validateProjectName", () => {
         (name) => validateProjectName(name).valid,
       ),
     ).toEqual([true, true, true, true, true]);
+  });
+});
+
+describe("scaffolding into the current directory", () => {
+  let cwd: string;
+
+  beforeEach(async () => {
+    cwd = await mkdtemp(path.join(tmpdir(), "Crème App-"));
+    vi.spyOn(process, "cwd").mockReturnValue(cwd);
+  });
+
+  afterEach(async () => {
+    vi.restoreAllMocks();
+    await rm(cwd, { recursive: true, force: true });
+  });
+
+  it("names the project after the directory and writes into it", () => {
+    expect([".", "./"].map((name) => projectTarget(name))).toEqual([
+      { name: normalizeProjectName(path.basename(cwd)), dir: "." },
+      { name: normalizeProjectName(path.basename(cwd)), dir: "." },
+    ]);
+    expect(projectTarget(".").name).toMatch(/^creme-app-/);
+  });
+
+  it("accepts an empty directory", () => {
+    expect(validateProjectName(".").valid).toBe(true);
+  });
+
+  it("refuses a directory that has anything in it", async () => {
+    await writeFile(path.join(cwd, ".gitignore"), "");
+    expect(validateProjectName(".")).toEqual({
+      valid: false,
+      error: "The current directory is not empty",
+    });
   });
 });
 
