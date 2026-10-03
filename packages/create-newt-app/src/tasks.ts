@@ -14,6 +14,7 @@ export async function scaffold(
   modules: Module[],
   options: {
     name: string;
+    dir: string;
     testing: "jest" | "vitest";
     database: "sqlite" | "postgres";
     deployment: TemplateData["deployment"];
@@ -22,7 +23,7 @@ export async function scaffold(
     selection: Selection;
   },
 ) {
-  const validation = validateProjectName(options.name);
+  const validation = validateProjectName(options.dir);
   if (!validation.valid) {
     console.error(`Error: ${validation.error}`);
     process.exit(1);
@@ -41,7 +42,7 @@ export async function scaffold(
     versions,
   };
 
-  await renderTemplatesToDisk(modules, options.name, templateData, options.selection);
+  await renderTemplatesToDisk(modules, options.dir, templateData, options.selection);
 
   const packages = modules
     .map((mod) => mod.packages)
@@ -49,7 +50,7 @@ export async function scaffold(
     .flat();
 
   if (packages.length > 0) {
-    await updatePackageJson(options.name, packages, templateData);
+    await updatePackageJson(options.dir, packages, templateData);
   }
 
   const scripts = modules
@@ -58,10 +59,10 @@ export async function scaffold(
     .flat();
 
   if (scripts.length > 0) {
-    await updateScripts(options.name, scripts, templateData);
+    await updateScripts(options.dir, scripts, templateData);
   }
 
-  await sortPackageJsons(options.name);
+  await sortPackageJsons(options.dir);
 }
 
 // execa throws ENOENT when the binary is not on PATH. Every tool we shell out

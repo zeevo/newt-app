@@ -1,5 +1,5 @@
 import ejs from "ejs";
-import { existsSync, promises } from "fs";
+import { existsSync, promises, readdirSync } from "fs";
 import path from "path";
 import type { Module, Package, Script, Selection, TemplateData } from "./types.js";
 import { getStaticFilePath } from "./templates";
@@ -313,24 +313,37 @@ export function normalizeProjectName(projectName: string): string {
     .slice(0, 214);
 }
 
+// "." scaffolds into the current directory, which then names the project.
+export function projectTarget(projectName: string) {
+  if ([".", "./"].includes(projectName.trim())) {
+    return { name: normalizeProjectName(path.basename(process.cwd())), dir: "." };
+  }
+  const name = normalizeProjectName(projectName);
+  return { name, dir: name };
+}
+
 export function validateProjectName(projectName: string): ValidationResult {
   if (!projectName) {
     return { valid: false, error: "Project name is required" };
   }
 
-  const normalized = normalizeProjectName(projectName);
+  const { name, dir } = projectTarget(projectName);
 
-  if (!normalized) {
+  if (!name) {
     return {
       valid: false,
       error: `"${projectName}" has nothing left after normalizing. Include a letter or a digit.`,
     };
   }
 
-  const targetPath = path.resolve(process.cwd(), normalized);
+  if (dir === ".") {
+    return readdirSync(process.cwd()).length === 0
+      ? { valid: true }
+      : { valid: false, error: "The current directory is not empty" };
+  }
 
-  if (existsSync(targetPath)) {
-    return { valid: false, error: `Directory "${normalized}" already exists` };
+  if (existsSync(path.resolve(process.cwd(), dir))) {
+    return { valid: false, error: `Directory "${dir}" already exists` };
   }
 
   return { valid: true };
