@@ -314,7 +314,7 @@ export function normalizeProjectName(projectName: string): string {
 }
 
 // "." scaffolds into the current directory, which then names the project.
-export function projectTarget(projectName: string): { name: string; dir: string } {
+export function projectTarget(projectName: string) {
   if ([".", "./"].includes(projectName.trim())) {
     return { name: normalizeProjectName(path.basename(process.cwd())), dir: "." };
   }
