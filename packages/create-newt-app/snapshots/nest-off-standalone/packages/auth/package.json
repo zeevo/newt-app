@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./options": "./src/options.ts"
   },
   "scripts": {
-    "generate": "dotenv -e ../../.env -- auth generate --config src/index.ts",
-    "migrate": "dotenv -e ../../.env -- auth migrate -y --config src/index.ts",
+    "generate": "dotenv -e ../../.env -- auth generate --config src/cli.ts",
+    "migrate": "dotenv -e ../../.env -- auth migrate -y --config src/cli.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
