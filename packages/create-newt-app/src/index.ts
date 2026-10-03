@@ -323,6 +323,11 @@ export async function doInit(options: Options) {
 
     p.outro(`Done!`);
 
+    if (name !== rawName) {
+      console.log(`Note: the project directory is "${name}", not "${rawName}".`);
+      console.log();
+    }
+
     console.log("Next steps:");
     console.log();
     console.log(chalk.blue(`  cd ${name}`));
