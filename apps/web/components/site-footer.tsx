@@ -13,9 +13,6 @@ export function SiteFooter() {
         <div className="flex items-center gap-2.5">
           <Icons.logo className="size-5 opacity-90" />
           <span className="text-base font-semibold tracking-wide">{siteConfig.title}</span>
-          <span className="pl-2 text-xs opacity-60">
-            © {new Date().getFullYear()} Shane O&apos;Neill
-          </span>
         </div>
         <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
           <a
