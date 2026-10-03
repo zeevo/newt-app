@@ -10,5 +10,7 @@ export const db = new Kysely<DB>({
   dialect: new PostgresDialect({ pool: driver }),
 });
 
-export type Database = Kysely<DB>;`,
+export type Database = Kysely<DB>;
+
+export type * from "./schema.js";`,
 };

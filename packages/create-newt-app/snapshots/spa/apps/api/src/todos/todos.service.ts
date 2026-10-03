@@ -1,13 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { db } from '@my-app/db';
-
-export interface Todo {
-  id: string;
-  title: string;
-  done: boolean;
-  createdAt: string;
-}
+import { db, type Todo } from '@my-app/db';
 
 const columns = ['id', 'title', 'done', 'createdAt'] as const;
 

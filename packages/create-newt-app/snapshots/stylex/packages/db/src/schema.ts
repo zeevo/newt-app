@@ -8,6 +8,15 @@ export interface TodoTable {
   createdAt: Generated<string>;
 }
 
+// Wire shape of a todo: what the api serves and the web app consumes.
+// The service converts table rows (raw sqlite values) into this.
+export interface Todo {
+  id: string;
+  title: string;
+  done: boolean;
+  createdAt: string;
+}
+
 export interface UserTable {
   id: string;
   name: string;
