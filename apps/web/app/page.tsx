@@ -103,7 +103,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="mt-4 max-w-[56ch] text-sm leading-relaxed text-muted-foreground lg:text-base">
-              A pnpm workspace with Next.js, NestJS, Better Auth and Kysely, wired together.
+              {siteConfig.description}
             </p>
             <div className="mt-6 flex h-9 w-fit items-center gap-2 rounded-full border bg-background pr-1.5 pl-4 text-sm whitespace-nowrap shadow-sm">
               <span className="shrink-0 text-muted-foreground select-none">$</span>
