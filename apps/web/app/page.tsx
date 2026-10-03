@@ -13,7 +13,7 @@ const INSTALL = "npm create newt-app";
 export default function Home() {
   return (
     <>
-      <section className="relative flex min-h-[calc(100svh-var(--header-height))] items-center overflow-hidden">
+      <section className="relative flex min-h-[calc(100svh-var(--header-height))] items-center overflow-hidden lg:pb-[calc(20svh+var(--header-height))]">
         <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
         {/* the tank's own canvas opts pointer events back in, so the chips stay
             clickable wherever the content leaves them uncovered */}
