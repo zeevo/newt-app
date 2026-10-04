@@ -9,7 +9,7 @@ import { hasCommand, initGit, pnpmFormat, pnpmInstall, scaffold } from "./tasks.
 import { reportRun } from "./telemetry.js";
 import {
   checkRequiredTools,
-  normalizeProjectName,
+  projectTarget,
   validateDeploymentCombo,
   validateExampleCombo,
   validateExtrasCombo,
@@ -269,7 +269,7 @@ export async function doInit(options: Options) {
 
     // Normalized here, not inside scaffold, so the directory, the package scope
     // and the "cd" line below can never disagree.
-    const name = normalizeProjectName(rawName);
+    const { name, dir } = projectTarget(rawName);
 
     const taskBuilder = new TaskBuilder();
 
@@ -278,6 +278,7 @@ export async function doInit(options: Options) {
       task: async () => {
         await scaffold(allModules, {
           name,
+          dir,
           testing,
           database,
           deployment,
@@ -293,7 +294,7 @@ export async function doInit(options: Options) {
       taskBuilder.add({
         title: "Installing with pnpm",
         task: async () => {
-          await pnpmInstall(name);
+          await pnpmInstall(dir);
           return "Installed.";
         },
       });
@@ -301,7 +302,7 @@ export async function doInit(options: Options) {
       taskBuilder.add({
         title: "Formatting",
         task: async () => {
-          await pnpmFormat(name);
+          await pnpmFormat(dir);
           return "Formatted.";
         },
       });
@@ -313,7 +314,7 @@ export async function doInit(options: Options) {
       taskBuilder.add({
         title: "Initializing git",
         task: async () => {
-          committed = await initGit(name);
+          committed = await initGit(dir);
           return committed ? "Initialized git." : "Initialized git, but could not commit.";
         },
       });
@@ -323,14 +324,16 @@ export async function doInit(options: Options) {
 
     p.outro(`Done!`);
 
-    if (name !== rawName) {
-      console.log(`Note: the project directory is "${name}", not "${rawName}".`);
+    if (dir !== "." && dir !== rawName) {
+      console.log(`Note: the project directory is "${dir}", not "${rawName}".`);
       console.log();
     }
 
     console.log("Next steps:");
     console.log();
-    console.log(chalk.blue(`  cd ${name}`));
+    if (dir !== ".") {
+      console.log(chalk.blue(`  cd ${dir}`));
+    }
     if (!options.install) {
       console.log(chalk.blue(`  pnpm install`));
       console.log(chalk.blue(`  pnpm format:fix`));
