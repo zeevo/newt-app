@@ -2,8 +2,7 @@ export const siteConfig = {
   name: "Newt App",
   title: "newt-app",
   url: "https://newt-app.com",
-  description:
-    "A Next.js frontend and a NestJS backend in one pnpm workspace, with Better Auth and a typed database layer already wired together.",
+  description: "A pnpm workspace with Next.js, NestJS, Better Auth and Kysely, wired together.",
   twitterHandle: "@zeevoexe",
   links: {
     twitter: "https://twitter.com/zeevoexe",
