@@ -4,16 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@newt-app/ui/lib/utils";
 import { Window } from "@/components/window";
 
-type Tone =
-  | "prompt"
-  | "cmd"
-  | "gray"
-  | "green"
-  | "magenta"
-  | "blue"
-  | "cyan"
-  | "dim"
-  | "inverse";
+type Tone = "prompt" | "cmd" | "gray" | "green" | "magenta" | "blue" | "cyan" | "dim" | "inverse";
 type Segment = { text: string; tone?: Tone };
 // `hang` indents a soft-wrapped help row under its description column
 type Line = Segment[] & { hang?: boolean };
@@ -79,10 +70,7 @@ const prompt = (typed = ""): Line => [
 ];
 const bar: Line = [{ text: "│", tone: "gray" }];
 const blank: Line = [{ text: " " }];
-const step = (text: string): Line => [
-  { text: "◇", tone: "green" },
-  { text: `  ${text}` },
-];
+const step = (text: string): Line => [{ text: "◇", tone: "green" }, { text: `  ${text}` }];
 const spinner = (title: string, tick: number): Line => [
   { text: FRAMES[tick % FRAMES.length] ?? "", tone: "magenta" },
   { text: `  ${title}${".".repeat(Math.floor((tick % 32) / 8))}` },
@@ -150,11 +138,13 @@ const answered = (question: string, answer: string): Line[] => [
 // each state repaints the prompt in place; the last one is submitted
 const ask = (states: Line[][], question: string, answer: string): Frame[] =>
   states
-    .map((lines, i): Frame => ({
-      drop: i === 0 ? 0 : (states[i - 1]?.length ?? 0),
-      add: i === 0 ? [bar, ...lines] : lines,
-      ms: i === 0 ? READ_MS : KEY_MS,
-    }))
+    .map(
+      (lines, i): Frame => ({
+        drop: i === 0 ? 0 : (states[i - 1]?.length ?? 0),
+        add: i === 0 ? [bar, ...lines] : lines,
+        ms: i === 0 ? READ_MS : KEY_MS,
+      }),
+    )
     .concat({
       drop: states.at(-1)?.length ?? 0,
       add: answered(question, answer),
@@ -168,9 +158,7 @@ const text = (question: string, placeholder: string, value: string): Frame[] =>
         { text: placeholder[0] ?? "", tone: "inverse" },
         { text: placeholder.slice(1), tone: "dim" },
       ]),
-      ...[...value].map((_, i) =>
-        active(question, [{ text: `${value.slice(0, i + 1)}█` }]),
-      ),
+      ...[...value].map((_, i) => active(question, [{ text: `${value.slice(0, i + 1)}█` }])),
     ],
     question,
     value,
@@ -195,16 +183,15 @@ const select = (question: string, options: Option[], path: number[]): Frame[] =>
     path.map((cursor) =>
       activeList(
         question,
-        options.map((option, i): Line =>
-          i === cursor
-            ? [
-                { text: "●", tone: "green" },
-                { text: ` ${option.label}` },
-                ...(option.hint
-                  ? [{ text: ` (${option.hint})`, tone: "dim" as const }]
-                  : []),
-              ]
-            : [{ text: `○ ${option.label}`, tone: "dim" }],
+        options.map(
+          (option, i): Line =>
+            i === cursor
+              ? [
+                  { text: "●", tone: "green" },
+                  { text: ` ${option.label}` },
+                  ...(option.hint ? [{ text: ` (${option.hint})`, tone: "dim" as const }] : []),
+                ]
+              : [{ text: `○ ${option.label}`, tone: "dim" }],
         ),
       ),
     ),
@@ -254,16 +241,8 @@ const SCENES: Scene[] = [
         ],
         [0, 1, 2, 1, 0],
       ),
-      ...select(
-        "Testing framework?",
-        [{ label: "Jest" }, { label: "Vitest" }],
-        [0, 1],
-      ),
-      ...select(
-        "Database?",
-        [{ label: "SQLite" }, { label: "Postgres" }],
-        [0, 1],
-      ),
+      ...select("Testing framework?", [{ label: "Jest" }, { label: "Vitest" }], [0, 1]),
+      ...select("Database?", [{ label: "SQLite" }, { label: "Postgres" }], [0, 1]),
       ...select(
         "Linter and formatter?",
         [{ label: "ESLint + Prettier" }, { label: "oxlint + oxfmt" }],
@@ -292,9 +271,7 @@ const SCENES: Scene[] = [
   {
     label: "flags",
     frames: [
-      ...typed(
-        "npm create newt-app@latest my-app -- --shadcn --database postgres",
-      ),
+      ...typed("npm create newt-app@latest my-app -- --shadcn --database postgres"),
       show([INTRO]),
       ...finish(["cd my-app", "pnpm dev"]),
     ],
@@ -304,10 +281,11 @@ const SCENES: Scene[] = [
     frames: [
       ...typed("npm create newt-app@latest -- --help"),
       show([
-        ...HELP.split("\n").map((row): Line =>
-          Object.assign([{ text: row || " " }], {
-            hang: row.startsWith("  -"),
-          }),
+        ...HELP.split("\n").map(
+          (row): Line =>
+            Object.assign([{ text: row || " " }], {
+              hang: row.startsWith("  -"),
+            }),
         ),
         prompt(),
       ]),
@@ -355,8 +333,7 @@ export function TerminalCast({ className }: { className?: string }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let cancelled = false;
-    const sleep = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const play = async () => {
       setLines([]);
@@ -409,21 +386,13 @@ export function TerminalCast({ className }: { className?: string }) {
       >
         <code>
           {shown.map((line, i) => (
-            <span
-              key={i}
-              className={cn(
-                "block",
-                line.hang && "sm:pl-[27ch] sm:-indent-[27ch]",
-              )}
-            >
+            <span key={i} className={cn("block", line.hang && "sm:pl-[27ch] sm:-indent-[27ch]")}>
               {line.map((segment, j) => (
                 <span key={j} className={segment.tone && TONES[segment.tone]}>
                   {segment.text}
                 </span>
               ))}
-              {i === shown.length - 1 && atPrompt(line) && (
-                <Caret blink={lines !== null} />
-              )}
+              {i === shown.length - 1 && atPrompt(line) && <Caret blink={lines !== null} />}
             </span>
           ))}
         </code>
