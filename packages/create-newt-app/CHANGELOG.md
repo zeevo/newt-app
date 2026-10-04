@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.35.2
+
+### Patch Changes
+
+- bd74913: `packages/auth/package.json` now declares `"type": "module"`, like `packages/db`, so Postgres projects no longer print Node's `MODULE_TYPELESS_PACKAGE_JSON` warning on every `pnpm dev`, `pnpm db:migrate` and `pnpm db:generate`.
+- 02290fd: Document the SPA production build in the README, with BETTER_AUTH_URL pointed at the NestJS origin so sign-in works
+- ce18ee6: drop the account issuer column from the kysely types, better-auth removed it in 1.7.3
+- 64775c7: Todo example: fetch helpers now throw on non-2xx responses, the todo list renders query and mutation failures (toasts in the shadcn variant), and the Todo wire type is declared once in packages/db instead of twice.
+- 38ce7cf: Transliterate accented letters in project names (é -> e) instead of dropping them, and note when the directory name differs from the input.
+
 ## 0.35.1
 
 ### Patch Changes

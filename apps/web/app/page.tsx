@@ -13,15 +13,15 @@ const INSTALL = "npm create newt-app";
 export default function Home() {
   return (
     <>
-      <section className="relative flex min-h-[calc(100svh-var(--header-height))] items-center overflow-hidden">
+      <section className="relative flex min-h-[calc(100svh-var(--header-height))] items-center overflow-hidden lg:pb-[calc(20svh+var(--header-height))]">
         <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
         {/* the tank's own canvas opts pointer events back in, so the chips stay
             clickable wherever the content leaves them uncovered */}
         <div className="pointer-events-none absolute inset-0">
-          <LogoRain border={false} occluder="[data-eclipse]" />
+          <LogoRain border={false} />
         </div>
         <div className="pointer-events-none relative container grid w-full items-center gap-8 py-10 lg:grid-cols-[1fr_1.12fr] lg:gap-12 lg:py-12 *:pointer-events-auto">
-          <div data-eclipse>
+          <div className="rounded-xl border bg-background p-6 sm:p-8">
             <a
               href={siteConfig.links.npm}
               target="_blank"
@@ -103,7 +103,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="mt-4 max-w-[56ch] text-sm leading-relaxed text-muted-foreground lg:text-base">
-              A pnpm workspace with Next.js, NestJS, Better Auth and Kysely, wired together.
+              {siteConfig.description}
             </p>
             <div className="mt-6 flex h-9 w-fit items-center gap-2 rounded-full border bg-background pr-1.5 pl-4 text-sm whitespace-nowrap shadow-sm">
               <span className="shrink-0 text-muted-foreground select-none">$</span>
