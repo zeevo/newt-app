@@ -3,10 +3,12 @@ import { cn } from "@newt-app/ui/lib/utils";
 export function Window({
   className,
   barClassName,
+  title,
   children,
 }: {
   className?: string;
   barClassName?: string;
+  title?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -25,6 +27,7 @@ export function Window({
         <span aria-hidden className="size-2.5 rounded-full bg-rose-400/80" />
         <span aria-hidden className="size-2.5 rounded-full bg-amber-400/80" />
         <span aria-hidden className="size-2.5 rounded-full bg-emerald-400/80" />
+        {title}
       </div>
       {children}
     </div>
