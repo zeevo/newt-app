@@ -39,7 +39,7 @@ const testingVitest: Module = {
     {
       module: "apps/api",
       name: "test:debug",
-      script: "vitest --inspect-brk --inspect --logHeapUsage --threads=false",
+      script: "vitest --inspect-brk --no-file-parallelism",
     },
     {
       module: "apps/api",
