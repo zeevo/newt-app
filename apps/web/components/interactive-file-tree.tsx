@@ -262,7 +262,12 @@ export function InteractiveFileTree({
           )}
         >
           <div className="flex flex-col gap-2 lg:w-[42%] lg:shrink-0">
-            <div className="flex flex-1 flex-col gap-2.5 rounded-lg border p-3">
+            <div
+              className={cn(
+                "flex flex-1 flex-col gap-2.5 rounded-lg border p-3",
+                fullscreen && "lg:min-h-0 lg:overflow-y-auto",
+              )}
+            >
               <Row label="name">
                 <Input
                   value={c.name}
@@ -412,7 +417,12 @@ export function InteractiveFileTree({
             )}
           </div>
 
-          <div className="min-h-[38rem] flex-1 rounded-lg border bg-code p-3">
+          <div
+            className={cn(
+              "min-h-[38rem] flex-1 rounded-lg border bg-code p-3",
+              fullscreen && "lg:min-h-0 lg:overflow-y-auto",
+            )}
+          >
             <FileTree
               name={c.name.trim() || DEFAULT_NAME}
               className="my-0 bg-transparent p-0 dark:bg-transparent"

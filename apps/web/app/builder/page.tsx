@@ -10,15 +10,16 @@ export const metadata: Metadata = {
 
 export default function BuilderPage() {
   // the footer's tank is tall enough to eat into min-h-svh, so the builder
-  // claims the screen below the header and pushes the footer past it
+  // claims the screen below the header and pushes the footer past it. On
+  // desktop it is pinned to that height and the tree scrolls inside it
   return (
-    <div className="relative flex min-h-[calc(100svh-var(--header-height))] flex-1 flex-col overflow-hidden">
+    <div className="relative flex min-h-[calc(100svh-var(--header-height))] flex-1 flex-col overflow-hidden lg:h-[calc(100svh-var(--header-height))] lg:flex-none">
       <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
-      <div className="container flex flex-1 flex-col py-10">
+      <div className="container flex min-h-0 flex-1 flex-col py-6">
         {/* nuqs reads useSearchParams, which needs a boundary on a statically
             rendered page */}
         <Suspense>
-          <InteractiveFileTree fullscreen className="flex-1" />
+          <InteractiveFileTree fullscreen className="min-h-0 flex-1" />
         </Suspense>
       </div>
     </div>
