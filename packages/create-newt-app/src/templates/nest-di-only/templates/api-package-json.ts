@@ -8,7 +8,8 @@ export default {
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "nest build"
+    "build": "nest build",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "dependencies": {
     "@nestjs/common": "<%= versions["@nestjs/common"] %>",
