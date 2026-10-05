@@ -20,6 +20,10 @@ async function main() {
   const stub = [
     'import { Kysely, sql } from "kysely";',
     "",
+    "// Table and column names must match the camelCase keys in schema.ts verbatim",
+    "// (e.g. \`guestbookEntry\`, \`userId\`, \`createdAt\`). Kysely uses those keys as",
+    "// SQL identifiers, so a snake_case name here fails at runtime, not at build.",
+    "",
     "export async function up(db: Kysely<any>): Promise<void> {",
     "  // await db.schema.createTable(...).execute();",
     "}",
