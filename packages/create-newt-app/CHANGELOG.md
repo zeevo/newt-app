@@ -1,5 +1,14 @@
 # create-newt-app
 
+## 0.35.4
+
+### Patch Changes
+
+- f158931: apps/api now has a `typecheck` script in spa and di-only modes, so `pnpm typecheck` covers it in every mode
+- 5bccf4a: standalone: `dev` in turbo.json now depends on `^migrate`, so a fresh scaffold runs migrations before `pnpm dev` serves auth routes
+- f5c713d: stylex: the app postcss config now scans components/ and lib/, not just app/
+- 70d60dc: vitest test:debug uses flags vitest 4 rejects
+
 ## 0.35.3
 
 ### Patch Changes
