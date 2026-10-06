@@ -18,7 +18,11 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "<%= projectName %>",
+<% if (nest !== 'off') { -%>
   description: "Next + Nest = Newt",
+<% } else { -%>
+  description: "Next.js + better-auth = Newt",
+<% } -%>
   icons: {
     icon: [
       { url: "/icon0.svg", type: "image/svg+xml" },

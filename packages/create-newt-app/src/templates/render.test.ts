@@ -344,7 +344,47 @@ describe("nest off scaffolds no Nest at all", () => {
     // process by the only app there is.
     expect(files.has("apps/web/app/api/hello/route.ts")).toBe(true);
     expect(files.get("apps/web/next.config.js")).not.toContain("localhost:3001");
+
+    // The landing page is the one place a user sees the contradiction: a
+    // nest.js card and Next + Nest branding in a repo with no Nest.
+    const page = files.get("apps/web/app/page.tsx") ?? "";
+    const layout = files.get("apps/web/app/layout.tsx") ?? "";
+    expect(page).not.toContain("nest.js");
+    expect(page).not.toContain("Next + Nest");
+    expect(page).not.toContain("nestjs.com");
+    expect(layout).not.toContain("Next + Nest");
   });
+});
+
+// The /api/hello card and the NestJS link follow the mode, and the tagline
+// only promises Nest when the scaffold ships it.
+describe("the landing page matches the selected nest mode", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const { files } = renderCombo(selection);
+      const page = files.get("apps/web/app/page.tsx") ?? "";
+      const layout = files.get("apps/web/app/layout.tsx") ?? "";
+
+      const tagline =
+        selection.nest === "off" ? "Next.js + better-auth = Newt" : "Next + Nest = Newt";
+      expect(page).toContain(tagline);
+      expect(layout).toContain(`description: "${tagline}"`);
+
+      expect(page).toContain("GET /api/hello");
+      if (selection.nest === "on") {
+        expect(page).toContain("nest.js");
+      } else if (selection.nest === "di-only") {
+        expect(page).toContain("nest.js");
+        expect(page).toContain("served by a Next.js route handler");
+      } else {
+        expect(page).not.toContain("nest.js");
+        expect(page).toContain("served in-process");
+      }
+
+      expect(page.includes("nestjs.com")).toBe(selection.nest !== "off");
+    },
+  );
 });
 
 // A sqlite app handed a Postgres URL opens it as a file path and dies on boot,
