@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import { resolve } from 'path';
 
 // Load root .env first, then local .env (local takes precedence)
-dotenv.config({ path: resolve(process.cwd(), '../../.env') });
-dotenv.config({ path: resolve(process.cwd(), '.env') });
+dotenv.config({ path: resolve(process.cwd(), '../../.env'), quiet: true });
+dotenv.config({ path: resolve(process.cwd(), '.env'), quiet: true });
 
 // No /api rewrite: there is no second process, so Next serves /api itself.
 /** @type {import('next').NextConfig} */
