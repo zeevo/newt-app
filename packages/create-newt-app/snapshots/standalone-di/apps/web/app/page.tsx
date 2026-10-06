@@ -40,7 +40,7 @@ export default function Home() {
 
       <div className="rounded-xl border p-6 space-y-1">
         <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">nest.js</p>
-        <p className="font-mono text-sm text-muted-foreground">GET /api/hello</p>
+        <p className="font-mono text-sm text-muted-foreground">GET /api/hello, served by a Next.js route handler</p>
         <pre className="mt-2 border rounded-md p-3 text-sm bg-muted/50">
           <code>{JSON.stringify(hello, null, 2)}</code>
         </pre>

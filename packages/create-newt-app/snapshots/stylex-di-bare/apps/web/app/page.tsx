@@ -42,7 +42,7 @@ export default function Home() {
 
       <div {...stylex.props(styles.card)}>
         <p {...stylex.props(styles.eyebrow)}>nest.js</p>
-        <p {...stylex.props(styles.mono, styles.muted)}>GET /api/hello</p>
+        <p {...stylex.props(styles.mono, styles.muted)}>GET /api/hello, served by a Next.js route handler</p>
         <pre {...stylex.props(styles.pre)}>
           <code>{JSON.stringify(hello, null, 2)}</code>
         </pre>

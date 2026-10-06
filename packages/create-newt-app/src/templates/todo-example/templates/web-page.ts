@@ -31,7 +31,11 @@ export default function Home() {
         <div>
           <h1 className="text-4xl font-black tracking-tight"><%= projectName %></h1>
           <p className="text-sm text-muted-foreground tracking-widest uppercase">
+<% if (nest !== 'off') { -%>
             Next + Nest = Newt 💜
+<% } else { -%>
+            Next.js + better-auth = Newt 💜
+<% } -%>
           </p>
         </div>
       </div>
@@ -42,6 +46,7 @@ export default function Home() {
         <p className="text-sm text-muted-foreground">Next.js rendering</p>
       </div>
 
+<% if (nest === 'on') { -%>
       <div className="rounded-xl border p-6 space-y-1">
         <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">nest.js</p>
         <p className="font-mono text-sm text-muted-foreground">GET /api/hello</p>
@@ -49,6 +54,23 @@ export default function Home() {
           <code>{JSON.stringify(hello, null, 2)}</code>
         </pre>
       </div>
+<% } else if (nest === 'di-only') { -%>
+      <div className="rounded-xl border p-6 space-y-1">
+        <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">nest.js</p>
+        <p className="font-mono text-sm text-muted-foreground">GET /api/hello, served by a Next.js route handler</p>
+        <pre className="mt-2 border rounded-md p-3 text-sm bg-muted/50">
+          <code>{JSON.stringify(hello, null, 2)}</code>
+        </pre>
+      </div>
+<% } else { -%>
+      <div className="rounded-xl border p-6 space-y-1">
+        <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">next.js</p>
+        <p className="font-mono text-sm text-muted-foreground">GET /api/hello, served in-process</p>
+        <pre className="mt-2 border rounded-md p-3 text-sm bg-muted/50">
+          <code>{JSON.stringify(hello, null, 2)}</code>
+        </pre>
+      </div>
+<% } -%>
 
       <div className="rounded-xl border p-6">
         <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">better-auth</p>
@@ -73,9 +95,11 @@ export default function Home() {
           <li>
             <Link href="https://nextjs.org">Next.js</Link>
           </li>
+<% if (nest !== 'off') { -%>
           <li>
             <Link href="https://nestjs.com">NestJS</Link>
           </li>
+<% } -%>
         </ul>
       </div>
     </main>

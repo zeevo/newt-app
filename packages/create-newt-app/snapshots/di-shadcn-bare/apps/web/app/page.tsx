@@ -56,7 +56,7 @@ export default function Home() {
           </p>
         </CardHeader>
         <CardContent>
-          <p className="font-mono text-sm text-muted-foreground">GET /api/hello</p>
+          <p className="font-mono text-sm text-muted-foreground">GET /api/hello, served by a Next.js route handler</p>
           <pre className="mt-2 rounded-md border p-3 text-sm bg-muted/50">
             <code>{JSON.stringify(hello, null, 2)}</code>
           </pre>
