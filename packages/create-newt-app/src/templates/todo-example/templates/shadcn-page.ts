@@ -36,7 +36,11 @@ export default function Home() {
         <div>
           <h1 className="text-4xl font-black tracking-tight"><%= projectName %></h1>
           <p className="text-sm text-muted-foreground tracking-widest uppercase">
+<% if (nest !== 'off') { -%>
             Next + Nest = Newt 💜
+<% } else { -%>
+            Next.js + better-auth = Newt 💜
+<% } -%>
           </p>
         </div>
       </div>
@@ -53,6 +57,7 @@ export default function Home() {
         </CardContent>
       </Card>
 
+<% if (nest === 'on') { -%>
       <Card>
         <CardHeader>
           <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
@@ -66,6 +71,35 @@ export default function Home() {
           </pre>
         </CardContent>
       </Card>
+<% } else if (nest === 'di-only') { -%>
+      <Card>
+        <CardHeader>
+          <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+            nest.js
+          </p>
+        </CardHeader>
+        <CardContent>
+          <p className="font-mono text-sm text-muted-foreground">GET /api/hello, served by a Next.js route handler</p>
+          <pre className="mt-2 rounded-md border p-3 text-sm bg-muted/50">
+            <code>{JSON.stringify(hello, null, 2)}</code>
+          </pre>
+        </CardContent>
+      </Card>
+<% } else { -%>
+      <Card>
+        <CardHeader>
+          <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+            next.js
+          </p>
+        </CardHeader>
+        <CardContent>
+          <p className="font-mono text-sm text-muted-foreground">GET /api/hello, served in-process</p>
+          <pre className="mt-2 rounded-md border p-3 text-sm bg-muted/50">
+            <code>{JSON.stringify(hello, null, 2)}</code>
+          </pre>
+        </CardContent>
+      </Card>
+<% } -%>
 
       <Card>
         <CardHeader>
@@ -96,9 +130,11 @@ export default function Home() {
           <li>
             <Link href="https://nextjs.org">Next.js</Link>
           </li>
+<% if (nest !== 'off') { -%>
           <li>
             <Link href="https://nestjs.com">NestJS</Link>
           </li>
+<% } -%>
         </ul>
       </div>
     </main>

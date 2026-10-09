@@ -33,7 +33,11 @@ export default function Home() {
         <div>
           <h1 {...stylex.props(styles.h1)}><%= projectName %></h1>
           <p {...stylex.props(styles.muted, styles.tagline)}>
+<% if (nest !== 'off') { -%>
             Next + Nest = Newt 💜
+<% } else { -%>
+            Next.js + better-auth = Newt 💜
+<% } -%>
           </p>
         </div>
       </div>
@@ -44,6 +48,7 @@ export default function Home() {
         <p {...stylex.props(styles.muted)}>Next.js rendering</p>
       </div>
 
+<% if (nest === 'on') { -%>
       <div {...stylex.props(styles.card)}>
         <p {...stylex.props(styles.eyebrow)}>nest.js</p>
         <p {...stylex.props(styles.mono, styles.muted)}>GET /api/hello</p>
@@ -51,6 +56,23 @@ export default function Home() {
           <code>{JSON.stringify(hello, null, 2)}</code>
         </pre>
       </div>
+<% } else if (nest === 'di-only') { -%>
+      <div {...stylex.props(styles.card)}>
+        <p {...stylex.props(styles.eyebrow)}>nest.js</p>
+        <p {...stylex.props(styles.mono, styles.muted)}>GET /api/hello, served by a Next.js route handler</p>
+        <pre {...stylex.props(styles.pre)}>
+          <code>{JSON.stringify(hello, null, 2)}</code>
+        </pre>
+      </div>
+<% } else { -%>
+      <div {...stylex.props(styles.card)}>
+        <p {...stylex.props(styles.eyebrow)}>next.js</p>
+        <p {...stylex.props(styles.mono, styles.muted)}>GET /api/hello, served in-process</p>
+        <pre {...stylex.props(styles.pre)}>
+          <code>{JSON.stringify(hello, null, 2)}</code>
+        </pre>
+      </div>
+<% } -%>
 
       <div {...stylex.props(styles.card)}>
         <p {...stylex.props(styles.eyebrow, styles.eyebrowSpaced)}>better-auth</p>
@@ -80,9 +102,11 @@ export default function Home() {
           <li>
             <Link href="https://nextjs.org">Next.js</Link>
           </li>
+<% if (nest !== 'off') { -%>
           <li>
             <Link href="https://nestjs.com">NestJS</Link>
           </li>
+<% } -%>
         </ul>
       </div>
     </main>

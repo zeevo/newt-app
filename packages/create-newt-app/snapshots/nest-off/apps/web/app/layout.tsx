@@ -14,7 +14,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "my-app",
-  description: "Next + Nest = Newt",
+  description: "Next.js + better-auth = Newt",
   icons: {
     icon: [
       { url: "/icon0.svg", type: "image/svg+xml" },

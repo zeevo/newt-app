@@ -1,6 +1,21 @@
 {
   "name": "create-newt-app",
   "version": "0.35.4",
+  "description": "Scaffold a pnpm workspace with Next.js, NestJS, Better Auth and Kysely, wired together.",
+  "keywords": [
+    "create-app",
+    "scaffold",
+    "starter",
+    "template",
+    "monorepo",
+    "turborepo",
+    "pnpm",
+    "nextjs",
+    "nestjs",
+    "better-auth",
+    "kysely",
+    "typescript"
+  ],
   "license": "MIT",
   "author": "Shane O'Neill",
   "repository": {
