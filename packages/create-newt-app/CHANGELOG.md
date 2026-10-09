@@ -1,5 +1,13 @@
 # create-newt-app
 
+## 0.35.5
+
+### Patch Changes
+
+- 484c826: Match the landing page to the nest mode: no nest.js card, NestJS link or Next + Nest tagline with `--nest off`
+- 9bdfaad: add an npm description and keywords
+- d86da99: point the readme at --help and the command builder, and mark shadcn/ui optional
+
 ## 0.35.4
 
 ### Patch Changes
