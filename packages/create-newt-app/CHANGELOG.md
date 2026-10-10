@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.36.0
+
+### Minor Changes
+
+- 6c71935: add zod to apps/web and apps/api in every scaffold
+
 ## 0.35.6
 
 ### Patch Changes
