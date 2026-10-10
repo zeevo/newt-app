@@ -9,7 +9,6 @@ AGENTS.md
 CLAUDE.md
 README.md
 apps/web/.gitignore
-apps/web/README.md
 apps/web/app/api/auth/[...all]/route.ts
 apps/web/app/api/hello/route.ts
 apps/web/app/apple-icon.png
@@ -39,7 +38,6 @@ packages/db/package.json
 packages/db/scripts/new-migration.ts
 packages/db/src/index.ts
 packages/db/src/migrate.ts
-packages/db/src/migrations/README.md
 packages/db/src/schema.ts
 packages/db/tsconfig.json
 packages/eslint-config/base.js

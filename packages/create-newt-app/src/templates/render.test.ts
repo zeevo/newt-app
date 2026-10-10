@@ -297,8 +297,8 @@ describe("the e2e suite ships only where it can pass", () => {
       const needed = ["supertest", "@types/supertest", "@nestjs/platform-express"];
       expect(needed.filter((dep) => dep in declared)).toEqual(e2e ? needed : []);
 
-      const readme = files.get("apps/api/README.md") ?? "";
-      expect(readme.includes("pnpm test:e2e")).toBe(e2e);
+      const readme = files.get("README.md") ?? "";
+      expect(readme.includes("pnpm --filter @my-app/api test:e2e")).toBe(e2e);
     },
   );
 });

@@ -12,18 +12,32 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Apps
+## Production
 
-- **web**: Next.js frontend (port 3000)
-- **api**: NestJS backend (port 3001)
+```sh
+docker compose up --build
+```
 
-## Packages
+The `migrate` service applies migrations before the app starts. Open [http://localhost:3000](http://localhost:3000); set `BETTER_AUTH_URL` to the public URL in a real deployment.
 
-- **`@my-app/auth`**: better-auth config
-- **`@my-app/db`**: Kysely client and migrations
-- **`@my-app/ui`**: shared React components
-- **`@my-app/typescript-config`**: shared tsconfig
+## Commands
 
-## Formatting
+- `pnpm dev`: run in development
+- `pnpm build`, `pnpm typecheck`, `pnpm test`: build, type-check, and test every workspace
+- `pnpm lint:check`: lint (fails on errors); `pnpm format:fix`: apply formatting
+- `pnpm db:migrate`: run migrations; `pnpm db:make <name>`: scaffold a new one
+- `pnpm --filter @my-app/api test:e2e`: run the e2e suite
 
-`pnpm format` checks without modifying files and fails if any file is unformatted; `pnpm format:fix` applies formatting.
+## Environment
+
+Set in `.env` (a committed `.env.example` documents each one):
+
+- **BETTER_AUTH_URL**: the public origin of the app
+- **BETTER_AUTH_SECRET**: a random secret used to sign sessions
+- **DATABASE_URL**: your Postgres connection string
+
+## Layout
+
+- **`apps/web`**: Next.js frontend (port 3000)
+- **`apps/api`**: NestJS backend (port 3001)
+- **`packages/`**: `auth`, `db`, `ui`, and shared `typescript-config`
