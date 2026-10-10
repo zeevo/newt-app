@@ -1,13 +1,12 @@
 import type { Module } from "../types";
 import { versions } from "../versions";
 import pluginPackageJson from "./templates/plugin-package-json";
-import pluginReadme from "./templates/plugin-readme";
 
 const plugin = "tools/oxlint/anti-slop";
 
 // Upstream publishes nothing to npm, and oxlint needs the directory marked ESM.
 const antiSlop: Module = {
-  templates: [pluginPackageJson, pluginReadme],
+  templates: [pluginPackageJson],
   staticFiles: [
     { src: "anti-slop/static/LICENSE", filename: `${plugin}/LICENSE` },
     { src: "anti-slop/static/index.ts", filename: `${plugin}/index.ts` },
