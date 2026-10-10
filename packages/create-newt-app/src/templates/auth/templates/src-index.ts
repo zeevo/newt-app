@@ -1,13 +1,9 @@
 export default {
   filename: "packages/auth/src/index.ts",
   template: `import { betterAuth } from "better-auth";
-import { driver } from "@<%= projectName %>/db";
+import { options } from "@<%= projectName %>/auth/options";
 
-export const auth = betterAuth({
-  database: driver,
-  emailAndPassword: { enabled: true },
-  trustedOrigins: [process.env.BETTER_AUTH_URL ?? "http://localhost:3000"],
-});
+export const auth = betterAuth(options);
 
 export type Auth = typeof auth;`,
 };

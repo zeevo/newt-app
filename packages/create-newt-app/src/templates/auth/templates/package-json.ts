@@ -6,12 +6,13 @@ export default {
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./options": "./src/options.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "migrate": "dotenv -e ../../.env -- auth migrate -y --config src/index.ts",
-    "generate": "dotenv -e ../../.env -- auth generate --config src/index.ts"
+    "migrate": "dotenv -e ../../.env -- auth migrate -y --config src/cli.ts",
+    "generate": "dotenv -e ../../.env -- auth generate --config src/cli.ts"
   },
   "dependencies": {
     "@<%= projectName %>/db": "workspace:*",
