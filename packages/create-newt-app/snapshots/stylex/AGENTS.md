@@ -14,3 +14,11 @@ Read `docs/README.md` inside that installed package first, then read the relevan
 
 This block is written and re-added by `turbo` before repository-scoped commands when an AI agent is detected. In the Turborepo source repository, its template is defined in `crates/turborepo-cli/src/cli/agent_guidance.rs`. Removing the managed block while updates are enabled means a later qualifying invocation will add it again. Set `"agentGuidance": false` in the root `turbo.json` or `turbo.jsonc` to opt out; this does not remove an existing block. Keep the block committed with your work to avoid an uncommitted change on the next agent invocation.
 <!-- END:turborepo-agent-rules -->
+
+# Project notes
+
+- **web** runs on port 3000; **api** (NestJS) runs on port 3001.
+- In development, `apps/web` rewrites `/api/*` to `http://localhost:3001/api/*` (see `apps/web/next.config.js`). The backend is a separate process; start both from the repo root with `pnpm dev`.
+- Migrations live in `packages/db`. Run `pnpm db:migrate`; scaffold a new one with `pnpm db:make <name>`.
+- Environment is read from the root `.env` (see `.env.example`): `DATABASE_URL`, `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`.
+- NestJS controllers must validate request bodies with a schema (the api registers a global `StandardSchemaValidationPipe`); keep the todo controller as the reference for how to do it.

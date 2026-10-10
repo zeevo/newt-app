@@ -16,3 +16,11 @@ This block is written and re-added by `turbo` before repository-scoped commands 
 <!-- END:turborepo-agent-rules -->
 
 After making changes, run `pnpm lint:check` and fix all errors.
+
+# Project notes
+
+- **web** runs on port 3000.
+- There is no separate backend process. API routes are Next.js route handlers that resolve NestJS providers in-process.
+- Migrations live in `packages/db`. Run `pnpm db:migrate`; scaffold a new one with `pnpm db:make <name>`.
+- Environment is read from the root `.env` (see `.env.example`): `DATABASE_URL`, `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`.
+- NestJS controllers must validate request bodies with a schema (the api registers a global `StandardSchemaValidationPipe`); keep the todo controller as the reference for how to do it.
