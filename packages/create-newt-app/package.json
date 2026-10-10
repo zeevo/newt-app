@@ -1,6 +1,6 @@
 {
   "name": "create-newt-app",
-  "version": "0.35.5",
+  "version": "0.35.6",
   "description": "Scaffold a pnpm workspace with Next.js, NestJS, Better Auth and Kysely, wired together.",
   "keywords": [
     "create-app",

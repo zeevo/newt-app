@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.35.6
+
+### Patch Changes
+
+- 3eb2ca6: upgrade next to 16.4.0
+
 ## 0.35.5
 
 ### Patch Changes
