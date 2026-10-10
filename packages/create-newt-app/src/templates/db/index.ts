@@ -3,13 +3,12 @@ import tsconfig from "./templates/tsconfig";
 import srcSchema from "./templates/src-schema";
 import srcMigrate from "./templates/src-migrate";
 import scriptsNewMigration from "./templates/scripts-new-migration";
-import migrationsReadme from "./templates/migrations-readme";
 import packageJsonSqlite from "./templates/package-json-sqlite";
 import packageJsonPostgres from "./templates/package-json-postgres";
 import srcIndexSqlite from "./templates/src-index-sqlite";
 import srcIndexPostgres from "./templates/src-index-postgres";
 
-const shared = [tsconfig, srcSchema, srcMigrate, scriptsNewMigration, migrationsReadme];
+const shared = [tsconfig, srcSchema, srcMigrate, scriptsNewMigration];
 
 export const dbSqlite: Module = {
   templates: [...shared, packageJsonSqlite, srcIndexSqlite],

@@ -1,7 +1,6 @@
 import type { Module } from "../types";
 import packageJson from "./templates/package-json";
 import gitignore from "./templates/gitignore";
-import readme from "./templates/readme";
 import nextConfig from "./templates/next-config";
 import postcssConfig from "./templates/postcss-config";
 import tsconfig from "./templates/tsconfig";
@@ -16,7 +15,6 @@ const web: Module = {
   templates: [
     packageJson,
     gitignore,
-    readme,
     nextConfig,
     postcssConfig,
     tsconfig,

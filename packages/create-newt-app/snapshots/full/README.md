@@ -14,44 +14,30 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Production
 
-`docker-compose.yml` builds and runs the app; the `migrate` service applies migrations before the app starts:
-
 ```sh
 docker compose up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Set `BETTER_AUTH_URL` to the public URL in a real deployment.
+The `migrate` service applies migrations before the app starts. Open [http://localhost:3000](http://localhost:3000); set `BETTER_AUTH_URL` to the public URL in a real deployment.
 
 ## Commands
 
-- `pnpm dev` — run the app in development
-- `pnpm build` — build every workspace
-- `pnpm typecheck` — type-check every workspace
-- `pnpm test` — run the unit tests
-- `pnpm lint:check` — lint without fixing (fails on errors)
-- `pnpm format` / `pnpm format:fix` — check / apply formatting
-- `pnpm db:migrate` — run migrations; `pnpm db:make <name>` scaffolds a new one
+- `pnpm dev` — run in development
+- `pnpm build`, `pnpm typecheck`, `pnpm test` — build, type-check, and test every workspace
+- `pnpm lint:check` — lint (fails on errors); `pnpm format:fix` — apply formatting
+- `pnpm db:migrate` — run migrations; `pnpm db:make <name>` — scaffold a new one
+- `pnpm --filter @my-app/api test:e2e` — run the e2e suite
 
 ## Environment
 
-Values live in `.env` (a committed `.env.example` documents each one):
+Set in `.env` (a committed `.env.example` documents each one):
 
 - **BETTER_AUTH_URL** — the public origin of the app
 - **BETTER_AUTH_SECRET** — a random secret used to sign sessions
 - **DATABASE_URL** — your Postgres connection string
 
-## Apps
+## Layout
 
-- **web**: Next.js frontend (port 3000)
-- **api**: NestJS backend (port 3001)
-
-## Packages
-
-- **`@my-app/auth`**: better-auth config
-- **`@my-app/db`**: Kysely client and migrations
-- **`@my-app/ui`**: shared React components
-- **`@my-app/typescript-config`**: shared tsconfig
-
-## Formatting
-
-`pnpm format` checks without modifying files and fails if any file is unformatted; `pnpm format:fix` applies formatting.
+- **`apps/web`** — Next.js frontend (port 3000)
+- **`apps/api`** — NestJS backend (port 3001)
+- **`packages/`** — `auth`, `db`, `ui`, and shared `typescript-config`

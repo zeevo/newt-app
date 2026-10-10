@@ -9,7 +9,6 @@ AGENTS.md
 CLAUDE.md
 Dockerfile
 README.md
-apps/api/README.md
 apps/api/nest-cli.json
 apps/api/package.json
 apps/api/src/app.controller.spec.ts
@@ -28,7 +27,6 @@ apps/api/tsconfig.json
 apps/api/vitest.config.e2e.mts
 apps/api/vitest.config.mts
 apps/web/.gitignore
-apps/web/README.md
 apps/web/app/api/auth/[...all]/route.ts
 apps/web/app/apple-icon.png
 apps/web/app/auth-form.tsx
@@ -60,7 +58,6 @@ packages/db/scripts/new-migration.ts
 packages/db/src/index.ts
 packages/db/src/migrate.ts
 packages/db/src/migrations/0001_create_todos.ts
-packages/db/src/migrations/README.md
 packages/db/src/schema.ts
 packages/db/tsconfig.json
 packages/typescript-config/base.json
@@ -139,7 +136,6 @@ packages/ui/src/styles/globals.css
 packages/ui/tsconfig.json
 pnpm-workspace.yaml
 tools/oxlint/anti-slop/LICENSE
-tools/oxlint/anti-slop/README.md
 tools/oxlint/anti-slop/index.ts
 tools/oxlint/anti-slop/package.json
 tools/oxlint/anti-slop/rules/no-chained-type-assertions.ts

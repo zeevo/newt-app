@@ -9,7 +9,6 @@ AGENTS.md
 CLAUDE.md
 Dockerfile
 README.md
-apps/api/README.md
 apps/api/__mocks__/@thallesp/nestjs-better-auth.js
 apps/api/eslint.config.mjs
 apps/api/jest.config.ts
@@ -25,7 +24,6 @@ apps/api/src/todos/todos.service.ts
 apps/api/tsconfig.build.json
 apps/api/tsconfig.json
 apps/web/.gitignore
-apps/web/README.md
 apps/web/app/api/auth/[...all]/route.ts
 apps/web/app/api/hello/route.ts
 apps/web/app/api/todos/[id]/route.ts
@@ -62,7 +60,6 @@ packages/db/scripts/new-migration.ts
 packages/db/src/index.ts
 packages/db/src/migrate.ts
 packages/db/src/migrations/0001_create_todos.ts
-packages/db/src/migrations/README.md
 packages/db/src/schema.ts
 packages/db/tsconfig.json
 packages/eslint-config/base.js
