@@ -4,12 +4,22 @@ import { FileMigrationProvider, Migrator } from "kysely";
 import { db } from "./index.js";
 
 async function main() {
+  const migrationFolder = path.join(process.cwd(), "src/migrations");
+  try {
+    await fs.access(migrationFolder);
+  } catch {
+    // A fresh project has no migrations yet; nothing to apply.
+    console.log("no migrations yet");
+    await db.destroy();
+    return;
+  }
+
   const migrator = new Migrator({
     db,
     provider: new FileMigrationProvider({
       fs,
       path,
-      migrationFolder: path.join(process.cwd(), "src/migrations"),
+      migrationFolder,
     }),
   });
 
