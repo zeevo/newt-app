@@ -11,6 +11,8 @@ import authForm from "./templates/auth-form";
 import authRoute from "./templates/auth-route";
 import authClient from "./templates/auth-client";
 import manifest from "./templates/manifest";
+import { versions } from "../versions";
+
 const web: Module = {
   templates: [
     packageJson,
@@ -51,6 +53,7 @@ const web: Module = {
       filename: "apps/web/public/web-app-manifest-512x512.png",
     },
   ],
+  packages: [{ package: "zod", module: "apps/web", version: versions.zod }],
 };
 
 export default web;
