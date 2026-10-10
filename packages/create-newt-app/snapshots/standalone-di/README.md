@@ -21,21 +21,21 @@ The `migrate` service applies migrations before the app starts. Open [http://loc
 
 ## Commands
 
-- `pnpm dev` — run in development
-- `pnpm build`, `pnpm typecheck`, `pnpm test` — build, type-check, and test every workspace
-- `pnpm lint:check` — lint (fails on errors); `pnpm format:fix` — apply formatting
-- `pnpm db:migrate` — run migrations; `pnpm db:make <name>` — scaffold a new one
+- `pnpm dev`: run in development
+- `pnpm build`, `pnpm typecheck`, `pnpm test`: build, type-check, and test every workspace
+- `pnpm lint:check`: lint (fails on errors); `pnpm format:fix`: apply formatting
+- `pnpm db:migrate`: run migrations; `pnpm db:make <name>`: scaffold a new one
 
 ## Environment
 
 Set in `.env` (a committed `.env.example` documents each one):
 
-- **BETTER_AUTH_URL** — the public origin of the app
-- **BETTER_AUTH_SECRET** — a random secret used to sign sessions
-- **DATABASE_URL** — not set for SQLite (the app uses `dev.db` at the repo root); set it to a Postgres URL to use Postgres
+- **BETTER_AUTH_URL**: the public origin of the app
+- **BETTER_AUTH_SECRET**: a random secret used to sign sessions
+- **DATABASE_URL**: not set for SQLite (the app uses `dev.db` at the repo root); set it to a Postgres URL to use Postgres
 
 ## Layout
 
-- **`apps/web`** — Next.js frontend (port 3000)
-- **`apps/api`** — NestJS providers, resolved in-process by the web app
-- **`packages/`** — `auth`, `db`, `ui`, `eslint-config`, and shared `typescript-config`
+- **`apps/web`**: Next.js frontend (port 3000)
+- **`apps/api`**: NestJS providers, resolved in-process by the web app
+- **`packages/`**: `auth`, `db`, `ui`, `eslint-config`, and shared `typescript-config`

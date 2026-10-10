@@ -10,7 +10,6 @@ async function main() {
   try {
     await fs.access(migrationFolder);
   } catch {
-    // A fresh project has no migrations yet; nothing to apply.
     console.log("no migrations yet");
     await db.destroy();
     return;
