@@ -66,10 +66,9 @@ const TEX_SIZE = 256;
 // chip outlines are drawn at the same 1px as every border in the app
 const BORDER_PX = 1;
 
-// the floor: a 19px dot lattice in --border, faded out from under the headline,
-// drawn under the chips in the same scene so it can react to them. Chips shove
-// nearby lattice points outward, PUSH as a fraction of chip radius, out to WAKE
-// radii.
+// the floor: a 19px dot lattice in --border, drawn under the chips in the same
+// scene so it can react to them. Chips shove nearby lattice points outward, PUSH
+// as a fraction of chip radius, out to WAKE radii.
 const FLOOR_SPACING = 19;
 const FLOOR_DOT = 0.75;
 // smallest edge ramp the dots are allowed, in view units. fwidth still widens it
@@ -78,11 +77,6 @@ const FLOOR_DOT = 0.75;
 const FLOOR_DOT_SOFT = 0.25;
 const FLOOR_PUSH = 0.28;
 const FLOOR_WAKE = 1.5;
-
-// the fade ellipse as fractions of the visible rect, and the distance across it
-// at which the lattice reaches full strength
-const FLOOR_FADE_EDGE = 0.8;
-const FLOOR_FADE_MIN = 0.15;
 
 type Star = {
   x: number;
@@ -198,23 +192,12 @@ function floorMaterial(chipCount: number) {
         float mark = 1.0 - smoothstep(
           ${FLOOR_DOT.toFixed(2)} - w, ${FLOOR_DOT.toFixed(2)} + w, d);
 
-        // fade the lattice out from under the headline, matching the CSS
-        // radial-gradient it is modelled on: a linear ramp across an ellipse
-        // 70% x 55% of the visible rect. Measured from the undisplaced position,
-        // so a passing chip cannot drag the fade around with it.
-        vec2 span = uViewMax - uViewMin;
-        vec2 centre = uViewMin + span * vec2(0.5, 0.35);
-        float t = length((vView - centre) / (span * vec2(0.35, 0.28)));
-        float fade = mix(
-          ${FLOOR_FADE_MIN.toFixed(2)}, 1.0,
-          clamp(t / ${FLOOR_FADE_EDGE.toFixed(1)}, 0.0, 1.0));
-
         // the canvas bleeds past the walls, so clip to inside them by hand
         vec2 q = abs(vView - (uViewMin + uViewMax) * 0.5)
           - ((uViewMax - uViewMin) * 0.5 - uRadius);
         float inside = step(length(max(q, 0.0)) + min(max(q.x, q.y), 0.0), uRadius);
 
-        float a = mark * fade * inside;
+        float a = mark * inside;
         if (a <= 0.002) discard;
         gl_FragColor = vec4(uColor, a);
         // uColor is in the linear working space, like every other material's;
