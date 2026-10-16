@@ -39,4 +39,4 @@ Set in `.env` (a committed `.env.example` documents each one):
 
 - **`apps/web`**: Next.js frontend (port 3000)
 - **`apps/api`**: NestJS providers, resolved in-process by the web app
-- **`packages/`**: `auth`, `db`, `ui`, `eslint-config`, and shared `typescript-config`
+- **`packages/`**: `auth`, `db`, `ui`, and shared `typescript-config`

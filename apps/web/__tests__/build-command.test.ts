@@ -87,7 +87,9 @@ describe("buildCommand", () => {
   it("only offers anti-slop with the linter that can run it", () => {
     const invalid = reachable
       .map(buildCommand)
-      .filter((command) => command.includes("--extras anti-slop") && !command.includes("oxc"));
+      .filter(
+        (command) => command.includes("--extras anti-slop") && command.includes("--linter eslint"),
+      );
 
     expect(invalid).toEqual([]);
   });
@@ -111,7 +113,7 @@ describe("buildCommand", () => {
         stylex: false,
         testing: "jest",
         database: "sqlite",
-        linter: "eslint",
+        linter: "oxc",
         deployment: "none",
         nest: "on",
         todoExample: true,

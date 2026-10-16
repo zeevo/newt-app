@@ -37,4 +37,4 @@ Set in `.env` (a committed `.env.example` documents each one):
 ## Layout
 
 - **`apps/web`**: Next.js frontend (port 3000)
-- **`packages/`**: `auth`, `db`, `ui`, `eslint-config`, and shared `typescript-config`
+- **`packages/`**: `auth`, `db`, `ui`, and shared `typescript-config`

@@ -132,10 +132,10 @@ export async function doInit(options: Options) {
         p.select<Linter>({
           message: "Linter and formatter?",
           options: [
-            { value: "eslint", label: "ESLint + Prettier" },
             { value: "oxc", label: "oxlint + oxfmt" },
+            { value: "eslint", label: "ESLint + Prettier" },
           ],
-          initialValue: "eslint",
+          initialValue: "oxc",
         }),
       extras: ({ results }) =>
         results.linter === "oxc"
@@ -214,7 +214,7 @@ export async function doInit(options: Options) {
     const database: Database = options.nonInteractive
       ? options.database
       : (answers.database ?? "sqlite");
-    const linter: Linter = options.nonInteractive ? options.linter : (answers.linter ?? "eslint");
+    const linter: Linter = options.nonInteractive ? options.linter : (answers.linter ?? "oxc");
     const deployment: Deployment = options.nonInteractive
       ? options.deployment
       : (answers.deployment ?? "none");
@@ -374,7 +374,7 @@ program
   .option("--stylex", "Use StyleX instead of Tailwind", false)
   .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
   .option("--database <database>", "Database: sqlite or postgres", "sqlite")
-  .option("--linter <linter>", "Linter: eslint or oxc", "eslint")
+  .option("--linter <linter>", "Linter: oxc or eslint", "oxc")
   .option("--deployment <strategy>", "Deployment: none, standalone, or spa", "none")
   .option("--nest <mode>", "NestJS: on, off, or di-only", "on")
   .option("--include-example", "Include the todo example", false)

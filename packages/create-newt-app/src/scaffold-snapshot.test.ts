@@ -37,8 +37,6 @@ const COMBOS = [
       "vitest",
       "--database",
       "postgres",
-      "--linter",
-      "oxc",
       "--extras",
       "anti-slop",
       "--deployment",
@@ -50,7 +48,10 @@ const COMBOS = [
     name: "standalone-di",
     flags: ["--nest", "di-only", "--deployment", "standalone", "--include-example"],
   },
-  { name: "spa", flags: ["--deployment", "spa", "--shadcn", "--include-example"] },
+  {
+    name: "spa",
+    flags: ["--deployment", "spa", "--shadcn", "--include-example", "--linter", "eslint"],
+  },
   // The only combo reaching the templates gated on no todo example: the di-only
   // app module and api index, the non-standalone di next config, and the
   // shadcn home page.
