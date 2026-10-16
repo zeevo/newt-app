@@ -17,6 +17,8 @@
 npm create newt-app
 ```
 
+<img src="https://raw.githubusercontent.com/zeevo/newt-app/main/.github/assets/demo.gif" alt="npm create newt-app walking through its prompts" width="700">
+
 Next.js and NestJS in one production-grade monorepo: a real backend, auth, and a database, curated so you're not deleting half of it on day one.
 
 ## Options
