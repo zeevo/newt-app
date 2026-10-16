@@ -369,6 +369,7 @@ program
   .argument("[name]")
   .option("-ni, --no-install", "Skip pnpm install", true)
   .option("-ng, --no-git", "Skip git initialization", true)
+  .option("-y, --yes", "Skip prompts and use the defaults", false)
   .option("--shadcn", "Include shadcn/ui", false)
   .option("--stylex", "Use StyleX instead of Tailwind", false)
   .option("--testing <framework>", "Testing framework: vitest or jest", "jest")
@@ -384,6 +385,7 @@ program
       options: {
         install: boolean;
         git: boolean;
+        yes: boolean;
         shadcn: boolean;
         stylex: boolean;
         testing: string;
@@ -415,7 +417,7 @@ program
         .filter(([option]) => command.getOptionValueSource(option) === "cli")
         .map(([, flag]) => flag);
 
-      const nonInteractive = explicitFlags.length > 0;
+      const nonInteractive = options.yes || explicitFlags.length > 0;
 
       const extras = options.extras
         .split(",")
