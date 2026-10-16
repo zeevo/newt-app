@@ -3,8 +3,8 @@
 .env.example
 .gitignore
 .npmrc
-.prettierignore
-.prettierrc
+.oxfmtrc.json
+.oxlintrc.json
 AGENTS.md
 CLAUDE.md
 Dockerfile
@@ -23,7 +23,6 @@ apps/web/app/layout.tsx
 apps/web/app/manifest.json
 apps/web/app/page.tsx
 apps/web/app/providers.tsx
-apps/web/eslint.config.js
 apps/web/lib/auth-client.ts
 apps/web/next.config.js
 apps/web/package.json
@@ -42,15 +41,10 @@ packages/db/src/index.ts
 packages/db/src/migrate.ts
 packages/db/src/schema.ts
 packages/db/tsconfig.json
-packages/eslint-config/base.js
-packages/eslint-config/next.js
-packages/eslint-config/package.json
-packages/eslint-config/react-internal.js
 packages/typescript-config/base.json
 packages/typescript-config/nextjs.json
 packages/typescript-config/package.json
 packages/typescript-config/react-library.json
-packages/ui/eslint.config.mjs
 packages/ui/package.json
 packages/ui/postcss.config.mjs
 packages/ui/src/button.tsx

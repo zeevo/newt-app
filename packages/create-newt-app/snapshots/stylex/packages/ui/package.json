@@ -8,17 +8,13 @@
     "./*": "./src/*.tsx"
   },
   "scripts": {
-    "lint": "eslint . --fix",
-    "lint:check": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@my-app/eslint-config": "workspace:*",
     "@my-app/typescript-config": "workspace:*",
     "@types/node": "^24.13.3",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "eslint": "^9.39.1",
     "typescript": "6.0.2"
   },
   "peerDependencies": {

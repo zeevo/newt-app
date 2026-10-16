@@ -76,7 +76,7 @@ export function buildCommand(c: Config): string {
   if (c.stylex) flags.push("--stylex");
   if (c.testing !== "jest" && testingAvailable(c.nest)) flags.push("--testing vitest");
   if (c.database !== "sqlite") flags.push("--database postgres");
-  if (c.linter !== "eslint") flags.push("--linter oxc");
+  if (c.linter !== "oxc") flags.push("--linter eslint");
   if (c.deployment !== "none") flags.push(`--deployment ${c.deployment}`);
   if (c.nest !== "on") flags.push(`--nest ${c.nest}`);
   if (c.todoExample) flags.push("--include-example");

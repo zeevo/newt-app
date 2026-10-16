@@ -7,16 +7,18 @@
     "db:make": "pnpm --filter @my-app/db run make",
     "db:migrate": "turbo run migrate",
     "dev": "turbo run dev",
-    "format": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
-    "format:fix": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
-    "lint": "turbo run lint",
-    "lint:check": "turbo run lint:check",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt",
+    "lint": "oxlint --fix",
+    "lint:check": "oxlint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
+    "@shadcn/lint": "^0.1.0",
     "@types/node": "^24.13.3",
-    "prettier": "^3.7.4",
+    "oxfmt": "^0.59.0",
+    "oxlint": "^1.80.0",
     "turbo": "^2.8.16",
     "typescript": "6.0.2"
   },
