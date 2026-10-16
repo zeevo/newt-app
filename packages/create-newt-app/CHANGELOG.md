@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.36.1
+
+### Patch Changes
+
+- 554ea44: Accept `-y`/`--yes` to skip the prompts and use the defaults.
+- b005ec1: Show a recording of the CLI in the README.
+
 ## 0.36.0
 
 ### Minor Changes
