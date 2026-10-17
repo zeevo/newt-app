@@ -21,14 +21,3 @@ npm create newt-app
 
 Next.js and NestJS in one production-grade monorepo: a real backend, auth, and a database, curated so you're not deleting half of it on day one.
 
-## Options
-
-Run `npm create newt-app -- --help` for every flag, or build a command at [newt-app.com](https://newt-app.com).
-
-## What's inside
-
-- **Next.js** frontend and **NestJS** backend, with `/api` proxied server-side to Nest
-- **Better Auth** shared across both apps
-- **Kysely** persistence, on SQLite or Postgres
-- Optional **shadcn/ui** component library
-- **Turborepo** + **pnpm** workspaces
