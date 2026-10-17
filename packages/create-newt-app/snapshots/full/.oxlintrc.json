@@ -28,7 +28,7 @@
   },
   "overrides": [
     {
-      "files": ["packages/ui/src/components/**"],
+      "files": ["packages/ui/src/components/**", "packages/ui/src/lib/highlighter.tsx"],
       "rules": {
         "anti-slop/no-chained-type-assertions": "off",
         "anti-slop/no-conditional-empty-object-spread": "off",

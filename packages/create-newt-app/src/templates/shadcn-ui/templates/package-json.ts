@@ -8,6 +8,7 @@ export default {
   "exports": {
     "./globals.css": "./src/styles/globals.css",
     "./postcss.config": "./postcss.config.mjs",
+    "./lib/highlighter": "./src/lib/highlighter.tsx",
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts",
@@ -31,6 +32,7 @@ export default {
     "react-day-picker": "<%= versions["react-day-picker"] %>",
     "react-resizable-panels": "<%= versions["react-resizable-panels"] %>",
     "recharts": "<%= versions.recharts %>",
+    "shiki": "<%= versions.shiki %>",
     "sonner": "<%= versions.sonner %>",
     "tw-animate-css": "<%= versions["tw-animate-css"] %>"
   },

@@ -75,6 +75,12 @@ import bubble from "./templates/bubble";
 import marker from "./templates/marker";
 import message from "./templates/message";
 import messageScroller from "./templates/message-scroller";
+import codeBlock from "./templates/code-block";
+import questionnaire from "./templates/questionnaire";
+import trace from "./templates/trace";
+import toast from "./templates/toast";
+import useHighlightedCode from "./templates/use-highlighted-code";
+import highlighter from "./templates/highlighter";
 
 const shadcnUi: Module = {
   templates: [
@@ -151,6 +157,12 @@ const shadcnUi: Module = {
     marker,
     message,
     messageScroller,
+    codeBlock,
+    questionnaire,
+    trace,
+    toast,
+    useHighlightedCode,
+    highlighter,
     componentsJson,
     webComponentsJson,
   ],
