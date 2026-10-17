@@ -88,6 +88,7 @@ packages/ui/src/components/card.tsx
 packages/ui/src/components/carousel.tsx
 packages/ui/src/components/chart.tsx
 packages/ui/src/components/checkbox.tsx
+packages/ui/src/components/code-block.tsx
 packages/ui/src/components/collapsible.tsx
 packages/ui/src/components/combobox.tsx
 packages/ui/src/components/command.tsx
@@ -117,6 +118,7 @@ packages/ui/src/components/navigation-menu.tsx
 packages/ui/src/components/pagination.tsx
 packages/ui/src/components/popover.tsx
 packages/ui/src/components/progress.tsx
+packages/ui/src/components/questionnaire.tsx
 packages/ui/src/components/radio-group.tsx
 packages/ui/src/components/resizable.tsx
 packages/ui/src/components/scroll-area.tsx
@@ -132,10 +134,14 @@ packages/ui/src/components/switch.tsx
 packages/ui/src/components/table.tsx
 packages/ui/src/components/tabs.tsx
 packages/ui/src/components/textarea.tsx
+packages/ui/src/components/toast.tsx
 packages/ui/src/components/toggle-group.tsx
 packages/ui/src/components/toggle.tsx
 packages/ui/src/components/tooltip.tsx
+packages/ui/src/components/trace.tsx
+packages/ui/src/hooks/use-highlighted-code.ts
 packages/ui/src/hooks/use-mobile.ts
+packages/ui/src/lib/highlighter.tsx
 packages/ui/src/lib/utils.ts
 packages/ui/src/styles/globals.css
 packages/ui/tsconfig.json
