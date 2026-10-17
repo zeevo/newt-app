@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.38.1
+
+### Patch Changes
+
+- 230e19f: Stop the Better Auth schema-mismatch error on the first `pnpm dev`. The `auth` CLI builds the auth instance to read its config, so it validated the schema against the empty database right before migrating it. The `migrate` and `generate` scripts now set `AUTH_CLI=1`, which turns validation off for the CLI only.
+
 ## 0.38.0
 
 ### Minor Changes
