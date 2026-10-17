@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.37.0
+
+### Minor Changes
+
+- 0eda616: Make oxlint + oxfmt the default linter and formatter. Pass `--linter eslint` for ESLint + Prettier.
+
 ## 0.36.1
 
 ### Patch Changes
