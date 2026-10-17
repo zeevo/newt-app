@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.38.0
+
+### Minor Changes
+
+- f5c5824: Add the shadcn code-block, questionnaire, trace and toast components, with the use-highlighted-code hook and its shiki highlighter
+
 ## 0.37.0
 
 ### Minor Changes
