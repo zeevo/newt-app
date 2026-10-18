@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CopyButton } from "@/components/copy-button";
-import LogoRain from "@/components/logo-rain";
 import { TerminalCast } from "@/components/terminal-cast";
 import { siteConfig } from "@/lib/config";
 import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
@@ -20,9 +19,6 @@ export default function Home() {
     <>
       <section className="relative flex flex-1 items-center overflow-hidden">
         <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
-        <div aria-hidden className="pointer-events-none absolute inset-0 opacity-50">
-          <LogoRain border={false} chipScale={0.55} />
-        </div>
         <div className="relative grid w-full items-center gap-10 px-4 py-14 lg:grid-cols-[1fr_1.05fr] lg:gap-12 lg:px-8 lg:py-20">
           <div>
             <p className="flex items-center gap-3.5 text-xs tracking-[0.3em] text-primary uppercase">
