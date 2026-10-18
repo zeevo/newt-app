@@ -246,6 +246,24 @@ export function validateExampleCombo(todoExample: boolean, nest: string): Valida
   return { valid: true };
 }
 
+// Only an explicitly passed --testing is rejected: the interactive path skips
+// the prompt when nest is off, and the flag default would otherwise condemn
+// every plain --nest off run.
+export function validateTestingCombo(testingExplicit: boolean, nest: string): ValidationResult {
+  if (testingExplicit && nest === "off") {
+    return {
+      valid: false,
+      error:
+        "--testing cannot be combined with --nest off.\n" +
+        "Every testing config, script and dev dependency lands in apps/api, which --nest off\n" +
+        "never scaffolds, so the choice would be silently ignored. Drop --testing, or pick\n" +
+        "--nest on or --nest di-only to get a test setup.",
+    };
+  }
+
+  return { valid: true };
+}
+
 const TOOL_HINTS = {
   pnpm: "Install it with `npm install -g pnpm`, or run `corepack enable`.",
   git: "Install it from https://git-scm.com/downloads, or pass --no-git.",

@@ -15,6 +15,7 @@ import {
   validateFlagValue,
   validateNodeVersion,
   validateProjectName,
+  validateTestingCombo,
 } from "./utils";
 import type { TemplateData } from "./types";
 import { versions } from "./templates/versions";
@@ -181,6 +182,25 @@ describe("validateExampleCombo", () => {
 
   it("accepts nest off without the example", () => {
     expect(validateExampleCombo(false, "off").valid).toBe(true);
+  });
+});
+
+describe("validateTestingCombo", () => {
+  it("rejects an explicit --testing with nest off", () => {
+    const result = validateTestingCombo(true, "off");
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("--testing cannot be combined with --nest off.");
+  });
+
+  it("accepts an explicit --testing with the nest modes that scaffold apps/api", () => {
+    expect(["on", "di-only"].map((nest) => validateTestingCombo(true, nest).valid)).toEqual([
+      true,
+      true,
+    ]);
+  });
+
+  it("accepts nest off when --testing was not passed", () => {
+    expect(validateTestingCombo(false, "off").valid).toBe(true);
   });
 });
 
