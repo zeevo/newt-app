@@ -9,7 +9,7 @@ const BAND = "bg-[oklch(0.19_0.03_262)] text-[oklch(0.95_0.012_85)]";
 export function SiteFooter() {
   return (
     <footer className={`${BAND} border-t`}>
-      <div className="container flex flex-col gap-5 py-7 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-5 px-4 py-7 sm:flex-row sm:items-center sm:justify-between lg:px-8">
         <div className="flex items-center gap-2.5">
           <Icons.logo className="size-5 opacity-90" />
           <span className="text-base font-semibold tracking-wide">{siteConfig.title}</span>

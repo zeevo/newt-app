@@ -15,7 +15,7 @@ export default function BuilderPage() {
   return (
     <div className="relative flex min-h-[calc(100svh-var(--header-height))] flex-1 flex-col overflow-hidden lg:h-[calc(100svh-var(--header-height))] lg:flex-none">
       <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
-      <div className="container flex min-h-0 flex-1 flex-col py-6">
+      <div className="flex min-h-0 flex-1 flex-col px-4 py-6 lg:px-8">
         {/* nuqs reads useSearchParams, which needs a boundary on a statically
             rendered page */}
         <Suspense>
