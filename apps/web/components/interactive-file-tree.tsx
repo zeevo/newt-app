@@ -350,7 +350,11 @@ export function InteractiveFileTree({
                 <DropdownMenu>
                   <DropdownMenuTrigger
                     render={
-                      <Button variant="outline" size="sm" className="min-w-32 rounded-none font-mono text-xs" />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="min-w-32 rounded-none font-mono text-xs"
+                      />
                     }
                   >
                     <span className="max-w-48 truncate">
