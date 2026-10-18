@@ -9,7 +9,7 @@ import { ModeToggle } from "@/app/_components/mode-toggle";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="container">
+      <div className="px-4 lg:px-8">
         <div className="flex h-(--header-height) items-center gap-2 **:data-[slot=separator]:!h-4">
           <MobileNav items={siteConfig.navItems} className="flex lg:hidden" />
           <Button
@@ -46,6 +46,15 @@ export function SiteHeader() {
               <span className="sr-only">npm</span>
             </Button>
             <ModeToggle />
+            <Button
+              size="sm"
+              variant="outline"
+              className="ml-1 h-8 rounded-none px-3.5 text-xs tracking-[0.07em] uppercase"
+              nativeButton={false}
+              render={<Link href="/builder" />}
+            >
+              Builder
+            </Button>
           </div>
         </div>
       </div>
