@@ -29,8 +29,14 @@ const SPEED_LARGE = 0.6;
 const RESTITUTION = 0.85;
 
 // speed slowly renormalizes toward each chip's cruise speed (direction kept),
-// so the tank neither stalls out nor stays frantic after bounces
+// so the tank neither stalls out after bounces nor stays frantic after kicks
 const CRUISE_RELAX = 0.4;
+
+// clicking a chip shoots it off in a random direction; CRUISE_RELAX brings it
+// back to cruise while it keeps ricocheting
+const KICK_MIN = 600;
+const KICK_MAX = 1200;
+const KICK_SPIN = 4;
 
 // spin: tangential slip at contacts (chip-chip and chip-wall) rubs chips into
 // rotation, with disk inertia (I = m r^2 / 2), slow decay, and a sanity cap
@@ -580,9 +586,34 @@ export default function LogoRain({
     const reduceMotion =
       window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // map a pointer event through the camera bounds into view (svg) coords and
+    // find the chip under it, if any
+    const chipAt = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const u = (e.clientX - rect.left) / (rect.width || 1);
+      const v = (e.clientY - rect.top) / (rect.height || 1);
+      const x = camera.left + u * (camera.right - camera.left);
+      const y = -(camera.top + v * (camera.bottom - camera.top));
+      return stars.find((s) => Math.hypot(x - s.x, y - s.y) < s.size);
+    };
+    const onPointerMove = (e: PointerEvent) => {
+      canvas.style.cursor = chipAt(e) ? "pointer" : "";
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      const s = chipAt(e);
+      if (!s) return;
+      const angle = Math.random() * Math.PI * 2;
+      const kick = KICK_MIN + Math.random() * (KICK_MAX - KICK_MIN);
+      s.vx = Math.cos(angle) * kick;
+      s.vy = Math.sin(angle) * kick;
+      s.angVel += (Math.random() * 2 - 1) * KICK_SPIN;
+    };
+
     if (reduceMotion) {
       render();
     } else {
+      canvas.addEventListener("pointermove", onPointerMove);
+      canvas.addEventListener("pointerdown", onPointerDown);
       let last = performance.now();
       renderer.setAnimationLoop((now) => {
         // a long stall (a background tab) would fling chips deep into the walls
@@ -711,6 +742,8 @@ export default function LogoRain({
     return () => {
       disposed = true;
       renderer.setAnimationLoop(null);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerdown", onPointerDown);
       themeObserver.disconnect();
       resizeObserver.disconnect();
       circleGeometry.dispose();
@@ -732,7 +765,7 @@ export default function LogoRain({
         ref={canvasRef}
         aria-label="Floating logos visualization"
         role="img"
-        className="pointer-events-none absolute block"
+        className="pointer-events-auto absolute block"
         // a positioned canvas takes its drawing buffer's size unless told otherwise
         style={{
           inset: -BLEED_PX,

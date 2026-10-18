@@ -7,13 +7,6 @@ import { version as cliVersion } from "../../../packages/create-newt-app/package
 
 const INSTALL = "npm create newt-app";
 
-const FLAGS = [
-  { flag: "--database", values: "sqlite · postgres" },
-  { flag: "--linter", values: "oxc · eslint" },
-  { flag: "--testing", values: "jest · vitest" },
-  { flag: "--deployment", values: "none · standalone · spa" },
-];
-
 export default function Home() {
   return (
     <>
@@ -21,11 +14,7 @@ export default function Home() {
         <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
         <div className="relative grid w-full items-center gap-10 px-4 py-14 lg:grid-cols-[1fr_1.05fr] lg:gap-12 lg:px-8 lg:py-20">
           <div>
-            <p className="flex items-center gap-3.5 text-xs tracking-[0.3em] text-primary uppercase">
-              <span aria-hidden className="h-px w-10 bg-primary" />
-              create-newt-app
-            </p>
-            <h1 className="mt-6 text-4xl leading-[1.02] font-bold tracking-tight text-balance sm:text-5xl xl:text-6xl">
+            <h1 className="text-4xl leading-[1.02] font-bold tracking-tight text-balance sm:text-5xl xl:text-6xl">
               The TypeScript project scaffolder for{" "}
               <span className="inline-flex items-center -space-x-1.5 align-middle sm:-space-x-2">
                 <span
@@ -126,18 +115,6 @@ export default function Home() {
           <TerminalCast className="min-w-0 rounded-none" />
         </div>
       </section>
-      <div className="grid grid-cols-2 border-t lg:grid-cols-4">
-        {FLAGS.map(({ flag, values }) => (
-          <Link
-            key={flag}
-            href="/builder"
-            className="border-b px-4 py-6 transition-colors odd:border-r hover:bg-primary/5 lg:border-r lg:border-b-0 lg:px-8 lg:last:border-r-0"
-          >
-            <span className="block text-base font-bold tracking-tight sm:text-xl">{values}</span>
-            <span className="mt-2 block text-xs tracking-wide text-muted-foreground">{flag}</span>
-          </Link>
-        ))}
-      </div>
     </>
   );
 }
