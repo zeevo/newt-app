@@ -24,7 +24,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 - `pnpm dev`: run in development
 - `pnpm build`, `pnpm typecheck`, `pnpm test`: build, type-check, and test every workspace
-- `pnpm lint:check`: lint (fails on errors); `pnpm format:fix`: apply formatting
+- `pnpm lint`: lint (fails on errors); `pnpm lint:fix`: fix what it can; `pnpm format:fix`: apply formatting
 - `pnpm db:migrate`: run migrations; `pnpm db:make <name>`: scaffold a new one
 
 ## Environment

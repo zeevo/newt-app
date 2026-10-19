@@ -6,8 +6,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev --port 3000",
-    "lint": "eslint --fix && next typegen && tsc --noEmit",
-    "lint:check": "eslint --max-warnings 0 && next typegen && tsc --noEmit",
+    "lint": "eslint --max-warnings 0 && next typegen && tsc --noEmit",
+    "lint:fix": "eslint --fix && next typegen && tsc --noEmit",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit"
   },
