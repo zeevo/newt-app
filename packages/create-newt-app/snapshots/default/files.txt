@@ -9,11 +9,13 @@ AGENTS.md
 CLAUDE.md
 README.md
 apps/api/__mocks__/@thallesp/nestjs-better-auth.js
+apps/api/__mocks__/better-auth.js
 apps/api/jest.config.ts
 apps/api/nest-cli.json
 apps/api/package.json
 apps/api/src/app.controller.spec.ts
 apps/api/src/app.controller.ts
+apps/api/src/app.module.spec.ts
 apps/api/src/app.module.ts
 apps/api/src/app.service.spec.ts
 apps/api/src/app.service.ts
