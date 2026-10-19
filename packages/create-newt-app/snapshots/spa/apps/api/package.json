@@ -5,15 +5,15 @@
   "scripts": {
     "build": "nest build",
     "dev": "nest start --watch",
-    "lint": "eslint \"src/**/*.ts\" --fix",
-    "lint:check": "eslint \"src/**/*.ts\" --max-warnings 0",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\" --fix",
+    "lint:check": "eslint \"src/**/*.ts\" \"test/**/*.ts\" --max-warnings 0",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:cov": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:debug": "node --inspect-brk --experimental-vm-modules node_modules/.bin/jest --runInBand",
-    "test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json",
+    "test:e2e": "pnpm --filter @my-app/auth migrate && pnpm --filter @my-app/db migrate && NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
