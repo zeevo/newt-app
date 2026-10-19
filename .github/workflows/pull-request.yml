@@ -188,7 +188,7 @@ jobs:
           fi
 
       - name: Lint scaffolded app
-        run: pnpm lint:check
+        run: pnpm lint
         working-directory: ${{ runner.temp }}/test-app
 
       - name: Test scaffolded app
@@ -199,7 +199,7 @@ jobs:
         run: pnpm build
         working-directory: ${{ runner.temp }}/test-app
 
-      # An --linter oxc app has a bare oxlint for lint:check, so without this
+      # An --linter oxc app has a bare oxlint for lint, so without this
       # nothing type checks it. Runs after the build because typecheck
       # dependsOn ^build: those upstream builds are cache hits here instead of
       # a second compile.
