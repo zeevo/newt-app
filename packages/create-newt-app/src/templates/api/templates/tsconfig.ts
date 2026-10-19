@@ -17,13 +17,13 @@ export default {
     "target": "ES2023",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,
     "types": [<% if (testing === 'jest') { %>"jest", <% } %><% if (testing === 'vitest') { %>"vitest/globals", <% } %>"node"]
   },
-  "exclude": ["vitest.config.mts", "vitest.config.e2e.mts", "node_modules", "dist"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules", "dist"]
 }`,
 };
