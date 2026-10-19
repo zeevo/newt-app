@@ -14,6 +14,7 @@ import {
   validateExampleCombo,
   validateExtrasCombo,
   validateStylingCombo,
+  validateTestingCombo,
   validateFlagValue,
   validateNodeVersion,
   validateProjectName,
@@ -239,6 +240,11 @@ export async function doInit(options: Options) {
     const exampleCombo = validateExampleCombo(todoExample, nest);
     if (!exampleCombo.valid) {
       throw new Error(exampleCombo.error);
+    }
+
+    const testingCombo = validateTestingCombo(options.explicitFlags.includes("--testing"), nest);
+    if (!testingCombo.valid) {
+      throw new Error(testingCombo.error);
     }
 
     const extrasCombo = validateExtrasCombo(extras, linter);
