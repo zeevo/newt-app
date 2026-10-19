@@ -5,7 +5,7 @@ export interface TodoTable {
   userId: string;
   title: string;
   done: Generated<number>;
-  createdAt: Generated<string>;
+  createdAt: string;
 }
 
 // Wire shape of a todo: what the api serves and the web app consumes.

@@ -1,4 +1,4 @@
-import { Kysely, sql } from "kysely";
+import { Kysely } from "kysely";
 
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
@@ -7,9 +7,9 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("userId", "text", (c) => c.notNull())
     .addColumn("title", "text", (c) => c.notNull())
     .addColumn("done", "integer", (c) => c.notNull().defaultTo(0))
-    .addColumn("createdAt", "text", (c) =>
-      c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
-    )
+    // App-set ISO 8601, like the auth tables; a CURRENT_TIMESTAMP default
+    // would store "YYYY-MM-DD HH:MM:SS" and sort inconsistently with it.
+    .addColumn("createdAt", "text", (c) => c.notNull())
     .execute();
 }
 

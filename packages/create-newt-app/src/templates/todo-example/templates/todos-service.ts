@@ -20,7 +20,8 @@ export class TodosService {
 
   async create(userId: string, title: string): Promise<Todo> {
     const id = randomUUID();
-    await db.insertInto('todo').values({ id, userId, title }).execute();
+    const createdAt = new Date().toISOString();
+    await db.insertInto('todo').values({ id, userId, title, createdAt }).execute();
     const row = await db
       .selectFrom('todo')
       .select(columns)
