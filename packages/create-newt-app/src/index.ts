@@ -202,6 +202,17 @@ export async function doInit(options: Options) {
       throw new Error(preflight.error);
     }
 
+    // A piped stdin cannot answer the prompts: clack would read EOF and
+    // cancel with exit 0, leaving no scaffold and no explanation. Fail with
+    // the ways to skip the prompts instead.
+    if (!options.nonInteractive && !process.stdin.isTTY) {
+      throw new Error(
+        "stdin is not a TTY, so the prompts cannot be answered.\n" +
+          "Pass --yes to accept the defaults, or any config flag\n" +
+          "(--testing, --database, --linter, --deployment, --nest, ...) to skip them.",
+      );
+    }
+
     const answers: Answers = await p.group(groupOpts, {
       onCancel: () => {
         console.log("Exiting.");
