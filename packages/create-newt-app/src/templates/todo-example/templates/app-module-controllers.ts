@@ -13,9 +13,9 @@ import { TodosModule } from './todos/todos.module';
 
 @Module({
 <% if (deployment === 'spa') { %>  imports: [
-    // serves apps/web's static export; the api runs from apps/api
+    // serves apps/web's static export; resolved from dist/, so it works from any cwd
     ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), '../web/out'),
+      rootPath: join(__dirname, '../../web/out'),
       exclude: ['/api/{*splat}', '/{*path}.:ext'],
     }),
     AuthModule.forRoot({ auth }),
