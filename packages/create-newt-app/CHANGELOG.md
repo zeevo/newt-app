@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.38.1
+
+### Patch Changes
+
+- 230e19f: Stop the Better Auth schema-mismatch error on the first `pnpm dev`. The `auth` CLI builds the auth instance to read its config, so it validated the schema against the empty database right before migrating it. The `migrate` and `generate` scripts now set `AUTH_CLI=1`, which turns validation off for the CLI only.
+- 5618737: Fail with a message when the prompts are needed but stdin is not a TTY. A piped stdin used to make clack read EOF and cancel with exit 0 — no scaffold, no explanation. The error now points at `--yes` and the config flags that skip the prompts.
+- 60552ed: Serve the SPA static export from a path resolved against the compiled file (`__dirname`) instead of `process.cwd()`. `node apps/api/dist/main` from the repo root 404'd `/` because `join(process.cwd(), '../web/out')` pointed at a directory that does not exist there.
+- 43ac044: Reject `--testing` combined with `--nest off` with a clear message, the way the other dead combinations are rejected. Every testing config, script and dev dependency lands in `apps/api`, which `--nest off` never scaffolds, so the choice was silently ignored before.
+- be8bc8a: Validate the todo title in the `--nest di-only` web route with the same zod check the controller uses in `--nest on` mode. `POST /api/todos` with a non-string, missing or empty title previously stored garbage or 500'd; it now 400s with the same body the controller returns.
+
 ## 0.38.0
 
 ### Minor Changes
