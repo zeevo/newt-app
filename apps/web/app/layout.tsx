@@ -1,6 +1,7 @@
 import { siteConfig } from "@/lib/config";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import LogoRain from "@/components/logo-rain";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { Toaster } from "@newt-app/ui/components/sonner";
 import "@newt-app/ui/globals.css";
@@ -54,9 +55,14 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="relative z-10 flex min-h-svh flex-col bg-background">
               <div className="dot-fade-bg absolute inset-0 z-[-1]"></div>
-              <SiteHeader />
-              <main className="flex flex-1 flex-col">{children}</main>
-              <SiteFooter />
+              <div aria-hidden className="pointer-events-none fixed inset-0 opacity-50">
+                <LogoRain border={false} chipScale={0.55} />
+              </div>
+              <div className="relative mx-auto flex w-full max-w-[1440px] flex-1 flex-col border-x bg-background">
+                <SiteHeader />
+                <main className="flex flex-1 flex-col">{children}</main>
+                <SiteFooter />
+              </div>
             </div>
             <Toaster />
           </ThemeProvider>

@@ -141,7 +141,7 @@ function Row({
             >
               <Info className="size-3.5" />
             </TooltipTrigger>
-            <TooltipContent className="max-w-56">{hint}</TooltipContent>
+            <TooltipContent className="max-w-56 rounded-none">{hint}</TooltipContent>
           </Tooltip>
         )}
       </span>
@@ -192,7 +192,7 @@ function Segmented<T extends string>({
           <ToggleGroupItem
             key={opt}
             value={opt}
-            className="gap-1.5 font-mono text-xs text-muted-foreground aria-pressed:border-ring aria-pressed:text-foreground"
+            className="gap-1.5 rounded-none font-mono text-xs text-muted-foreground aria-pressed:border-ring aria-pressed:text-foreground"
           >
             {logos?.[opt] && <Logo src={logos[opt]!} className="size-3.5" />}
             {opt}
@@ -223,7 +223,7 @@ function BoolToggle({
       <Toggle
         variant="outline"
         size="sm"
-        className="min-w-14 font-mono text-xs text-muted-foreground aria-pressed:border-ring aria-pressed:text-foreground"
+        className="min-w-14 rounded-none font-mono text-xs text-muted-foreground aria-pressed:border-ring aria-pressed:text-foreground"
         pressed={pressed}
         onPressedChange={onChange}
         disabled={disabled}
@@ -264,7 +264,7 @@ export function InteractiveFileTree({
           <div className="flex flex-col gap-2 lg:w-[42%] lg:shrink-0">
             <div
               className={cn(
-                "flex flex-1 flex-col gap-2.5 rounded-lg border p-3",
+                "flex flex-1 flex-col gap-2.5 rounded-none border p-3",
                 fullscreen && "lg:min-h-0 lg:overflow-y-auto",
               )}
             >
@@ -274,7 +274,7 @@ export function InteractiveFileTree({
                   onChange={(e) => set("name", e.target.value)}
                   placeholder={DEFAULT_NAME}
                   aria-label="Project name"
-                  className="w-44 font-mono text-xs"
+                  className="w-44 rounded-none font-mono text-xs"
                 />
               </Row>
               <BoolToggle label="Next.js" logo="/logos/nextjs.svg" pressed disabled />
@@ -350,7 +350,11 @@ export function InteractiveFileTree({
                 <DropdownMenu>
                   <DropdownMenuTrigger
                     render={
-                      <Button variant="outline" size="sm" className="min-w-32 font-mono text-xs" />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="min-w-32 rounded-none font-mono text-xs"
+                      />
                     }
                   >
                     <span className="max-w-48 truncate">
@@ -358,7 +362,7 @@ export function InteractiveFileTree({
                     </span>
                     <ChevronDown />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuContent align="end" className="w-56 rounded-none">
                     <DropdownMenuRadioGroup
                       value={c.deployment}
                       onValueChange={(v) => {
@@ -371,7 +375,7 @@ export function InteractiveFileTree({
                         <DropdownMenuRadioItem
                           key={option}
                           value={option}
-                          className="font-mono text-xs"
+                          className="rounded-none font-mono text-xs"
                         >
                           {option}
                         </DropdownMenuRadioItem>
@@ -384,7 +388,7 @@ export function InteractiveFileTree({
                         checked={c.todoExample}
                         onCheckedChange={(v) => set("todoExample", v)}
                         disabled={!todoExampleAvailable(c.nest)}
-                        className="font-mono text-xs"
+                        className="rounded-none font-mono text-xs"
                       >
                         example app
                       </DropdownMenuCheckboxItem>
@@ -392,7 +396,7 @@ export function InteractiveFileTree({
                         <DropdownMenuCheckboxItem
                           checked={c.antiSlop}
                           onCheckedChange={(v) => set("antiSlop", v)}
-                          className="font-mono text-xs"
+                          className="rounded-none font-mono text-xs"
                         >
                           anti-slop
                         </DropdownMenuCheckboxItem>
@@ -419,7 +423,7 @@ export function InteractiveFileTree({
 
           <div
             className={cn(
-              "min-h-[38rem] flex-1 rounded-lg border bg-code p-3",
+              "min-h-[38rem] flex-1 rounded-none border bg-code p-3",
               fullscreen && "lg:min-h-0 lg:overflow-y-auto",
             )}
           >
@@ -435,7 +439,7 @@ export function InteractiveFileTree({
         <div className="flex items-stretch gap-2">
           {/* min-w-0 lets the code scroll inside its own block instead of
               growing the row and squeezing the button */}
-          <div className="min-w-0 flex-1 rounded-lg border bg-code px-3 py-2">
+          <div className="min-w-0 flex-1 rounded-none border bg-code px-3 py-2">
             <code className="block overflow-x-auto font-mono text-sm whitespace-nowrap text-foreground">
               <span className="text-green-800 select-none dark:text-green-400">$ </span>
               {coloured(command)}

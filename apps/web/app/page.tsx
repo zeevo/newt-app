@@ -1,9 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@newt-app/ui/components/button";
 import { CopyButton } from "@/components/copy-button";
-import { Icons } from "@/components/icons";
-import LogoRain from "@/components/logo-rain";
 import { TerminalCast } from "@/components/terminal-cast";
 import { siteConfig } from "@/lib/config";
 import { version as cliVersion } from "../../../packages/create-newt-app/package.json";
@@ -13,30 +10,16 @@ const INSTALL = "npm create newt-app";
 export default function Home() {
   return (
     <>
-      <section className="relative flex min-h-[calc(100svh-var(--header-height))] items-center overflow-hidden lg:pb-[calc(20svh+var(--header-height))]">
+      <section className="relative flex flex-1 items-center overflow-hidden">
         <div aria-hidden className="hero-wash pointer-events-none absolute inset-0 -z-10" />
-        {/* the tank's own canvas opts pointer events back in, so the chips stay
-            clickable wherever the content leaves them uncovered */}
-        <div className="pointer-events-none absolute inset-0">
-          <LogoRain border={false} />
-        </div>
-        <div className="pointer-events-none relative container grid w-full items-center gap-8 py-10 lg:grid-cols-[1fr_1.12fr] lg:gap-12 lg:py-12 *:pointer-events-auto">
-          <div className="rounded-xl border bg-background p-6 sm:p-8">
-            <a
-              href={siteConfig.links.npm}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border bg-background/80 py-1 pr-2.5 pl-3.5 text-xs text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
-            >
-              <span className="size-1.5 rounded-full bg-green-500" />v{cliVersion} on npm
-              <span aria-hidden>→</span>
-            </a>
-            <h1 className="mt-5 text-3xl leading-[1.12] font-semibold tracking-tight text-balance sm:text-4xl">
+        <div className="relative grid w-full items-center gap-10 px-4 py-14 lg:grid-cols-[1fr_1.05fr] lg:gap-12 lg:px-8 lg:py-20">
+          <div>
+            <h1 className="text-4xl leading-[1.02] font-bold tracking-tight text-balance sm:text-5xl xl:text-6xl">
               The TypeScript project scaffolder for{" "}
               <span className="inline-flex items-center -space-x-1.5 align-middle sm:-space-x-2">
                 <span
                   title="Next.js"
-                  className="z-[0] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
+                  className="z-[0] inline-flex size-8 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -50,7 +33,7 @@ export default function Home() {
                 </span>
                 <span
                   title="NestJS"
-                  className="z-[1] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
+                  className="z-[1] inline-flex size-8 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
                 >
                   <Image
                     src="/logos/nestjs.svg"
@@ -62,7 +45,7 @@ export default function Home() {
                 </span>
                 <span
                   title="Better Auth"
-                  className="z-[2] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
+                  className="z-[2] inline-flex size-8 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -76,7 +59,7 @@ export default function Home() {
                 </span>
                 <span
                   title="shadcn/ui"
-                  className="z-[3] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
+                  className="z-[3] inline-flex size-8 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -90,7 +73,7 @@ export default function Home() {
                 </span>
                 <span
                   title="oxc"
-                  className="z-[4] inline-flex size-6 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-8"
+                  className="z-[4] inline-flex size-8 items-center justify-center rounded-full border-2 border-background bg-foreground sm:size-11"
                 >
                   <Image
                     src="/logos/oxc.svg"
@@ -102,36 +85,34 @@ export default function Home() {
                 </span>
               </span>
             </h1>
-            <p className="mt-4 max-w-[56ch] text-sm leading-relaxed text-muted-foreground lg:text-base">
+            <p className="mt-6 max-w-[50ch] leading-relaxed text-muted-foreground">
               {siteConfig.description}
             </p>
-            <div className="mt-6 flex h-9 w-fit items-center gap-2 rounded-full border bg-background pr-1.5 pl-4 text-sm whitespace-nowrap shadow-sm">
-              <span className="shrink-0 text-muted-foreground select-none">$</span>
-              <span className="font-mono">{INSTALL}</span>
-              <CopyButton value={INSTALL} className="static shrink-0" />
+            <div className="mt-8 flex w-fit max-w-full items-stretch border bg-background/80 text-sm backdrop-blur-sm">
+              <code className="flex items-center px-4 py-3 whitespace-nowrap">
+                <span className="mr-2.5 text-primary select-none">$</span>
+                {INSTALL}
+              </code>
+              <div className="flex items-center border-l px-1.5">
+                <CopyButton value={INSTALL} className="static rounded-none bg-transparent" />
+              </div>
             </div>
-            <div className="mt-3 flex flex-wrap items-center gap-2.5">
-              <Button
-                size="lg"
-                className="h-9 rounded-full px-4"
-                nativeButton={false}
-                render={<Link href="/builder" />}
+            <p className="mt-4 text-xs tracking-wide text-muted-foreground">
+              <a
+                href={siteConfig.links.npm}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-foreground"
               >
-                Build a command
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="h-9 rounded-full px-4"
-                nativeButton={false}
-                render={<Link href={siteConfig.links.github} target="_blank" rel="noreferrer" />}
-              >
-                <Icons.gitHub />
-                GitHub
-              </Button>
-            </div>
+                v{cliVersion} on npm
+              </a>{" "}
+              · MIT ·{" "}
+              <Link href="/builder" className="text-primary hover:underline">
+                pick flags in the builder →
+              </Link>
+            </p>
           </div>
-          <TerminalCast className="min-w-0" />
+          <TerminalCast className="min-w-0 rounded-none" />
         </div>
       </section>
     </>

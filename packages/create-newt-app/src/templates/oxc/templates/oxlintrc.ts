@@ -30,7 +30,7 @@ export default {
   }<% } %><% if (shadcn) { %>,
   "overrides": [
     {
-      "files": ["packages/ui/src/components/**"],
+      "files": ["packages/ui/src/components/**", "packages/ui/src/lib/highlighter.tsx"],
       "rules": {<% if (antiSlop) { %>
         "anti-slop/no-chained-type-assertions": "off",
         "anti-slop/no-conditional-empty-object-spread": "off",
