@@ -44,11 +44,7 @@ const testingVitest: Module = {
     {
       module: "apps/api",
       name: "test:e2e",
-      // Migrations first: the suite boots AppModule, which initialises Better
-      // Auth against the database, so a fresh clone needs the tables to exist.
-      // Auth before db: app tables may reference the auth ones.
-      script:
-        "pnpm --filter @<%= projectName %>/auth migrate && pnpm --filter @<%= projectName %>/db migrate && vitest run --config ./vitest.config.e2e.mts",
+      script: "pnpm -w run db:migrate && vitest run --config ./vitest.config.e2e.mts",
     },
   ],
 };
