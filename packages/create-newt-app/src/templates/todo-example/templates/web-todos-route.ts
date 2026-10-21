@@ -5,6 +5,9 @@ import { headers } from 'next/headers';
 import { inject } from '@/lib/nest';
 import { auth } from '@<%= projectName %>/auth';
 import { TodosService } from '@<%= projectName %>/api';
+import { z } from 'zod';
+
+const createTodoSchema = z.object({ title: z.string().trim().min(1) });
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -16,9 +19,19 @@ export async function GET() {
 export async function POST(req: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return new NextResponse('Unauthorized', { status: 401 });
-  const { title } = await req.json();
+  const parsed = createTodoSchema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        message: parsed.error.issues.map((issue) => issue.message),
+        error: 'Bad Request',
+        statusCode: 400,
+      },
+      { status: 400 },
+    );
+  }
   const todos = await inject(TodosService);
-  return NextResponse.json(await todos.create(session.user.id, title), {
+  return NextResponse.json(await todos.create(session.user.id, parsed.data.title), {
     status: 201,
   });
 }`,
