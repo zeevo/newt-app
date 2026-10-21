@@ -16,9 +16,6 @@ export default {
   testEnvironment: 'node',
   moduleNameMapper: {
     '^@thallesp/nestjs-better-auth$': '<rootDir>/../__mocks__/@thallesp/nestjs-better-auth.js',
-    // better-auth is ESM-only; without this, any spec that reaches it
-    // (e.g. via @<%= projectName %>/auth) fails to load under ts-jest CJS.
-    '^better-auth$': '<rootDir>/../__mocks__/better-auth.js',
   },
 } satisfies Config;`,
 };
