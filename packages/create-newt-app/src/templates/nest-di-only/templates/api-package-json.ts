@@ -9,7 +9,7 @@ export default {
   },
   "scripts": {
     "build": "nest build",
-    "typecheck": "tsc -p tsconfig.build.json --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/common": "<%= versions["@nestjs/common"] %>",
