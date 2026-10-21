@@ -10,7 +10,6 @@ module.exports = {
   RequireAuth: noop,
   Session: noop,
   AuthGuard: class AuthGuard {},
-  // forRoot must return a module Nest can compile, not just a function.
   AuthModule: { forRoot: () => MockAuthModule, forRootAsync: () => MockAuthModule },
 };
 `,
