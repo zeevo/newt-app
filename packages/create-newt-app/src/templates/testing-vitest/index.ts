@@ -44,7 +44,7 @@ const testingVitest: Module = {
     {
       module: "apps/api",
       name: "test:e2e",
-      script: "vitest run --config ./vitest.config.e2e.mts",
+      script: "pnpm -w run db:migrate && vitest run --config ./vitest.config.e2e.mts",
     },
   ],
 };

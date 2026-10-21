@@ -46,7 +46,8 @@ const testingJest: Module = {
     {
       module: "apps/api",
       name: "test:e2e",
-      script: "NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json",
+      script:
+        "pnpm -w run db:migrate && NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json",
     },
   ],
 };
