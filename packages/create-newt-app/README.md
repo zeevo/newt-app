@@ -5,7 +5,7 @@
   </picture>
 
   <h1>newt-app</h1>
-  <p><strong>Scaffold a production-ready, full-stack TypeScript monorepo in one command.</strong></p>
+  <p><strong>Scaffold perfect Next.js apps</strong></p>
 
 <a href="https://www.npmjs.com/package/create-newt-app"><img alt="npm version" src="https://img.shields.io/npm/v/create-newt-app?style=flat-square"></a>
 
@@ -18,5 +18,3 @@ npm create newt-app
 ```
 
 <img src="https://raw.githubusercontent.com/zeevo/newt-app/main/.github/assets/demo.gif" alt="npm create newt-app walking through its prompts" width="700">
-
-Next.js and NestJS in one production-grade monorepo: a real backend, auth, and a database, curated so you're not deleting half of it on day one.
