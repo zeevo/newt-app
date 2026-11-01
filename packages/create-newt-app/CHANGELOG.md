@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.38.2
+
+### Patch Changes
+
+- 5381c91: Raise the shadcn dependency floors to what shadcn 4.23 emits, including cn 0.5 and @shadcn/lint 0.2
+
 ## 0.38.1
 
 ### Patch Changes
