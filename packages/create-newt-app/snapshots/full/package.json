@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@oxlint/plugins": "^1.74.0",
-    "@shadcn/lint": "^0.1.0",
+    "@shadcn/lint": "^0.2.3",
     "@types/node": "^24.13.3",
     "oxfmt": "^0.59.0",
     "oxlint": "^1.80.0",
