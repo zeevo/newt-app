@@ -8,7 +8,7 @@ export default {
   "private": true,
   "scripts": {
     "build": "nest build",
-    "typecheck": "tsc -p tsconfig.build.json --noEmit",
+    "typecheck": "tsc --noEmit",
     "start": "nest start",
     "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
