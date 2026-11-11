@@ -11,6 +11,10 @@ const antiSlop: Module = {
     { src: "anti-slop/static/LICENSE", filename: `${plugin}/LICENSE` },
     { src: "anti-slop/static/index.ts", filename: `${plugin}/index.ts` },
     {
+      src: "anti-slop/static/rules/no-array-filter-map.ts",
+      filename: `${plugin}/rules/no-array-filter-map.ts`,
+    },
+    {
       src: "anti-slop/static/rules/no-chained-type-assertions.ts",
       filename: `${plugin}/rules/no-chained-type-assertions.ts`,
     },
@@ -29,6 +33,10 @@ const antiSlop: Module = {
     {
       src: "anti-slop/static/rules/no-object-parameters.ts",
       filename: `${plugin}/rules/no-object-parameters.ts`,
+    },
+    {
+      src: "anti-slop/static/rules/no-reduce-accumulator-copy.ts",
+      filename: `${plugin}/rules/no-reduce-accumulator-copy.ts`,
     },
     {
       src: "anti-slop/static/rules/no-reflect-apply.ts",
@@ -67,12 +75,24 @@ const antiSlop: Module = {
       filename: `${plugin}/rules/no-widen-then-assert.ts`,
     },
     {
+      src: "anti-slop/static/rules/require-readable-spacing.ts",
+      filename: `${plugin}/rules/require-readable-spacing.ts`,
+    },
+    {
       src: "anti-slop/static/rules/require-safety-comment-for-type-assertion.ts",
       filename: `${plugin}/rules/require-safety-comment-for-type-assertion.ts`,
     },
     {
+      src: "anti-slop/static/shared/array-method.ts",
+      filename: `${plugin}/shared/array-method.ts`,
+    },
+    {
       src: "anti-slop/static/shared/dictionary-types.ts",
       filename: `${plugin}/shared/dictionary-types.ts`,
+    },
+    {
+      src: "anti-slop/static/shared/function-parameters.ts",
+      filename: `${plugin}/shared/function-parameters.ts`,
     },
     {
       src: "anti-slop/static/shared/lexical-type-parameters.ts",
@@ -81,6 +101,31 @@ const antiSlop: Module = {
     {
       src: "anti-slop/static/shared/reflect-method.ts",
       filename: `${plugin}/shared/reflect-method.ts`,
+    },
+    { src: "anti-slop/static/shared/scope.ts", filename: `${plugin}/shared/scope.ts` },
+    {
+      src: "anti-slop/static/shared/type-alias-resolution.ts",
+      filename: `${plugin}/shared/type-alias-resolution.ts`,
+    },
+    {
+      src: "anti-slop/static/vendor/eslint-stylistic/LICENSE",
+      filename: `${plugin}/vendor/eslint-stylistic/LICENSE`,
+    },
+    {
+      src: "anti-slop/static/vendor/eslint-stylistic/UPSTREAM.md",
+      filename: `${plugin}/vendor/eslint-stylistic/UPSTREAM.md`,
+    },
+    {
+      src: "anti-slop/static/vendor/eslint-stylistic/padding-line-ast.ts",
+      filename: `${plugin}/vendor/eslint-stylistic/padding-line-ast.ts`,
+    },
+    {
+      src: "anti-slop/static/vendor/eslint-stylistic/padding-line-between-statements.ts",
+      filename: `${plugin}/vendor/eslint-stylistic/padding-line-between-statements.ts`,
+    },
+    {
+      src: "anti-slop/static/vendor/eslint-stylistic/padding-line-options.d.ts",
+      filename: `${plugin}/vendor/eslint-stylistic/padding-line-options.d.ts`,
     },
   ],
   packages: [
