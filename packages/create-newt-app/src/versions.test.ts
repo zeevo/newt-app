@@ -31,6 +31,7 @@ function pinsFromTemplates(): Pin[] {
       .filter((template) => template.filename.endsWith("package.json"))
       .flatMap((template) => {
         const pkg = JSON.parse(ejs.render(template.template, templateData));
+
         return PINNED_FIELDS.flatMap((field) =>
           Object.entries<string>(pkg[field] ?? {}).map(([name, version]) => ({
             name,
@@ -60,6 +61,7 @@ describe("dependency versions", () => {
 
     const byName = pins.reduce<Record<string, Pin[]>>((acc, pin) => {
       acc[pin.name] = (acc[pin.name] ?? []).concat(pin);
+
       return acc;
     }, {});
 

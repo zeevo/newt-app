@@ -8,6 +8,7 @@ const renderPanel = (searchParams = "") =>
 
 const openExtras = () => {
   fireEvent.click(screen.getByRole("button", { name: /example app|none|anti-slop/ }));
+
   return screen.getByRole("menu");
 };
 

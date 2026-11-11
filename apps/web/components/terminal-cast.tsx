@@ -5,8 +5,11 @@ import { cn } from "@newt-app/ui/lib/utils";
 import { Window } from "@/components/window";
 
 type Tone = "prompt" | "cmd" | "gray" | "green" | "magenta" | "blue";
+
 type Segment = { text: string; tone?: Tone };
+
 type Line = Segment[];
+
 type Task = { title: string; done: string; ms: number };
 
 const CMD = "npm create newt-app@latest my-app -- --shadcn --database postgres";
@@ -42,9 +45,11 @@ const prompt = (typed = ""): Line => [
   { text: "$ ", tone: "prompt" },
   { text: typed, tone: "cmd" },
 ];
+
 const bar: Line = [{ text: "│", tone: "gray" }];
 const blank: Line = [{ text: " " }];
 const step = (text: string): Line => [{ text: "◇", tone: "green" }, { text: `  ${text}` }];
+
 const spinner = (title: string, tick: number): Line => [
   { text: FRAMES[tick % FRAMES.length] ?? "", tone: "magenta" },
   { text: `  ${title}${".".repeat(Math.floor((tick % 32) / 8))}` },
@@ -117,6 +122,7 @@ export function TerminalCast({ className }: { className?: string }) {
     const push = (...next: Line[]) => {
       if (!cancelled) setLines((prev) => [...prev, ...next]);
     };
+
     const replaceLast = (line: Line) => {
       if (!cancelled) setLines((prev) => [...prev.slice(0, -1), line]);
     };
@@ -159,6 +165,7 @@ export function TerminalCast({ className }: { className?: string }) {
     };
 
     void play();
+
     return () => {
       cancelled = true;
     };
@@ -166,6 +173,7 @@ export function TerminalCast({ className }: { className?: string }) {
 
   useEffect(() => {
     const view = viewRef.current;
+
     if (view) view.scrollTop = view.scrollHeight;
   }, [lines]);
 

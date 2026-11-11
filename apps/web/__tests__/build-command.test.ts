@@ -46,6 +46,8 @@ const reachable: Config[] = NEST_MODES.flatMap((nest) =>
   ),
 );
 
+const commands = reachable.map(buildCommand);
+
 describe("buildCommand", () => {
   it("hides exactly the deployments the CLI rejects per nest mode", () => {
     // Pinned against validateDeploymentCombo in packages/create-newt-app. The
@@ -62,34 +64,30 @@ describe("buildCommand", () => {
   });
 
   it("never pairs a nest mode with a deployment the CLI rejects", () => {
-    const invalid = reachable
-      .map(buildCommand)
-      .filter((command) =>
-        NEST_MODES.some(
-          (nest) =>
-            command.includes(`--nest ${nest}`) &&
-            [...NEST_REJECTS[nest]].some((mode) => command.includes(`--deployment ${mode}`)),
-        ),
-      );
+    const invalid = commands.filter((command) =>
+      NEST_MODES.some(
+        (nest) =>
+          command.includes(`--nest ${nest}`) &&
+          [...NEST_REJECTS[nest]].some((mode) => command.includes(`--deployment ${mode}`)),
+      ),
+    );
 
     expect(invalid).toEqual([]);
   });
 
   // validateExampleCombo rejects the pair: the example is a Nest module.
   it("never pairs --nest off with --include-example", () => {
-    const invalid = reachable
-      .map(buildCommand)
-      .filter((command) => command.includes("--nest off") && command.includes("--include-example"));
+    const invalid = commands.filter(
+      (command) => command.includes("--nest off") && command.includes("--include-example"),
+    );
 
     expect(invalid).toEqual([]);
   });
 
   it("only offers anti-slop with the linter that can run it", () => {
-    const invalid = reachable
-      .map(buildCommand)
-      .filter(
-        (command) => command.includes("--extras anti-slop") && command.includes("--linter eslint"),
-      );
+    const invalid = commands.filter(
+      (command) => command.includes("--extras anti-slop") && command.includes("--linter eslint"),
+    );
 
     expect(invalid).toEqual([]);
   });
@@ -97,10 +95,11 @@ describe("buildCommand", () => {
   it("emits a config flag whenever shadcn is off, so the CLI stays non-interactive", () => {
     // With no flags the CLI prompts, and its interactive default turns shadcn
     // back on — the panel would be lying.
-    const withoutFlags = reachable
-      .filter((c) => !c.shadcn)
-      .map(buildCommand)
-      .filter((command) => !command.includes(" -- "));
+    const withoutFlags = reachable.flatMap((c) => {
+      const command = buildCommand(c);
+
+      return !c.shadcn && !command.includes(" -- ") ? [command] : [];
+    });
 
     expect(withoutFlags).toEqual([]);
   });

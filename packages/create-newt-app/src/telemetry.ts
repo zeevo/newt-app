@@ -35,7 +35,9 @@ const CI_PROVIDERS = [
 
 export function detectCi(env: NodeJS.ProcessEnv = process.env): string {
   const named = CI_PROVIDERS.find(([key]) => env[key]);
+
   if (named) return named[1];
+
   return env.CI ? "unknown" : "none";
 }
 
@@ -43,8 +45,11 @@ export function detectCi(env: NodeJS.ProcessEnv = process.env): string {
 // checked first so the project-specific switches cannot re-enable past it.
 export function isOptedOut(env: NodeJS.ProcessEnv = process.env): boolean {
   if (env.DO_NOT_TRACK === "1" || env.DO_NOT_TRACK?.toLowerCase() === "true") return true;
+
   if (env.NEWT_TELEMETRY_DISABLED === "1") return true;
+
   if (env.NEWT_TELEMETRY !== undefined) return env.NEWT_TELEMETRY !== "1";
+
   return false;
 }
 
@@ -54,11 +59,13 @@ export function isEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
 
 export function nodeMajor(version: string = process.version): string {
   const match = /^v?(\d+)/.exec(version);
+
   return match ? `v${match[1]}` : "other";
 }
 
 export function buildPayload(report: RunReport) {
   const { selection } = report;
+
   return {
     cliVersion: pkg.version,
     nodeMajor: nodeMajor(),

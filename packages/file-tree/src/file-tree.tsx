@@ -135,8 +135,10 @@ const EXTENSION_GLYPHS = new Map([
 /** The glyph for a filename, for `FileTree.File`'s `icon`. */
 export function fileIcon(name: string): React.ReactNode {
   const dot = name.lastIndexOf(".");
+
   // A leading dot opens a dotfile, not an extension: .prettierrc is not `rc`.
   if (dot < 1) return FileGlyph;
+
   return EXTENSION_GLYPHS.get(name.slice(dot + 1).toLowerCase()) ?? FileGlyph;
 }
 
@@ -216,6 +218,7 @@ function FileTree({ name, className, children, ...props }: FileTreeProps) {
 }
 
 FileTree.Folder = Folder;
+
 FileTree.File = File;
 
 export { FileTree };

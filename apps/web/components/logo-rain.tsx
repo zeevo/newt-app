@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
@@ -17,6 +18,7 @@ const VIEW_H = 775;
 
 const MIN_SIZE = 60;
 const MAX_SIZE = 110;
+
 // chips shrink with the tank below this many view units across, so a phone's
 // narrow tank isn't packed with desktop-sized chips
 const CHIP_FULL_W = 960;
@@ -55,6 +57,7 @@ const BEND_SPACING = 12;
 const BEND_TENSION = 2.72e6;
 const BEND_STIFF = 900;
 const BEND_DAMP = 12;
+
 // the string is stepped at a fixed rate: its tension is too stiff for one step
 // per frame
 const BEND_RATE = 240;
@@ -71,6 +74,7 @@ const BORDER_PX = 1;
 // as a fraction of chip radius, out to WAKE radii.
 const FLOOR_SPACING = 19;
 const FLOOR_DOT = 0.75;
+
 // smallest edge ramp the dots are allowed, in view units. fwidth still widens it
 // wherever a wake stretches the lattice, so this only sets how crisp the dots
 // read across the calm floor.
@@ -114,6 +118,7 @@ function cssColor(css: string): THREE.Color {
   ctx.fillStyle = css;
   ctx.fillRect(0, 0, 1, 1);
   const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+
   return new THREE.Color().setRGB(r! / 255, g! / 255, b! / 255, THREE.SRGBColorSpace);
 }
 
@@ -128,9 +133,11 @@ function readTheme() {
   const background = cssColor(getComputedStyle(probe).backgroundColor);
   probe.remove();
   const dark = document.documentElement.classList.contains("dark");
+
   const border = cssColor(
     getComputedStyle(document.documentElement).getPropertyValue("--border").trim(),
   );
+
   return {
     background,
     border,
@@ -211,10 +218,12 @@ function floorMaterial(chipCount: number) {
 // rasterize an svg into a white silhouette texture, tinted later via material color
 async function loadSilhouette(url: string): Promise<THREE.CanvasTexture> {
   const text = await (await fetch(url)).text();
+
   const viewBox = text
     .match(/viewBox="([^"]+)"/)?.[1]
     ?.split(/[\s,]+/)
     .map(Number);
+
   const aspect = viewBox && viewBox.length === 4 && viewBox[3]! > 0 ? viewBox[2]! / viewBox[3]! : 1;
 
   const blobUrl = URL.createObjectURL(new Blob([text], { type: "image/svg+xml" }));
@@ -236,6 +245,7 @@ async function loadSilhouette(url: string): Promise<THREE.CanvasTexture> {
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
+
   return texture;
 }
 
@@ -261,6 +271,7 @@ export default function LogoRain({
     let disposed = false;
 
     let renderer: THREE.WebGLRenderer;
+
     try {
       renderer = new THREE.WebGLRenderer({
         canvas,
@@ -270,6 +281,7 @@ export default function LogoRain({
     } catch {
       return; // no WebGL: leave the background empty
     }
+
     renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();
@@ -309,9 +321,11 @@ export default function LogoRain({
       depthWrite: false,
       side: THREE.DoubleSide,
     });
+
     const wall = new THREE.Mesh(new THREE.BufferGeometry(), wallMaterial);
     let wallPosition = new THREE.BufferAttribute(new Float32Array(0), 3);
     wall.renderOrder = MAX_SIZE * 10 + 3;
+
     if (border) scene.add(wall);
 
     // the walls' inner edge covers the view like preserveAspectRatio="xMidYMid
@@ -368,12 +382,14 @@ export default function LogoRain({
       geometry.setIndex(
         Array.from({ length: points }, (_, p) => {
           const q = (p + 1) % points;
+
           return [2 * p, 2 * p + 1, 2 * q, 2 * p + 1, 2 * q + 1, 2 * q];
         }).flat(),
       );
       wall.geometry.dispose();
       wall.geometry = geometry;
     }
+
     fit();
 
     // lay the border along the bent walls and the rigid corners, growing
@@ -382,6 +398,7 @@ export default function LogoRain({
       const out = wallPosition.array;
       const width = BORDER_PX / viewScale;
       let k = 0;
+
       const put = (x: number, y: number, mx: number, my: number) => {
         out[k++] = x;
         out[k++] = -y;
@@ -390,6 +407,7 @@ export default function LogoRain({
         out[k++] = -(y + my * width);
         out[k++] = 0;
       };
+
       walls.forEach(({ nx, ny, x0, y0, length, bend }) => {
         const step = length / (bend.length - 1);
         bend.forEach((u, j) =>
@@ -448,6 +466,7 @@ export default function LogoRain({
       // best-candidate samples gently discourage clumping without looking gridded
       const min = floorUniforms.uViewMin!.value;
       const max = floorUniforms.uViewMax!.value;
+
       const { x, y } = Array.from({ length: 4 }, () => ({
         x: min.x + size + Math.random() * Math.max(max.x - min.x - 2 * size, 0),
         y: min.y + size + Math.random() * Math.max(max.y - min.y - 2 * size, 0),
@@ -458,6 +477,7 @@ export default function LogoRain({
                 ...stars.map((o) => Math.hypot(o.x - candidate.x, o.y - candidate.y) - o.size),
               )
             : Infinity;
+
           return dist > best.dist ? { ...candidate, dist } : best;
         },
         { x: 0, y: 0, dist: -Infinity },
@@ -476,18 +496,21 @@ export default function LogoRain({
         opacity: 1,
         depthWrite: false,
       });
+
       const ringMaterial = new THREE.MeshBasicMaterial({
         color: theme.border,
         transparent: true,
         opacity: 1,
         depthWrite: false,
       });
+
       const logoMaterial = new THREE.MeshBasicMaterial({
         color: theme.silhouette,
         transparent: true,
         opacity: theme.logoAlpha,
         depthWrite: false,
       });
+
       logoMaterial.visible = false; // until its texture loads
       circleMaterials.push(circleMaterial);
       ringMaterials.push(ringMaterial);
@@ -534,8 +557,10 @@ export default function LogoRain({
       loadSilhouette(logos[i % logos.length]!).then((texture) => {
         if (disposed) {
           texture.dispose();
+
           return;
         }
+
         textures.push(texture);
         logoMaterials[i]!.map = texture;
         logoMaterials[i]!.visible = true;
@@ -581,6 +606,7 @@ export default function LogoRain({
       });
       render();
     });
+
     resizeObserver.observe(container);
 
     const reduceMotion =
@@ -594,13 +620,17 @@ export default function LogoRain({
       const v = (e.clientY - rect.top) / (rect.height || 1);
       const x = camera.left + u * (camera.right - camera.left);
       const y = -(camera.top + v * (camera.bottom - camera.top));
+
       return stars.find((s) => Math.hypot(x - s.x, y - s.y) < s.size);
     };
+
     const onPointerMove = (e: PointerEvent) => {
       canvas.style.cursor = chipAt(e) ? "pointer" : "";
     };
+
     const onPointerDown = (e: PointerEvent) => {
       const s = chipAt(e);
+
       if (!s) return;
       const angle = Math.random() * Math.PI * 2;
       const kick = KICK_MIN + Math.random() * (KICK_MAX - KICK_MIN);
@@ -635,16 +665,20 @@ export default function LogoRain({
           // one rubs the chip into rotation
           walls.forEach(({ nx, ny, rest }) => {
             const depth = s.x * nx + s.y * ny + s.size - rest;
+
             if (depth <= 0) return;
             const vn = s.vx * nx + s.vy * ny;
             let turned = vn - WALL_SPRING * depth * dt;
+
             if (depth > maxBend) {
               s.x -= nx * (depth - maxBend);
               s.y -= ny * (depth - maxBend);
               turned = -Math.abs(vn);
             }
+
             s.vx += (turned - vn) * nx;
             s.vy += (turned - vn) * ny;
+
             if (vn <= 0 || turned > 0) return;
             const slip = s.vx * ny - s.vy * nx - s.angVel * s.size;
             s.vx -= SPIN_GRIP * slip * ny;
@@ -660,6 +694,7 @@ export default function LogoRain({
             const dy = b.y - a.y;
             const dist = Math.hypot(dx, dy) || 1;
             const overlap = a.size + b.size - dist;
+
             if (overlap <= 0) return;
             const nx = dx / dist;
             const ny = dy / dist;
@@ -675,6 +710,7 @@ export default function LogoRain({
             b.y += ny * overlap * wb;
             // impulse along the normal, only while approaching
             const rel = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+
             if (rel >= 0) return;
             const j = (-(1 + RESTITUTION) * rel) / inv;
             a.vx -= (j / ma) * nx;
@@ -684,8 +720,10 @@ export default function LogoRain({
             // tangential slip at the contact rubs both chips into rotation
             const tx = -ny;
             const ty = nx;
+
             const slip =
               (b.vx - a.vx) * tx + (b.vy - a.vy) * ty - (a.angVel * a.size + b.angVel * b.size);
+
             const jt = (SPIN_GRIP * slip) / inv;
             a.vx += (jt / ma) * tx;
             a.vy += (jt / ma) * ty;
@@ -716,12 +754,15 @@ export default function LogoRain({
             });
             stars.forEach((s) => {
               const depth = s.x * w.nx + s.y * w.ny + s.size - w.rest;
+
               if (depth <= 0) return;
               const along = (w.x0 - s.x) * w.ny + (s.y - w.y0) * w.nx;
               bend.forEach((u, j) => {
                 const off = j * spacing - along;
+
                 if (j === 0 || j === last || Math.abs(off) >= s.size) return;
                 const surface = depth - s.size + Math.sqrt(s.size * s.size - off * off);
+
                 if (surface <= u) return;
                 bend[j] = surface;
                 vel[j] = Math.max(vel[j]!, 0);
