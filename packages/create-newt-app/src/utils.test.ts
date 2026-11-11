@@ -145,6 +145,7 @@ describe("validateDeploymentCombo", () => {
     expect(
       ["di-only", "off"].map((nest) => {
         const result = validateDeploymentCombo("spa", nest);
+
         return [result.valid, result.error?.includes(`--nest ${nest}`)];
       }),
     ).toEqual([
@@ -227,10 +228,13 @@ describe("checkRequiredTools", () => {
 
   it("does not require git when git is skipped", async () => {
     const asked: string[] = [];
+
     const result = await checkRequiredTools({ install: true, git: false }, async (command) => {
       asked.push(command);
+
       return true;
     });
+
     expect(asked).toEqual(["pnpm"]);
     expect(result.valid).toBe(true);
   });

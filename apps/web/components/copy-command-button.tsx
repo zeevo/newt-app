@@ -23,6 +23,7 @@ export function CopyCommandButton({ value }: { value: string }) {
   React.useEffect(() => {
     if (!hasCopied) return;
     const timer = setTimeout(() => setHasCopied(false), 2000);
+
     return () => clearTimeout(timer);
   }, [hasCopied]);
 
