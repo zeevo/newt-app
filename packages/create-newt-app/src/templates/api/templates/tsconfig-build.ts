@@ -2,6 +2,9 @@ export default {
   filename: "apps/api/tsconfig.build.json",
   template: `{
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src"
+  },
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "vitest.config.mts", "vitest.config.e2e.mts", "jest.config.ts"]
 }`,
 };
