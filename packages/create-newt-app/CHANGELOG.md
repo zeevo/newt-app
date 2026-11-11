@@ -1,5 +1,17 @@
 # create-newt-app
 
+## 0.38.3
+
+### Patch Changes
+
+- b5be05f: Make apps/api type-checkable and type-check its specs.
+
+  - `tsconfig.json` set `rootDir: "./src"` with no `include`, so the default `**/*` pulled in `jest.config.ts` and `test/`, and `tsc --noEmit` died with TS6059 in every nest-on mode. It now includes `src/**/*` and `test/**/*` explicitly and sets `rootDir: "."` (the build config keeps `./src`)
+  - the `exclude` list named `vitest.config.mts`/`vitest.config.e2e.mts` even in jest mode, where they don't exist; explicit `include` makes the stale entries moot
+  - the `typecheck` script pointed at `tsconfig.build.json`, which excludes `test` and `**/*spec.ts`, so nothing ever type-checked the specs; it now runs `tsc --noEmit` against the full config (same change for the di-only and spa package.json variants)
+
+- 6e5da57: Fix the `@thallesp/nestjs-better-auth` jest mock: it exported `BetterAuthModule`, but the real package exports `AuthModule`, so any unit spec that compiled `AppModule` died with `TypeError: Cannot read properties of undefined (reading 'forRoot')`. The mock now exports `AuthModule`, and `forRoot` returns a module Nest can compile.
+
 ## 0.38.2
 
 ### Patch Changes
