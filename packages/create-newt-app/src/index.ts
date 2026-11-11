@@ -28,8 +28,11 @@ const NEST_CHOICES = ["on", "off", "di-only"] as const satisfies readonly Nest[]
 const EXTRAS_CHOICES = ["anti-slop"] as const satisfies readonly Extra[];
 
 type Testing = (typeof TESTING_CHOICES)[number];
+
 type Database = (typeof DATABASE_CHOICES)[number];
+
 type Linter = (typeof LINTER_CHOICES)[number];
+
 type Deployment = (typeof DEPLOYMENT_CHOICES)[number];
 
 type Answers = {
@@ -223,42 +226,53 @@ export async function doInit(options: Options) {
     const useShadcn = options.nonInteractive ? options.shadcn : (answers.shadcn ?? true);
     const useStylex = options.nonInteractive ? options.stylex : (answers.stylex ?? false);
     const testing: Testing = options.nonInteractive ? options.testing : (answers.testing ?? "jest");
+
     const database: Database = options.nonInteractive
       ? options.database
       : (answers.database ?? "sqlite");
+
     const linter: Linter = options.nonInteractive ? options.linter : (answers.linter ?? "oxc");
+
     const deployment: Deployment = options.nonInteractive
       ? options.deployment
       : (answers.deployment ?? "none");
+
     const nest: Nest = options.nonInteractive ? options.nest : (answers.nest ?? "on");
+
     const todoExample = options.nonInteractive
       ? options.includeExample
       : nest !== "off" && (answers.todoExample ?? true);
+
     const extras: readonly Extra[] = options.nonInteractive
       ? options.extras
       : (answers.extras ?? []);
 
     const stylingCombo = validateStylingCombo(useShadcn, useStylex);
+
     if (!stylingCombo.valid) {
       throw new Error(stylingCombo.error);
     }
 
     const deploymentCombo = validateDeploymentCombo(deployment, nest);
+
     if (!deploymentCombo.valid) {
       throw new Error(deploymentCombo.error);
     }
 
     const exampleCombo = validateExampleCombo(todoExample, nest);
+
     if (!exampleCombo.valid) {
       throw new Error(exampleCombo.error);
     }
 
     const testingCombo = validateTestingCombo(options.explicitFlags.includes("--testing"), nest);
+
     if (!testingCombo.valid) {
       throw new Error(testingCombo.error);
     }
 
     const extrasCombo = validateExtrasCombo(extras, linter);
+
     if (!extrasCombo.valid) {
       throw new Error(extrasCombo.error);
     }
@@ -280,6 +294,7 @@ export async function doInit(options: Options) {
     const rawName = answers.name ?? options.name ?? "";
 
     const nameCheck = validateProjectName(rawName);
+
     if (!nameCheck.valid) {
       throw new Error(nameCheck.error);
     }
@@ -303,6 +318,7 @@ export async function doInit(options: Options) {
           antiSlop: extras.includes("anti-slop"),
           selection,
         });
+
         return "Scaffolded.";
       },
     });
@@ -312,6 +328,7 @@ export async function doInit(options: Options) {
         title: "Installing with pnpm",
         task: async () => {
           await pnpmInstall(dir);
+
           return "Installed.";
         },
       });
@@ -320,6 +337,7 @@ export async function doInit(options: Options) {
         title: "Formatting",
         task: async () => {
           await pnpmFormat(dir);
+
           return "Formatted.";
         },
       });
@@ -332,6 +350,7 @@ export async function doInit(options: Options) {
         title: "Initializing git",
         task: async () => {
           committed = await initGit(dir);
+
           return committed ? "Initialized git." : "Initialized git, but could not commit.";
         },
       });
@@ -348,16 +367,20 @@ export async function doInit(options: Options) {
 
     console.log("Next steps:");
     console.log();
+
     if (dir !== ".") {
       console.log(chalk.blue(`  cd ${dir}`));
     }
+
     if (!options.install) {
       console.log(chalk.blue(`  pnpm install`));
       console.log(chalk.blue(`  pnpm format:fix`));
     }
+
     if (!committed) {
       console.log(chalk.blue(`  git commit -m "Initial commit"`));
     }
+
     console.log(chalk.blue(`  pnpm dev`));
     console.log();
 

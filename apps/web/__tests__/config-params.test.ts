@@ -38,6 +38,7 @@ describe("config params", () => {
       todoExample: true,
       antiSlop: true,
     };
+
     expect(sanitizeConfig(base).deployment).toBe("none");
     expect(sanitizeConfig({ ...base, nest: "off" }).deployment).toBe("none");
     expect(sanitizeConfig({ ...base, deployment: "standalone" }).deployment).toBe("standalone");
@@ -57,6 +58,7 @@ describe("config params", () => {
       todoExample: true,
       antiSlop: false,
     };
+
     expect(sanitizeConfig(base).todoExample).toBe(false);
     expect(sanitizeConfig({ ...base, nest: "di-only" }).todoExample).toBe(true);
   });
@@ -73,6 +75,7 @@ describe("config params", () => {
       todoExample: true,
       antiSlop: true,
     };
+
     expect(sanitizeConfig(base).antiSlop).toBe(true);
     expect(sanitizeConfig({ ...base, linter: "eslint" }).antiSlop).toBe(false);
   });

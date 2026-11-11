@@ -17,18 +17,22 @@ function legacyCopyToClipboard(value: string) {
   textArea.select();
   textArea.setSelectionRange(0, value.length);
   let hasCopied = false;
+
   try {
     hasCopied = document.execCommand("copy");
   } catch {
     hasCopied = false;
   }
+
   document.body.removeChild(textArea);
+
   return hasCopied;
 }
 
 export async function copyToClipboardWithMeta(value: string) {
   if (!globalThis.window || !value) return false;
   let hasCopied = false;
+
   if (navigator.clipboard?.writeText) {
     try {
       await navigator.clipboard.writeText(value);
@@ -39,6 +43,7 @@ export async function copyToClipboardWithMeta(value: string) {
   } else {
     hasCopied = legacyCopyToClipboard(value);
   }
+
   return hasCopied;
 }
 
@@ -56,6 +61,7 @@ export function CopyButton({
   React.useEffect(() => {
     if (hasCopied) {
       const timer = setTimeout(() => setHasCopied(false), 2000);
+
       return () => clearTimeout(timer);
     }
   }, [hasCopied]);
@@ -72,6 +78,7 @@ export function CopyButton({
       )}
       onClick={async () => {
         const copied = await copyToClipboardWithMeta(value);
+
         if (copied) setHasCopied(true);
       }}
       {...props}

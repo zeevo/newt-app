@@ -72,20 +72,31 @@ export function normalizeName(name: string): string {
 
 export function buildCommand(c: Config): string {
   const flags: string[] = [];
+
   if (c.shadcn) flags.push("--shadcn");
+
   if (c.stylex) flags.push("--stylex");
+
   if (c.testing !== "jest" && testingAvailable(c.nest)) flags.push("--testing vitest");
+
   if (c.database !== "sqlite") flags.push("--database postgres");
+
   if (c.linter !== "oxc") flags.push("--linter eslint");
+
   if (c.deployment !== "none") flags.push(`--deployment ${c.deployment}`);
+
   if (c.nest !== "on") flags.push(`--nest ${c.nest}`);
+
   if (c.todoExample) flags.push("--include-example");
+
   if (c.antiSlop) flags.push("--extras anti-slop");
+
   // Passing a config flag is what puts the CLI in non-interactive mode. Every
   // other option here matches its default, so without this the CLI would prompt
   // and shadcn would come back on — the opposite of what the panel shows.
   if (!flags.length && !c.shadcn) flags.push("--testing jest");
   const name = normalizeName(c.name) || DEFAULT_NAME;
+
   return flags.length
     ? `npm create newt-app@latest ${name} -- ${flags.join(" ")}`
     : `npm create newt-app@latest ${name}`;

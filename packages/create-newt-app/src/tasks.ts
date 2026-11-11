@@ -24,6 +24,7 @@ export async function scaffold(
   },
 ) {
   const validation = validateProjectName(options.dir);
+
   if (!validation.valid) {
     console.error(`Error: ${validation.error}`);
     process.exit(1);
@@ -44,19 +45,13 @@ export async function scaffold(
 
   await renderTemplatesToDisk(modules, options.dir, templateData, options.selection);
 
-  const packages = modules
-    .map((mod) => mod.packages)
-    .filter((ele) => ele !== undefined)
-    .flat();
+  const packages = modules.flatMap((mod) => mod.packages ?? []);
 
   if (packages.length > 0) {
     await updatePackageJson(options.dir, packages, templateData);
   }
 
-  const scripts = modules
-    .map((mod) => mod.scripts)
-    .filter((ele) => ele !== undefined)
-    .flat();
+  const scripts = modules.flatMap((mod) => mod.scripts ?? []);
 
   if (scripts.length > 0) {
     await updateScripts(options.dir, scripts, templateData);
@@ -70,6 +65,7 @@ export async function scaffold(
 export async function hasCommand(command: string) {
   try {
     await execa(command, ["--version"]);
+
     return true;
   } catch {
     return false;
@@ -103,6 +99,7 @@ export async function initGit(cwd: string) {
     await execa("git", ["commit", "-m", "Initial commit"], {
       cwd,
     });
+
     return true;
   } catch {
     return false;

@@ -1,4 +1,5 @@
 import type { Selection } from "../../types";
+
 export default {
   when: (s: Selection) => !s.shadcn && !s.stylex,
   filename: "apps/web/app/layout.tsx",
