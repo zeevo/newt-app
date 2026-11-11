@@ -19,6 +19,9 @@ export const databaseFile =
   process.env.DATABASE_URL ?? path.join(projectRoot(process.cwd()), "dev.db");
 
 export const driver = new BetterSqlite3(databaseFile);
+driver.pragma("journal_mode = WAL");
+driver.pragma("foreign_keys = ON");
+driver.pragma("busy_timeout = 5000");
 
 export const db = new Kysely<DB>({
   dialect: new SqliteDialect({ database: driver }),
