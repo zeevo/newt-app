@@ -55,10 +55,12 @@ const isFlag = (token: string) => token.startsWith("--") && token.length > 2;
 // text lookup
 function coloured(command: string) {
   const tokens = command.split(" ");
+
   return tokens.map((token, i) => {
     const next = tokens[i + 1];
     const isValue = isFlag(tokens[i - 1] ?? "") && !token.startsWith("-");
     const isBooleanFlag = isFlag(token) && (next === undefined || next.startsWith("-"));
+
     return isValue || isBooleanFlag ? (
       <Fragment key={i}>
         {" "}
@@ -73,6 +75,7 @@ function coloured(command: string) {
 function renderNodes(nodes: TreeNode[]) {
   return nodes.map((node) => {
     const className = node.conditional ? grow : undefined;
+
     return node.kind === "dir" ? (
       <FileTree.Folder
         key={node.path}
@@ -185,6 +188,7 @@ function Segmented<T extends string>({
         value={[value]}
         onValueChange={(v) => {
           const picked = options.find((option) => option === v[0]);
+
           if (picked) onChange(picked);
         }}
       >
@@ -246,6 +250,7 @@ export function InteractiveFileTree({
   const set = <K extends keyof Config>(key: K, value: Config[K]) => setC({ [key]: value });
 
   const command = useMemo(() => buildCommand(c), [c]);
+
   const selected = [
     c.deployment === "none" ? null : c.deployment,
     c.todoExample ? "example app" : null,
@@ -367,6 +372,7 @@ export function InteractiveFileTree({
                       value={c.deployment}
                       onValueChange={(v) => {
                         const picked = deploymentOptions(c.nest).find((option) => option === v);
+
                         if (picked) set("deployment", picked);
                       }}
                     >

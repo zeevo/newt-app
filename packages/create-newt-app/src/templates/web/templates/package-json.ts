@@ -1,4 +1,5 @@
 import type { Selection } from "../../types";
+
 export default {
   when: (s: Selection) => s.nest !== "di-only" && !s.stylex,
   filename: "apps/web/package.json",

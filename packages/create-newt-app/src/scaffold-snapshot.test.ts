@@ -16,6 +16,7 @@ import { templates } from "./templates";
 const run = promisify(execFile);
 
 const CLI = fileURLToPath(new URL("../dist/index.js", import.meta.url));
+
 // Snapshots keep the extension the scaffolder emitted, so they read as the
 // files they are. That makes them ordinary source files to anything walking the
 // repo, so vitest, oxfmt, oxlint and git are all told to skip this directory.
@@ -98,6 +99,7 @@ const posix = (from: string, to: string) => path.relative(from, to).split(path.s
 
 async function filesIn(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { recursive: true, withFileTypes: true });
+
   return entries
     .filter((entry) => entry.isFile())
     .map((entry) => posix(dir, path.join(entry.parentPath, entry.name)))
@@ -126,6 +128,7 @@ const scaffolded = await Promise.all(
     });
 
     const dir = path.join(cwd, "my-app");
+
     return { name, dir, files: await filesIn(dir) };
   }),
 );
@@ -159,6 +162,7 @@ it("keeps no snapshot the scaffolder no longer emits", async () => {
   const entries = await readdir(SNAPSHOTS, { recursive: true, withFileTypes: true }).catch(
     () => [],
   );
+
   const orphans = entries
     .filter((entry) => entry.isFile())
     .map((entry) => posix(SNAPSHOTS, path.join(entry.parentPath, entry.name)))

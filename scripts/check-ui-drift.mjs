@@ -32,6 +32,7 @@ import { fileURLToPath } from "node:url";
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const cna = path.join(repo, "packages/create-newt-app");
 const require = createRequire(path.join(cna, "package.json"));
+
 // ejs and esbuild belong to create-newt-app, not the repo root
 const ejs = require("ejs");
 
@@ -41,12 +42,15 @@ const upstream = process.argv.includes("--upstream");
 // The templates are TS with extensionless relative imports, so bundle them to a
 // temp ESM file rather than fighting a TS loader.
 const bundle = path.join(repo, "node_modules/.cache/ui-drift-templates.mjs");
+
 fs.mkdirSync(path.dirname(bundle), { recursive: true });
+
 execFileSync(
   require.resolve("esbuild/bin/esbuild"),
   ["src/templates/index.ts", "--bundle", "--format=esm", "--platform=node", `--outfile=${bundle}`],
   { cwd: cna, stdio: "pipe" },
 );
+
 const { templates } = await import(`${bundle}?t=${process.pid}`);
 
 const data = {
@@ -60,6 +64,7 @@ const data = {
 
 const render = (template) => {
   let out = ejs.render(template, data);
+
   return out.endsWith("\n") ? out : out + "\n";
 };
 
@@ -79,23 +84,29 @@ const tracked = templates.shadcnUi.templates.filter(
 const drifted = tracked.filter((t) => {
   const rendered = render(t.template);
   const dest = path.join(repo, t.filename);
+
   if (fs.existsSync(dest) && fs.readFileSync(dest, "utf8") === rendered) {
     return false;
   }
+
   if (write) {
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, rendered);
   }
+
   return true;
 });
 
 // Files packages/ui has that no template claims: components added to the site
 // without a matching template, which scaffolded apps therefore never get.
 const claimed = new Set(templates.shadcnUi.templates.map((t) => t.filename));
+
 const untracked = ["src/components", "src/hooks", "src/lib"]
   .flatMap((dir) => {
     const abs = path.join(repo, "packages/ui", dir);
+
     if (!fs.existsSync(abs)) return [];
+
     return fs.readdirSync(abs).map((f) => `packages/ui/${dir}/${f}`);
   })
   .filter((f) => !claimed.has(f));
@@ -160,6 +171,7 @@ if (upstream) {
   const componentsJson = JSON.parse(
     fs.readFileSync(path.join(repo, "packages/ui/components.json"), "utf8"),
   );
+
   fs.writeFileSync(
     path.join(dir, "components.json"),
     JSON.stringify({
@@ -187,6 +199,7 @@ if (upstream) {
   );
 
   console.log(`\nupstream: asking shadcn to emit ${components.length} component(s)...`);
+
   try {
     execFileSync("npx", ["--yes", "shadcn@latest", "add", ...components, "--yes", "--overwrite"], {
       cwd: dir,
@@ -196,6 +209,7 @@ if (upstream) {
     // the CLI exits non-zero when it skips a component it cannot emit, which is
     // expected here, so judge by what landed on disk rather than by exit code
     const stderr = error.stderr?.toString().trim();
+
     if (stderr) console.log(`upstream: shadcn said: ${stderr}`);
   }
 
@@ -226,11 +240,13 @@ if (upstream) {
 
   const adopt = (name) => {
     const source = templateSource(fs.readFileSync(path.join(ui, `${name}.tsx`), "utf8"));
+
     const file = path.join(
       repo,
       "packages/create-newt-app/src/templates/shadcn-ui/templates",
       `${name}.ts`,
     );
+
     const existing = fs.readFileSync(file, "utf8");
     const opens = existing.indexOf("template: `") + "template: `".length;
     const closes = existing.lastIndexOf("`,");
@@ -250,20 +266,24 @@ if (upstream) {
   const diverged = [];
   const expected = [];
   const missing = [];
+
   for (const name of components) {
     const emitted = path.join(ui, `${name}.tsx`);
+
     // shadcn lists some components per style with no files, e.g. base-nova
     // dropped form in favour of field. Nothing to compare against.
     if (!fs.existsSync(emitted)) {
       missing.push(name);
       continue;
     }
+
     if (canonical(ours.get(name)) !== canonical(fs.readFileSync(emitted, "utf8"))) {
       (INTENTIONAL[name] ? expected : diverged).push(name);
     }
   }
 
   const compared = components.length - missing.length;
+
   if (diverged.length === 0) {
     console.log(
       `upstream: ${compared - expected.length} of ${compared} component(s) match what shadcn emits`,
@@ -278,17 +298,21 @@ if (upstream) {
     diverged.forEach((n) => console.error(`  ${n}  (diff ${path.join(ui, n + ".tsx")})`));
     console.error("\nRe-run with --write to take shadcn's version.");
   }
+
   expected.forEach((n) => console.log(`upstream: ${n} differs on purpose, ${INTENTIONAL[n]}`));
+
   if (missing.length > 0) {
     console.log(
       `upstream: ${missing.length} listed but not emitted for style ${componentsJson.style}: ${missing.join(", ")}`,
     );
   }
+
   if (local.length > 0) {
     console.log(
       `upstream: ${local.length} not in the registry, so ours alone: ${local.join(", ")}`,
     );
   }
+
   console.log(`upstream: shadcn output kept at ${ui}`);
 }
 

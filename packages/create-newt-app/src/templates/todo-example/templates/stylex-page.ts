@@ -1,4 +1,5 @@
 import type { Selection } from "../../types";
+
 export default {
   when: (s: Selection) => s.todoExample && s.stylex,
   filename: "apps/web/app/page.tsx",

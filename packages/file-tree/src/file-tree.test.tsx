@@ -29,6 +29,7 @@ describe("FileTree", () => {
         </FileTree.Folder>
       </FileTree>,
     );
+
     const folder = container.querySelector('[data-slot="file-tree-folder"]')!;
     expect(folder.tagName).toBe("LI");
     expect(folder.querySelector('ul > [data-slot="file-tree-file"]')).toBeTruthy();
@@ -50,6 +51,7 @@ describe("FileTree", () => {
     );
 
     const shortRule = "[&:last-child>[data-tree-line]]:h-3.5";
+
     const byName = Object.fromEntries(
       entries(container).map((e) => [e.querySelector("span.flex")!.textContent, e]),
     );
@@ -79,6 +81,7 @@ describe("FileTree", () => {
         </FileTree.Folder>
       </FileTree>,
     );
+
     const all = entries(container);
     expect(all).toHaveLength(3);
     all.forEach((entry) => {
@@ -100,6 +103,7 @@ describe("FileTree", () => {
         ))}
       </FileTree>,
     );
+
     expect(entries(container)).toHaveLength(3);
     expect(screen.getByText("in-a-fragment.ts")).toBeInTheDocument();
   });
@@ -111,6 +115,7 @@ describe("FileTree", () => {
         <FileTree.File>plain.ts</FileTree.File>
       </FileTree>,
     );
+
     expect(screen.getByText("standalone output")).toBeInTheDocument();
     const plain = entries(container)[1]!;
     expect(plain.textContent).toBe("plain.ts");
@@ -123,6 +128,7 @@ describe("FileTree", () => {
         <FileTree.File>default.ts</FileTree.File>
       </FileTree>,
     );
+
     expect(screen.getByTestId("mine")).toBeInTheDocument();
     expect(entries(container)[1]!.querySelector("svg")).toBeTruthy();
   });
@@ -137,6 +143,7 @@ describe("FileTree", () => {
       ".prettierrc",
       "README.md",
     ];
+
     const { container } = render(
       <FileTree name="my-app">
         {names.map((name) => (
@@ -146,6 +153,7 @@ describe("FileTree", () => {
         ))}
       </FileTree>,
     );
+
     const [ts, tsx, js, dotJson, json, dotfile, unknown] = entries(container).map(glyphOf);
 
     expect(new Set([ts, tsx, js, json]).size).toBe(4);
@@ -161,6 +169,7 @@ describe("FileTree", () => {
         <FileTree.File icon={fileIcon("index.ts")}>index.ts</FileTree.File>
       </FileTree>,
     );
+
     const [plain, typed] = entries(container).map(glyphOf);
     expect(plain).not.toBe(typed);
   });
