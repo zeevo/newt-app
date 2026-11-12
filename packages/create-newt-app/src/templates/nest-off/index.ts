@@ -3,9 +3,12 @@ import webNextConfig from "./templates/web-next-config";
 import webHelloRoute from "./templates/web-hello-route";
 
 // Everything apps/api used to supply, written straight into apps/web: the
-// /api/hello handler and a next.config with nothing to proxy to.
+// /api/hello handler and a next.config with nothing to proxy to. With no api,
+// Next is the only server, so its route handlers and server actions query the
+// db package directly.
 const nestOff: Module = {
   templates: [webNextConfig, webHelloRoute],
+  packages: [{ package: "@<%= projectName %>/db", module: "apps/web", version: "workspace:*" }],
 };
 
 export default nestOff;
