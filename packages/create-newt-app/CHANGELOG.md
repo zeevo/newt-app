@@ -1,5 +1,11 @@
 # create-newt-app
 
+## 0.38.4
+
+### Patch Changes
+
+- 90ca8dd: With `--nest off`, `apps/web` now depends on the db package, since Next is the only server. The db package re-exports kysely's `sql` so apps can write raw SQL without adding kysely themselves
+
 ## 0.38.3
 
 ### Patch Changes
