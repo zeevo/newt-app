@@ -66,7 +66,7 @@ Set in \`.env\` (a committed \`.env.example\` documents each one):
 <% if (database === 'postgres') { -%>
 - **DATABASE_URL**: your Postgres connection string
 <% } else { -%>
-- **DATABASE_URL**: not set for SQLite (the app uses \`dev.db\` at the repo root); set it to a Postgres URL to use Postgres
+- **DATABASE_URL**: unset by default, so the app uses \`dev.db\` at the repo root; set it to an absolute file path to use a different SQLite file
 <% } -%>
 
 ## Layout
