@@ -34,7 +34,7 @@ Set in `.env` (a committed `.env.example` documents each one):
 
 - **BETTER_AUTH_URL**: the public origin of the app
 - **BETTER_AUTH_SECRET**: a random secret used to sign sessions
-- **DATABASE_URL**: not set for SQLite (the app uses `dev.db` at the repo root); set it to a Postgres URL to use Postgres
+- **DATABASE_URL**: unset by default, so the app uses `dev.db` at the repo root; set it to an absolute file path to use a different SQLite file
 
 ## Layout
 
