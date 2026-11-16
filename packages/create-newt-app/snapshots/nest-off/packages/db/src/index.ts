@@ -24,4 +24,8 @@ export const db = new Kysely<DB>({
 
 export type Database = Kysely<DB>;
 
+// Re-exported so apps that depend on this package can write raw SQL without
+// depending on kysely themselves.
+export { sql } from "kysely";
+
 export type * from "./schema.js";
