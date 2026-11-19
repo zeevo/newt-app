@@ -83,7 +83,7 @@ export async function pnpmInstall(cwd: string) {
 }
 
 export async function pnpmFormat(cwd: string) {
-  return await execa("pnpm", ["format:fix"], {
+  return await execa("pnpm", ["format"], {
     cwd,
   });
 }

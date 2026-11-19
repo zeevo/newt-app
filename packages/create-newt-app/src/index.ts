@@ -353,7 +353,7 @@ export async function doInit(options: Options) {
     }
     if (!options.install) {
       console.log(chalk.blue(`  pnpm install`));
-      console.log(chalk.blue(`  pnpm format:fix`));
+      console.log(chalk.blue(`  pnpm format`));
     }
     if (!committed) {
       console.log(chalk.blue(`  git commit -m "Initial commit"`));
