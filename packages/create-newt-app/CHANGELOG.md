@@ -1,5 +1,12 @@
 # create-newt-app
 
+## 0.38.4
+
+### Patch Changes
+
+- 3b95279: bump next to 16.4.6 for the security fix
+- 90ca8dd: With `--nest off`, `apps/web` now depends on the db package, since Next is the only server. The db package re-exports kysely's `sql` so apps can write raw SQL without adding kysely themselves
+
 ## 0.38.3
 
 ### Patch Changes
