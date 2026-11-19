@@ -1,5 +1,15 @@
 # create-newt-app
 
+## 0.39.0
+
+### Minor Changes
+
+- a64c96f: Scaffolded apps now use `format` (write), `format:check`, `lint` (check) and `lint:fix`, matching this repo. ESLint `lint` in `apps/web` no longer runs `next typegen && tsc`; use `pnpm typecheck`.
+
+### Patch Changes
+
+- 59ee63b: The SQLite README no longer says `DATABASE_URL` can be set to a Postgres URL; it documents it as an optional absolute path to the SQLite file
+
 ## 0.38.4
 
 ### Patch Changes
