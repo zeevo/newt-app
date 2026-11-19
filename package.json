@@ -12,6 +12,7 @@
     "format": "oxfmt --disable-nested-config",
     "format:check": "oxfmt --check --disable-nested-config",
     "lint": "oxlint --disable-nested-config",
+    "lint:fix": "oxlint --fix --disable-nested-config",
     "release": "turbo run build && changeset publish",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",

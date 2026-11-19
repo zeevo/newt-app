@@ -7,10 +7,10 @@
     "db:make": "pnpm --filter @my-app/db run make",
     "db:migrate": "turbo run migrate",
     "dev": "turbo run dev",
-    "format": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
-    "format:fix": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "lint": "turbo run lint",
-    "lint:check": "turbo run lint:check",
+    "lint:fix": "turbo run lint:fix",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck"
   },
