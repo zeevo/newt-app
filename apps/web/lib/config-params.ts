@@ -36,6 +36,7 @@ export function sanitizeConfig(c: Config): Config {
   const todoExample = c.todoExample && todoExampleAvailable(c.nest);
   const antiSlop = c.antiSlop && antiSlopAvailable(c.linter);
   const stylex = c.stylex && !c.shadcn;
+
   return deployment === c.deployment &&
     todoExample === c.todoExample &&
     antiSlop === c.antiSlop &&

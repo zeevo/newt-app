@@ -1,4 +1,5 @@
 import type { Selection } from "../../types";
+
 export default {
   when: (s: Selection) => s.nest === "on" && s.deployment !== "spa",
   filename: "apps/api/package.json",

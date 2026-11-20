@@ -48,7 +48,9 @@ const MAX_BODY = 60000;
 
 const parseVersion = (value) => {
   const match = /^(\d+)\.(\d+)\.(\d+)(?:[-+](.*))?$/.exec(value ?? "");
+
   if (!match) return null;
+
   return {
     major: Number(match[1]),
     minor: Number(match[2]),
@@ -64,9 +66,12 @@ const compareVersions = (a, b) => a.major - b.major || a.minor - b.minor || a.pa
 // reported as unparsed rather than guessed at.
 const parseRange = (range) => {
   const match = /^(\^|~|)\s*(\d+\.\d+\.\d+(?:[-+][^\s]*)?)$/.exec((range ?? "").trim());
+
   if (!match) return null;
   const version = parseVersion(match[2]);
+
   if (!version) return null;
+
   return { operator: match[1], version };
 };
 
@@ -75,15 +80,21 @@ const parseRange = (range) => {
 // those ranges silently freeze.
 const satisfies = (candidate, range) => {
   const { operator, version } = range;
+
   if (compareVersions(candidate, version) < 0) return false;
+
   if (operator === "") return compareVersions(candidate, version) === 0;
+
   if (operator === "~") {
     return candidate.major === version.major && candidate.minor === version.minor;
   }
+
   if (version.major > 0) return candidate.major === version.major;
+
   if (version.minor > 0) {
     return candidate.major === 0 && candidate.minor === version.minor;
   }
+
   return compareVersions(candidate, version) === 0;
 };
 
@@ -94,13 +105,17 @@ const satisfies = (candidate, range) => {
 const readTemplateVersions = async () => {
   const source = await readFile(path.join(repoRoot, versionsFile), "utf8");
   const literal = /export const versions = \{([\s\S]*?)\n\} as const;/.exec(source);
+
   if (!literal) {
     throw new Error(`could not find the versions object literal in ${versionsFile}`);
   }
+
   const entries = [...literal[1].matchAll(/^\s*"([^"]+)":\s*"([^"]+)",?\s*$/gm)];
+
   if (entries.length === 0) {
     throw new Error(`parsed zero entries out of ${versionsFile}`);
   }
+
   return entries.map((match) => ({ name: match[1], range: match[2] }));
 };
 
@@ -110,8 +125,10 @@ const readWorkspaceVersions = async () => {
   const nested = await Promise.all(
     ["apps", "packages"].map(async (dir) => {
       const base = path.join(repoRoot, dir);
+
       if (!existsSync(base)) return [];
       const children = await readdir(base, { withFileTypes: true });
+
       return children
         .filter((child) => child.isDirectory())
         .map((child) => path.join(dir, child.name, "package.json"))
@@ -156,6 +173,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // and the last time the registry entry changed at all.
 const fetchPackument = async (name) => {
   const url = `https://registry.npmjs.org/${name.replace("/", "%2F")}`;
+
   const attempt = async (remaining) => {
     try {
       const response = await fetch(url, {
@@ -164,28 +182,36 @@ const fetchPackument = async (name) => {
           "user-agent": USER_AGENT,
         },
       });
+
       if (response.status === 404) return { error: "not found on the registry" };
+
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
       return { data: await response.json() };
     } catch (error) {
       if (remaining <= 0) return { error: String(error.message ?? error) };
       await sleep((RETRIES - remaining + 1) * 500);
+
       return attempt(remaining - 1);
     }
   };
+
   return attempt(RETRIES);
 };
 
 const runPool = async (items, limit, worker) => {
   const results = Array.from({ length: items.length });
   const queue = items.map((item, index) => ({ item, index }));
+
   const runners = Array.from({ length: Math.min(limit, queue.length) }, async () => {
     while (queue.length > 0) {
       const next = queue.shift();
       results[next.index] = await worker(next.item);
     }
   });
+
   await Promise.all(runners);
+
   return results;
 };
 
@@ -196,12 +222,15 @@ const daysSince = (timestamp, now) =>
 
 const analyze = ({ name, range, owners }, packument, now) => {
   const base = { name, range, owners };
+
   if (packument.error) return { ...base, unresolved: packument.error };
 
   const data = packument.data;
   const latest = parseVersion(data["dist-tags"]?.latest);
   const parsedRange = parseRange(range);
+
   if (!latest) return { ...base, unresolved: "the registry has no latest tag" };
+
   if (!parsedRange) return { ...base, unresolved: `unrecognized range "${range}"` };
 
   // What a fresh install resolves to today, which for a scaffolded app is what
@@ -213,10 +242,11 @@ const analyze = ({ name, range, owners }, packument, now) => {
     .sort(compareVersions)
     .pop();
 
-  const deprecations = [latest.raw, resolved?.raw]
-    .filter((version) => version !== undefined)
-    .map((version) => ({ version, note: String(data.versions?.[version]?.deprecated ?? "") }))
-    .filter((entry) => entry.note.length > 0);
+  const deprecations = [latest.raw, resolved?.raw].flatMap((version) => {
+    const note = version === undefined ? "" : String(data.versions?.[version]?.deprecated ?? "");
+
+    return note.length > 0 ? [{ version, note }] : [];
+  });
 
   return {
     ...base,
@@ -270,14 +300,17 @@ const renderGroup = (title, blurb, findings) => {
 
   const deprecated = resolved.filter((finding) => finding.deprecations.length > 0);
   const byAge = (a, b) => b.idleDays - a.idleDays;
+
   const idle = (finding, low, high) =>
     finding.idleDays !== null && finding.idleDays >= low && finding.idleDays < high;
 
   const dormant = resolved.filter((finding) => idle(finding, DORMANT_DAYS, Infinity)).sort(byAge);
   const quiet = resolved.filter((finding) => idle(finding, QUIET_DAYS, DORMANT_DAYS)).sort(byAge);
+
   const majors = resolved
     .filter((finding) => finding.majorsBehind > 0)
     .sort((a, b) => b.majorsBehind - a.majorsBehind);
+
   // The interesting subset of frozen ranges: a caret on a 0.x version, where
   // the range looks permissive but can never pick up the next minor.
   const frozenZero = resolved.filter(
@@ -287,7 +320,9 @@ const renderGroup = (title, blurb, findings) => {
       finding.pinned.major === 0 &&
       finding.latest.major === 0,
   );
+
   const floating = resolved.filter((finding) => finding.floats && finding.majorsBehind === 0);
+
   // "Current" means the range installs the latest release, not that the number
   // written down matches it.
   const current = resolved.filter(
@@ -412,6 +447,7 @@ const main = async () => {
   const names = [
     ...new Set([...templateVersions, ...workspaceVersions].map((entry) => entry.name)),
   ];
+
   process.stderr.write(
     `resolving ${names.length} packages (${templateVersions.length} scaffolded, ${workspaceVersions.length} workspace)\n`,
   );

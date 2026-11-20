@@ -105,6 +105,7 @@ export function selectModules(selection: ModuleSelection): Module[] {
   // Nest has no controllers of its own, so a suite booting apps/api has
   // nothing to hit.
   const selectedTesting = testing === "vitest" ? testingVitest : testingJest;
+
   const testingModule =
     nest === "off"
       ? null

@@ -1,4 +1,5 @@
 import type { Selection } from "../../types";
+
 export default {
   when: (s: Selection) => !s.stylex,
   filename: "apps/web/postcss.config.mjs",

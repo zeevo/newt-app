@@ -17,6 +17,7 @@ const DATABASES = ["sqlite", "postgres"] as const;
 const LINTERS = ["eslint", "oxc"] as const;
 const BOOLS = [true, false];
 const EXTRAS = [[], ["anti-slop"]] as const satisfies readonly (readonly Extra[])[];
+
 // The styling axis is three-way, but shadcn and stylex are mutually exclusive,
 // so it rides along as two booleans the validator then prunes.
 const STYLING = [
@@ -24,6 +25,7 @@ const STYLING = [
   { shadcn: true, stylex: false },
   { shadcn: false, stylex: true },
 ] as const;
+
 const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies"];
 
 // Every selection the CLI will accept. The rejected pairs are filtered with the
@@ -88,6 +90,7 @@ function renderCombo(selection: ModuleSelection) {
       .filter((template) => template.when?.(selection) ?? true)
       .forEach((template) => {
         if (files.has(template.filename)) collisions.push(template.filename);
+
         try {
           files.set(template.filename, ejs.render(template.template, data));
         } catch (error) {
@@ -103,6 +106,7 @@ function renderCombo(selection: ModuleSelection) {
     .forEach((pkg) => {
       const target = `${pkg.module}/package.json`;
       const contents = files.get(target);
+
       if (!contents) return;
       const json = JSON.parse(contents);
       const field = pkg.dev ? "devDependencies" : "dependencies";
@@ -118,6 +122,7 @@ function renderCombo(selection: ModuleSelection) {
     .flatMap((mod) => mod.scripts ?? [])
     .forEach((script) => {
       const target = `${script.module}/package.json`;
+
       if (!files.has(target)) return;
       scripts.set(target, {
         ...scripts.get(target),
@@ -145,30 +150,34 @@ describe(`template rendering across ${combos.length} selections`, () => {
       // templates may claim the same output file.
       expect(collisions).toEqual([]);
 
-      const invalidJson = [...files]
-        .filter(([filename]) => filename.endsWith(".json"))
-        .filter(([, contents]) => {
-          try {
-            JSON.parse(contents);
-            return false;
-          } catch {
-            return true;
-          }
-        })
-        .map(([filename]) => filename);
+      const invalidJson = [...files].flatMap(([filename, contents]) => {
+        if (!filename.endsWith(".json")) return [];
+
+        try {
+          JSON.parse(contents);
+
+          return [];
+        } catch {
+          return [filename];
+        }
+      });
+
       expect(invalidJson).toEqual([]);
 
       const scaffolded = new Set(
         packageJsons(files).map(([, contents]) => JSON.parse(contents).name),
       );
+
       const unresolved = packageJsons(files).flatMap(([filename, contents]) => {
         const json: Manifest = JSON.parse(contents);
+
         return DEP_FIELDS.flatMap((field) =>
           Object.entries(json[field] ?? {})
             .filter(([dep, version]) => version.startsWith("workspace:") && !scaffolded.has(dep))
             .map(([dep]) => `${filename} ${field}.${dep}`),
         );
       });
+
       expect(unresolved).toEqual([]);
 
       // The root package.json is unconditional, so every scaffold gets the
@@ -223,9 +232,9 @@ describe("@shadcn/lint ships with the shadcn option", () => {
     "%s",
     (_name, selection) => {
       const { files } = renderCombo(selection);
+
       const mentions = [...files.entries()]
-        .filter(([, contents]) => contents.includes("@shadcn/lint"))
-        .map(([filename]) => filename)
+        .flatMap(([filename, contents]) => (contents.includes("@shadcn/lint") ? [filename] : []))
         .sort();
 
       expect(mentions).toEqual(
@@ -307,9 +316,9 @@ describe("the e2e suite ships only where it can pass", () => {
 // scope or the api's own lint run fails on unresolved describe/it/expect.
 describe("api tsconfig types match the test runner", () => {
   it.each(
-    combos
-      .filter((selection) => selection.nest !== "off")
-      .map((selection) => [label(selection), selection] as const),
+    combos.flatMap((selection) =>
+      selection.nest !== "off" ? [[label(selection), selection] as const] : [],
+    ),
   )("%s", (_name, selection) => {
     const tsconfig = renderCombo(selection).files.get("apps/api/tsconfig.json") ?? "";
     const types = JSON.parse(tsconfig).compilerOptions.types;
@@ -322,9 +331,9 @@ describe("api tsconfig types match the test runner", () => {
 // would drag @nestjs back in through a dependency.
 describe("nest off scaffolds no Nest at all", () => {
   it.each(
-    combos
-      .filter((selection) => selection.nest === "off")
-      .map((selection) => [label(selection), selection] as const),
+    combos.flatMap((selection) =>
+      selection.nest === "off" ? [[label(selection), selection] as const] : [],
+    ),
   )("%s", (_name, selection) => {
     const { files } = renderCombo(selection);
 
@@ -332,12 +341,14 @@ describe("nest off scaffolds no Nest at all", () => {
 
     const nestDeps = packageJsons(files).flatMap(([filename, contents]) => {
       const json: Manifest = JSON.parse(contents);
+
       return DEP_FIELDS.flatMap((field) =>
         Object.keys(json[field] ?? {})
           .filter((dep) => dep.startsWith("@nestjs/") || dep.includes("nestjs-better-auth"))
           .map((dep) => `${filename} ${field}.${dep}`),
       );
     });
+
     expect(nestDeps).toEqual([]);
 
     // The handler the /api rewrite used to reach on port 3001, now served in
@@ -368,10 +379,12 @@ describe("the landing page matches the selected nest mode", () => {
 
       const tagline =
         selection.nest === "off" ? "Next.js + better-auth = Newt" : "Next + Nest = Newt";
+
       expect(page).toContain(tagline);
       expect(layout).toContain(`description: "${tagline}"`);
 
       expect(page).toContain("GET /api/hello");
+
       if (selection.nest === "on") {
         expect(page).toContain("nest.js");
       } else if (selection.nest === "di-only") {
@@ -397,6 +410,7 @@ describe("the standalone compose file matches the selected database", () => {
 
       if (selection.deployment !== "standalone") {
         expect(compose).toBeUndefined();
+
         return;
       }
 

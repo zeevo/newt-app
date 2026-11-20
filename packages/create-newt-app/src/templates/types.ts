@@ -16,6 +16,7 @@ export type TemplateData = {
   authSecret: string;
   versions: Versions;
 };
+
 // Every option a template can select on. Kept separate from TemplateData
 // because these steer *which* template is used, not what it renders.
 export type Selection = {
@@ -44,14 +45,18 @@ export type Template = {
   template: string;
   when?: (selection: Selection) => boolean;
 };
+
 export type File = { src: string; filename: string };
+
 export type Package = {
   package: string;
   module: string;
   version: string;
   dev?: boolean;
 };
+
 export type Script = { module: string; name: string; script: string };
+
 export type Module = {
   templates: Template[];
   staticFiles?: File[];

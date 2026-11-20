@@ -73,6 +73,7 @@ const key = (c: Config) =>
 // it produces rather than a second hand-rolled translation of Config.
 const flagsFor = (c: Config) => {
   const [, flags] = buildCommand(c).split(" -- ");
+
   return flags ? flags.split(" ") : [];
 };
 
@@ -82,6 +83,7 @@ function flatten(nodes: TreeNode[]): TreeNode[] {
 
 async function emittedFiles(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { recursive: true, withFileTypes: true });
+
   return entries
     .filter((entry) => entry.isFile())
     .map((entry) => path.relative(dir, path.join(entry.parentPath, entry.name)));
@@ -133,8 +135,10 @@ describe("scaffoldTree", () => {
           node.kind === "file"
             ? files.includes(node.path)
             : files.some((file) => file.startsWith(`${node.path}/`));
+
         return `${exists ? "shown" : "hidden"} ${node.path}`;
       });
+
       const actual = everyPath.map(
         (node) => `${shown.has(node.path) ? "shown" : "hidden"} ${node.path}`,
       );
@@ -146,6 +150,7 @@ describe("scaffoldTree", () => {
   it("counts the shadcn components it advertises", () => {
     const c = configs.find((config) => config.shadcn)!;
     const node = flatten(scaffoldTree(c)).find((n) => n.path === "packages/ui")!;
+
     const count = scaffolded
       .get(key(c))!
       .filter((file) => file.startsWith("packages/ui/src/components/")).length;

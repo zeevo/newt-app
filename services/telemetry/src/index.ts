@@ -62,27 +62,35 @@ const KNOWN_FLAGS = [
 // The only two free-form fields; "other" keeps an unknown version countable.
 function normalizeCliVersion(value: unknown): string {
   const text = String(value);
+
   return /^\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(text) ? text : "other";
 }
 
 function normalizeNodeMajor(value: unknown): string {
   const match = /^v(\d{1,3})$/.exec(String(value));
+
   if (!match) return "other";
   const major = Number(match[1]);
+
   return major >= 18 && major <= 40 ? `v${major}` : "other";
 }
 
 function normalizeExplicitFlags(value: unknown): string | null {
   if (value === "") return "";
+
   if (!KNOWN_FLAGS.includes(String(value).split(",")[0] ?? "")) return null;
   const parts = String(value).split(",");
+
   if (parts.length > KNOWN_FLAGS.length) return null;
+
   if (!parts.every((part) => KNOWN_FLAGS.includes(part))) return null;
+
   return [...new Set(parts)].sort().join(",");
 }
 
 function enumValue<K extends keyof typeof ENUMS>(key: K, value: unknown): string | null {
   const allowed: readonly string[] = ENUMS[key];
+
   return allowed.find((candidate) => candidate === value) ?? null;
 }
 
@@ -151,26 +159,32 @@ export default {
 
     const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
     const { success } = await env.RATE_LIMITER.limit({ key: ip });
+
     if (!success) return new Response("Too Many Requests", { status: 429 });
 
     // Attacker controlled, so this is a cheap early reject, not the real check.
     const declared = Number(request.headers.get("content-length"));
+
     if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) {
       return new Response("Payload Too Large", { status: 413 });
     }
 
     let body: unknown;
+
     try {
       const raw = await request.text();
+
       if (new TextEncoder().encode(raw).byteLength > MAX_BODY_BYTES) {
         return new Response("Payload Too Large", { status: 413 });
       }
+
       body = JSON.parse(raw);
     } catch {
       return new Response("Bad Request", { status: 400 });
     }
 
     const row = parse(body, Math.floor(Date.now() / 1000));
+
     if (!row) return new Response("Bad Request", { status: 400 });
 
     // The client IP is visible here and deliberately never stored.

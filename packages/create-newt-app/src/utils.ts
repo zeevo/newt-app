@@ -29,6 +29,7 @@ export async function updatePackageJson(
       if (isMissingFile(err)) {
         continue;
       }
+
       throw err;
     }
 
@@ -64,6 +65,7 @@ export async function updateScripts(
       if (isMissingFile(err)) {
         continue;
       }
+
       throw err;
     }
 
@@ -137,8 +139,10 @@ export async function sortPackageJsons(destDir: string) {
   const nested = await Promise.all(
     ["apps", "packages"].map(async (base) => {
       const dir = path.join(destDir, base);
+
       try {
         const entries = await promises.readdir(dir, { withFileTypes: true });
+
         return entries
           .filter((entry) => entry.isDirectory())
           .map((entry) => path.join(dir, entry.name, "package.json"));
@@ -147,12 +151,14 @@ export async function sortPackageJsons(destDir: string) {
       }
     }),
   );
+
   const files = [path.join(destDir, "package.json")].concat(...nested);
 
   await Promise.all(
     files.map(async (file) => {
       if (!existsSync(file)) return;
       const pkg = JSON.parse(await promises.readFile(file, "utf8"));
+
       if (pkg.scripts) pkg.scripts = sortByKey(pkg.scripts);
       DEP_FIELDS.forEach((field) => {
         if (pkg[field]) pkg[field] = sortByKey(pkg[field]);
@@ -336,7 +342,9 @@ export function projectTarget(projectName: string) {
   if ([".", "./"].includes(projectName.trim())) {
     return { name: normalizeProjectName(path.basename(process.cwd())), dir: "." };
   }
+
   const name = normalizeProjectName(projectName);
+
   return { name, dir: name };
 }
 
