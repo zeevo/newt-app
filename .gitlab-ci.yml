@@ -1,0 +1,48 @@
+# Mirrors .github/workflows/ci.yml: format, lint, typecheck, test, build.
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+stages:
+  - lint
+  - test
+  - build
+
+default:
+  image: node:24
+
+variables:
+  PNPM_VERSION: "11.25.0"
+
+.pnpm:
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store/
+  before_script:
+    - npm install -g pnpm@$PNPM_VERSION
+    - pnpm install --frozen-lockfile --store-dir .pnpm-store
+
+lint:
+  extends: .pnpm
+  stage: lint
+  script:
+    - pnpm format:check
+    - pnpm lint
+    - pnpm typecheck
+
+test:
+  extends: .pnpm
+  stage: test
+  script:
+    - pnpm test
+
+build:
+  extends: .pnpm
+  stage: build
+  script:
+    - pnpm build
