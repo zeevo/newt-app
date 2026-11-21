@@ -10,7 +10,7 @@ export default {
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "migrate": "dotenv -e ../../.env -- tsx src/migrate.ts",
+    "migrate": "pnpm --filter @<%= projectName %>/auth run migrate && dotenv -e ../../.env -- tsx src/migrate.ts",
     "make": "tsx scripts/new-migration.ts"
   },
   "dependencies": {
