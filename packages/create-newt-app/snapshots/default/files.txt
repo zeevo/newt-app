@@ -23,7 +23,6 @@ apps/api/test/jest-e2e.json
 apps/api/tsconfig.build.json
 apps/api/tsconfig.json
 apps/web/.gitignore
-apps/web/app/api/auth/[...all]/route.ts
 apps/web/app/apple-icon.png
 apps/web/app/auth-form.tsx
 apps/web/app/favicon.ico

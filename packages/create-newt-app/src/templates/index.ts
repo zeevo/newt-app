@@ -88,10 +88,12 @@ export function selectModules(selection: ModuleSelection): Module[] {
         ? deploymentSpa
         : null;
 
-  // In SPA mode NestJS serves Better Auth (AuthModule.forRoot); the Next.js
-  // auth handler is redundant and can't be statically exported, so drop it.
+  // Whenever NestJS is on it serves Better Auth (AuthModule.forRoot) and the
+  // web app proxies /api to it (a rewrite in none/standalone, the static export
+  // in spa), so the Next.js auth handler is shadowed and redundant: drop it.
+  // In nest off and di-only nothing else serves /api/auth, so keep it.
   const webModule =
-    deployment === "spa"
+    nest === "on"
       ? {
           ...web,
           templates: web.templates.filter(

@@ -356,6 +356,20 @@ describe("nest off scaffolds no Nest at all", () => {
   });
 });
 
+// Nest-on scaffolds proxy /api to the Nest app, which serves Better Auth
+// (AuthModule.forRoot), so the Next.js auth handler is shadowed and dropped.
+// nest off and di-only mount no Nest /api/auth, so the handler stays and is
+// the auth server itself.
+describe("the next auth handler ships only when nothing else serves /api/auth", () => {
+  it.each(combos.map((selection) => [label(selection), selection] as const))(
+    "%s",
+    (_name, selection) => {
+      const { files } = renderCombo(selection);
+      expect(files.has("apps/web/app/api/auth/[...all]/route.ts")).toBe(selection.nest !== "on");
+    },
+  );
+});
+
 // The /api/hello card and the NestJS link follow the mode, and the tagline
 // only promises Nest when the scaffold ships it.
 describe("the landing page matches the selected nest mode", () => {

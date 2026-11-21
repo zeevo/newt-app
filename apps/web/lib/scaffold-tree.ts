@@ -55,9 +55,12 @@ export function scaffoldTree(c: Config): TreeNode[] {
                       },
                     ]
                   : []),
-                // A static export has no server to run a handler, so spa is the
-                // one config where Next.js writes no route handlers at all.
-                ...(c.deployment === "spa"
+                // Next.js writes route handlers only when it serves /api itself.
+                // spa is a static export with no server at all, and with nest on
+                // the /api rewrite hands every route (auth and hello) to Nest on
+                // port 3001, so the handlers are shadowed and not written. Only
+                // nest off and di-only (deployment none/standalone) write them.
+                ...(c.deployment === "spa" || c.nest === "on"
                   ? []
                   : [
                       {
@@ -71,20 +74,14 @@ export function scaffoldTree(c: Config): TreeNode[] {
                             path: "apps/web/app/api/auth",
                             annotation: "Better Auth handler",
                           },
-                          // With nest on, /api/hello is Nest's, reached over the
-                          // rewrite to port 3001.
-                          ...(c.nest === "on"
-                            ? []
-                            : [
-                                {
-                                  name: "hello",
-                                  kind: "dir" as const,
-                                  path: "apps/web/app/api/hello",
-                                  annotation:
-                                    c.nest === "off" ? "plain route handler" : "injects AppService",
-                                  conditional: true,
-                                },
-                              ]),
+                          {
+                            name: "hello",
+                            kind: "dir" as const,
+                            path: "apps/web/app/api/hello",
+                            annotation:
+                              c.nest === "off" ? "plain route handler" : "injects AppService",
+                            conditional: true,
+                          },
                         ],
                       },
                     ]),
