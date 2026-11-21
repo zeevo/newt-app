@@ -27,7 +27,6 @@ apps/api/tsconfig.json
 apps/api/vitest.config.e2e.mts
 apps/api/vitest.config.mts
 apps/web/.gitignore
-apps/web/app/api/auth/[...all]/route.ts
 apps/web/app/apple-icon.png
 apps/web/app/auth-form.tsx
 apps/web/app/favicon.ico
