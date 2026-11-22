@@ -1,6 +1,7 @@
 export default {
   filename: "apps/api/test/app.e2e-spec.ts",
-  template: `import { Test, TestingModule } from '@nestjs/testing';
+  template: `import './e2e-env';
+import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';

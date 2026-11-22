@@ -71,6 +71,7 @@ export const templates = {
 
 const E2E_FILES = [
   "apps/api/test/app.e2e-spec.ts",
+  "apps/api/test/e2e-env.ts",
   "apps/api/test/jest-e2e.json",
   "apps/api/vitest.config.e2e.mts",
 ];

@@ -29,7 +29,7 @@ Open [http://localhost:3001](http://localhost:3001). In a real deployment, set `
 - `pnpm build`, `pnpm typecheck`, `pnpm test`: build, type-check, and test every workspace
 - `pnpm lint`: lint (fails on errors); `pnpm format`: apply formatting
 - `pnpm db:migrate`: run migrations; `pnpm db:make <name>`: scaffold a new one
-- `pnpm --filter @my-app/api test:e2e`: run the e2e suite
+- `pnpm test:e2e`: run the e2e suite (runs the migrations first)
 
 ## Environment
 

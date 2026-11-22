@@ -23,6 +23,7 @@ apps/api/src/todos/todos.module.ts
 apps/api/src/todos/todos.service.spec.ts
 apps/api/src/todos/todos.service.ts
 apps/api/test/app.e2e-spec.ts
+apps/api/test/e2e-env.ts
 apps/api/test/jest-e2e.json
 apps/api/tsconfig.build.json
 apps/api/tsconfig.json

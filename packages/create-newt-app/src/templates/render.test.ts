@@ -298,7 +298,7 @@ describe("the e2e suite ships only where it can pass", () => {
       expect(needed.filter((dep) => dep in declared)).toEqual(e2e ? needed : []);
 
       const readme = files.get("README.md") ?? "";
-      expect(readme.includes("pnpm --filter @my-app/api test:e2e")).toBe(e2e);
+      expect(readme.includes("pnpm test:e2e")).toBe(e2e);
     },
   );
 });
