@@ -26,6 +26,11 @@ export default {
     "test": {
       "dependsOn": ["^build"]
     },
+    "test:e2e": {
+      "dependsOn": ["^migrate"],
+      "env": ["DATABASE_URL"],
+      "cache": false
+    },
     "dev": {
       "dependsOn": ["^migrate"],
       "env": ["DATABASE_URL"],

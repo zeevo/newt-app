@@ -1,3 +1,4 @@
+import './e2e-env';
 import { describe, it, beforeEach } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';

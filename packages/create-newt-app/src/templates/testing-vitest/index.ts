@@ -2,10 +2,11 @@ import type { Module } from "../types";
 import { versions } from "../versions";
 import vitestConfig from "./templates/vitest-config";
 import vitestConfigE2e from "./templates/vitest-config-e2e";
+import e2eEnv from "./templates/e2e-env";
 import e2eSpec from "./templates/e2e-spec";
 
 const testingVitest: Module = {
-  templates: [vitestConfig, vitestConfigE2e, e2eSpec],
+  templates: [vitestConfig, vitestConfigE2e, e2eEnv, e2eSpec],
   packages: [
     {
       package: "vitest",

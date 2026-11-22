@@ -54,7 +54,7 @@ The \`migrate\` service applies migrations before the app starts. Open [http://l
 - \`pnpm lint\`: lint (fails on errors); \`pnpm format\`: apply formatting
 - \`pnpm db:migrate\`: run migrations; \`pnpm db:make <name>\`: scaffold a new one
 <% if (nest === 'on') { -%>
-- \`pnpm --filter @<%= projectName %>/api test:e2e\`: run the e2e suite
+- \`pnpm test:e2e\`: run the e2e suite (runs the migrations first)
 <% } -%>
 
 ## Environment
