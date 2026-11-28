@@ -75,6 +75,7 @@ function renderCombo(selection: ModuleSelection) {
     linter: selection.linter,
     antiSlop: selection.extras.includes("anti-slop"),
     shadcn: selection.shadcn,
+    todoExample: selection.todoExample,
     authSecret: "test-secret",
     versions,
   };

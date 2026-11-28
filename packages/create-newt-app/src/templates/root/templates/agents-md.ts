@@ -32,7 +32,7 @@ After making changes, run \`pnpm lint\` and fix all errors.<% } %>
 - Migrations live in \`packages/db\`. Run \`pnpm db:migrate\`; scaffold a new one with \`pnpm db:make <name>\`.
 - Environment is read from the root \`.env\` (see \`.env.example\`): \`DATABASE_URL\`, \`BETTER_AUTH_URL\`, \`BETTER_AUTH_SECRET\`.
 <% if (nest !== 'off') { -%>
-- NestJS controllers must validate request bodies with a schema (the api registers a global \`StandardSchemaValidationPipe\`); keep the todo controller as the reference for how to do it.
+- NestJS controllers must validate request bodies with a schema (the api registers a global \`StandardSchemaValidationPipe\`)<% if (todoExample) { %>; keep the todo controller as the reference for how to do it<% } %>.
 <% } -%>
 `,
 };
