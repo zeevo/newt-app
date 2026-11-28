@@ -13,6 +13,7 @@ const templateData: TemplateData = {
   linter: "eslint",
   antiSlop: false,
   shadcn: false,
+  todoExample: false,
   authSecret: "secret",
   versions,
 };

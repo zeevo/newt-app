@@ -21,4 +21,4 @@ This block is written and re-added by `turbo` before repository-scoped commands 
 - In development, `apps/web` rewrites `/api/*` to `http://localhost:3001/api/*` (see `apps/web/next.config.js`). The backend is a separate process; start both from the repo root with `pnpm dev`.
 - Migrations live in `packages/db`. Run `pnpm db:migrate`; scaffold a new one with `pnpm db:make <name>`.
 - Environment is read from the root `.env` (see `.env.example`): `DATABASE_URL`, `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`.
-- NestJS controllers must validate request bodies with a schema (the api registers a global `StandardSchemaValidationPipe`); keep the todo controller as the reference for how to do it.
+- NestJS controllers must validate request bodies with a schema (the api registers a global `StandardSchemaValidationPipe`).

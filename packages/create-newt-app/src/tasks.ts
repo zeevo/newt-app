@@ -38,6 +38,7 @@ export async function scaffold(
     linter: options.linter,
     antiSlop: options.antiSlop,
     shadcn: options.selection.shadcn,
+    todoExample: options.selection.todoExample,
     authSecret: randomBytes(32).toString("base64url"),
     versions,
   };
