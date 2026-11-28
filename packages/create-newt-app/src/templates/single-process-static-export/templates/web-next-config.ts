@@ -14,7 +14,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 // and production uses the static files.
 /** @type {import('next').NextConfig} */
 const nextConfig = isProduction
-  ? { output: 'export' }
+  ? { output: 'export', trailingSlash: true }
   : {
       async rewrites() {
         return [
